@@ -1,0 +1,12 @@
+@import "./assets/config/config";
+* {
+    margin: 0;
+    box-sizing: border-box;
+
+}
+.AppContainer {
+    height: 100vh;
+    width: 100vw;
+    padding: 1.25rem;
+    background-color: lighten($color: $white_color, $amount: 0.7);
+}
