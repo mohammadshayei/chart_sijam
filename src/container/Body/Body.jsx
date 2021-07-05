@@ -6,18 +6,10 @@ import { stringFa } from "../../assets/strings/stringFa";
 const Body = (props) => {
   return (
     <div className={classes.cardsContainer}>
-      <Card
-        title={stringFa.card_title[0]}
-        chartType='Bar'
-      />
-      <Card
-        title={stringFa.card_title[1]}
-        chartType='Line'
-      />
-      <Card
-        title={stringFa.card_title[2]}
-        chartType='Radar'
-      />
+      <Card title={stringFa.card_title[1]} chartType="Line" />
+      <Card title={stringFa.card_title[3]} chartType="Doughnut" />
+      <Card title={stringFa.card_title[0]} chartType="Bar" />
+      <Card title={stringFa.card_title[2]} chartType="Radar" />
     </div>
   );
 };

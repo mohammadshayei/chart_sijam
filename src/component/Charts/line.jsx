@@ -6,7 +6,9 @@ const LineChart = (props) => {
     return {
       label: item.label,
       data: item.data,
-      backgroundColor: item.fillColor,
+      // backgroundColor: item.fillColor,
+      borderColor: item.fillColor,
+      tension:0.2
     };
   });
 
@@ -25,7 +27,7 @@ const LineChart = (props) => {
           maintainAspectRatio: false,
           scales: {
             y: {
-              beginAtZero: true,
+              beginAtZero: false,
             },
           },
         }}
