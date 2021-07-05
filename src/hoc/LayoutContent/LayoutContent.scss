@@ -1,0 +1,63 @@
+@import "../../assets/config/config";
+
+.LayoutContentContainer {
+    height: 100%;
+    width: 100%;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: hidden;
+    .LeftSectionContaienr {
+        width: 87%;
+        margin-left: 0;
+        height: 100%;
+        display: block;
+        .NavbarConainer {
+            height: 7.5rem;
+            margin-top: 0;
+            width: 100%;
+        }
+        .BodyContainer {
+            // height: calc(100% - 6rem);
+            height: calc(100% - 7.5rem);
+            margin-top: 0;
+            width: 100%;
+            background-color: rgb(201, 196, 196);
+        }
+    }
+
+    .Extend {
+        animation: ease-out 200ms forwards Extend;
+    }
+    @keyframes Extend {
+        0% {
+            width: 0.89%;
+        }
+        50% {
+            width: 93%;
+        }
+        100% {
+            width: 100%;
+        }
+    }
+    .Reduce {
+        animation: ease-out 200ms forwards Reduce;
+    }
+    @keyframes Reduce {
+        0% {
+            width: 98%;
+        }
+        50% {
+            width: 93%;
+        }
+        100% {
+            width: 87%;
+        }
+    }
+
+    .RightSectionContaienr {
+        width: 13%;
+        margin-left: 0;
+        height: 100%;
+    }
+}

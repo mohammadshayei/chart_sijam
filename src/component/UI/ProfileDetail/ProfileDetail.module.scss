@@ -1,0 +1,25 @@
+.ProfileDetailContainer{
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    img{
+        width:55px;
+        height:55px;
+    }
+    span{
+        font-size: 12px;
+        margin-left: .5rem;
+    }
+    .DropDownContainer{
+        width: 29px;
+        height: 29px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 0.4rem;
+        border-radius: 50%;
+        transition: background-color 500ms;
+        cursor: pointer;
+    }
+}

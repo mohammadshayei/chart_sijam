@@ -2,11 +2,14 @@
 * {
     margin: 0;
     box-sizing: border-box;
-
+    font-family: IRANSans;
+    user-select: none;
 }
 .AppContainer {
     height: 100vh;
     width: 100vw;
     padding: 1.25rem;
     background-color: lighten($color: $white_color, $amount: 0.7);
+    min-height: 600px;
+    min-width: 800px;
 }
