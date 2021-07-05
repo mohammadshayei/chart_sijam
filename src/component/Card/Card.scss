@@ -1,0 +1,29 @@
+@import "../../assets/config/global";
+
+.card-container {
+  width: 600px;
+  overflow: hidden;
+  padding: 1.5rem;
+  margin: 0 0 3rem 3rem;
+  border-radius: 10px;
+  transition: 0.3s;
+  animation: ease-in;
+  @extend %global-shadow;
+  .card-title {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    user-select: none;
+    .card-setting:hover {
+      cursor: pointer;
+      font-size: "large";
+    }
+  }
+}
+.card-container:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 20px;
+}
