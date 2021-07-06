@@ -1,22 +1,33 @@
-import React from "react";
-import classes from "./LayoutContent.module.scss";
+import React, { useState } from "react";
+import "./LayoutContent.scss";
 import Drawer from "../../component/Navigation/Drawer/Drawer";
 import Body from "../../container/Body/Body";
+import { lightTheme } from "../../styles/theme";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
 const LayoutContent = (props) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const onToggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
-    <div className={classes.LayoutContentContainer}>
-      <div className={classes.LeftSectionContaienr}>
-        <div className={classes.NavbarConainer}>
-          <Navbar />
+    <div
+      className="LayoutContentContainer"
+      style={{ backgroundColor: lightTheme.background_color }}
+    >
+      <div
+        className={`LeftSectionContaienr ${isMenuOpen ? "Reduce" : "extend"}`}
+        style={{ width: isMenuOpen ? "87%" : "100%" }}
+      >
+        <div className="NavbarConainer">
+          <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
         </div>
-        <div className={classes.BodyContainer}>
+        <div className="BodyContainer">
           <Body />
         </div>
       </div>
-      <div className={classes.RightSectionContaienr}>
-        <Drawer />
-      </div>
+
+        <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
+
     </div>
   );
 };

@@ -1,0 +1,22 @@
+.HeaderContainer {
+    width: calc(13vw);
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.8rem;
+    .LogoContainer {
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 30px;
+            height: 30px;
+            margin-left: 0.2rem;
+        }
+    }
+}
+
+

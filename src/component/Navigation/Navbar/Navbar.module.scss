@@ -1,0 +1,30 @@
+@import '../../../assets/config/global';
+
+.NavbarContainer {
+    width: calc(100% - 2px);
+    height: 100%;
+    @extend %global-shadow;
+    margin-left: 1px;
+
+    .ProfileSectionContainer {
+        height: 5rem;
+        width: 100%;
+        padding: 0 1rem;
+        padding-left: 2rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    @extend %global-shadow;
+
+        .IconContainer{
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+    }
+    .BanksContainer {
+        height: 2.5rem;
+        width: 100%;
+    }
+}

@@ -1,0 +1,44 @@
+@import "../../../assets/config/global";
+.DrawerContainer {
+    @extend %global-shadow;
+    height: 100%;
+    width: 13%;
+}
+.HideDrawer {
+    animation: ease-out 200ms forwards HideDrawer;
+}
+@keyframes HideDrawer {
+    0% {
+        width: 10%;
+        opacity: 0.9;
+    }
+    50% {
+        width: 5%;
+        opacity: 0.4;
+    }
+    100% {
+        width: 0%;
+        opacity: 0;
+
+        // transform: translateX(110%);
+    }
+}
+.ShowDrawer {
+    animation: ease-out 200ms forwards ShowDrawer;
+}
+@keyframes ShowDrawer {
+    0% {
+        width: 0.1%;
+        opacity: 0.1;
+    }
+    50% {
+        width: 5%;
+        opacity: 0.6;
+    }
+    100% {
+        width: 13%;
+        opacity: 1;
+
+        // transform: translateX(110%);
+    }
+}
