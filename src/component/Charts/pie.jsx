@@ -1,42 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Pie } from "react-chartjs-2";
 
 const PieChart = (props) => {
-  const [datasets, setDataSets] = useState(null);
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    if (props.data) {
-      setDataSets(
-        props.data.map((item) => {
-          return {
-            label: item.label,
-            data: item.data,
-            // backgroundColor: item.fillColor,
-            borderColor: item.fillColor,
-            tension: 0.2,
-          };
-        })
-      );
-
-      setData({
-        labels: props.labels,
-        datasets: datasets,
-      });
-    }
-  }, [props.data]);
-
   return (
     <div>
       <Pie
-        data={data}
+        data={props.data}
         height={300}
         width={300}
         options={{
+          responsive: true,
           maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+              },
+              display: true,
+              rtl: true,
+              position: "left",
+            },
+          },
           scales: {
+            title: {
+              display: false,
+            },
+            x: {
+              ticks: { display: false },
+              grid: {
+                display: false,
+                drawBorder: false,
+              },
+            },
             y: {
-              beginAtZero: true,
+              ticks: { display: false },
+              grid: {
+                display: false,
+                drawBorder: false,
+              },
+              // beginAtZero: true,
             },
           },
         }}

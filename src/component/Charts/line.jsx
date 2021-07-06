@@ -9,9 +9,11 @@ const LineChart = (props) => {
         height={300}
         width={300}
         options={{
+          tension: 0.2,
           maintainAspectRatio: false,
           scales: {
             y: {
+              // position: "right",
               beginAtZero: false,
             },
           },

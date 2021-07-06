@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./Body.scss";
 import Card from "../../component/Card/Card";
 import { data } from "../../assets/DummyData/data";
-// import { stringFa } from "../../assets/strings/stringFa";
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Body = (props) => {
