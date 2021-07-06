@@ -22,12 +22,11 @@ const LayoutContent = (props) => {
           <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
         </div>
         <div className="BodyContainer">
-          <Body />
+          <Body bankId="125" />
         </div>
       </div>
 
-        <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
-
+      <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
     </div>
   );
 };

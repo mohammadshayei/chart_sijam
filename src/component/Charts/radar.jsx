@@ -1,19 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Radar } from "react-chartjs-2";
 
 const RadarChart = (props) => {
-  let datasets = props.data.map((item) => {
-    return {
-      label: item.label,
-      data: item.data,
-      backgroundColor: item.fillColor,
-    };
-  });
+  const [datasets, setDataSets] = useState(null);
+  const [data, setData] = useState(null);
 
-  let data = {
-    labels: props.labels,
-    datasets: datasets,
-  };
+  useEffect(() => {
+    if (props.data) {
+      setDataSets(
+        props.data.map((item) => {
+          return {
+            label: item.label,
+            data: item.data,
+            // backgroundColor: item.fillColor,
+            borderColor: item.fillColor,
+            tension: 0.2,
+          };
+        })
+      );
+
+      setData({
+        labels: props.labels,
+        datasets: datasets,
+      });
+    }
+  }, [props.data]);
 
   return (
     <div>

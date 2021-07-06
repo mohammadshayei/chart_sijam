@@ -2,23 +2,10 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 
 const BarChart = (props) => {
-  let datasets = props.data.map((item) => {
-    return {
-      label: item.label,
-      data: item.data,
-      backgroundColor: item.fillColor,
-    };
-  });
-
-  let data = {
-    labels: props.labels,
-    datasets: datasets,
-  };
-
   return (
     <div>
       <Bar
-        data={data}
+        data={props.data}
         height={300}
         width={300}
         options={{
