@@ -1,29 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MenuItem from "../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
-import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
 import { data } from "../../../../assets/dummy_data/TestData";
-const MenuItems = () => {
-  const [ItemsComponent, setItemsComponent] = useState(null);
-  const [dataItems, setDataItems] = useState(null);
-  const [clickedList, setClickedList] = useState([]);
+import * as actions from "../../../../store/actions/software";
 
-  const onMenuItemClickHandler = (type, inputData, index, name) => {
+const MenuItems = () => {
+  const [dataItems, setDataItems] = useState([]);
+  const [clickedList, setClickedList] = useState([]);
+  const [closedList, setClosedList] = useState([]);
+  const dispatch = useDispatch();
+  const selectSoftware = (name, banks, type) => {
+    dispatch(actions.selectSoftware(name, banks, type));
+  };
+
+  const onMenuItemClickHandler = (id, type, inputData, index, name) => {
     let arrType;
-    if (type === "holding") arrType = "softwares";
-    else if (type === "company") arrType = "banks";
-    else if (type === "banks") arrType = "";
+    if (type === "holding") {
+      arrType = "softwares";
+    } else if (type === "company") {
+      arrType = "banks";
+    } else if (type === "software") {
+    } else if (type === "banks") {
+      arrType = "";
+    }
+
     let finded = clickedList.find((item) => item === `${type}${name}`);
     if (finded) {
       let newData = dataItems;
       newData.splice(index + 1, inputData.length);
       setDataItems([...newData]);
       setClickedList([...clickedList.filter((i) => i !== `${type}${name}`)]);
+      setClosedList([...closedList, `${type}${name}`]);
+
       return;
     }
     if (type === "software") {
-      setClickedList([...clickedList, `${type}${name}`]);
-      console.log([...clickedList, `${type}${name}`])
+      let p;
+      for (let i = index; i >= 0; i--) {
+        if (dataItems[i].type === "company") {
+          p = dataItems[i].name;
+          break;
+        }
+      }
+      selectSoftware(id, name, inputData, type, p);
     } else {
       let newData = dataItems;
       newData.splice(
@@ -31,56 +51,48 @@ const MenuItems = () => {
         0,
         ...inputData.map((item) => ({
           data: arrType ? item[arrType] : null,
+          id: item.id,
           name: item.name,
           type: item.type,
+          parent: name,
         }))
       );
       setDataItems([...newData]);
       setClickedList([...clickedList, `${type}${name}`]);
+      setClosedList([...closedList.filter((i) => i !== `${type}${name}`)]);
     }
   };
+
   useEffect(() => {
     setDataItems(
       data.map((item) => ({
+        id: item.id,
         data: item.companies,
         name: item.name,
         type: item.type,
+        parent: item.parent,
       }))
     );
-    setItemsComponent(
-      data.map((item, index) => (
-        <MenuItem
-          onClick={onMenuItemClickHandler}
-          key={`${uuidv4()}`}
-          data={item.companies}
-          name={item.name}
-          type={item.type}
-          index={index}
-          clickedList={clickedList}
-        />
-      ))
-    );
   }, []);
-  useEffect(() => {
-    if (dataItems) {
-      setItemsComponent(
-        dataItems.map((item, index) => (
-          <MenuItem
-            onClick={onMenuItemClickHandler}
-            key={`${uuidv4()}`}
-            data={item.data}
-            name={item.name}
-            type={item.type}
-            index={index}
-            clickedList={clickedList}
-          />
-        ))
-      );
-    }
-  }, [dataItems]);
+  useEffect(() => {}, [dataItems]);
   return (
     <div className="MenuItemsContainer">
-      {ItemsComponent ? ItemsComponent : null}
+      {dataItems.length > 0
+        ? dataItems.map((item, index) => (
+            <MenuItem
+              onClick={onMenuItemClickHandler}
+              key={item.id}
+              data={item.data}
+              id={item.id}
+              name={item.name}
+              type={item.type}
+              parent={item.parent}
+              index={index}
+              clickedList={clickedList}
+              closedList={closedList}
+            />
+          ))
+        : null}
     </div>
   );
 };

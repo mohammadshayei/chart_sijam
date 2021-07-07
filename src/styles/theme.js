@@ -7,4 +7,6 @@ export const lightTheme = {
   arrows_color: "#8D8D8D",
   menu_icons_color: "#000",
   holding_menu_item_color: "#DFDDDD",
+  text_clicked_menu_color:'#ffffff',
+  text_menu_item_color:"#000"
 };
