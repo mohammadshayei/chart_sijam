@@ -8,14 +8,7 @@ const BubbleChart = (props) => {
         data={props.data}
         height={300}
         width={300}
-        options={{
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        }}
+        options={props.option}
       />
     </div>
   );

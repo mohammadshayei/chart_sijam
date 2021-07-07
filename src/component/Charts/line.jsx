@@ -8,16 +8,7 @@ const LineChart = (props) => {
         data={props.data}
         height={300}
         width={300}
-        options={{
-          tension: 0.2,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              // position: "right",
-              beginAtZero: false,
-            },
-          },
-        }}
+        options={props.option}
       />
     </div>
   );

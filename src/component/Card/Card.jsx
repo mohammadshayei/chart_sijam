@@ -22,18 +22,18 @@ function Card(props) {
       props.database
     ) {
       setData({
-        labels: props.database.databaseLabels,
-        datasets: props.database.databaseData.map((item) => {
+        labels: props.database.labels,
+        datasets: props.database.data.map((item) => {
           return {
-            label: item.dataLabel,
+            label: item.label,
             data: item.data,
-            backgroundColor: item.fillColor,
-            // borderColor: item.fillColor,
+            backgroundColor: props.backGroundColor,
+            borderColor: props.borderColor,
           };
         }),
       });
     }
-  }, [props.chartType, props.database]);
+  }, [props]);
 
   return (
     <div className="card-container">
@@ -45,13 +45,21 @@ function Card(props) {
         />
         <p>{props.title}</p>
       </div>
-      {props.chartType === "Bar" && <Bar data={data} />}
-      {props.chartType === "Bubble" && <Bubble data={data} />}
-      {props.chartType === "Doughnut" && <Doughnut data={data} />}
-      {props.chartType === "Line" && <Line data={data} />}
-      {props.chartType === "Pie" && <Pie data={data} />}
-      {props.chartType === "PolarArea" && <PolarArea data={data} />}
-      {props.chartType === "Radar" && <Radar data={data} />}
+      {props.chartType === "Bar" && <Bar data={data} option={props.option} />}
+      {props.chartType === "Bubble" && (
+        <Bubble data={data} option={props.option} />
+      )}
+      {props.chartType === "Doughnut" && (
+        <Doughnut data={data} option={props.option} />
+      )}
+      {props.chartType === "Line" && <Line data={data} option={props.option} />}
+      {props.chartType === "Pie" && <Pie data={data} option={props.option} />}
+      {props.chartType === "PolarArea" && (
+        <PolarArea data={data} option={props.option} />
+      )}
+      {props.chartType === "Radar" && (
+        <Radar data={data} option={props.option} />
+      )}
     </div>
   );
 }

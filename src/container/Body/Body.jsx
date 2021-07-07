@@ -22,7 +22,7 @@ const Body = (props) => {
           item.charts.map((ch) => {
             return {
               ...ch,
-              databaseData: item.database[0],
+              database: item.database[0],
             };
           })
         );
@@ -87,10 +87,13 @@ const Body = (props) => {
       {charts
         ? charts.map((item) => (
             <Card
-              title={item.chartTitle}
-              chartType={item.chartType}
-              database={item.databaseData}
-              labels={item.databaseLabels}
+              title={item.title}
+              chartType={item.type}
+              backGroundColor={item.backGroundColor}
+              borderColor={item.borderColor}              
+              option={item.option}
+              labels={item.labels}
+              database={item.database}
             />
           ))
         : null}

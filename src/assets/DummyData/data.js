@@ -4,29 +4,146 @@ export const data = [
     bankName: "فروش",
     charts: [
       {
-        chartId: "1251",
-        chartTitle: "نمودار حلقوی فروش ماهانه",
-        chartType: "Doughnut",
+        id: "1251",
+        title: "نمودار حلقوی فروش ماهانه",
+        type: "Doughnut",
+        backGroundColor: [
+          "rgba(116, 103, 240, 1)",
+          "rgba(255, 165, 80, 1)",
+          "rgba(234, 96, 97, 1)",
+          "rgba(0, 136, 132, 1)",
+          "rgba(152, 148, 215, 1)",
+        ],
+        option: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+              },
+              display: true,
+              rtl: false,
+              position: "left",
+            },
+          },
+          scales: {
+            title: {
+              display: false,
+            },
+            x: {
+              ticks: { display: false },
+              grid: {
+                display: false,
+                drawBorder: false,
+              },
+            },
+            y: {
+              ticks: { display: false },
+              grid: {
+                display: false,
+                drawBorder: false,
+              },
+              // beginAtZero: true,
+            },
+          },
+        },
       },
       {
-        chartId: "1252",
-        chartTitle: "نمودار کیکی فروش ماهانه",
-        chartType: "Pie",
+        id: "1252",
+        title: "نمودار کیکی فروش ماهانه",
+        type: "Pie",
+        backGroundColor: [
+          "rgba(116, 103, 240, 1)",
+          "rgba(255, 165, 80, 1)",
+          "rgba(234, 96, 97, 1)",
+          "rgba(0, 136, 132, 1)",
+          "rgba(152, 148, 215, 1)",
+        ],
+        option: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+              },
+              display: true,
+              rtl: false,
+              position: "left",
+            },
+          },
+          scales: {
+            title: {
+              display: false,
+            },
+            x: {
+              ticks: { display: false },
+              grid: {
+                display: false,
+                drawBorder: false,
+              },
+            },
+            y: {
+              ticks: { display: false },
+              grid: {
+                display: false,
+                drawBorder: false,
+              },
+              // beginAtZero: true,
+            },
+          },
+        },
       },
       {
-        chartId: "1253",
-        chartTitle: "نمودار خطی فروش ماهانه",
-        chartType: "Line",
+        id: "1253",
+        title: "نمودار خطی فروش ماهانه",
+        type: "Line",
+        borderColor: "rgba(116, 103, 240, 1)",
+        option: {
+          tension: 0.2,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+              },
+              display: true,
+              rtl: false,
+              position: "top",
+            },
+          },
+          scales: {
+            y: {
+              // position: "right",
+              beginAtZero: false,
+            },
+          },
+        },
       },
       {
-        chartId: "1254",
-        chartTitle: "نمودار ستونی فروش ماهانه",
-        chartType: "Bar",
+        id: "1254",
+        title: "نمودار ستونی فروش ماهانه",
+        type: "Bar",
+        backGroundColor: [
+          "rgba(116, 103, 240, 1)",
+          "rgba(255, 165, 80, 1)",
+          "rgba(234, 96, 97, 1)",
+          "rgba(0, 136, 132, 1)",
+          "rgba(152, 148, 215, 1)",
+        ],
+        options: {
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
       },
     ],
     database: [
       {
-        databaseLabels: [
+        labels: [
           "فروردین",
           "اردیبهشت",
           "خرداد",
@@ -40,37 +157,26 @@ export const data = [
           // "بهمن",
           // "اسفند",
         ],
-        databaseData: [
+        data: [
           {
-            dataLabel: "110",
+            label: "110",
             data: [32, 25, 15, 1],
-            fillColor: [
-              "rgba(116, 103, 240, 1)",
-              "rgba(255, 165, 80, 1)",
-              "rgba(234, 96, 97, 1)",
-              "rgba(0, 136, 132, 1)",
-              "rgba(152, 148, 215, 1)",
-            ],
           },
           // {
-          //   dataLabel: "550",
+          //   label: "550",
           //   data: [25, 15, 5, 5],
-          //   fillColor: "rgba(255, 165, 80, 1)",
           // },
           // {
-          //   dataLabel: "275",
+          //   label: "275",
           //   data: [2, 1, 1, 1],
-          //   fillColor: "rgba(234, 96, 97, 1)",
           // },
           // {
-          //   dataLabel: "200",
+          //   label: "200",
           //   data: [25, 15, 10, 10],
-          //   fillColor: "rgba(0, 136, 132, 1)",
           // },
           // {
-          //   dataLabel: "35",
+          //   label: "35",
           //   data: [10, 15, 15, 5],
-          //   fillColor: "rgba(152, 148, 215, 1)",
           // },
         ],
       },
