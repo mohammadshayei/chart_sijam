@@ -1,0 +1,1 @@
+export const SELECT_MENU_ITEM = 'SELECT_MENU_ITEM';
