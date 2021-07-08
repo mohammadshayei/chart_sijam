@@ -29,6 +29,8 @@ function Card(props) {
             data: item.data,
             backgroundColor: props.backGroundColor,
             borderColor: props.borderColor,
+            borderRadius: props.borderRadius,
+            borderWidth: props.borderWidth,
           };
         }),
       });

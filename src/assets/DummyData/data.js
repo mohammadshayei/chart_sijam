@@ -13,7 +13,9 @@ export const data = [
           "rgba(234, 96, 97, 1)",
           "rgba(0, 136, 132, 1)",
           "rgba(152, 148, 215, 1)",
+          "#d7cb94",
         ],
+        borderWidth: 0,
         database: {
           labels: ["110", "55", "275", "200", "35", "پره"],
           data: [
@@ -139,6 +141,8 @@ export const data = [
           "rgba(0, 136, 132, 1)",
           "rgba(152, 148, 215, 1)",
         ],
+        borderRadius: 3,
+        borderWidth: 0,
         database: {
           labels: [
             "فروردین",

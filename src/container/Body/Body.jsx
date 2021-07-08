@@ -63,6 +63,8 @@ const Body = (props) => {
                             chartType={item.type}
                             backGroundColor={item.backGroundColor}
                             borderColor={item.borderColor}
+                            borderRadius={item.borderRadius}
+                            borderWidth={item.borderWidth}
                             database={item.database}
                             option={item.option}
                           />
