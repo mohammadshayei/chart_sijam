@@ -15,6 +15,7 @@ export const data = [
           "rgba(152, 148, 215, 1)",
           "#d7cb94",
         ],
+        borderColor: [],
         borderWidth: 0,
         database: {
           labels: ["110", "55", "275", "200", "35", "پره"],
@@ -64,6 +65,13 @@ export const data = [
         id: "1253",
         title: "نمودار خطی فروش ماهانه",
         type: "Line",
+        backGroundColor: [
+          "rgba(116, 103, 240, 1)",
+          "rgba(255, 165, 80, 1)",
+          "rgba(234, 96, 97, 1)",
+          "rgba(0, 136, 132, 1)",
+          "rgba(152, 148, 215, 1)",
+        ],
         borderColor: [
           "rgba(116, 103, 240, 1)",
           "rgba(255, 165, 80, 1)",
@@ -141,6 +149,7 @@ export const data = [
           "rgba(0, 136, 132, 1)",
           "rgba(152, 148, 215, 1)",
         ],
+        borderColor: [],
         borderRadius: 3,
         borderWidth: 0,
         database: {

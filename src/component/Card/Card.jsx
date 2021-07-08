@@ -23,12 +23,18 @@ function Card(props) {
     ) {
       setData({
         labels: props.database.labels,
-        datasets: props.database.data.map((item) => {
+        datasets: props.database.data.map((item, index) => {
           return {
             label: item.label,
             data: item.data,
-            backgroundColor: props.backGroundColor,
-            borderColor: props.borderColor,
+            backgroundColor:
+              props.database.data.length === 1
+                ? props.backGroundColor
+                : props.backGroundColor[index],
+            borderColor:
+              props.database.data.length === 1
+                ? props.borderColor
+                : props.borderColor[index],
             borderRadius: props.borderRadius,
             borderWidth: props.borderWidth,
           };
