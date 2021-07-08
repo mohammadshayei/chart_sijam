@@ -1,6 +1,6 @@
 export const data = [
   {
-    bankId: "125",
+    bankId: "3",
     bankName: "فروش",
     charts: [
       {
