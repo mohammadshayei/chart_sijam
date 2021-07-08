@@ -3,25 +3,46 @@ import "./BanksContainer.scss";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import AcUnitIcon from '@material-ui/icons/AcUnit';
-function NextArrow(props) {
+import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
+import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
+import { lightTheme } from "../../../../styles/theme";
+
+function RightNavButton(props) {
   const { className, style, onClick } = props;
   return (
     <div
-      className={className}
-      style={{ ...style, display: "block"}}
+      className={`slick-arrow`}
+      style={{ ...style, display: "flex", alignItems: "center" }}
       onClick={onClick}
-    />
+    >
+      <ArrowForwardIosRoundedIcon
+        style={{
+          color: lightTheme.arrows_color,
+          height: "14px",
+          width: "14px",
+          marginLeft: "1rem",
+        }}
+      />
+    </div>
   );
 }
-
-function PrevArrow(props) {
-  const { className, onClick } = props;
+function LeftNavButton(props) {
+  const { className, style, onClick } = props;
   return (
-    <button className={className} onClick={onClick}>
-      <AcUnitIcon  />
-    </button>
+    <div
+      className={`slick-arrow`}
+      style={{ ...style, display: "flex", alignItems: "center" }}
+      onClick={onClick}
+    >
+      <ArrowBackIosRoundedIcon
+        style={{
+          color: lightTheme.arrows_color,
+          height: "14px",
+          width: "14px",
+          marginRight: "1rem",
+        }}
+      />
+    </div>
   );
 }
 
@@ -32,8 +53,8 @@ const BanksContainer = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <RightNavButton />,
+    prevArrow: <LeftNavButton />,
   };
   return (
     <div className="BanksContainer">
