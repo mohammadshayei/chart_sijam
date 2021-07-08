@@ -4,8 +4,9 @@
   width: 500spx;
   overflow: hidden;
   padding: 1.5rem;
-  margin: 0 0 3rem 3rem;
-  border-radius: 10px;
+  margin: 0 0 2.2rem 2.2rem;
+  border-radius: 5px;
+  background-color: white;
   transition: 0.3s;
   animation: ease-in;
   @extend %global-shadow;
@@ -29,5 +30,6 @@
 }
 .card-container:hover {
   transform: scale(1.03);
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 20px;
+  box-shadow: rgba(14, 30, 37, 0.05) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.12) 0px 2px 14px 0px;
 }
