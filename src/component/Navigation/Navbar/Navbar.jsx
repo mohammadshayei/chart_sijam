@@ -5,6 +5,7 @@ import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import { lightTheme } from "../../../styles/theme";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
+import BanksContainer from "./BanksContainer/BanksContainer";
 
 const Navbar = (props) => {
   const [isFav, setIsFav] = useState(false);
@@ -43,7 +44,9 @@ const Navbar = (props) => {
           )}
         </div>
       </div>
-      <div className={classes.BanksContainer}></div>
+      <div className={classes.BanksContainer}>
+        <BanksContainer />
+      </div>
     </div>
   );
 };

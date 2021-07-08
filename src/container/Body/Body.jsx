@@ -87,6 +87,7 @@ const Body = (props) => {
       {charts
         ? charts.map((item) => (
             <Card
+              key={`${item.id}`}
               title={item.title}
               chartType={item.type}
               backGroundColor={item.backGroundColor}
