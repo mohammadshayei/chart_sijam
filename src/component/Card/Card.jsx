@@ -46,11 +46,7 @@ const Card = React.memo(function Card(props) {
   return (
     <div className="card-container">
       <div className="card-title">
-        <SettingsOutlinedIcon
-          className="card-setting"
-          color="disabled"
-          fontSize="small"
-        />
+        <SettingsOutlinedIcon className="card-setting" />
         <p>{props.title}</p>
       </div>
       {props.chartType === "Bar" && <Bar data={data} option={props.option} />}

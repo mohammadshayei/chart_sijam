@@ -1,14 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LayoutContent.scss";
 import Drawer from "../../component/Navigation/Drawer/Drawer";
 import Body from "../../container/Body/Body";
+import { data } from "../../assets/DummyData/data";
 import { lightTheme } from "../../styles/theme";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
+import { useSelector } from "react-redux";
+import AddRoundedIcon from "@material-ui/icons/AddRounded";
+import { green } from "@material-ui/core/colors";
+
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [bodyContent, setBodyContent] = useState(null);
+
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const software = useSelector((state) => state.software);
+
+  useEffect(() => {
+    data.forEach((item) => {
+      if (software.id === item.bankId) {
+        setBodyContent(
+          <div className="BodyContainer" style={{ alignItems:'flex-start' }}>
+            <Body bankId={software.id} />
+          </div>
+        );
+      } else {
+        setBodyContent(
+          <div className="BodyContainer">
+            <div className="BodyContent">
+              <div className="CreateChartContainer">
+                <AddRoundedIcon />
+                <p>ایجاد نمودار</p>
+              </div>
+              .نموداری وجود ندارد
+            </div>
+          </div>
+        );
+      }
+    });
+  }, [software.id]);
+
   return (
     <div
       className="LayoutContentContainer"
@@ -21,9 +54,7 @@ const LayoutContent = (props) => {
         <div className="NavbarConainer">
           <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
         </div>
-        <div className="BodyContainer">
-          <Body bankId="125" />
-        </div>
+        {bodyContent}
       </div>
 
       <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />

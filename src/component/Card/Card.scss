@@ -17,6 +17,10 @@
     justify-content: space-between;
     margin-bottom: 2rem;
     user-select: none;
+    .card-setting {
+      color: rgba(116, 114, 114, 0.459);
+      font-size: 1.1rem;
+    }
     .card-setting:hover {
       cursor: pointer;
       font-size: "large";
