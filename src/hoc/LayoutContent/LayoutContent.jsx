@@ -21,15 +21,21 @@ const LayoutContent = (props) => {
   useEffect(() => {
     data.forEach((item) => {
       if (software.id === item.bankId) {
-        setBodyContent(<Body bankId={software.id} />);
+        setBodyContent(
+          <div className="BodyContainer" style={{ alignItems:'flex-start' }}>
+            <Body bankId={software.id} />
+          </div>
+        );
       } else {
         setBodyContent(
-          <div className="BodyContent">
-            <div className="CreateChartContainer">
-              <AddRoundedIcon />
-              <p>ایجاد نمودار</p>
+          <div className="BodyContainer">
+            <div className="BodyContent">
+              <div className="CreateChartContainer">
+                <AddRoundedIcon />
+                <p>ایجاد نمودار</p>
+              </div>
+              .نموداری وجود ندارد
             </div>
-            .نموداری وجود ندارد
           </div>
         );
       }
@@ -48,7 +54,7 @@ const LayoutContent = (props) => {
         <div className="NavbarConainer">
           <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
         </div>
-        <div className="BodyContainer">{bodyContent}</div>
+        {bodyContent}
       </div>
 
       <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
