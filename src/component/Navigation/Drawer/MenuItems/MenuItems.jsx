@@ -24,17 +24,42 @@ const MenuItems = () => {
     } else if (type === "banks") {
       arrType = "";
     }
-
     let finded = clickedList.find((item) => item === `${type}${name}`);
     if (finded) {
       let newData = dataItems;
       newData.splice(index + 1, inputData.length);
       setDataItems([...newData]);
-      setClickedList([...clickedList.filter((i) => i !== `${type}${name}`)]);
-      setClosedList([...closedList, `${type}${name}`]);
+      if (type === "holding") {
+        let newClickedList = clickedList.filter((i) => i !== `${type}${name}`);
+        let newClosedList = closedList;
+        setClickedList([...newClickedList]);
+        setClosedList([...closedList, `${type}${name}`]);
+
+        // this line have a bug and must to fix when we have more than 2 holdings
+        let newDataItmes = dataItems.filter((i) => i.type === "holding");
+        // setDataItems([...dataItems.filter((i) => i.parent !== name)]);
+        setDataItems([...newDataItmes]);
+        selectSoftware('', '', [], '', '');
+
+        inputData.forEach((dt) => {
+          if (newClickedList.find((ncl) => ncl === `${dt.type}${dt.name}`)) {
+            newClosedList.push(`${dt.type}${dt.name}`);
+            newClickedList = newClickedList.filter(
+              (i) => i !== `${dt.type}${dt.name}`
+            );
+
+            setClickedList([...newClickedList]);
+          }
+        });
+        setClosedList([...newClickedList]);
+      } else {
+        setClickedList([...clickedList.filter((i) => i !== `${type}${name}`)]);
+        setClosedList([...closedList, `${type}${name}`]);
+      }
 
       return;
     }
+
     if (type === "software") {
       let p;
       for (let i = index; i >= 0; i--) {

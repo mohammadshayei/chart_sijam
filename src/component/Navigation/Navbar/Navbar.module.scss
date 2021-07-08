@@ -3,11 +3,10 @@
 .NavbarContainer {
     width: calc(100% - 2px);
     height: 100%;
-    @extend %global-shadow;
     margin-left: 1px;
-
+    // background-color: red;
     .ProfileSectionContainer {
-        height: 5rem;
+        height: 4.5rem;
         width: 100%;
         padding: 0 1rem;
         padding-left: 2rem;
@@ -15,7 +14,6 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-    @extend %global-shadow;
 
         .IconContainer{
             height: 100%;
@@ -24,7 +22,8 @@
         }
     }
     .BanksContainer {
-        height: 2.5rem;
+        height: 3rem;
         width: 100%;
+        // background-color: green;
     }
 }

@@ -14,7 +14,10 @@ const MenuItem = (props) => {
   const [fontColor, setFontColor] = useState(lightTheme.text_menu_item_color);
   const [iconColor, setIconColor] = useState(lightTheme.menu_icons_color);
   const [arrowsColor, setArrowsColor] = useState(lightTheme.arrows_color);
+  const [fontSize, setFontSize] = useState(12);
 
+  const [boxShadow, setBoxShadow] = useState("");
+  const [isHover, setIsHover] = useState(false);
   const software = useSelector((state) => state.software);
 
   const styleIcon = {
@@ -25,8 +28,19 @@ const MenuItem = (props) => {
     marginLeft: ".3rem",
     marginBottom: ".08rem",
   };
-
+  const onMouseEnter = (e) => {
+    if (!clicked && software.id !== props.id) {
+      setIsHover(true);
+    }
+  };
+  const onMouseLeave = (e) => {
+    if (!clicked && software.id !== props.id) {
+      setIsHover(false);
+    }
+  };
   useEffect(() => {
+    if (props.type === "software") setFontSize(11.5);
+    else setFontSize(12);
     if (props.clickedList) {
       setClicked(
         props.clickedList.find((item) => item === `${props.type}${props.name}`)
@@ -38,6 +52,7 @@ const MenuItem = (props) => {
     ) {
       setFontColor("");
       setBg(lightTheme.holding_menu_item_color);
+      setBoxShadow("");
     } else if (
       props.type === "company" &&
       props.clickedList.find((item) => item === `${props.type}${props.name}`)
@@ -45,12 +60,13 @@ const MenuItem = (props) => {
       setFontColor(lightTheme.text_clicked_menu_color);
       setIconColor(lightTheme.text_clicked_menu_color);
       setArrowsColor(lightTheme.text_clicked_menu_color);
+      setBoxShadow("rgba(0, 0, 0, 0.1) -4px 9px 25px -6px");
       setBg(
-        `linear-gradient(${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
+        `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
       );
     } else if (software.id === props.id) {
-      console.log('hellow')
       setFontColor(lightTheme.clicked_darken_color);
+      setBoxShadow("");
     }
 
     if (
@@ -58,31 +74,36 @@ const MenuItem = (props) => {
       props.closedList.find((item) => item === `${props.type}${props.name}`)
     ) {
       setBg("");
+      setBoxShadow("");
     } else if (
       props.type === "company" &&
       props.closedList.find((item) => item === `${props.type}${props.name}`)
     ) {
+      setBoxShadow("");
       setFontColor(lightTheme.text_menu_item_color);
       setIconColor(lightTheme.menu_icons_color);
       setArrowsColor(lightTheme.arrows_color);
       setBg("");
-    } else if (software.id === props.id) {
+    } else if (props.type === "software" && software.id !== props.id) {
+      setBoxShadow("");
       setFontColor(lightTheme.text_menu_item_color);
     }
-  }, [props.clickedList, props.closedList,software]);
+  }, [props.clickedList, props.closedList, software]);
 
   return (
     <div
       className="MenuItemContainer"
       style={{
         background: bg,
+        boxShadow: boxShadow,
       }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       onClick={() =>
         props.onClick(props.id, props.type, props.data, props.index, props.name)
       }
     >
       <div className="DropDownIcon">
-        {/* {props.data.length !== 0 && props.type !== "software" ? ( */}
         {props.data && props.type !== "software" ? (
           <ArrowBackIosRoundedIcon
             className={`${
@@ -103,8 +124,8 @@ const MenuItem = (props) => {
             }
               `}
             style={{
-              width: "17px",
-              height: "17px",
+              width: "13px",
+              height: "13px",
               color: arrowsColor,
             }}
           />
@@ -115,8 +136,12 @@ const MenuItem = (props) => {
         <span
           style={{
             color: fontColor,
-            // software.id === props.id ? lightTheme.clicked_darken_color : "",
             fontWeight: software.id === props.id ? "bold" : "",
+            marginRight: (props.type === "company")||(props.type === "holding") ? ".7rem" : "",
+            ...{
+              fontSize: isHover ? `${fontSize+0.5}px` : fontSize,
+              transform: isHover ? "scale(1.08)" : "",
+            },
           }}
         >
           {props.name}

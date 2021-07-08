@@ -19,7 +19,6 @@ const Body = (props) => {
   };
 
   useEffect(() => {
-
     data.forEach((item) => {
       if (item.bankId === props.bankId) {
         setCharts(
@@ -32,7 +31,7 @@ const Body = (props) => {
       }
     });
   }, [data]);
-  
+
   return (
     <div>
       <DragDropContext onDragEnd={dragEnd}>
