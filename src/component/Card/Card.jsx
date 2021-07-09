@@ -11,6 +11,17 @@ import Radar from "../Charts/radar";
 
 const Card = React.memo(function Card(props) {
   const [data, setData] = useState(null);
+  const [dropDown, setDropDown] = useState(false);
+  const chartNames = [
+    "ستونی",
+    "حبابی",
+    "دونات",
+    "خطی",
+    "دایره ای",
+    "قطبی",
+    "راداری",
+  ];
+
   useEffect(() => {
     if (
       (props.chartType === "Line" ||
@@ -46,9 +57,24 @@ const Card = React.memo(function Card(props) {
   return (
     <div className="card-container">
       <div className="card-title">
-        <SettingsOutlinedIcon className="card-setting" />
+        <SettingsOutlinedIcon
+          className="card-setting"
+          onClick={() => {
+            setDropDown(!dropDown);
+          }}
+        />
         <p>{props.title}</p>
       </div>
+      <div className="card-content">
+
+      </div>
+      {dropDown && (
+        <div className="card-dropdown">
+          {chartNames.map((item) => 
+            <div className="card-dropdown-item">{item}</div>
+          )}
+        </div>
+      )}
       {props.chartType === "Bar" && <Bar data={data} option={props.option} />}
       {props.chartType === "Bubble" && (
         <Bubble data={data} option={props.option} />

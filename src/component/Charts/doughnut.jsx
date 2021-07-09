@@ -6,8 +6,8 @@ const DoughnutChart = (props) => {
     <div>
       <Doughnut
         data={props.data}
-        height={300}
-        width={300}
+        height={200}
+        width={200}
         options={props.option}
       />
     </div>

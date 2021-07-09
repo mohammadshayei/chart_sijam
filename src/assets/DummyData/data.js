@@ -36,7 +36,7 @@ export const data = [
               },
               display: true,
               rtl: false,
-              position: "left",
+              position: "bottom",
             },
           },
           scales: {
