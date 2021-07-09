@@ -1,24 +1,12 @@
 import React from "react";
 import { PolarArea } from "react-chartjs-2";
 
-const PolarAreaChart = (props) => {  
+const PolarAreaChart = React.memo( (props) => {
   return (
     <div>
-      <PolarArea
-        data={props.data}
-        height={300}
-        width={300}
-        options={{
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        }}
-      />
+      <PolarArea data={props.data} options={props.option} />
     </div>
   );
-};
+});
 
 export default PolarAreaChart;
