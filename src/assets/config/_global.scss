@@ -2,3 +2,19 @@
     box-shadow: rgba(14, 30, 37, 0.068) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.171) 0px 2px 16px 0px;
 }
+span.ripple {
+    position: absolute; /* The absolute position we mentioned earlier */
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 600ms linear;
+    // background-color: #red;
+    background-color: #332b8b;
+    opacity: 0.4;
+    
+}
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

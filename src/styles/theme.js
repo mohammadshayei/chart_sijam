@@ -8,5 +8,6 @@ export const lightTheme = {
   menu_icons_color: "#000",
   holding_menu_item_color: "rgba(56,56,56,0.05)",
   text_clicked_menu_color:'#ffffff',
-  text_menu_item_color:"#000"
+  text_menu_item_color:"#000",
+  ripple_bank_color:"#332b8b",
 };

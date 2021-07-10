@@ -26,6 +26,16 @@ export const data = [
                 name: "پیش فاکتور فروش",
                 type: "bank",
               },
+              {
+                id: "623",
+                name: "رهگیری کالا ها",
+                type: "bank",
+              },
+              {
+                id: "6155",
+                name: "رهگیری ساخت و تولید",
+                type: "bank",
+              },
             ],
             type: "software",
           },

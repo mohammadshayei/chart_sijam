@@ -1,20 +1,13 @@
 .BanksContainer {
     width: 100%;
+    // width: 100px;
     height: calc(100% - 3px);
-    padding: 0 1rem;
+    padding: 0 2rem;
     border-top: 1px solid rgba($color: #ccc, $alpha: 0.4);
-
-    .SliderContainer {
-        display: flex;
-        .divstyle {
-        }
-        .slick-prev:before,
-        .slick-next:before {
-            color: black;
-            background-color: white;
-            // display: none;
-        }
-    }
-    // background-color: red;
-    // background-color: red;
+    display: flex;
+    flex-direction: row;
+    direction: rtl;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
 }

@@ -10,3 +10,4 @@ export const selectSoftware = (id, name, banks, type, parent) => {
     parent: parent,
   };
 };
+
