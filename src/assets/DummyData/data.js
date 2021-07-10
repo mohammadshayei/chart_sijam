@@ -1,16 +1,14 @@
 export const data = [
   [
     {
-      holdingId:"",
-      companyId:"",
-      softwareId: "",
+      softwareId: "001001002",
       banks: [
         {
-          bankId: "9994",
-          bankName: "فاکتور فروش",
+          bankId: "001001002229",
+          bankName: "فاکتور فروش قطعی",
           charts: [
             {
-              id: "1251",
+              id: "001001002229001",
               title: "سهم فروش",
               type: "Doughnut",
               backGroundColor: [
@@ -68,7 +66,7 @@ export const data = [
               },
             },
             {
-              id: "1253",
+              id: "001001002229002",
               title: "نمودار خطی فروش ماهانه",
               type: "Line",
               backGroundColor: [
@@ -145,7 +143,7 @@ export const data = [
               },
             },
             {
-              id: "1254",
+              id: "001001002229003",
               title: "نمودار ستونی فروش ماهانه",
               type: "Bar",
               backGroundColor: [
