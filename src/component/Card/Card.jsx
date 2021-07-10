@@ -58,12 +58,7 @@ const Card = React.memo((props) => {
   }, [props]);
 
   return (
-    <div
-      className="card-container"
-      // onMouseLeave={() => {
-      //   setDropDown(false);
-      // }}
-    >
+    <div className="card-container">
       {dropDown && (
         <DropDown
           dropDownItems={chartNames}

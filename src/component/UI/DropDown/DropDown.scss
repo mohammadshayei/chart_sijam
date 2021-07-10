@@ -1,5 +1,6 @@
 .dropdown {
   position: absolute;
+  overflow: hidden;
   top: 3rem;
   left: 1rem;
   width: 100px;
@@ -8,8 +9,8 @@
   border-radius: 5px;
   box-shadow: 0 0 24px 1px rgba(0, 0, 0, 0.1);
   background-color: rgba(243, 243, 243, 0.85);
+  backdrop-filter: blur(3px);
   .dropdown-item {
-    border-radius: 5px;
     padding: 8px 12px;
     font-size: 13px;
   }
