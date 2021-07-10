@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./Card.scss";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import Bar from "../Charts/bar";
@@ -8,9 +8,23 @@ import Line from "../Charts/line";
 import Pie from "../Charts/pie";
 import PolarArea from "../Charts/polararea";
 import Radar from "../Charts/radar";
+import DropDown from "../UI/DropDown/DropDown";
 
-const Card = React.memo(function Card(props) {
+const Card = React.memo((props) => {
   const [data, setData] = useState(null);
+  const [dropDown, setDropDown] = useState(false);
+  const [selected, setSelected] = useState(props.chartType);
+
+  const chartNames = [
+    "Bar",
+    "Bubble",
+    "Doughnut",
+    "Line",
+    "Pie",
+    "PolarArea",
+    "Radar",
+  ];
+
   useEffect(() => {
     if (
       (props.chartType === "Line" ||
@@ -44,26 +58,42 @@ const Card = React.memo(function Card(props) {
   }, [props]);
 
   return (
-    <div className="card-container">
+    <div
+      className="card-container"
+      // onMouseLeave={() => {
+      //   setDropDown(false);
+      // }}
+    >
+      {dropDown && (
+        <DropDown
+          dropDownItems={chartNames}
+          selected={selected}
+          setSelected={setSelected}
+          setDropDown={setDropDown}
+        />
+      )}
       <div className="card-title">
-        <SettingsOutlinedIcon className="card-setting" />
+        <SettingsOutlinedIcon
+          className="card-setting"
+          onClick={() => {
+            setDropDown(!dropDown);
+          }}
+        />
         <p>{props.title}</p>
       </div>
-      {props.chartType === "Bar" && <Bar data={data} option={props.option} />}
-      {props.chartType === "Bubble" && (
-        <Bubble data={data} option={props.option} />
-      )}
-      {props.chartType === "Doughnut" && (
-        <Doughnut data={data} option={props.option} />
-      )}
-      {props.chartType === "Line" && <Line data={data} option={props.option} />}
-      {props.chartType === "Pie" && <Pie data={data} option={props.option} />}
-      {props.chartType === "PolarArea" && (
-        <PolarArea data={data} option={props.option} />
-      )}
-      {props.chartType === "Radar" && (
-        <Radar data={data} option={props.option} />
-      )}
+      <div className="card-content">
+        {selected === "Bar" && <Bar data={data} option={props.option} />}
+        {selected === "Bubble" && <Bubble data={data} option={props.option} />}
+        {selected === "Doughnut" && (
+          <Doughnut data={data} option={props.option} />
+        )}
+        {selected === "Line" && <Line data={data} option={props.option} />}
+        {selected === "Pie" && <Pie data={data} option={props.option} />}
+        {selected === "PolarArea" && (
+          <PolarArea data={data} option={props.option} />
+        )}
+        {selected === "Radar" && <Radar data={data} option={props.option} />}
+      </div>
     </div>
   );
 });

@@ -52,6 +52,7 @@ const Body = (props) => {
                     >
                       {(provided) => (
                         <div
+                          className="cardsItem"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}

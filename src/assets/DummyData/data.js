@@ -27,7 +27,7 @@ export const data = [
           ],
         },
         option: {
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           cutout: "65%",
           plugins: {
             legend: {
@@ -36,7 +36,7 @@ export const data = [
               },
               display: true,
               rtl: false,
-              position: "left",
+              position: "bottom",
             },
           },
           scales: {
@@ -119,7 +119,7 @@ export const data = [
         },
         option: {
           tension: 0.2,
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           plugins: {
             legend: {
               labels: {
@@ -191,7 +191,8 @@ export const data = [
           ],
         },
         options: {
-          maintainAspectRatio: false,
+          responsive: true,
+          maintainAspectRatio: true,
           scales: {
             y: {
               beginAtZero: true,

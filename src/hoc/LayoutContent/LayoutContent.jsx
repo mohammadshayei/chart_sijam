@@ -20,25 +20,28 @@ const LayoutContent = (props) => {
 
   useEffect(() => {
     data.forEach((item) => {
-      if (software.id === item.bankId) {
-        setBodyContent(
-          <div className="BodyContainer" style={{ alignItems:'flex-start' }}>
-            <Body bankId={software.id} />
-          </div>
-        );
-      } else {
-        setBodyContent(
-          <div className="BodyContainer">
-            <div className="BodyContent">
-              <div className="CreateChartContainer">
-                <AddRoundedIcon />
-                <p>ایجاد نمودار</p>
-              </div>
-              .نموداری وجود ندارد
+      software.id === item.bankId
+      // "3" === item.bankId
+        ? setBodyContent(
+            <div className="BodyContainer" style={{ alignItems: "flex-start" }}>
+              <Body bankId={software.id} />
+              {/* <Body bankId="3" /> */}
             </div>
-          </div>
-        );
-      }
+          )
+        : setBodyContent(
+            <div
+              className="BodyContainer"
+              style={{ alignItems: "center", justifyContent: "center" }}
+            >
+              <div className="BodyContent">
+                <div className="CreateChartContainer">
+                  <AddRoundedIcon />
+                  <p>ایجاد نمودار</p>
+                </div>
+                .نموداری وجود ندارد
+              </div>
+            </div>
+          );
     });
   }, [software.id]);
 
