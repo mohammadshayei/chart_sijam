@@ -12,7 +12,7 @@ export const data = [
             name: "پایش",
             banks: [
               {
-                id: "4",
+                id: "9994",
                 name: "فاکتور فروش",
                 type: "bank",
               },
@@ -40,7 +40,7 @@ export const data = [
             type: "software",
           },
           {
-            id: "7",
+            id: "9993",
             name: "فروش",
             banks: [
               {

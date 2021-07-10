@@ -6,7 +6,6 @@ import * as actions from "../../../../../store/actions/bank";
 import { ripple } from "../../../../../assets/config/ripple";
 const Bank = React.memo(function Bank(props) {
   const [style, setStyle] = useState(null);
-  const [isHover, setIsHover] = useState(false);
 
   const [clicked, setClicked] = useState(false);
 
@@ -16,7 +15,7 @@ const Bank = React.memo(function Bank(props) {
     dispatch(actions.selectBank(bank));
   };
   useEffect(() => {
-    if (bank.bank) {
+      if (bank.bank) {
       if (bank.bank.id === props.data.id) {
         setClicked(true);
         setStyle({

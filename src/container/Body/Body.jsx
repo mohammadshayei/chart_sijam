@@ -3,9 +3,11 @@ import "./Body.scss";
 import Card from "../../component/Card/Card";
 import { data } from "../../assets/DummyData/data";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
 
 const Body = (props) => {
   const [charts, setCharts] = useState([]);
+  const bankData = useSelector((state) => state.bank);
 
   const dragEnd = (result) => {
     if (!result.destination) return;
@@ -17,20 +19,38 @@ const Body = (props) => {
 
     setCharts(card);
   };
-
+  console.log('here4')
   useEffect(() => {
-    data.forEach((item) => {
-      if (item.bankId === props.bankId) {
-        setCharts(
-          item.charts.map((ch) => {
-            return {
-              ...ch,
-            };
-          })
-        );
-      }
-    });
-  }, [data]);
+    // if (bankData.bank.id)  {
+    //   console.log(bankData.bank.id)
+    //   console.log(data.filter((dt) => dt.bankId === bankData.bank.id));
+    //   data
+    //     .filter((dt) => dt.bankId === bankData.bank.id)
+    //     .forEach((item) => {
+    //       if (item.bankId === props.bankId) {
+    //         setCharts(
+    //           item.charts.map((ch) => {
+    //             return {
+    //               ...ch,
+    //             };
+    //           })
+    //         );
+    //       }
+    //     });
+    // } else {
+      data.forEach((item) => {
+        if (item.bankId === props.bankId) {
+          setCharts(
+            item.charts.map((ch) => {
+              return {
+                ...ch,
+              };
+            })
+          );
+        }
+      });
+    // }
+  }, [data, bankData.bank]);
 
   return (
     <div>
