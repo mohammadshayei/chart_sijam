@@ -68,7 +68,7 @@ const LayoutContent = (props) => {
               : "center",
           }}
         >
-          {detail.software ? (
+          {detail.software ||detail.company||detail.holding ? (
             softwareExistInData ? (
               <Body data={softwareExistInData} />
             ) : (
