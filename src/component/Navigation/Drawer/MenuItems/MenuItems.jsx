@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import MenuItem from "../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { data } from "../../../../assets/dummy_data/TestData";
 import * as actions from "../../../../store/actions/detail";
 
 const MenuItems = () => {
   const [dataItems, setDataItems] = useState([]);
-  const [clickedList, setClickedList] = useState([]);
-  const [closedList, setClosedList] = useState([]);
+  const [unClicked, setUnClicked] = useState("");
   const dispatch = useDispatch();
+  const detail = useSelector((state) => state.detail);
+
   const selectSoftware = (software) => {
     dispatch(actions.selectSoftware(software));
   };
@@ -31,7 +32,22 @@ const MenuItems = () => {
   const clearBanks = () => {
     dispatch(actions.clearBanks());
   };
+  const setMenuData = (inputData, arrType, index) => {
+    let newData = dataItems;
+    newData.splice(
+      index + 1,
+      0,
+      ...inputData.map((item) => ({
+        data: arrType ? item[arrType] : null,
+        id: item.id,
+        name: item.name,
+        type: item.type,
+      }))
+    );
+    setDataItems([...newData]);
+  };
   const onMenuItemClickHandler = (id, type, inputData, index, name) => {
+    setUnClicked('')
     clearBanks();
     let arrType;
     if (type === "holding") {
@@ -42,88 +58,56 @@ const MenuItems = () => {
     } else if (type === "banks") {
       arrType = "";
     }
-    let finded = clickedList.find((item) => item === `${type}${name}`);
-    if (finded) {
-      let newData = dataItems;
-      newData.splice(index + 1, inputData.length);
-      setDataItems([...newData]);
-      if (type === "holding") {
-        let newClickedList = clickedList.filter((i) => i !== `${type}${name}`);
-        let newClosedList = closedList;
-        setClickedList([...newClickedList]);
-        setClosedList([...closedList, `${type}${name}`]);
-        clearHolding();
-        // this line have a bug and must to fix when we have more than 2 holdings
-        let newDataItmes = dataItems.filter((i) => i.type === "holding");
-        // setDataItems([...dataItems.filter((i) => i.parent !== name)]);
-        setDataItems([...newDataItmes]);
-        clearSoftware();
-        inputData.forEach((dt) => {
-          if (newClickedList.find((ncl) => ncl === `${dt.type}${dt.name}`)) {
-            newClosedList.push(`${dt.type}${dt.name}`);
-            newClickedList = newClickedList.filter(
-              (i) => i !== `${dt.type}${dt.name}`
-            );
+    // let finded = clickedList.find((item) => item === `${type}${name}`);
+    switch (type) {
 
-            setClickedList([...newClickedList]);
-          }
-        });
-        setClosedList([...newClickedList]);
-      } else {
-        if(type==='company')clearCompany()
-        setClickedList([...clickedList.filter((i) => i !== `${type}${name}`)]);
-        setClosedList([...closedList, `${type}${name}`]);
-      }
-
-      return;
-    }
-
-    if (type === "software") {
-      let p;
-      for (let i = index; i >= 0; i--) {
-        if (dataItems[i].type === "company") {
-          p = dataItems[i].name;
-          break;
+      case "holding":
+        if (detail.holding && detail.holding.id === id) {
+          setUnClicked(id)
+          clearHolding();
+          clearSoftware();
+          clearCompany();
+          let newDataItmes = dataItems.filter((i) => i.type === "holding");
+          setDataItems([...newDataItmes]);
+        } else {
+          selectHolding({
+            id,
+            name,
+            companies: inputData,
+            type,
+          });
+          setMenuData(inputData, arrType, index);
         }
-      }
-      // selectSoftware(id, name, inputData, type, p);
-      selectSoftware({
-        id,
-        name,
-        banks: inputData,
-        type,
-        parent: p,
-      });
-    } else {
-      if (type === "holding")
-        selectHolding({
+        break;
+      case "company":
+        if (detail.company && detail.company.id === id) {
+          setUnClicked(id)
+          clearCompany();
+          clearSoftware();
+          let newDataItmes = dataItems;
+          newDataItmes.splice(index + 1, inputData.length);
+          setDataItems(newDataItmes);
+        } else {
+          selectCompany({
+            id,
+            name,
+            softwares: inputData,
+            type,
+          });
+          setMenuData(inputData, arrType, index);
+        }
+        break;
+      case "software":
+        selectSoftware({
           id,
           name,
-          companies: inputData,
+          banks: inputData,
           type,
         });
-      else if (type === "company")
-        selectCompany({
-          id,
-          name,
-          softwares: inputData,
-          type,
-        });
-      let newData = dataItems;
-      newData.splice(
-        index + 1,
-        0,
-        ...inputData.map((item) => ({
-          data: arrType ? item[arrType] : null,
-          id: item.id,
-          name: item.name,
-          type: item.type,
-          parent: name,
-        }))
-      );
-      setDataItems([...newData]);
-      setClickedList([...clickedList, `${type}${name}`]);
-      setClosedList([...closedList.filter((i) => i !== `${type}${name}`)]);
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -152,8 +136,7 @@ const MenuItems = () => {
               type={item.type}
               parent={item.parent}
               index={index}
-              clickedList={clickedList}
-              closedList={closedList}
+              unClicked={unClicked}
             />
           ))
         : null}

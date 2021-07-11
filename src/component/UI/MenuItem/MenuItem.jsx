@@ -30,84 +30,98 @@ const MenuItem = (props) => {
   };
 
   const onMouseEnter = (e) => {
-    if (detail.software) {
-      if (!clicked && detail.software.id !== props.id) {
-        setIsHover(true);
-      }
-    }
+    // if (detail.software) {
+    //   if (!clicked && detail.software.id !== props.id) {
+    //     setIsHover(true);
+    //   }
+    // }
   };
   const onMouseLeave = (e) => {
-    if (detail.software) {
-      if (!clicked && detail.software.id !== props.id) {
-        setIsHover(false);
-      }
-    }
+    // if (detail.software) {
+    //   if (!clicked && detail.software.id !== props.id) {
+    //     setIsHover(false);
+    //   }
+    // }
   };
   useEffect(() => {
-    if (props.type === "software") setFontSize(11.5);
-    else setFontSize(12);
-    if (props.clickedList) {
-      setClicked(
-        props.clickedList.find((item) => item === `${props.type}${props.name}`)
-      );
-    }
-    if (
-      props.type === "holding" &&
-      props.clickedList.find((item) => item === `${props.type}${props.name}`)
-    ) {
-      setFontColor("");
-      setBg(lightTheme.holding_menu_item_color);
-      setBoxShadow("");
-    } else if (
-      props.type === "company" &&
-      props.clickedList.find((item) => item === `${props.type}${props.name}`)
-    ) {
-      setFontColor(lightTheme.text_clicked_menu_color);
-      setIconColor(lightTheme.text_clicked_menu_color);
-      setArrowsColor(lightTheme.text_clicked_menu_color);
-      setBoxShadow("rgba(0, 0, 0, 0.1) -4px 9px 25px -6px");
-      setBg(
-        `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
-      );
-    } else if (detail.software) {
-      if (detail.software.id === props.id) {
-        setFontColor(lightTheme.clicked_darken_color);
-        setBoxShadow("");
-      }
-    }
-
-    if (
-      props.type === "holding" &&
-      props.closedList.find((item) => item === `${props.type}${props.name}`)
-    ) {
-      setBg("");
-      setBoxShadow("");
-    } else if (
-      props.type === "company" &&
-      props.closedList.find((item) => item === `${props.type}${props.name}`)
-    ) {
-      setBoxShadow("");
-      setFontColor(lightTheme.text_menu_item_color);
-      setIconColor(lightTheme.menu_icons_color);
-      setArrowsColor(lightTheme.arrows_color);
-      setBg("");
-    } else if (props.type === "software" && detail.software) {
-      if (detail.software.id !== props.id) {
-        setBoxShadow("");
-        setFontColor(lightTheme.text_menu_item_color);
-      }
-    }
-  }, [props.clickedList, props.name,props.id,props.type,props.closedList, detail.software]);
+    // if (props.type === "software") setFontSize(11.5);
+    // else setFontSize(12);
+    // if (props.clickedList) {
+    //   setClicked(
+    //     props.clickedList.find((item) => item === `${props.type}${props.name}`)
+    //   );
+    // }
+    // if (
+    //   props.type === "holding" &&
+    //   props.clickedList.find((item) => item === `${props.type}${props.name}`)
+    // ) {
+    //   setFontColor("");
+    //   setBg(lightTheme.holding_menu_item_color);
+    //   setBoxShadow("");
+    // } else if (
+    //   props.type === "company" &&
+    //   props.clickedList.find((item) => item === `${props.type}${props.name}`)
+    // ) {
+    //   setFontColor(lightTheme.text_clicked_menu_color);
+    //   setIconColor(lightTheme.text_clicked_menu_color);
+    //   setArrowsColor(lightTheme.text_clicked_menu_color);
+    //   setBoxShadow("rgba(0, 0, 0, 0.1) -4px 9px 25px -6px");
+    //   setBg(
+    //     `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
+    //   );
+    // } else if (detail.software) {
+    //   if (detail.software.id === props.id) {
+    //     setFontColor(lightTheme.clicked_darken_color);
+    //     setBoxShadow("");
+    //   }
+    // }
+    // if (
+    //   props.type === "holding" &&
+    //   props.closedList.find((item) => item === `${props.type}${props.name}`)
+    // ) {
+    //   setBg("");
+    //   setBoxShadow("");
+    // } else if (
+    //   props.type === "company" &&
+    //   props.closedList.find((item) => item === `${props.type}${props.name}`)
+    // ) {
+    //   setBoxShadow("");
+    //   setFontColor(lightTheme.text_menu_item_color);
+    //   setIconColor(lightTheme.menu_icons_color);
+    //   setArrowsColor(lightTheme.arrows_color);
+    //   setBg("");
+    // } else if (props.type === "software" && detail.software) {
+    //   if (detail.software.id !== props.id) {
+    //     setBoxShadow("");
+    //     setFontColor(lightTheme.text_menu_item_color);
+    //   }
+    // }
+  }, [
+    props.clickedList,
+    props.name,
+    props.id,
+    props.type,
+    props.closedList,
+    detail.software,
+  ]);
 
   return (
     <div
       className="MenuItemContainer"
       style={{
-        background: bg,
-        boxShadow: boxShadow,
+        background:
+          detail.holding && detail.holding.id === props.id
+            ? lightTheme.holding_menu_item_color
+            : detail.company && detail.company.id === props.id
+            ? `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
+            : "",
+        boxShadow:
+          detail.company && detail.company.id === props.id
+            ? "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px"
+            : "",
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      // onMouseEnter={onMouseEnter}
+      // onMouseLeave={onMouseLeave}
       onClick={(e) => {
         props.onClick(
           props.id,
@@ -122,21 +136,12 @@ const MenuItem = (props) => {
         {props.data && props.type !== "software" ? (
           <ArrowBackIosRoundedIcon
             className={`${
-              props.type !== "software" &&
-              props.clickedList.find(
-                (item) => item === `${props.type}${props.name}`
-              )
+              (detail.holding && detail.holding.id === props.id) ||
+              (detail.company && detail.company.id === props.id)
                 ? "DropDownOpenRotate"
                 : ""
             }
-            ${
-              props.type !== "software" &&
-              props.closedList.find(
-                (item) => item === `${props.type}${props.name}`
-              )
-                ? "DropDownCloseRotate"
-                : ""
-            }
+            ${props.unClicked === props.id ? "DropDownCloseRotate" : ""}
               `}
             style={{
               width: "13px",
