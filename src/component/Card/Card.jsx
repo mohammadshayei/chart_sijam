@@ -9,12 +9,12 @@ import Pie from "../Charts/pie";
 import PolarArea from "../Charts/polararea";
 import Radar from "../Charts/radar";
 import DropDown from "../UI/DropDown/DropDown";
-
+import { data } from "../../assets/dummy_data/TestData";
 const Card = React.memo((props) => {
-  const [data, setData] = useState(null);
+  const [chartData, setChartData] = useState(null);
   const [dropDown, setDropDown] = useState(false);
   const [selected, setSelected] = useState(props.chartType);
-
+  const [details, setDetails] = useState([]);
   const chartNames = [
     "Bar",
     "Bubble",
@@ -35,7 +35,7 @@ const Card = React.memo((props) => {
         props.chartType === "Radar") &&
       props.database
     ) {
-      setData({
+      setChartData({
         labels: props.database.labels,
         datasets: props.database.data.map((item, index) => {
           return {
@@ -56,7 +56,29 @@ const Card = React.memo((props) => {
       });
     }
   }, [props]);
-
+  useEffect(() => {
+    let tempDetails;
+    if (data) {
+      data.forEach((item) => {
+        if (item.id === props.chartId.substring(0, 3)) {
+          tempDetails = [item.name]
+          if (item.companies) {
+            item.companies.forEach((cp) => {
+              if (cp.id === props.chartId.substring(0, 6)) {
+                tempDetails = [...tempDetails,cp.name]
+                cp.softwares.forEach((sf) => {
+                  if (sf.id === props.chartId.substring(0, 9)) {
+                    tempDetails = [...tempDetails,sf.name]
+                    setDetails(tempDetails);
+                  }
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+  }, [props.chartId]);
   return (
     <div className="card-container">
       {dropDown && (
@@ -69,7 +91,7 @@ const Card = React.memo((props) => {
       )}
       <div className="card-title-container">
         <div className="card-source-name">
-          <p></p>
+          <p>{details ? details.join(' / ') : ""}</p>
         </div>
         <div className="card-title">
           <SettingsOutlinedIcon
@@ -82,17 +104,21 @@ const Card = React.memo((props) => {
         </div>
       </div>
       <div className="card-content">
-        {selected === "Bar" && <Bar data={data} option={props.option} />}
-        {selected === "Bubble" && <Bubble data={data} option={props.option} />}
+        {selected === "Bar" && <Bar data={chartData} option={props.option} />}
+        {selected === "Bubble" && (
+          <Bubble data={chartData} option={props.option} />
+        )}
         {selected === "Doughnut" && (
-          <Doughnut data={data} option={props.option} />
+          <Doughnut data={chartData} option={props.option} />
         )}
-        {selected === "Line" && <Line data={data} option={props.option} />}
-        {selected === "Pie" && <Pie data={data} option={props.option} />}
+        {selected === "Line" && <Line data={chartData} option={props.option} />}
+        {selected === "Pie" && <Pie data={chartData} option={props.option} />}
         {selected === "PolarArea" && (
-          <PolarArea data={data} option={props.option} />
+          <PolarArea data={chartData} option={props.option} />
         )}
-        {selected === "Radar" && <Radar data={data} option={props.option} />}
+        {selected === "Radar" && (
+          <Radar data={chartData} option={props.option} />
+        )}
       </div>
     </div>
   );

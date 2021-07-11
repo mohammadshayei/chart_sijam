@@ -17,7 +17,6 @@ const Body = (props) => {
   };
   useEffect(() => {
     if (props.data) {
-      console.log('want to add')
       props.data.forEach((item) => {
         setCharts(
           item.charts.map((ch) => {
@@ -59,6 +58,7 @@ const Body = (props) => {
                             key={`${item.id}`}
                             title={item.title}
                             chartType={item.type}
+                            chartId={item.id}
                             backGroundColor={item.backGroundColor}
                             borderColor={item.borderColor}
                             borderRadius={item.borderRadius}
