@@ -6,10 +6,11 @@ import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import { lightTheme } from "../../../styles/theme";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import BanksContainer from "./BanksContainer/BanksContainer";
-
+import { ripple } from "../../../assets/config/ripple";
 const Navbar = (props) => {
   const [isFav, setIsFav] = useState(false);
-  const onStarClickHandler = () => {
+  const onStarClickHandler = (e) => {
+    ripple(e, lightTheme.ripple_star_color);
     setIsFav(!isFav);
   };
   const starStyles = {
@@ -23,14 +24,14 @@ const Navbar = (props) => {
       <div className={classes.ProfileSectionContainer}>
         <ProfileDetail />
         <div className={classes.IconContainer}>
-          {isFav ? (
-            <StarRoundedIcon onClick={onStarClickHandler} style={starStyles} />
-          ) : (
-            <StarBorderRoundedIcon
-              onClick={onStarClickHandler}
-              style={starStyles}
-            />
-          )}
+          <div className={classes.StarContainer} onClick={onStarClickHandler}>
+            {isFav ? (
+              <StarRoundedIcon style={starStyles} />
+            ) : (
+              <StarBorderRoundedIcon style={starStyles} />
+            )}
+          </div>
+
           {props.isMenuOpen ? null : (
             <MenuRoundedIcon
               style={{
