@@ -7,43 +7,21 @@ import { lightTheme } from "../../styles/theme";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
 import { useSelector } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
-import { green } from "@material-ui/core/colors";
+import { stringFa } from "../../assets/strings/strignFa";
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const [bodyContent, setBodyContent] = useState(null);
-
+  const [softwareExistInData, setSoftwareExistInData] = useState(false);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   const software = useSelector((state) => state.software);
 
   useEffect(() => {
-    data.forEach((item) => {
-      software.id === item.bankId
-      // "3" === item.bankId
-        ? setBodyContent(
-            <div className="BodyContainer" style={{ alignItems: "flex-start" }}>
-              <Body bankId={software.id} />
-              {/* <Body bankId="3" /> */}
-            </div>
-          )
-        : setBodyContent(
-            <div
-              className="BodyContainer"
-              style={{ alignItems: "center", justifyContent: "center" }}
-            >
-              <div className="BodyContent">
-                <div className="CreateChartContainer">
-                  <AddRoundedIcon />
-                  <p>ایجاد نمودار</p>
-                </div>
-                .نموداری وجود ندارد
-              </div>
-            </div>
-          );
-    });
-  }, [software.id]);
+    if (software.id) {
+      setSoftwareExistInData(data.find((dt) => dt.softwareId === software.id));
+    }
+  }, [software.id, data]);
 
   return (
     <div
@@ -57,7 +35,39 @@ const LayoutContent = (props) => {
         <div className="NavbarConainer">
           <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
         </div>
-        {bodyContent}
+        <div
+          className="BodyContainer"
+          style={{
+            alignItems: software.id
+              ? softwareExistInData
+                ? "flex-start"
+                : "center"
+              : "center",
+            justifyContent: software.id
+              ? softwareExistInData
+                ? ""
+                : "center"
+              : "center",
+          }}
+        >
+          {software.id ? (
+            softwareExistInData ? (
+              <Body data={softwareExistInData.banks} />
+            ) : (
+              <div className="BodyContent">
+                <div className="CreateChartContainer">
+                  <AddRoundedIcon />
+                  <p>{stringFa.create_chart}</p>
+                </div>
+                {stringFa.no_exist_charts}
+              </div>
+            )
+          ) : (
+            <div className="BodyContent">
+              {stringFa.clicked_software_to_see_charts}
+            </div>
+          )}
+        </div>
       </div>
 
       <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />

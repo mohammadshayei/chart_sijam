@@ -1,5 +1,4 @@
 export const data = [
-  [
     {
       softwareId: "001001002",
       banks: [
@@ -208,5 +207,4 @@ export const data = [
         },
       ],
     },
-  ],
-];
+  ]

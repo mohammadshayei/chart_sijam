@@ -7,6 +7,7 @@ import RadioButtonUncheckedRoundedIcon from "@material-ui/icons/RadioButtonUnche
 import { useSelector } from "react-redux";
 
 import { lightTheme } from "../../../styles/theme";
+// import { ripple } from "../../../assets/config/ripple";
 
 const MenuItem = (props) => {
   const [clicked, setClicked] = useState(false);
@@ -28,6 +29,26 @@ const MenuItem = (props) => {
     marginLeft: ".3rem",
     marginBottom: ".08rem",
   };
+
+  const ripple = (event) => {
+    const button = event.currentTarget;
+    // console.log(`widht : ${button.clientWidth}  heihgt : ${ button.clientHeight}`)
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - (button.offsetLeft + radius)}px`;
+    circle.style.top = `${event.clientY - (button.offsetTop + radius)}px`;
+    console.log(`style with : ${circle.style.width} style left : ${circle.style.left} style top ${circle.style.top}`)
+    // circle.style.background = lightTheme.ripple_bank_color;
+    circle.classList.add("ripple");
+    const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) {
+      ripple.remove();
+    }
+    button.appendChild(circle);
+  };
+
   const onMouseEnter = (e) => {
     if (!clicked && software.id !== props.id) {
       setIsHover(true);
@@ -99,9 +120,16 @@ const MenuItem = (props) => {
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onClick={() =>
-        props.onClick(props.id, props.type, props.data, props.index, props.name)
-      }
+      onClick={(e) => {
+        ripple(e);
+        props.onClick(
+          props.id,
+          props.type,
+          props.data,
+          props.index,
+          props.name
+        );
+      }}
     >
       <div className="DropDownIcon">
         {props.data && props.type !== "software" ? (
@@ -137,9 +165,12 @@ const MenuItem = (props) => {
           style={{
             color: fontColor,
             fontWeight: software.id === props.id ? "bold" : "",
-            marginRight: (props.type === "company")||(props.type === "holding") ? ".7rem" : "",
+            marginRight:
+              props.type === "company" || props.type === "holding"
+                ? ".7rem"
+                : "",
             ...{
-              fontSize: isHover ? `${fontSize+0.5}px` : fontSize,
+              fontSize: isHover ? `${fontSize + 0.5}px` : fontSize,
               transform: isHover ? "scale(1.08)" : "",
             },
           }}

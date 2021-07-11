@@ -4,6 +4,7 @@ import "./MenuItems.scss";
 import { useDispatch } from "react-redux";
 import { data } from "../../../../assets/dummy_data/TestData";
 import * as actions from "../../../../store/actions/software";
+import * as bankActions from "../../../../store/actions/bank";
 
 const MenuItems = () => {
   const [dataItems, setDataItems] = useState([]);
@@ -13,8 +14,11 @@ const MenuItems = () => {
   const selectSoftware = (name, banks, type) => {
     dispatch(actions.selectSoftware(name, banks, type));
   };
-
+  const clearBanks = () => {
+    dispatch(bankActions.clearBanks());
+  };
   const onMenuItemClickHandler = (id, type, inputData, index, name) => {
+    clearBanks()
     let arrType;
     if (type === "holding") {
       arrType = "softwares";
@@ -39,7 +43,7 @@ const MenuItems = () => {
         let newDataItmes = dataItems.filter((i) => i.type === "holding");
         // setDataItems([...dataItems.filter((i) => i.parent !== name)]);
         setDataItems([...newDataItmes]);
-        selectSoftware('', '', [], '', '');
+        selectSoftware("", "", [], "", "");
 
         inputData.forEach((dt) => {
           if (newClickedList.find((ncl) => ncl === `${dt.type}${dt.name}`)) {

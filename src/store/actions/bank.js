@@ -6,3 +6,8 @@ export const selectBank = (bank) => {
     bank: bank,
   };
 };
+export const clearBanks = () => {
+  return {
+    type: actionTypes.CLEAR_MY_BANKS,
+  };
+};

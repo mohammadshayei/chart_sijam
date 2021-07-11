@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const Body = (props) => {
   const [charts, setCharts] = useState([]);
   const bankData = useSelector((state) => state.bank);
+  const software = useSelector((state) => state.software);
 
   const dragEnd = (result) => {
     if (!result.destination) return;
@@ -19,8 +20,18 @@ const Body = (props) => {
 
     setCharts(card);
   };
-  console.log('here4')
   useEffect(() => {
+    if (props.data) {
+      props.data.forEach((item) => {
+        setCharts(
+          item.charts.map((ch) => {
+            return {
+              ...ch,
+            };
+          })
+        );
+      });
+    }
     // if (bankData.bank.id)  {
     //   console.log(bankData.bank.id)
     //   console.log(data.filter((dt) => dt.bankId === bankData.bank.id));
@@ -38,19 +49,20 @@ const Body = (props) => {
     //       }
     //     });
     // } else {
-      data.forEach((item) => {
-        if (item.bankId === props.bankId) {
-          setCharts(
-            item.charts.map((ch) => {
-              return {
-                ...ch,
-              };
-            })
-          );
-        }
-      });
+    // console.log(software)
+    // data.forEach((item) => {
+    //   if (item.bankId === '001001002') {
+    //     setCharts(
+    //       item.charts.map((ch) => {
+    //         return {
+    //           ...ch,
+    //         };
+    //       })
+    //     );
+    //   }
+    // });
     // }
-  }, [data, bankData.bank]);
+  }, [props.data]);
 
   return (
     <div>
