@@ -15,8 +15,8 @@ const Bank = React.memo(function Bank(props) {
     dispatch(actions.selectBank(bank));
   };
   useEffect(() => {
-      if (bank.bank) {
-      if (bank.bank.id === props.data.id) {
+      if (bank.banks) {
+      if (bank.banks.find(bk=>bk.id===props.data.id)) {
         setClicked(true);
         setStyle({
           background: `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`,
@@ -30,7 +30,7 @@ const Bank = React.memo(function Bank(props) {
         });
       }
     }
-  }, [bank.bank, props.data]);
+  }, [bank.banks, props.data]);
 
   const onMouseEnter = () => {
     if (!clicked) {
@@ -49,7 +49,6 @@ const Bank = React.memo(function Bank(props) {
     }
   };
   const onBankClickHandler = (e) => {
-    // if (props.data)
     ripple(e);
     selectBank(props.data);
   };

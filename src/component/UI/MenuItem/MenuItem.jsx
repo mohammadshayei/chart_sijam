@@ -28,6 +28,9 @@ const MenuItem = (props) => {
     marginLeft: ".3rem",
     marginBottom: ".08rem",
   };
+
+ 
+
   const onMouseEnter = (e) => {
     if (!clicked && software.id !== props.id) {
       setIsHover(true);
@@ -99,9 +102,15 @@ const MenuItem = (props) => {
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onClick={() =>
-        props.onClick(props.id, props.type, props.data, props.index, props.name)
-      }
+      onClick={(e) => {
+        props.onClick(
+          props.id,
+          props.type,
+          props.data,
+          props.index,
+          props.name
+        );
+      }}
     >
       <div className="DropDownIcon">
         {props.data && props.type !== "software" ? (
@@ -137,9 +146,12 @@ const MenuItem = (props) => {
           style={{
             color: fontColor,
             fontWeight: software.id === props.id ? "bold" : "",
-            marginRight: (props.type === "company")||(props.type === "holding") ? ".7rem" : "",
+            marginRight:
+              props.type === "company" || props.type === "holding"
+                ? ".7rem"
+                : "",
             ...{
-              fontSize: isHover ? `${fontSize+0.5}px` : fontSize,
+              fontSize: isHover ? `${fontSize + 0.5}px` : fontSize,
               transform: isHover ? "scale(1.08)" : "",
             },
           }}
