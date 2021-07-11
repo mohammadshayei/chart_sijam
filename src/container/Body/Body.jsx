@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Body.scss";
 import Card from "../../component/Card/Card";
-import { data } from "../../assets/DummyData/data";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
 
 const Body = (props) => {
   const [charts, setCharts] = useState([]);

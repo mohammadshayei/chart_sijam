@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import MenuItem from "../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
 import { useDispatch } from "react-redux";

@@ -12,7 +12,6 @@ import { stringFa } from "../../assets/strings/strignFa";
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [softwareExistInData, setSoftwareExistInData] = useState(false);
-  const [banksData, setBanksData] = useState([]);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -39,7 +38,7 @@ const LayoutContent = (props) => {
       });
       setSoftwareExistInData(softwaresTemp)
     }
-  }, [detail.software, detail.holding, detail.company, data]);
+  }, [detail.software, detail.holding, detail.company]);
 
   return (
     <div

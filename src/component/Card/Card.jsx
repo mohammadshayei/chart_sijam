@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import "./Card.scss";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import Bar from "../Charts/bar";

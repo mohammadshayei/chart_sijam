@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import "./MenuItem.scss";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
@@ -97,7 +97,7 @@ const MenuItem = (props) => {
         setFontColor(lightTheme.text_menu_item_color);
       }
     }
-  }, [props.clickedList, props.closedList, detail.software]);
+  }, [props.clickedList, props.name,props.id,props.type,props.closedList, detail.software]);
 
   return (
     <div
