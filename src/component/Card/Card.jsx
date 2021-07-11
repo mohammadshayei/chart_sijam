@@ -67,14 +67,19 @@ const Card = React.memo((props) => {
           setDropDown={setDropDown}
         />
       )}
-      <div className="card-title">
-        <SettingsOutlinedIcon
-          className="card-setting"
-          onClick={() => {
-            setDropDown(!dropDown);
-          }}
-        />
-        <p>{props.title}</p>
+      <div className="card-title-container">
+        <div className="card-source-name">
+          <p></p>
+        </div>
+        <div className="card-title">
+          <SettingsOutlinedIcon
+            className="card-setting"
+            onClick={() => {
+              setDropDown(!dropDown);
+            }}
+          />
+          <p>{props.title}</p>
+        </div>
       </div>
       <div className="card-content">
         {selected === "Bar" && <Bar data={data} option={props.option} />}

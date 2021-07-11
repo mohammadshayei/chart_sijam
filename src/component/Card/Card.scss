@@ -2,30 +2,43 @@
 
 .card-container {
   position: relative;
-  padding: 1.5rem;
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
   margin: 0 0 2.2rem 2.2rem;
   border-radius: 5px;
   background-color: white;
   transition: 0.3s;
   animation: ease-in;
   @extend %global-shadow;
-  .card-title {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-    user-select: none;
-    .card-setting {
-      color: rgba(116, 114, 114, 0.459);
-      font-size: 1.1rem;
-      transition: 0.3s;
-      animation: ease-in-out;
+  .card-title-container {
+    .card-source-name {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size:13px;
+      color: rgba(0, 0, 0, 0.3);
+      user-select: none;
     }
-    .card-setting:hover {
-      cursor: pointer;
-      transform: rotate(180deg);
+    .card-title {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      user-select: none;
+      font-size:15px;
+      .card-setting {
+        color: rgba(116, 114, 114, 0.459);
+        font-size: 1.1rem;
+        transition: 0.3s;
+        animation: ease-in-out;
+      }
+      .card-setting:hover {
+        cursor: pointer;
+        transform: rotate(180deg);
+      }
     }
   }
   .card-content {
