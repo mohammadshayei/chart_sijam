@@ -7,21 +7,17 @@ import { useSelector } from "react-redux";
 
 const Body = (props) => {
   const [charts, setCharts] = useState([]);
-  const bankData = useSelector((state) => state.bank);
-  const software = useSelector((state) => state.software);
 
   const dragEnd = (result) => {
     if (!result.destination) return;
-
     const card = [...charts];
-
     const [orderedCard] = card.splice(result.source.index, 1);
     card.splice(result.destination.index, 0, orderedCard);
-
     setCharts(card);
   };
   useEffect(() => {
     if (props.data) {
+      console.log('want to add')
       props.data.forEach((item) => {
         setCharts(
           item.charts.map((ch) => {
@@ -32,36 +28,6 @@ const Body = (props) => {
         );
       });
     }
-    // if (bankData.bank.id)  {
-    //   console.log(bankData.bank.id)
-    //   console.log(data.filter((dt) => dt.bankId === bankData.bank.id));
-    //   data
-    //     .filter((dt) => dt.bankId === bankData.bank.id)
-    //     .forEach((item) => {
-    //       if (item.bankId === props.bankId) {
-    //         setCharts(
-    //           item.charts.map((ch) => {
-    //             return {
-    //               ...ch,
-    //             };
-    //           })
-    //         );
-    //       }
-    //     });
-    // } else {
-    // console.log(software)
-    // data.forEach((item) => {
-    //   if (item.bankId === '001001002') {
-    //     setCharts(
-    //       item.charts.map((ch) => {
-    //         return {
-    //           ...ch,
-    //         };
-    //       })
-    //     );
-    //   }
-    // });
-    // }
   }, [props.data]);
 
   return (

@@ -13,8 +13,20 @@ const MenuItems = () => {
   const selectSoftware = (software) => {
     dispatch(actions.selectSoftware(software));
   };
+  const selectCompany = (company) => {
+    dispatch(actions.selectCompany(company));
+  };
+  const selectHolding = (holding) => {
+    dispatch(actions.selectHolding(holding));
+  };
   const clearSoftware = () => {
     dispatch(actions.clearSoftware());
+  };
+  const clearCompany = () => {
+    dispatch(actions.clearCompany());
+  };
+  const clearHolding = () => {
+    dispatch(actions.clearHolding());
   };
   const clearBanks = () => {
     dispatch(actions.clearBanks());
@@ -40,7 +52,7 @@ const MenuItems = () => {
         let newClosedList = closedList;
         setClickedList([...newClickedList]);
         setClosedList([...closedList, `${type}${name}`]);
-
+        clearHolding();
         // this line have a bug and must to fix when we have more than 2 holdings
         let newDataItmes = dataItems.filter((i) => i.type === "holding");
         // setDataItems([...dataItems.filter((i) => i.parent !== name)]);
@@ -58,6 +70,7 @@ const MenuItems = () => {
         });
         setClosedList([...newClickedList]);
       } else {
+        if(type==='company')clearCompany()
         setClickedList([...clickedList.filter((i) => i !== `${type}${name}`)]);
         setClosedList([...closedList, `${type}${name}`]);
       }
@@ -82,6 +95,20 @@ const MenuItems = () => {
         parent: p,
       });
     } else {
+      if (type === "holding")
+        selectHolding({
+          id,
+          name,
+          companies: inputData,
+          type,
+        });
+      else if (type === "company")
+        selectCompany({
+          id,
+          name,
+          softwares: inputData,
+          type,
+        });
       let newData = dataItems;
       newData.splice(
         index + 1,

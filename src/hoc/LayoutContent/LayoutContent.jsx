@@ -12,6 +12,7 @@ import { stringFa } from "../../assets/strings/strignFa";
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [softwareExistInData, setSoftwareExistInData] = useState(false);
+  const [banksData, setBanksData] = useState([]);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -19,9 +20,26 @@ const LayoutContent = (props) => {
 
   useEffect(() => {
     if (detail.software) {
-      setSoftwareExistInData(data.find((dt) => dt.softwareId === detail.software.id));
+      setSoftwareExistInData(
+        data.find((dt) => dt.softwareId === detail.software.id).banks
+      );
+    } else if (detail.company) {
+      let softwaresTemp = [];
+      data.forEach((item) => {
+        if (item.softwareId.substring(0, 6) === detail.company.id)
+          softwaresTemp = [...softwaresTemp, ...item.banks];
+      });
+      setSoftwareExistInData(softwaresTemp)
     }
-  }, [detail.software, data]);
+    else if (detail.holding) {
+      let softwaresTemp = [];
+      data.forEach((item) => {
+        if (item.softwareId.substring(0, 3) === detail.holding.id)
+          softwaresTemp = [...softwaresTemp, ...item.banks];
+      });
+      setSoftwareExistInData(softwaresTemp)
+    }
+  }, [detail.software, detail.holding, detail.company, data]);
 
   return (
     <div
@@ -50,9 +68,9 @@ const LayoutContent = (props) => {
               : "center",
           }}
         >
-          {detail.software? (
+          {detail.software ? (
             softwareExistInData ? (
-              <Body data={softwareExistInData.banks} />
+              <Body data={softwareExistInData} />
             ) : (
               <div className="BodyContent">
                 <div className="CreateChartContainer">
