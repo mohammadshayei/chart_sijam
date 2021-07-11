@@ -3,22 +3,24 @@ import MenuItem from "../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
 import { useDispatch } from "react-redux";
 import { data } from "../../../../assets/dummy_data/TestData";
-import * as actions from "../../../../store/actions/software";
-import * as bankActions from "../../../../store/actions/bank";
+import * as actions from "../../../../store/actions/detail";
 
 const MenuItems = () => {
   const [dataItems, setDataItems] = useState([]);
   const [clickedList, setClickedList] = useState([]);
   const [closedList, setClosedList] = useState([]);
   const dispatch = useDispatch();
-  const selectSoftware = (name, banks, type) => {
-    dispatch(actions.selectSoftware(name, banks, type));
+  const selectSoftware = (software) => {
+    dispatch(actions.selectSoftware(software));
+  };
+  const clearSoftware = () => {
+    dispatch(actions.clearSoftware());
   };
   const clearBanks = () => {
-    dispatch(bankActions.clearBanks());
+    dispatch(actions.clearBanks());
   };
   const onMenuItemClickHandler = (id, type, inputData, index, name) => {
-    clearBanks()
+    clearBanks();
     let arrType;
     if (type === "holding") {
       arrType = "softwares";
@@ -43,8 +45,7 @@ const MenuItems = () => {
         let newDataItmes = dataItems.filter((i) => i.type === "holding");
         // setDataItems([...dataItems.filter((i) => i.parent !== name)]);
         setDataItems([...newDataItmes]);
-        selectSoftware("", "", [], "", "");
-
+        clearSoftware();
         inputData.forEach((dt) => {
           if (newClickedList.find((ncl) => ncl === `${dt.type}${dt.name}`)) {
             newClosedList.push(`${dt.type}${dt.name}`);
@@ -72,7 +73,14 @@ const MenuItems = () => {
           break;
         }
       }
-      selectSoftware(id, name, inputData, type, p);
+      // selectSoftware(id, name, inputData, type, p);
+      selectSoftware({
+        id,
+        name,
+        banks: inputData,
+        type,
+        parent: p,
+      });
     } else {
       let newData = dataItems;
       newData.splice(

@@ -18,7 +18,7 @@ const MenuItem = (props) => {
 
   const [boxShadow, setBoxShadow] = useState("");
   const [isHover, setIsHover] = useState(false);
-  const software = useSelector((state) => state.software);
+  const detail = useSelector((state) => state.detail);
 
   const styleIcon = {
     width: "13px",
@@ -29,16 +29,18 @@ const MenuItem = (props) => {
     marginBottom: ".08rem",
   };
 
- 
-
   const onMouseEnter = (e) => {
-    if (!clicked && software.id !== props.id) {
-      setIsHover(true);
+    if (detail.software) {
+      if (!clicked && detail.software.id !== props.id) {
+        setIsHover(true);
+      }
     }
   };
   const onMouseLeave = (e) => {
-    if (!clicked && software.id !== props.id) {
-      setIsHover(false);
+    if (detail.software) {
+      if (!clicked && detail.software.id !== props.id) {
+        setIsHover(false);
+      }
     }
   };
   useEffect(() => {
@@ -67,9 +69,11 @@ const MenuItem = (props) => {
       setBg(
         `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
       );
-    } else if (software.id === props.id) {
-      setFontColor(lightTheme.clicked_darken_color);
-      setBoxShadow("");
+    } else if (detail.software) {
+      if (detail.software.id === props.id) {
+        setFontColor(lightTheme.clicked_darken_color);
+        setBoxShadow("");
+      }
     }
 
     if (
@@ -87,11 +91,13 @@ const MenuItem = (props) => {
       setIconColor(lightTheme.menu_icons_color);
       setArrowsColor(lightTheme.arrows_color);
       setBg("");
-    } else if (props.type === "software" && software.id !== props.id) {
-      setBoxShadow("");
-      setFontColor(lightTheme.text_menu_item_color);
+    } else if (props.type === "software" && detail.software) {
+      if (detail.software.id !== props.id) {
+        setBoxShadow("");
+        setFontColor(lightTheme.text_menu_item_color);
+      }
     }
-  }, [props.clickedList, props.closedList, software]);
+  }, [props.clickedList, props.closedList, detail.software]);
 
   return (
     <div
@@ -145,7 +151,11 @@ const MenuItem = (props) => {
         <span
           style={{
             color: fontColor,
-            fontWeight: software.id === props.id ? "bold" : "",
+            fontWeight: detail.software
+              ? detail.software.id === props.id
+                ? "bold"
+                : ""
+              : "",
             marginRight:
               props.type === "company" || props.type === "holding"
                 ? ".7rem"

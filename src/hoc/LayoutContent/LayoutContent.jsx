@@ -15,13 +15,13 @@ const LayoutContent = (props) => {
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const software = useSelector((state) => state.software);
+  const detail = useSelector((state) => state.detail);
 
   useEffect(() => {
-    if (software.id) {
-      setSoftwareExistInData(data.find((dt) => dt.softwareId === software.id));
+    if (detail.software) {
+      setSoftwareExistInData(data.find((dt) => dt.softwareId === detail.software.id));
     }
-  }, [software.id, data]);
+  }, [detail.software, data]);
 
   return (
     <div
@@ -38,19 +38,19 @@ const LayoutContent = (props) => {
         <div
           className="BodyContainer"
           style={{
-            alignItems: software.id
+            alignItems: detail.software
               ? softwareExistInData
                 ? "flex-start"
                 : "center"
               : "center",
-            justifyContent: software.id
+            justifyContent: detail.software
               ? softwareExistInData
                 ? ""
                 : "center"
               : "center",
           }}
         >
-          {software.id ? (
+          {detail.software? (
             softwareExistInData ? (
               <Body data={softwareExistInData.banks} />
             ) : (

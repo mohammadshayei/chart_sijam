@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import Bank from "./Bank/Bank";
 
 const BanksContainer = () => {
-  const software = useSelector((state) => state.software);
+  const detail = useSelector((state) => state.detail);
   return (
     <div className="BanksContainer">
-      {software.banks.map((slide, index) => (
-        <Bank key={slide.id} data={slide}  />
-      ))}
+      {detail.software
+        ? detail.software.banks.map((slide, index) => (
+            <Bank key={slide.id} data={slide} />
+          ))
+        : null}
     </div>
   );
 };
