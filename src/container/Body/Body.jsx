@@ -14,16 +14,14 @@ const Body = (props) => {
     setCharts(card);
   };
   useEffect(() => {
+    let tempData = [];
     if (props.data) {
       props.data.forEach((item) => {
-        setCharts(
-          item.charts.map((ch) => {
-            return {
-              ...ch,
-            };
-          })
-        );
+        item.charts.map((ch) => {
+          tempData = [...tempData, ch];
+        });
       });
+      setCharts(tempData);
     }
   }, [props.data]);
 

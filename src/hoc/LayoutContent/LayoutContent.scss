@@ -23,10 +23,14 @@
       padding-top: 1.5rem;
       height: calc(100% - 7.5rem);
       margin-top: 0;
-      display: flex;
+      // display: flex;
+      display: inline-flex;
+      flex-direction: row;
+      flex-wrap: wrap;
       width: 100%;
       box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px inset;
       background-color: rgb(249, 249, 249);
+      overflow: scroll;
       .BodyContent {
         display: flex;
         flex-direction: row;
@@ -35,7 +39,7 @@
           display: flex;
           flex-direction: row;
           color: rgb(44, 175, 44);
-          padding-right:1rem;
+          padding-right: 1rem;
         }
         .CreateChartContainer:hover {
           cursor: pointer;
