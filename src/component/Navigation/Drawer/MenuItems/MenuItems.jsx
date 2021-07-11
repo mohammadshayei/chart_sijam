@@ -3,22 +3,36 @@ import MenuItem from "../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
 import { useDispatch } from "react-redux";
 import { data } from "../../../../assets/dummy_data/TestData";
-import * as actions from "../../../../store/actions/software";
-import * as bankActions from "../../../../store/actions/bank";
+import * as actions from "../../../../store/actions/detail";
 
 const MenuItems = () => {
   const [dataItems, setDataItems] = useState([]);
   const [clickedList, setClickedList] = useState([]);
   const [closedList, setClosedList] = useState([]);
   const dispatch = useDispatch();
-  const selectSoftware = (name, banks, type) => {
-    dispatch(actions.selectSoftware(name, banks, type));
+  const selectSoftware = (software) => {
+    dispatch(actions.selectSoftware(software));
+  };
+  const selectCompany = (company) => {
+    dispatch(actions.selectCompany(company));
+  };
+  const selectHolding = (holding) => {
+    dispatch(actions.selectHolding(holding));
+  };
+  const clearSoftware = () => {
+    dispatch(actions.clearSoftware());
+  };
+  const clearCompany = () => {
+    dispatch(actions.clearCompany());
+  };
+  const clearHolding = () => {
+    dispatch(actions.clearHolding());
   };
   const clearBanks = () => {
-    dispatch(bankActions.clearBanks());
+    dispatch(actions.clearBanks());
   };
   const onMenuItemClickHandler = (id, type, inputData, index, name) => {
-    clearBanks()
+    clearBanks();
     let arrType;
     if (type === "holding") {
       arrType = "softwares";
@@ -38,13 +52,12 @@ const MenuItems = () => {
         let newClosedList = closedList;
         setClickedList([...newClickedList]);
         setClosedList([...closedList, `${type}${name}`]);
-
+        clearHolding();
         // this line have a bug and must to fix when we have more than 2 holdings
         let newDataItmes = dataItems.filter((i) => i.type === "holding");
         // setDataItems([...dataItems.filter((i) => i.parent !== name)]);
         setDataItems([...newDataItmes]);
-        selectSoftware("", "", [], "", "");
-
+        clearSoftware();
         inputData.forEach((dt) => {
           if (newClickedList.find((ncl) => ncl === `${dt.type}${dt.name}`)) {
             newClosedList.push(`${dt.type}${dt.name}`);
@@ -57,6 +70,7 @@ const MenuItems = () => {
         });
         setClosedList([...newClickedList]);
       } else {
+        if(type==='company')clearCompany()
         setClickedList([...clickedList.filter((i) => i !== `${type}${name}`)]);
         setClosedList([...closedList, `${type}${name}`]);
       }
@@ -72,8 +86,29 @@ const MenuItems = () => {
           break;
         }
       }
-      selectSoftware(id, name, inputData, type, p);
+      // selectSoftware(id, name, inputData, type, p);
+      selectSoftware({
+        id,
+        name,
+        banks: inputData,
+        type,
+        parent: p,
+      });
     } else {
+      if (type === "holding")
+        selectHolding({
+          id,
+          name,
+          companies: inputData,
+          type,
+        });
+      else if (type === "company")
+        selectCompany({
+          id,
+          name,
+          softwares: inputData,
+          type,
+        });
       let newData = dataItems;
       newData.splice(
         index + 1,

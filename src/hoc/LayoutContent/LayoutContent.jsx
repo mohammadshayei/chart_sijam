@@ -12,16 +12,34 @@ import { stringFa } from "../../assets/strings/strignFa";
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [softwareExistInData, setSoftwareExistInData] = useState(false);
+  const [banksData, setBanksData] = useState([]);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const software = useSelector((state) => state.software);
+  const detail = useSelector((state) => state.detail);
 
   useEffect(() => {
-    if (software.id) {
-      setSoftwareExistInData(data.find((dt) => dt.softwareId === software.id));
+    if (detail.software) {
+      setSoftwareExistInData(
+        data.find((dt) => dt.softwareId === detail.software.id).banks
+      );
+    } else if (detail.company) {
+      let softwaresTemp = [];
+      data.forEach((item) => {
+        if (item.softwareId.substring(0, 6) === detail.company.id)
+          softwaresTemp = [...softwaresTemp, ...item.banks];
+      });
+      setSoftwareExistInData(softwaresTemp)
     }
-  }, [software.id, data]);
+    else if (detail.holding) {
+      let softwaresTemp = [];
+      data.forEach((item) => {
+        if (item.softwareId.substring(0, 3) === detail.holding.id)
+          softwaresTemp = [...softwaresTemp, ...item.banks];
+      });
+      setSoftwareExistInData(softwaresTemp)
+    }
+  }, [detail.software, detail.holding, detail.company, data]);
 
   return (
     <div
@@ -38,21 +56,21 @@ const LayoutContent = (props) => {
         <div
           className="BodyContainer"
           style={{
-            alignItems: software.id
+            alignItems: detail.software
               ? softwareExistInData
                 ? "flex-start"
                 : "center"
               : "center",
-            justifyContent: software.id
+            justifyContent: detail.software
               ? softwareExistInData
                 ? ""
                 : "center"
               : "center",
           }}
         >
-          {software.id ? (
+          {detail.software ||detail.company||detail.holding ? (
             softwareExistInData ? (
-              <Body data={softwareExistInData.banks} />
+              <Body data={softwareExistInData} />
             ) : (
               <div className="BodyContent">
                 <div className="CreateChartContainer">

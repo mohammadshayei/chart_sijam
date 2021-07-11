@@ -6,13 +6,11 @@ import reportWebVitals from "./reportWebVitals";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
-import softwareReducer from "./store/reducers/software";
-import bankReducer from "./store/reducers/bank";
+import detailReducer from "./store/reducers/detail";
 
 
 const rootReducer = combineReducers({
-  software: softwareReducer,
-  bank:bankReducer
+  detail:detailReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

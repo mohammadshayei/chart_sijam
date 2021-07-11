@@ -1,5 +1,12 @@
-export const SELECT_MENU_ITEM = 'SELECT_MENU_ITEM';
+export const SELECT_HOLDING = 'SELECT_HOLDING';
+export const SELECT_COMPANY = 'SELECT_COMPANY';
+export const SELECT_SOFTWARE = 'SELECT_SOFTWARE';
 export const SELECT_BANK = 'SELECT_BANK';
+export const CLEAR_HOLDING = 'CLEAR_HOLDING';
+export const CLEAR_COMPANY = 'CLEAR_COMPANY';
+export const CLEAR_SOFTWARE = 'CLEAR_SOFTWARE';
 export const CLEAR_MY_BANKS = 'CLEAR_MY_BANKS';
+
+
 
 

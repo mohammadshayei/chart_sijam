@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { lightTheme } from "../../../../../styles/theme";
 import "./Bank.scss";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../../../store/actions/bank";
+import * as actions from "../../../../../store/actions/detail";
 import { ripple } from "../../../../../assets/config/ripple";
 const Bank = React.memo(function Bank(props) {
   const [style, setStyle] = useState(null);
 
   const [clicked, setClicked] = useState(false);
 
-  const bank = useSelector((state) => state.bank);
+  const detail = useSelector((state) => state.detail);
   const dispatch = useDispatch();
   const selectBank = (bank) => {
     dispatch(actions.selectBank(bank));
   };
   useEffect(() => {
-      if (bank.banks) {
-      if (bank.banks.find(bk=>bk.id===props.data.id)) {
+      if (detail.banks) {
+      if (detail.banks.find(bk=>bk.id===props.data.id)) {
         setClicked(true);
         setStyle({
           background: `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`,
@@ -30,7 +30,7 @@ const Bank = React.memo(function Bank(props) {
         });
       }
     }
-  }, [bank.banks, props.data]);
+  }, [detail.banks, props.data]);
 
   const onMouseEnter = () => {
     if (!clicked) {

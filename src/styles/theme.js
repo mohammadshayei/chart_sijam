@@ -10,4 +10,5 @@ export const lightTheme = {
   text_clicked_menu_color:'#ffffff',
   text_menu_item_color:"#000",
   ripple_bank_color:"#332b8b",
+  ripple_star_color:"#fa9435"
 };

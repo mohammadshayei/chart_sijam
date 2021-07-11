@@ -10,16 +10,14 @@ const Body = (props) => {
 
   const dragEnd = (result) => {
     if (!result.destination) return;
-
     const card = [...charts];
-
     const [orderedCard] = card.splice(result.source.index, 1);
     card.splice(result.destination.index, 0, orderedCard);
-
     setCharts(card);
   };
   useEffect(() => {
     if (props.data) {
+      console.log('want to add')
       props.data.forEach((item) => {
         setCharts(
           item.charts.map((ch) => {

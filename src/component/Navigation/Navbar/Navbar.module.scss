@@ -19,6 +19,17 @@
             height: 100%;
             display: flex;
             align-items: center;
+            justify-content: center;
+            .StarContainer{
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 20px;
+                position: relative;
+                overflow: hidden;
+            }
         }
     }
     .BanksContainer {
