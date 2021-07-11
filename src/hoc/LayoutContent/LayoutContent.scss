@@ -30,7 +30,7 @@
       width: 100%;
       box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px inset;
       background-color: rgb(249, 249, 249);
-      overflow: scroll;
+      overflow-y: auto;
       .BodyContent {
         display: flex;
         flex-direction: row;

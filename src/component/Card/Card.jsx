@@ -10,6 +10,7 @@ import PolarArea from "../Charts/polararea";
 import Radar from "../Charts/radar";
 import DropDown from "../UI/DropDown/DropDown";
 import { data } from "../../assets/dummy_data/TestData";
+
 const Card = React.memo((props) => {
   const [chartData, setChartData] = useState(null);
   const [dropDown, setDropDown] = useState(false);
