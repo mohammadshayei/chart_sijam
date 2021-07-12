@@ -14,6 +14,8 @@
     .DropDownIcon {
         width: 20px;
         height: 20px;
+        display: flex;
+        align-items: center;
         .DropDownOpenRotate {
             animation: ease-out 250ms forwards DropDownOpenAnimation;
         }
@@ -53,18 +55,11 @@
             font-size: 12px;
         }
     }
-    &:hover {
-        // font-weight: bold;
-        span {
-            font-size: 12.5px;
-            transform: scale(1.08);
-        }
-    }
     .IconContainer {
         width: 20px;
         height: 20px;
-        // color: rgb(109, 37, 109);
-        // color: rgb(165, 6, 165);
+        display: flex;
+        align-items: center;
     }
     .ShowDrawer {
         animation: ease-out 200ms forwards ShowDrawer;

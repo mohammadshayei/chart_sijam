@@ -17,9 +17,9 @@ const Body = (props) => {
     let tempData = [];
     if (props.data) {
       props.data.forEach((item) => {
-        item.charts.map((ch) => {
-          tempData = [...tempData, ch];
-        });
+        if (item.charts) {
+          item.charts.map((ch) => (tempData = [...tempData, ch]));
+        }
       });
       setCharts(tempData);
     }

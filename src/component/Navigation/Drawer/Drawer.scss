@@ -1,44 +1,66 @@
 @import "../../../assets/config/global";
 .DrawerContainer {
-    @extend %global-shadow;
-    height: 100%;
-    width: 13%;
+  @extend %global-shadow;
+  height: 100%;
+  width: 13%;
 }
 .HideDrawer {
-    animation: ease-out 200ms forwards HideDrawer;
+  animation: ease-out 200ms forwards HideDrawer;
+}
+@media screen and (max-width: 1300px) {
+  .DrawerContainer {
+    width: 17%;
+  }
+  .ShowDrawer {
+    animation: ease-out 200ms forwards ShowDrawer1300;
+  }
 }
 @keyframes HideDrawer {
-    0% {
-        width: 10%;
-        opacity: 0.9;
-    }
-    50% {
-        width: 5%;
-        opacity: 0.4;
-    }
-    100% {
-        width: 0%;
-        opacity: 0;
+  0% {
+    width: 10%;
+    opacity: 0.9;
+  }
+  50% {
+    width: 5%;
+    opacity: 0.4;
+  }
+  100% {
+    width: 0%;
+    opacity: 0;
 
-        // transform: translateX(110%);
-    }
+    // transform: translateX(110%);
+  }
 }
-.ShowDrawer {
-    animation: ease-out 200ms forwards ShowDrawer;
-}
+
 @keyframes ShowDrawer {
-    0% {
-        width: 0.1%;
-        opacity: 0.1;
-    }
-    50% {
-        width: 5%;
-        opacity: 0.6;
-    }
-    100% {
-        width: 13%;
-        opacity: 1;
+  0% {
+    width: 0.1%;
+    opacity: 0.1;
+  }
+  50% {
+    width: 5%;
+    opacity: 0.6;
+  }
+  100% {
+    width: 13%;
+    opacity: 1;
 
-        // transform: translateX(110%);
-    }
+    // transform: translateX(110%);
+  }
+}
+@keyframes ShowDrawer1300 {
+  0% {
+    width: 0.1%;
+    opacity: 0.1;
+  }
+  50% {
+    width: 9%;
+    opacity: 0.6;
+  }
+  100% {
+    width: 17%;
+    opacity: 1;
+
+    // transform: translateX(110%);
+  }
 }
