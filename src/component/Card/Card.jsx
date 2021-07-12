@@ -62,14 +62,14 @@ const Card = React.memo((props) => {
     if (data) {
       data.forEach((item) => {
         if (item.id === props.chartId.substring(0, 3)) {
-          tempDetails = [item.name]
+          tempDetails = [item.name];
           if (item.companies) {
             item.companies.forEach((cp) => {
               if (cp.id === props.chartId.substring(0, 6)) {
-                tempDetails = [...tempDetails,cp.name]
+                tempDetails = [...tempDetails, cp.name];
                 cp.softwares.forEach((sf) => {
                   if (sf.id === props.chartId.substring(0, 9)) {
-                    tempDetails = [...tempDetails,sf.name]
+                    tempDetails = [...tempDetails, sf.name];
                     setDetails(tempDetails);
                   }
                 });
@@ -91,9 +91,9 @@ const Card = React.memo((props) => {
         />
       )}
       <div className="card-title-container">
-        <div className="card-source-name">
+        {/* <div className="card-source-name">
           <p>{details ? details.join(' / ') : ""}</p>
-        </div>
+        </div> */}
         <div className="card-title">
           <SettingsOutlinedIcon
             className="card-setting"
@@ -101,6 +101,7 @@ const Card = React.memo((props) => {
               setDropDown(!dropDown);
             }}
           />
+          <p className="details">{details ? details.join(" / ") : ""}</p>
           <p>{props.title}</p>
         </div>
       </div>
