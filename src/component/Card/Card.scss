@@ -1,52 +1,88 @@
 @import "../../assets/config/global";
 
-.card-container {
-  position: relative;
-  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
-  margin: 0 0 2.2rem 2.2rem;
-  border-radius: 5px;
-  background-color: white;
-  transition: 0.3s;
-  animation: ease-in;
-  @extend %global-shadow;
-  .card-title-container {
-    .card-source-name {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-bottom: 1rem;
-      font-size:13px;
-      color: rgba(0, 0, 0, 0.5);
-      user-select: none;
-    }
-    .card-title {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      user-select: none;
-      font-size:15px;
-      .card-setting {
-        color: rgba(116, 114, 114, 0.459);
-        font-size: 1.1rem;
-        transition: 0.3s;
-        animation: ease-in-out;
-      }
-      .card-setting:hover {
-        cursor: pointer;
-        transform: rotate(180deg);
-      }
-    }
-  }
-  .card-content {
-    width: 300px;
-    height: 300px;
+$desktop: 1280px;
+$laptop: 1024px;
+$tablet: 768px;
+$phone: 480px;
+
+// .cardsContainer {
+//   display: inline-flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+  .card-container {
     position: relative;
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+    margin: 0 0 2.2rem 2.2rem;
+    border-radius: 5px;
+    background-color: white;
+    transition: 0.3s;
+    animation: ease-in;
+    @media screen and (max-width: $desktop) and (min-width: $tablet) {
+      width: 300px;
+    }
+    @media screen and (max-width: $tablet) {
+      width: 200px;
+    }
+    @extend %global-shadow;
+    .card-title-container {
+      .card-source-name {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 1rem;
+        color: rgba(0, 0, 0, 0.5);
+        user-select: none;
+        font-size: 13px;
+        @media screen and (max-width: $desktop) and (min-width: $tablet) {
+          font-size: 10px;
+        }
+        @media screen and (max-width: $tablet) {
+          font-size: 8px;
+        }
+      }
+      .card-title {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        user-select: none;
+        font-size: 15px;
+        @media screen and (max-width: $desktop) and (min-width: $tablet) {
+          font-size: 13px;
+        }
+        @media screen and (max-width: $tablet) {
+          font-size: 10px;
+        }
+        .card-setting {
+          color: rgba(116, 114, 114, 0.459);
+          font-size: 1.1rem;
+          transition: 0.3s;
+          animation: ease-in-out;
+        }
+        .card-setting:hover {
+          cursor: pointer;
+          transform: rotate(180deg);
+        }
+      }
+    }
+    .card-content {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      @media screen and (max-width: $desktop) and (min-width: $tablet) {
+        width: 250px;
+        height: 250px;
+      }
+      @media screen and (max-width: $tablet) {
+        width: 150px;
+        height: 150px;
+      }
+    }
   }
-}
+// }
 .card-container:hover {
   transform: scale(1.03);
   box-shadow: rgba(14, 30, 37, 0.05) 0px 2px 4px 0px,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Body.scss";
-import Card from "../../component/Card/Card";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import CardsContainer from "./CardsContainer/CardsContainer";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const Body = (props) => {
   const [charts, setCharts] = useState([]);
+  const [chartsArray, setChartsArray] = useState(null);
 
   const dragEnd = (result) => {
     if (!result.destination) return;
@@ -13,8 +14,12 @@ const Body = (props) => {
     card.splice(result.destination.index, 0, orderedCard);
     setCharts(card);
   };
+
   useEffect(() => {
     let tempData = [];
+    let tempDataArray = [];
+    let tempChartsArray = [];
+    let count = parseInt(`${window.innerWidth / 500}`);
     if (props.data) {
       props.data.forEach((item) => {
         item.charts.map((ch) => {
@@ -22,55 +27,33 @@ const Body = (props) => {
         });
       });
       setCharts(tempData);
+      // for (let index = 0; index < charts.length; index++) {
+      //   tempDataArray.push(charts[index]);
+      // if (index % count === 0) {
+      //     tempChartsArray.push(tempDataArray);
+      //     tempDataArray = [];
+      //   }
+      // }
+      // setChartsArray(tempChartsArray);
     }
   }, [props.data]);
 
   return (
     <div>
       <DragDropContext onDragEnd={dragEnd}>
-        <Droppable droppableId="cardsSequence" direction="horizontal">
-          {(provided) => (
-            <div
-              className="cardsContainer"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {charts
-                ? charts.map((item, index) => (
-                    <Draggable
-                      draggableId={`draggable${item.id}`}
-                      key={`draggable${item.id}`}
-                      index={index}
-                      isDragDisabled={false}
-                    >
-                      {(provided) => (
-                        <div
-                          className="cardsItem"
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                        >
-                          <Card
-                            key={`${item.id}`}
-                            title={item.title}
-                            chartType={item.type}
-                            chartId={item.id}
-                            backGroundColor={item.backGroundColor}
-                            borderColor={item.borderColor}
-                            borderRadius={item.borderRadius}
-                            borderWidth={item.borderWidth}
-                            database={item.database}
-                            option={item.option}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))
-                : null}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+        <div className="cardsContainer">
+          {charts
+            ? charts.map((item, index) => (
+                <CardsContainer
+                  key={`${item.id}`}
+                  listId={`${item.id}`}
+                  listType="CARD"
+                  charts={item}
+                  index={index}
+                />
+              ))
+            : null}
+        </div>
       </DragDropContext>
     </div>
   );

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./Card.scss";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
-import Bar from "../Charts/bar";
-import Bubble from "../Charts/bubble";
-import Doughnut from "../Charts/doughnut";
-import Line from "../Charts/line";
-import Pie from "../Charts/pie";
-import PolarArea from "../Charts/polararea";
-import Radar from "../Charts/radar";
-import DropDown from "../UI/DropDown/DropDown";
+import Bar from "../../component/Charts/bar";
+import Bubble from "../../component/Charts/bubble";
+import Doughnut from "../../component/Charts/doughnut";
+import Line from "../../component/Charts/line";
+import Pie from "../../component/Charts/pie";
+import PolarArea from "../../component/Charts/polararea";
+import Radar from "../../component/Charts/radar";
+import DropDown from "../../component/UI/DropDown/DropDown";
 import { data } from "../../assets/dummy_data/TestData";
 
 const Card = React.memo((props) => {
