@@ -17,6 +17,7 @@ $phone: 480px;
   background-color: white;
   transition: 0.3s;
   animation: ease-in;
+  width: 400px;
   @media screen and (max-width: $desktop) and (min-width: $tablet) {
     width: 300px;
   }
