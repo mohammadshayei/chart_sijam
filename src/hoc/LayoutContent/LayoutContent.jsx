@@ -19,24 +19,28 @@ const LayoutContent = (props) => {
 
   useEffect(() => {
     if (detail.software) {
-      setSoftwareExistInData(
-        data.find((dt) => dt.softwareId === detail.software.id).banks
+      let softwareData = data.find(
+        (dt) => dt.softwareId === detail.software.id
       );
+      if (softwareData) {
+        setSoftwareExistInData(softwareData.banks);
+      } else {
+        setSoftwareExistInData([]);
+      }
     } else if (detail.company) {
       let softwaresTemp = [];
       data.forEach((item) => {
         if (item.softwareId.substring(0, 6) === detail.company.id)
           softwaresTemp = [...softwaresTemp, ...item.banks];
       });
-      setSoftwareExistInData(softwaresTemp)
-    }
-    else if (detail.holding) {
+      setSoftwareExistInData(softwaresTemp);
+    } else if (detail.holding) {
       let softwaresTemp = [];
       data.forEach((item) => {
         if (item.softwareId.substring(0, 3) === detail.holding.id)
           softwaresTemp = [...softwaresTemp, ...item.banks];
       });
-      setSoftwareExistInData(softwaresTemp)
+      setSoftwareExistInData(softwaresTemp);
     }
   }, [detail.software, detail.holding, detail.company]);
 
@@ -67,7 +71,7 @@ const LayoutContent = (props) => {
               : "center",
           }}
         >
-          {detail.software ||detail.company||detail.holding ? (
+          {detail.software || detail.company || detail.holding ? (
             softwareExistInData ? (
               <Body data={softwareExistInData} />
             ) : (

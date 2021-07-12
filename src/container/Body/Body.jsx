@@ -22,9 +22,9 @@ const Body = (props) => {
     let count = parseInt(`${window.innerWidth / 500}`);
     if (props.data) {
       props.data.forEach((item) => {
-        item.charts.map((ch) => {
-          tempData = [...tempData, ch];
-        });
+        if (item.charts) {
+          item.charts.map((ch) => (tempData = [...tempData, ch]));
+        }
       });
       setCharts(tempData);
       // for (let index = 0; index < charts.length; index++) {

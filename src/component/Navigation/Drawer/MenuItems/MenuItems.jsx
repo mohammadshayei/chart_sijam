@@ -47,7 +47,7 @@ const MenuItems = () => {
     setDataItems([...newData]);
   };
   const onMenuItemClickHandler = (id, type, inputData, index, name) => {
-    setUnClicked('')
+    setUnClicked("");
     clearBanks();
     let arrType;
     if (type === "holding") {
@@ -60,10 +60,9 @@ const MenuItems = () => {
     }
     // let finded = clickedList.find((item) => item === `${type}${name}`);
     switch (type) {
-
       case "holding":
         if (detail.holding && detail.holding.id === id) {
-          setUnClicked(id)
+          setUnClicked(id);
           clearHolding();
           clearSoftware();
           clearCompany();
@@ -81,20 +80,55 @@ const MenuItems = () => {
         break;
       case "company":
         if (detail.company && detail.company.id === id) {
-          setUnClicked(id)
+          setUnClicked(id);
           clearCompany();
           clearSoftware();
           let newDataItmes = dataItems;
           newDataItmes.splice(index + 1, inputData.length);
           setDataItems(newDataItmes);
         } else {
-          selectCompany({
-            id,
-            name,
-            softwares: inputData,
-            type,
-          });
-          setMenuData(inputData, arrType, index);
+          if (detail.company) {
+            setUnClicked(detail.company.id);
+            clearCompany();
+            clearSoftware();
+            let newDataItmes = dataItems;
+            newDataItmes.splice(
+              detail.company.indx + 1,
+              detail.company.softwares.length
+            );
+            let newIndex =
+              detail.company.indx < index
+                ? index - detail.company.softwares.length
+                : index;
+            newDataItmes.splice(
+              newIndex + 1,
+              0,
+              ...inputData.map((item) => ({
+                data: arrType ? item[arrType] : null,
+                id: item.id,
+                name: item.name,
+                type: item.type,
+              }))
+            );
+            setDataItems([...newDataItmes]);
+            selectCompany({
+              id,
+              name,
+              softwares: inputData,
+              type,
+              indx: newIndex,
+            });
+            // setDataItems(newDataItmes);
+          } else {
+            selectCompany({
+              id,
+              name,
+              softwares: inputData,
+              type,
+              indx: index,
+            });
+            setMenuData(inputData, arrType, index);
+          }
         }
         break;
       case "software":

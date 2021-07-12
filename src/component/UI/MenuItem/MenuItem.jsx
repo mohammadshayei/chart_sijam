@@ -5,105 +5,24 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"; //to por
 import RadioButtonUncheckedRoundedIcon from "@material-ui/icons/RadioButtonUncheckedRounded"; // to khali
 import { useSelector } from "react-redux";
-
+import { ripple } from "../../../assets/config/ripple";
 import { lightTheme } from "../../../styles/theme";
 
 const MenuItem = (props) => {
-  const [clicked, setClicked] = useState(false);
-  const [bg, setBg] = useState("");
-  const [fontColor, setFontColor] = useState(lightTheme.text_menu_item_color);
-  const [iconColor, setIconColor] = useState(lightTheme.menu_icons_color);
-  const [arrowsColor, setArrowsColor] = useState(lightTheme.arrows_color);
-  const [fontSize, setFontSize] = useState(12);
-
-  const [boxShadow, setBoxShadow] = useState("");
-  const [isHover, setIsHover] = useState(false);
   const detail = useSelector((state) => state.detail);
-
+  const [clicked, setClicked] = useState(false);
   const styleIcon = {
     width: "13px",
     height: "13px",
-    // color: lightTheme.menu_icons_color,
-    color: iconColor,
     marginLeft: ".3rem",
     marginBottom: ".08rem",
   };
-
-  const onMouseEnter = (e) => {
-    // if (detail.software) {
-    //   if (!clicked && detail.software.id !== props.id) {
-    //     setIsHover(true);
-    //   }
-    // }
-  };
-  const onMouseLeave = (e) => {
-    // if (detail.software) {
-    //   if (!clicked && detail.software.id !== props.id) {
-    //     setIsHover(false);
-    //   }
-    // }
-  };
   useEffect(() => {
-    // if (props.type === "software") setFontSize(11.5);
-    // else setFontSize(12);
-    // if (props.clickedList) {
-    //   setClicked(
-    //     props.clickedList.find((item) => item === `${props.type}${props.name}`)
-    //   );
-    // }
-    // if (
-    //   props.type === "holding" &&
-    //   props.clickedList.find((item) => item === `${props.type}${props.name}`)
-    // ) {
-    //   setFontColor("");
-    //   setBg(lightTheme.holding_menu_item_color);
-    //   setBoxShadow("");
-    // } else if (
-    //   props.type === "company" &&
-    //   props.clickedList.find((item) => item === `${props.type}${props.name}`)
-    // ) {
-    //   setFontColor(lightTheme.text_clicked_menu_color);
-    //   setIconColor(lightTheme.text_clicked_menu_color);
-    //   setArrowsColor(lightTheme.text_clicked_menu_color);
-    //   setBoxShadow("rgba(0, 0, 0, 0.1) -4px 9px 25px -6px");
-    //   setBg(
-    //     `linear-gradient(150deg,${lightTheme.clicked_darken_color},${lightTheme.clicked_lighten_color})`
-    //   );
-    // } else if (detail.software) {
-    //   if (detail.software.id === props.id) {
-    //     setFontColor(lightTheme.clicked_darken_color);
-    //     setBoxShadow("");
-    //   }
-    // }
-    // if (
-    //   props.type === "holding" &&
-    //   props.closedList.find((item) => item === `${props.type}${props.name}`)
-    // ) {
-    //   setBg("");
-    //   setBoxShadow("");
-    // } else if (
-    //   props.type === "company" &&
-    //   props.closedList.find((item) => item === `${props.type}${props.name}`)
-    // ) {
-    //   setBoxShadow("");
-    //   setFontColor(lightTheme.text_menu_item_color);
-    //   setIconColor(lightTheme.menu_icons_color);
-    //   setArrowsColor(lightTheme.arrows_color);
-    //   setBg("");
-    // } else if (props.type === "software" && detail.software) {
-    //   if (detail.software.id !== props.id) {
-    //     setBoxShadow("");
-    //     setFontColor(lightTheme.text_menu_item_color);
-    //   }
-    // }
-  }, [
-    props.clickedList,
-    props.name,
-    props.id,
-    props.type,
-    props.closedList,
-    detail.software,
-  ]);
+    (detail.holding && detail.holding.id === props.id) ||
+    (detail.company && detail.company.id === props.id)
+      ? setClicked(true)
+      : setClicked(false);
+  }, [detail.holding, detail.company, props.id]);
 
   return (
     <div
@@ -120,9 +39,15 @@ const MenuItem = (props) => {
             ? "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px"
             : "",
       }}
-      // onMouseEnter={onMouseEnter}
-      // onMouseLeave={onMouseLeave}
       onClick={(e) => {
+        ripple(
+          e,
+          detail.company && detail.company.id === props.id
+            ? lightTheme.clicked_darken_color
+            : detail.holding && detail.holding.id === props.id
+            ? lightTheme.ripple_holding_menu_item_color
+            : "black"
+        );
         props.onClick(
           props.id,
           props.type,
@@ -135,18 +60,16 @@ const MenuItem = (props) => {
       <div className="DropDownIcon">
         {props.data && props.type !== "software" ? (
           <ArrowBackIosRoundedIcon
-            className={`${
-              (detail.holding && detail.holding.id === props.id) ||
-              (detail.company && detail.company.id === props.id)
-                ? "DropDownOpenRotate"
-                : ""
-            }
+            className={`${clicked ? "DropDownOpenRotate" : ""}
             ${props.unClicked === props.id ? "DropDownCloseRotate" : ""}
               `}
             style={{
               width: "13px",
               height: "13px",
-              color: arrowsColor,
+              color:
+                detail.company && detail.company.id === props.id
+                  ? lightTheme.text_clicked_menu_color
+                  : lightTheme.arrows_color,
             }}
           />
         ) : null}
@@ -155,7 +78,12 @@ const MenuItem = (props) => {
       <div className="TitleContainer">
         <span
           style={{
-            color: fontColor,
+            color:
+              detail.software && detail.software.id === props.id
+                ? lightTheme.clicked_darken_color
+                : detail.company && detail.company.id === props.id
+                ? lightTheme.text_clicked_menu_color
+                : lightTheme.text_color,
             fontWeight: detail.software
               ? detail.software.id === props.id
                 ? "bold"
@@ -165,10 +93,6 @@ const MenuItem = (props) => {
               props.type === "company" || props.type === "holding"
                 ? ".7rem"
                 : "",
-            ...{
-              fontSize: isHover ? `${fontSize + 0.5}px` : fontSize,
-              transform: isHover ? "scale(1.08)" : "",
-            },
           }}
         >
           {props.name}
@@ -181,11 +105,24 @@ const MenuItem = (props) => {
         ) : props.type === "company" ? (
           clicked ? (
             <FiberManualRecordRoundedIcon
-              style={{ ...styleIcon, width: 12, height: 12 }}
+              style={{
+                ...styleIcon,
+                color:
+                  detail.company && detail.company.id === props.id
+                    ? lightTheme.text_clicked_menu_color
+                    : lightTheme.arrows_color,
+                width: 12,
+                height: 12,
+              }}
             />
           ) : (
             <RadioButtonUncheckedRoundedIcon
-              style={{ ...styleIcon, width: 11, height: 11 }}
+              style={{
+                ...styleIcon,
+                color: lightTheme.arrows_color,
+                width: 11,
+                height: 11,
+              }}
             />
           )
         ) : null}
