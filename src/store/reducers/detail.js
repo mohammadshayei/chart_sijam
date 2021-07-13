@@ -26,8 +26,8 @@ const selectSoftware = (state, action) => {
   };
 };
 const addBank = (state, action) => {
-  let count = state.banks.length;
-  let newBanks = state.banks.filter((bk) => bk.id !== action.bank.id);
+  let count = state.banks?state.banks.length:0;
+  let newBanks = state.banks?state.banks.filter((bk) => bk.id !== action.bank.id):[];
   if (count === newBanks.length) newBanks.push(action.bank);
   return {
     ...state,
