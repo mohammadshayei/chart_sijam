@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { lightTheme } from "../../../../../styles/theme";
 import "./Bank.scss";
 import { useDispatch, useSelector } from "react-redux";
-import * as banksActions from "../../../../../store/actions/banksData";
 import * as detailActions from "../../../../../store/actions/detail";
 import { ripple } from "../../../../../assets/config/ripple";
 const Bank = React.memo(function Bank(props) {
@@ -10,10 +9,6 @@ const Bank = React.memo(function Bank(props) {
   const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
   const detail = useSelector((state) => state.detail);
-  const banksData = useSelector((state) => state.banks);
-  const setChartsData = (banks) => {
-    dispatch(banksActions.setBankData(banks));
-  };
   const selectBank = (bank) => {
     dispatch(detailActions.selectBank(bank));
   };
@@ -32,17 +27,6 @@ const Bank = React.memo(function Bank(props) {
       });
     }
   }, [detail.banks, props.data]);
-  useEffect(() => {
-    // if (banksData.banks) {
-    //   let bks = banksData.banks.filter((item) => {
-    //     // console.log(item)
-    //     return detail.banks.find(
-    //       (detailsBank) => detailsBank.id === item.bankId
-    //     );
-    //   });
-    //   setChartsData(bks)
-    // }
-  }, [detail.banks]);
   const onMouseEnter = () => {
     if (!clicked) {
       setStyle({

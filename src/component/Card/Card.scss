@@ -27,21 +27,15 @@ $phone: 480px;
   }
   @extend %global-shadow;
   .card-title-container {
-    .card-title {
+    .card-source-name{
       width: 100%;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       user-select: none;
       font-size: 15px;
-      @media screen and (max-width: $desktop) and (min-width: $tablet) {
-        font-size: 13px;
-      }
-      @media screen and (max-width: $tablet) {
-        font-size: 10px;
-      }
       .details {
         display: flex;
         flex-direction: row;
@@ -77,21 +71,29 @@ $phone: 480px;
         align-items: center;
         justify-content: center;
         border-radius: 20px;
-        position: relative
+        position: relative;
+        
         // overflow: hidden;
       }
+    }
     }
     .card-title {
       width: 100%;
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: flex-end;
-      margin-bottom: 2rem;
+      justify-content: space-between;
+      margin-bottom: 1rem;
       user-select: none;
       font-size: 15px;
+      @media screen and (max-width: $desktop) and (min-width: $tablet) {
+        font-size: 13px;
+      }
+      @media screen and (max-width: $tablet) {
+        font-size: 10px;
+      }
     }
-  }
+    
   .card-content {
     width: 300px;
     height: 300px;
