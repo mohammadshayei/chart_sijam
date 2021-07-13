@@ -1,5 +1,14 @@
 @import "../../assets/config/global";
 
+$desktop: 1280px;
+$laptop: 1024px;
+$tablet: 768px;
+$phone: 480px;
+
+// .cardsContainer {
+//   display: inline-flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
 .card-container {
   position: relative;
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
@@ -9,9 +18,16 @@
 
   transition: 0.3s;
   animation: ease-in;
+  width: 400px;
+  @media screen and (max-width: $desktop) and (min-width: $tablet) {
+    width: 300px;
+  }
+  @media screen and (max-width: $tablet) {
+    width: 200px;
+  }
   @extend %global-shadow;
   .card-title-container {
-    .card-source-name {
+    .card-title {
       width: 100%;
       display: flex;
       flex-direction: row;
@@ -19,12 +35,27 @@
       justify-content: space-between;
       margin-bottom: 1rem;
       user-select: none;
-      // position: relative;
+      font-size: 15px;
+      @media screen and (max-width: $desktop) and (min-width: $tablet) {
+        font-size: 13px;
+      }
+      @media screen and (max-width: $tablet) {
+        font-size: 10px;
+      }
       .details {
-        user-select: none;
-        font-size: 0.8rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 1rem;
         color: rgba(0, 0, 0, 0.5);
-        
+        user-select: none;
+        font-size: 13px;
+        @media screen and (max-width: $desktop) and (min-width: $tablet) {
+          font-size: 10px;
+        }
+        @media screen and (max-width: $tablet) {
+          font-size: 8px;
+        }
       }
       .card-setting {
         color: rgba(116, 114, 114, 0.459);
@@ -64,8 +95,18 @@
   .card-content {
     width: 300px;
     height: 300px;
+    position: relative;
+    @media screen and (max-width: $desktop) and (min-width: $tablet) {
+      width: 250px;
+      height: 250px;
+    }
+    @media screen and (max-width: $tablet) {
+      width: 150px;
+      height: 150px;
+    }
   }
 }
+// }
 .card-container:hover {
   transform: scale(1.03);
   box-shadow: rgba(14, 30, 37, 0.05) 0px 2px 4px 0px,
