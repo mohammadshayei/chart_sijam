@@ -10,12 +10,23 @@ import PolarArea from "../Charts/polararea";
 import Radar from "../Charts/radar";
 import DropDown from "../UI/DropDown/DropDown";
 import { data } from "../../assets/dummy_data/TestData";
-
+import StarRoundedIcon from "@material-ui/icons/StarRounded";
+import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
+import { lightTheme } from "../../styles/theme";
 const Card = React.memo((props) => {
   const [chartData, setChartData] = useState(null);
   const [dropDown, setDropDown] = useState(false);
   const [selected, setSelected] = useState(props.chartType);
   const [details, setDetails] = useState([]);
+  const [isFav, setIsFav] = useState(false);
+  const onStarClickHandler = (e) => {
+    // ripple(e, 'red');
+    setIsFav(!isFav);
+  };
+
+  const starStyles = {
+    color: lightTheme.star_color,
+  };
   const chartNames = [
     "Bar",
     "Bubble",
@@ -91,10 +102,7 @@ const Card = React.memo((props) => {
         />
       )}
       <div className="card-title-container">
-        {/* <div className="card-source-name">
-          <p>{details ? details.join(' / ') : ""}</p>
-        </div> */}
-        <div className="card-title">
+        <div className="card-source-name">
           <SettingsOutlinedIcon
             className="card-setting"
             onClick={() => {
@@ -102,9 +110,19 @@ const Card = React.memo((props) => {
             }}
           />
           <p className="details">{details ? details.join(" / ") : ""}</p>
+          <div className='star-container' onClick={onStarClickHandler}>
+            {isFav ? (
+              <StarRoundedIcon style={starStyles} />
+            ) : (
+              <StarBorderRoundedIcon style={starStyles} />
+            )}
+          </div>
+        </div>
+        <div className="card-title">
           <p>{props.title}</p>
         </div>
       </div>
+
       <div className="card-content">
         {selected === "Bar" && <Bar data={chartData} option={props.option} />}
         {selected === "Bubble" && (

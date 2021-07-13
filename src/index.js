@@ -7,10 +7,13 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import detailReducer from "./store/reducers/detail";
+import banksDataReducer from "./store/reducers/banksData";
+
 
 
 const rootReducer = combineReducers({
-  detail:detailReducer
+  detail:detailReducer,
+  banks:banksDataReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

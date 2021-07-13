@@ -8,6 +8,7 @@ export const ripple = (event,color=lightTheme.ripple_bank_color) => {
   circle.style.width = circle.style.height = `${diameter}px`;
   circle.style.left = `${event.clientX - (button.offsetLeft + radius)}px`;
   circle.style.top = `${event.clientY - (button.offsetTop + radius)}px`;
+  // console.log(`widht : ${circle.style.width} left  : widht : ${circle.style.left}  top : ${circle.style.top}`)
   circle.style.background =color;
   circle.classList.add("ripple");
   const ripple = button.getElementsByClassName("ripple")[0];

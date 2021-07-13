@@ -5,27 +5,33 @@ import Body from "../../container/Body/Body";
 import { data } from "../../assets/DummyData/data";
 import { lightTheme } from "../../styles/theme";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { stringFa } from "../../assets/strings/strignFa";
+import * as bankActions from "../../store/actions/banksData";
+
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const [softwareExistInData, setSoftwareExistInData] = useState(false);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const dispatch = useDispatch();
+  const banksData = useSelector((state) => state.banks);
   const detail = useSelector((state) => state.detail);
-
+  const setChartsData = (banks) => {
+    dispatch(bankActions.setBankData(banks));
+  };
+  
   useEffect(() => {
     if (detail.software) {
       let softwareData = data.find(
         (dt) => dt.softwareId === detail.software.id
       );
       if (softwareData) {
-        setSoftwareExistInData(softwareData.banks);
+        setChartsData(softwareData.banks)
       } else {
-        setSoftwareExistInData([]);
+        setChartsData()
       }
     } else if (detail.company) {
       let softwaresTemp = [];
@@ -33,17 +39,17 @@ const LayoutContent = (props) => {
         if (item.softwareId.substring(0, 6) === detail.company.id)
           softwaresTemp = [...softwaresTemp, ...item.banks];
       });
-      setSoftwareExistInData(softwaresTemp);
+      setChartsData(softwaresTemp);
     } else if (detail.holding) {
       let softwaresTemp = [];
       data.forEach((item) => {
         if (item.softwareId.substring(0, 3) === detail.holding.id)
           softwaresTemp = [...softwaresTemp, ...item.banks];
       });
-      setSoftwareExistInData(softwaresTemp);
+      setChartsData(softwaresTemp);
     }
   }, [detail.software, detail.holding, detail.company]);
-
+  
   return (
     <div
       className="LayoutContentContainer"
@@ -60,20 +66,20 @@ const LayoutContent = (props) => {
           className="BodyContainer"
           style={{
             alignItems: detail.software
-              ? softwareExistInData
+              ? banksData.banks
                 ? "flex-start"
                 : "center"
               : "center",
             justifyContent: detail.software
-              ? softwareExistInData
+              ? banksData.banks
                 ? ""
                 : "center"
               : "center",
           }}
         >
           {detail.software || detail.company || detail.holding ? (
-            softwareExistInData ? (
-              <Body data={softwareExistInData} />
+            banksData.banks ? (
+              <Body data={banksData.banks} />
             ) : (
               <div className="BodyContent">
                 <div className="CreateChartContainer">
