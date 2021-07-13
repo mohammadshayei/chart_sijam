@@ -6,19 +6,10 @@ import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRo
 import RadioButtonUncheckedRoundedIcon from "@material-ui/icons/RadioButtonUncheckedRounded"; // to khali
 import { ripple } from "../../../assets/config/ripple";
 import { lightTheme } from "../../../styles/theme";
-import { useSelector, useDispatch } from "react-redux";
-import * as banksActions from "../../../store/actions/banksData";
-import * as detailActions from "../../../store/actions/detail";
+import { useSelector } from "react-redux";
 
 const MenuItem = (props) => {
-  const dispatch = useDispatch();
-  const banksData = useSelector((state) => state.banks);
-  const setChartsData = (banks) => {
-    dispatch(banksActions.setBankData(banks));
-  };
-  const addBank = (bank) => {
-    dispatch(detailActions.selectBank(bank));
-  };
+  
   const detail = useSelector((state) => state.detail);
   const [clicked, setClicked] = useState(false);
   const styleIcon = {
@@ -33,16 +24,7 @@ const MenuItem = (props) => {
       ? setClicked(true)
       : setClicked(false);
   }, [detail.holding, detail.company, props.id]);
-  useEffect(() => {
-    if(banksData.banks){
-      let bks = banksData.banks.filter((item) =>{
-        // console.log(item)
-        return detail.banks.find((detailsBank) => detailsBank.id === item.bankId)
-      }
-      );
-      console.log(bks)
-    }
-  }, [detail.banks]);
+
   return (
     <div
       className="MenuItemContainer"
@@ -59,8 +41,6 @@ const MenuItem = (props) => {
             : "",
       }}
       onClick={(e) => {
-        console.log(detail.banks);
-        // pu;
         ripple(
           e,
           detail.company && detail.company.id === props.id

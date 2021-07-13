@@ -5,11 +5,10 @@ import Body from "../../container/Body/Body";
 import { data } from "../../assets/DummyData/data";
 import { lightTheme } from "../../styles/theme";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { stringFa } from "../../assets/strings/strignFa";
 import * as bankActions from "../../store/actions/banksData";
-
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -22,16 +21,16 @@ const LayoutContent = (props) => {
   const setChartsData = (banks) => {
     dispatch(bankActions.setBankData(banks));
   };
-  
+
   useEffect(() => {
     if (detail.software) {
       let softwareData = data.find(
         (dt) => dt.softwareId === detail.software.id
       );
       if (softwareData) {
-        setChartsData(softwareData.banks)
+        setChartsData(softwareData.banks);
       } else {
-        setChartsData()
+        setChartsData();
       }
     } else if (detail.company) {
       let softwaresTemp = [];
@@ -49,7 +48,6 @@ const LayoutContent = (props) => {
       setChartsData(softwaresTemp);
     }
   }, [detail.software, detail.holding, detail.company]);
-  
   return (
     <div
       className="LayoutContentContainer"
@@ -79,7 +77,17 @@ const LayoutContent = (props) => {
         >
           {detail.software || detail.company || detail.holding ? (
             banksData.banks ? (
-              <Body data={banksData.banks} />
+              <Body
+                data={
+                  detail.banks && detail.banks.length > 0
+                    ? banksData.banks.filter((item) =>
+                        detail.banks.find(
+                          (detailBank) => detailBank.id === item.bankId
+                        )
+                      )
+                    : banksData.banks
+                }
+              />
             ) : (
               <div className="BodyContent">
                 <div className="CreateChartContainer">
