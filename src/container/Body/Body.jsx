@@ -4,54 +4,108 @@ import CardsContainer from "./CardsContainer/CardsContainer";
 import { DragDropContext } from "react-beautiful-dnd";
 
 const Body = (props) => {
-  const [charts, setCharts] = useState([]);
   const [chartsArray, setChartsArray] = useState(null);
 
-  const dragEnd = (result) => {
-    if (!result.destination) return;
-    const card = [...charts];
-    const [orderedCard] = card.splice(result.source.index, 1);
-    card.splice(result.destination.index, 0, orderedCard);
-    setCharts(card);
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const reorderCharts = (inputCharts, source, destination) => {
+    const current = [...inputCharts[source.droppableId]];
+    const next = [...inputCharts[destination.droppableId]];
+    const target = current[source.index];
+    // moving to same list
+    if (source.droppableId === destination.droppableId) {
+      const reordered = reorder(current, source.index, destination.index);
+      return {
+        ...inputCharts,
+        [source.droppableId]: reordered,
+      };
+    }
+
+    // moving to different list
+
+    // remove from original
+    current.splice(source.index, 1);
+    // insert into next
+    next.splice(destination.index, 0, target);
+    let swapTarget;
+    console.log(destination.index)
+    console.log(next.length)
+    if (destination.index > next.length-2 ) {
+      swapTarget = next[destination.index - 1];
+      // remove next chart from destination list
+      next.splice(destination.index - 1, 1);
+      // insert into source list
+      current.splice(source.index, 0, swapTarget);
+    } else {
+      swapTarget = next[destination.index + 1];
+      // remove next chart from destination list
+      next.splice(destination.index + 1, 1);
+      // insert into source list
+      current.splice(source.index, 0, swapTarget);
+    }
+
+    return {
+      ...inputCharts,
+      [source.droppableId]: current,
+      [destination.droppableId]: next,
+    };
   };
 
   useEffect(() => {
-    let tempData = [];
     let tempDataArray = [];
-    let tempChartsArray = [];
+    let tempChartsArray = {};
     let count = parseInt(`${window.innerWidth / 500}`);
     if (props.data) {
-      props.data.forEach((item) => {
-        if (item.charts) {
-          item.charts.map((ch) => (tempData = [...tempData, ch]));
-        }
+      let charts = [];
+      props.data.forEach((dt) => {
+        charts = [...charts, ...dt.charts];
       });
-      setCharts(tempData);
-      // for (let index = 0; index < charts.length; index++) {
-      //   tempDataArray.push(charts[index]);
-      // if (index % count === 0) {
-      //     tempChartsArray.push(tempDataArray);
-      //     tempDataArray = [];
-      //   }
-      // }
-      // setChartsArray(tempChartsArray);
+      for (let index = 0; index < charts.length; index++) {
+        if (charts[index]) {
+          tempDataArray = [...tempDataArray, charts[index]];
+          if ((index + 1) % count === 0) {
+            tempChartsArray = {
+              ...tempChartsArray,
+              [index + 1]: tempDataArray,
+            };
+            tempDataArray = [];
+          }
+        }
+      }
+      setChartsArray(tempChartsArray);
     }
   }, [props.data]);
 
   return (
     <div>
-      <DragDropContext onDragEnd={dragEnd}>
+      <DragDropContext
+        onDragEnd={(result) => {
+          if (!result.destination) {
+            return;
+          }
+          let src = result.source;
+          let dist = result.destination;
+          setChartsArray(reorderCharts(chartsArray, src, dist));
+        }}
+      >
         <div className="cardsContainer">
-          {charts
-            ? charts.map((item, index) => (
-                <CardsContainer
-                  key={`${item.id}`}
-                  listId={`${item.id}`}
-                  listType="CARD"
-                  charts={item}
-                  index={index}
-                />
-              ))
+          {chartsArray
+            ? Object.entries(chartsArray).map(([k, v]) => {
+                return v ? (
+                  <CardsContainer
+                    key={k}
+                    listId={k}
+                    listType="CARD"
+                    charts={v}
+                  />
+                ) : null;
+              })
             : null}
         </div>
       </DragDropContext>

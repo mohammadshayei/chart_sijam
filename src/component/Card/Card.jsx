@@ -13,6 +13,7 @@ import { data } from "../../assets/dummy_data/TestData";
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import { lightTheme } from "../../styles/theme";
+
 const Card = React.memo((props) => {
   const [chartData, setChartData] = useState(null);
   const [dropDown, setDropDown] = useState(false);
