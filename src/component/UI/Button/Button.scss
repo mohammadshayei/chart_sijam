@@ -1,0 +1,30 @@
+.Button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    // color: white;
+    border-radius: .25rem;
+    font-size: 16px;
+    padding: 0 18px;
+    height: 42px;
+    line-height: 42px;
+    outline: none;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all .2s ease;
+    cursor: pointer;
+    &.BtnSecondary {
+      background-color: #adaebb;
+      border: 1px solid #adaebb;
+    }
+    &.BtnPrimary {
+      background-color: #5567ff;
+      border: 1px solid #5567ff;
+    }
+    &.Disabled {
+      background-color: #adaebb;
+      border: 1px solid #adaebb;
+      pointer-events: none;
+    }
+  }
