@@ -22,3 +22,28 @@
   min-height: 600px;
   min-width: 800px;
 }
+
+
+/* width */
+::-webkit-scrollbar {
+  width:8px;
+  display: none;
+}
+*:hover::-webkit-scrollbar {
+  display: flex;
+
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bbb9b9;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #969595;
+}

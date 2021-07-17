@@ -7,7 +7,7 @@ import { lightTheme } from "../../styles/theme";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
-import { stringFa } from "../../assets/strings/strignFa";
+import { stringFa } from "../../assets/strings/stringFaCollection";
 import * as bankActions from "../../store/actions/banksData";
 
 const LayoutContent = (props) => {

@@ -1,5 +1,14 @@
+@import '../../../assets/config/global';
+
 .SelectImageContainerContainer{
-    width: 20rem;
+    width: 10rem;
     height: 100%;
-    background-color: orange;
+    box-sizing: border-box;
+    padding-top: 0rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    @extend %global-shadow;
 }

@@ -7,7 +7,7 @@ const Button = (props) => {
       style={{ ...props.ButtonStyle }}
       className={`Button ${props.ButtonClassname}`}
       onClick={(e) => {
-        ripple(e, "red");
+        ripple(e, props.rippleColor);
         if (props.clicked) props.clicked();
       }}
       type={props.buttonType}
