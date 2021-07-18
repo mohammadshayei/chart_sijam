@@ -199,18 +199,14 @@ const Card = React.memo((props) => {
           <p>{props.title}</p>
         </div>
       </div>
-      <div className="card-content">
-        {selected === "ستونی" && (
-          <BarChart data={chartData} option={props.option} />
-        )}
-        {selected === "حبابی" && (
-          <BubbleChart data={chartData} option={props.option} />
-        )}
-        {selected === "دونات" && (
-          <DoughnutChart data={chartData} option={props.option} />
-        )}
-        {selected === "خطی" && (
-          <LineChart data={chartData} option={props.option} />
+
+      <div
+        className="card-content"
+        // style={{ width: 400, height: 200 }}
+      >
+        {selected === "Bar" && <Bar data={chartData} option={props.option} />}
+        {selected === "Bubble" && (
+          <Bubble data={chartData} option={props.option} />
         )}
         {selected === "دایره ای" && (
           <PieChart data={chartData} option={props.option} />

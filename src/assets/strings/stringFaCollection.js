@@ -5,5 +5,6 @@ export const stringFa = {
     ".برای مشاهده نمودار ها بر روی نرم افزار ها کلیک کنید",
   no_exist_charts: " .نموداری وجود ندارد",
   create_chart: "ایجاد نمودار",
-  select_bank:'انتخاب بانک'
+  select_bank:'انتخاب بانک',
+  title:'عنوان'
 };

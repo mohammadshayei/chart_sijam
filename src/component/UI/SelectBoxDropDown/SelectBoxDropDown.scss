@@ -1,7 +1,8 @@
 .SelectBoxDropDownContainer {
-  width: 15rem;
+  width: 18rem;
   height: 100;
   padding-top: 3rem;
+  margin: 0rem 1rem;
   .SelectBoxDropDownHeader {
     width: 100%;
     display: flex;
@@ -10,8 +11,10 @@
     .ButtonContent {
       width: 100%;
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+      height: 1.8rem;
+      align-items: center;
+      justify-content: flex-end ;
+      padding: .2rem 0 0 0 ;
       p {
         font-size: 15px;
       }
@@ -21,6 +24,9 @@
     width: 100%;
     height: 100%;
     padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     // background-color: aqua;
     .TitleContent {
       width: 100%;

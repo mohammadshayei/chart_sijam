@@ -123,7 +123,6 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              responsive: true,
               maintainAspectRatio: false,
               plugins: {
                 legend: {
@@ -328,7 +327,6 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              responsive: true,
               maintainAspectRatio: false,
               plugins: {
                 legend: {

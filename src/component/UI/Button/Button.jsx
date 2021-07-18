@@ -8,9 +8,11 @@ const Button = (props) => {
       className={`Button ${props.ButtonClassname}`}
       onClick={(e) => {
         ripple(e, props.rippleColor);
-        if (props.clicked) props.clicked();
+        if (props.onClick) props.onClick();
       }}
       type={props.buttonType}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
     >
       {props.children}
     </button>

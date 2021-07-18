@@ -14,6 +14,7 @@ const CheckBox = (props) => {
     <div
       className="CheckBoxContent"
       style={{
+        ...props.style,
         border: `1px solid rgba(56,56,56,0.09)`,
         borderRadius:'.2rem',
       }}
@@ -22,6 +23,7 @@ const CheckBox = (props) => {
       <input
         onChange={inputChangeHandler}
         type="checkbox"
+        className='CheckBox'
         checked={props.value}
       />
     </div>
