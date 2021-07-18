@@ -1,4 +1,13 @@
 @import "./assets/config/config";
+@font-face {
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 400;
+  src: url("./assets/fonts/iran-sans/eot/IRANSansWeb\(NoEn\)_Medium.eot");
+  src: url("./assets/fonts/iran-sans/ttf/IRANSansWeb\(NoEn\)_Medium.ttf");
+  src: url("./assets/fonts/iran-sans/woff/IRANSansWeb\(NoEn\)_Medium.woff");
+
+}
 * {
   margin: 0;
   box-sizing: border-box;
@@ -12,5 +21,29 @@
   background-color: lighten($color: $white_color, $amount: 0.7);
   min-height: 600px;
   min-width: 800px;
- 
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width:8px;
+  display: none;
+}
+*:hover::-webkit-scrollbar {
+  display: flex;
+
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bbb9b9;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #969595;
 }

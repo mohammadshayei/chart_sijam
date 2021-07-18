@@ -1,0 +1,18 @@
+@import '../../../assets/config/global';
+
+.ImagePickerContainer{
+    margin: 1rem 0rem;
+    width: 7rem;
+    height: 7rem;
+    cursor: pointer;
+    border-radius: .3rem;
+    @extend %global-shadow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    img{
+        width: 100%;
+        height: 100%;
+    }
+}

@@ -2,7 +2,7 @@ import React from "react";
 import "./Header.scss";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import IMAGE from "../../../../assets/images/simamIcon.png";
-import { stringFa } from "../../../../assets/strings/strignFa";
+import { stringFa } from "../../../../assets/strings/stringFaCollection";
 import { lightTheme } from "../../../../styles/theme";
 const Header = (props) => {
   return (
