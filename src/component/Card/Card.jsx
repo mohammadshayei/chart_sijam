@@ -1,42 +1,111 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Card.scss";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
-import Bar from "../../component/Charts/bar";
-import Bubble from "../../component/Charts/bubble";
-import Doughnut from "../../component/Charts/doughnut";
-import Line from "../../component/Charts/line";
-import Pie from "../../component/Charts/pie";
-import PolarArea from "../../component/Charts/polararea";
-import Radar from "../../component/Charts/radar";
-import DropDown from "../../component/UI/DropDown/DropDown";
-import { data } from "../../assets/dummy_data/TestData";
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
+import BarChart from "./../Charts/bar";
+import BubbleChart from "./../Charts/bubble";
+import DoughnutChart from "./../Charts/doughnut";
+import LineChart from "./../Charts/line";
+import PieChart from "./../Charts/pie";
+import PolarAreaChart from "./../Charts/polararea";
+import RadarChart from "./../Charts/radar";
+import DropDown from "./../UI/DropDown/DropDown";
+import { data } from "../../assets/dummy_data/TestData";
 import { lightTheme } from "../../styles/theme";
+import {
+  FcBarChart,
+  FcLineChart,
+  FcDoughnutChart,
+  FcPieChart,
+  FcRadarPlot,
+} from "react-icons/fc";
+import { MdBubbleChart } from "react-icons/md";
+
+function useOnClickOutside(ref, handler) {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, [ref, handler]);
+}
 
 const Card = React.memo((props) => {
   const [chartData, setChartData] = useState(null);
   const [dropDown, setDropDown] = useState(false);
-  const [selected, setSelected] = useState(props.chartType);
+  const [selected, setSelected] = useState(null);
   const [details, setDetails] = useState([]);
   const [isFav, setIsFav] = useState(false);
+  const starStyles = {
+    color: lightTheme.star_color,
+  };
+  const dropDownItems = [
+    "ستونی",
+    "حبابی",
+    "دونات",
+    "خطی",
+    "دایره ای",
+    "مساحت",
+    "راداری",
+    "divider",
+    "کوچک",
+    "متوسط",
+    "بزرگ",
+  ];
+  const dropDownIcons = [
+    <FcBarChart />,
+    <MdBubbleChart />,
+    <FcDoughnutChart />,
+    <FcLineChart />,
+    <FcPieChart />,
+    <FcPieChart />,
+    <FcRadarPlot />,
+  ];
+  const ref = useRef();
+
   const onStarClickHandler = (e) => {
     // ripple(e, 'red');
     setIsFav(!isFav);
   };
 
-  const starStyles = {
-    color: lightTheme.star_color,
-  };
-  const chartNames = [
-    "Bar",
-    "Bubble",
-    "Doughnut",
-    "Line",
-    "Pie",
-    "PolarArea",
-    "Radar",
-  ];
+  useOnClickOutside(ref, () => {
+    setDropDown(false);
+  });
+
+  useEffect(() => {
+    if (props.chartType === "Bar") {
+      setSelected("ستونی");
+    }
+    if (props.chartType === "Bubble") {
+      setSelected("حبابی");
+    }
+    if (props.chartType === "Doughnut") {
+      setSelected("دونات");
+    }
+    if (props.chartType === "Line") {
+      setSelected("خطی");
+    }
+    if (props.chartType === "Pie") {
+      setSelected("دایره ای");
+    }
+    if (props.chartType === "PolarArea") {
+      setSelected("مساحت");
+    }
+    if (props.chartType === "Radar") {
+      setSelected("راداری");
+    }
+  }, [props.chartType]);
 
   useEffect(() => {
     if (
@@ -69,6 +138,7 @@ const Card = React.memo((props) => {
       });
     }
   }, [props]);
+
   useEffect(() => {
     let tempDetails;
     if (data) {
@@ -91,27 +161,33 @@ const Card = React.memo((props) => {
         }
       });
     }
-  }, [props.chartId]);
+  }, [props.chartId]);  
+
   return (
     <div className="card-container">
-      {dropDown && (
-        <DropDown
-          dropDownItems={chartNames}
-          selected={selected}
-          setSelected={setSelected}
-          setDropDown={setDropDown}
-        />
-      )}
       <div className="card-title-container">
         <div className="card-source-name">
-          <SettingsOutlinedIcon
-            className="card-setting"
-            onClick={() => {
-              setDropDown(!dropDown);
-            }}
-          />
+          <div className="setting-container">
+            <div ref={ref}>
+              {dropDown && (
+                <DropDown
+                  dropDownItems={dropDownItems}
+                  dropDownIcons={dropDownIcons}
+                  selected={selected}
+                  setSelected={setSelected}
+                  setDropDown={setDropDown}
+                />
+              )}
+              <SettingsOutlinedIcon
+                className="card-setting"
+                onClick={() => {
+                  setDropDown(!dropDown);
+                }}
+              />
+            </div>
+          </div>
           <p className="details">{details ? details.join(" / ") : ""}</p>
-          <div className='star-container' onClick={onStarClickHandler}>
+          <div className="star-container" onClick={onStarClickHandler}>
             {isFav ? (
               <StarRoundedIcon style={starStyles} />
             ) : (
@@ -123,22 +199,27 @@ const Card = React.memo((props) => {
           <p>{props.title}</p>
         </div>
       </div>
-
       <div className="card-content">
-        {selected === "Bar" && <Bar data={chartData} option={props.option} />}
-        {selected === "Bubble" && (
-          <Bubble data={chartData} option={props.option} />
+        {selected === "ستونی" && (
+          <BarChart data={chartData} option={props.option} />
         )}
-        {selected === "Doughnut" && (
-          <Doughnut data={chartData} option={props.option} />
+        {selected === "حبابی" && (
+          <BubbleChart data={chartData} option={props.option} />
         )}
-        {selected === "Line" && <Line data={chartData} option={props.option} />}
-        {selected === "Pie" && <Pie data={chartData} option={props.option} />}
-        {selected === "PolarArea" && (
-          <PolarArea data={chartData} option={props.option} />
+        {selected === "دونات" && (
+          <DoughnutChart data={chartData} option={props.option} />
         )}
-        {selected === "Radar" && (
-          <Radar data={chartData} option={props.option} />
+        {selected === "خطی" && (
+          <LineChart data={chartData} option={props.option} />
+        )}
+        {selected === "دایره ای" && (
+          <PieChart data={chartData} option={props.option} />
+        )}
+        {selected === "مساحت" && (
+          <PolarAreaChart data={chartData} option={props.option} />
+        )}
+        {selected === "راداری" && (
+          <RadarChart data={chartData} option={props.option} />
         )}
       </div>
     </div>

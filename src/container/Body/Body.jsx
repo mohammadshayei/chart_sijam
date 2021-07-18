@@ -60,7 +60,7 @@ const Body = (props) => {
   useEffect(() => {
     let tempDataArray = [];
     let tempChartsArray = {};
-    let count = parseInt(`${window.innerWidth / 500}`);
+    let count = parseInt(`${window.innerWidth / 600}`);
     if (props.data) {
       let charts = [];
       props.data.forEach((dt) => {

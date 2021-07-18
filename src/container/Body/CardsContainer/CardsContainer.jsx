@@ -13,7 +13,7 @@ const CardsContainer = React.memo((props) => {
 
   // const getListStyle = (isDraggingOver) => ({
   //   background: isDraggingOver ? "lightblue" : "rgb(249, 249, 249)",
-  // });  
+  // });
   return (
     <Droppable
       droppableId={props.listId}
@@ -37,7 +37,7 @@ const CardsContainer = React.memo((props) => {
                           draggableId={`draggable${item.id}`}
                           key={`draggable${item.id}`}
                           index={index}
-                          isDragDisabled={false}
+                          isDragDisabled={true}
                         >
                           {(provided, snapshot) => (
                             <div

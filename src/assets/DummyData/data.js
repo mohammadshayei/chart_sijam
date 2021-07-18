@@ -30,7 +30,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -122,7 +123,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -195,7 +197,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -233,7 +235,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -325,7 +328,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -398,7 +402,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -436,7 +440,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -528,7 +533,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -601,7 +607,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -644,7 +650,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -736,7 +743,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -809,7 +817,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -847,7 +855,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -939,7 +948,9 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -1012,7 +1023,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -1050,7 +1061,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -1142,7 +1154,9 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -1215,7 +1229,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -1258,7 +1272,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -1350,7 +1365,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -1423,7 +1439,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -1461,7 +1477,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -1553,7 +1570,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -1626,7 +1644,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -1664,7 +1682,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -1756,7 +1775,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -1829,7 +1849,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -1867,7 +1887,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -1959,7 +1980,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -2032,7 +2054,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -2075,7 +2097,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -2167,7 +2190,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -2240,7 +2264,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -2278,7 +2302,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -2370,7 +2395,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -2443,7 +2469,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -2481,7 +2507,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -2573,7 +2600,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -2646,7 +2674,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -2689,7 +2717,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -2781,7 +2810,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -2854,7 +2884,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -2897,7 +2927,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -2989,7 +3020,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -3062,7 +3094,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -3105,7 +3137,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -3197,7 +3230,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -3270,7 +3304,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -3313,7 +3347,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -3405,7 +3440,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -3478,7 +3514,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -3521,7 +3557,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -3613,7 +3650,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -3686,7 +3724,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -3724,7 +3762,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -3816,7 +3855,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -3889,7 +3929,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -3927,7 +3967,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -4019,7 +4060,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -4092,7 +4134,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -4135,7 +4177,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -4227,7 +4270,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -4300,7 +4344,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
@@ -4343,7 +4387,8 @@ export const data = [
               ],
             },
             option: {
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               cutout: "65%",
               plugins: {
                 legend: {
@@ -4435,7 +4480,8 @@ export const data = [
             },
             option: {
               tension: 0.2,
-              maintainAspectRatio: true,
+              responsive: true,
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   labels: {
@@ -4508,7 +4554,7 @@ export const data = [
             },
             options: {
               responsive: true,
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
               scales: {
                 y: {
                   beginAtZero: true,
