@@ -45,3 +45,11 @@ export const clearBanks = () => {
     type: actionTypes.CLEAR_MY_BANKS,
   };
 };
+
+export const setType = ({ key, value, item }) => dispatch => {
+  dispatch({
+    type: actionTypes.SET_CHART_TYPE,
+    payload: { key, value, item }
+  });
+};
+

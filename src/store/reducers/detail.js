@@ -60,6 +60,20 @@ const clearBanks = (state) => {
   };
 };
 
+const setChartType = (state, action) => {
+  const { key, value, item } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [key]: {
+        ...state.data[key],
+        [item]: value
+      }
+    }
+  };
+}
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_HOLDING:
@@ -78,6 +92,8 @@ const reducer = (state = initialState, action) => {
       return clearSoftware(state);
     case actionTypes.CLEAR_MY_BANKS:
       return clearBanks(state);
+    case actionTypes.SET_CHART_TYPE:
+      return setChartType(state, action);
     default:
       return state;
   }

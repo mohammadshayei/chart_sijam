@@ -1,7 +1,17 @@
 import React from "react";
 import "./DropDown.scss";
 
+import { setType } from "../../../store/actions/detail";
+
+import chartTypes from "../../../constants/chart-types";
+import { root } from "postcss";
+
 const DropDown = (props) => {
+  handleClick = (value) => {
+    setType({ key: props.root, value, item: "type" });
+    props.setDropDown(false); //state of dropdown activate
+  };
+
   return (
     <div className="dropdown">
       {props.dropDownItems.map(
@@ -13,11 +23,8 @@ const DropDown = (props) => {
             <div className="dropdown-divider"></div>
           ) : (
             <div
-              key={`${item}`}
-              onClick={(e) => {
-                props.setSelected(item); //state of selected item
-                props.setDropDown(false); //state of dropdown activate
-              }}
+              key={`${item}`}              
+              onClick={handleClick}
               className="dropdown-item"
             >
               {item}

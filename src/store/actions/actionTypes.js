@@ -7,3 +7,4 @@ export const CLEAR_COMPANY = "CLEAR_COMPANY";
 export const CLEAR_SOFTWARE = "CLEAR_SOFTWARE";
 export const CLEAR_MY_BANKS = "CLEAR_MY_BANKS";
 export const SET_BANKS_DATA = "SET_BANKS_DATA";
+export const SET_CHART_TYPE = "SET_CHART_TYPE";
