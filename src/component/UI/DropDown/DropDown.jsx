@@ -1,39 +1,54 @@
 import React from "react";
 import "./DropDown.scss";
-
-import { setType } from "../../../store/actions/detail";
-
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { setType } from "../../../store/actions/chart.js";
 import chartTypes from "../../../constants/chart-types";
-import { root } from "postcss";
+import {
+  FcBarChart,
+  FcLineChart,
+  FcDoughnutChart,
+  FcPieChart,
+  FcRadarPlot,
+} from "react-icons/fc";
+import { MdBubbleChart } from "react-icons/md";
 
 const DropDown = (props) => {
-  handleClick = (value) => {
-    setType({ key: props.root, value, item: "type" });
+  const dropDownIcons = [
+    <FcBarChart />,
+    <MdBubbleChart />,
+    <FcDoughnutChart />,
+    <FcLineChart />,
+    <FcPieChart />,
+    <FcPieChart />,
+    <FcRadarPlot />,
+  ];
+
+  const handleClick = (value) => {
+    setType({ key: props.chartId, value, item: "type" });
     props.setDropDown(false); //state of dropdown activate
   };
 
   return (
     <div className="dropdown">
-      {props.dropDownItems.map(
-        (
-          item,
-          index //items of your dropdown
-        ) =>
-          item === "divider" ? (
-            <div className="dropdown-divider"></div>
-          ) : (
-            <div
-              key={`${item}`}              
-              onClick={handleClick}
-              className="dropdown-item"
-            >
-              {item}
-              <div className="dropdown-icon">{props.dropDownIcons[index]}</div>
-            </div>
-          )
-      )}
+      {chartTypes.map(({ label, value }, index) => (
+        <div
+          key={`${value}`}
+          onClick={() => handleClick(value)}
+          className="dropdown-item"
+        >
+          {label}
+          <div className="dropdown-icon">{dropDownIcons[index]}</div>
+        </div>
+      ))}
+      <div className="dropdown-divider"></div>
+      <li>
+        <Link className="dropdown-item" to={`/create_chart`}>
+          ویرایش
+        </Link>
+      </li>
     </div>
   );
 };
 
-export default DropDown;
+export default connect(null, { setType })(DropDown);

@@ -9,30 +9,30 @@ const Card = React.memo((props) => {
 
   useEffect(() => {
     if (
-      (props.item.chartType === "Line" ||
-        props.item.chartType === "Doughnut" ||
-        props.item.chartType === "Pie" ||
-        props.item.chartType === "PolarArea" ||
-        props.item.chartType === "Bar" ||
-        props.item.chartType === "Radar") &&
-      props.item.database
+      (props.item.type === "Line" ||
+        props.item.type === "Doughnut" ||
+        props.item.type === "Pie" ||
+        props.item.type === "PolarArea" ||
+        props.item.type === "Bar" ||
+        props.item.type === "Radar") &&
+      props.item.data.database
     ) {
       setChartData({
-        labels: props.item.database.labels,
-        datasets: props.item.database.data.map((item, index) => {
+        labels: props.item.data.database.labels,
+        datasets: props.item.data.database.data.map((item, index) => {
           return {
             label: item.label,
             data: item.data,
             backgroundColor:
-              props.item.database.data.length === 1
-                ? props.item.backGroundColor
-                : props.item.backGroundColor[index],
+              props.item.data.database.data.length === 1
+                ? props.item.data.backGroundColor
+                : props.item.data.backGroundColor[index],
             borderColor:
-              props.item.database.data.length === 1
-                ? props.item.borderColor
-                : props.item.borderColor[index],
-            borderRadius: props.item.borderRadius,
-            borderWidth: props.item.borderWidth,
+              props.item.data.database.data.length === 1
+                ? props.item.data.borderColor
+                : props.item.data.borderColor[index],
+            borderRadius: props.item.data.borderRadius,
+            borderWidth: props.item.data.borderWidth,
           };
         }),
       });
@@ -41,16 +41,12 @@ const Card = React.memo((props) => {
 
   return (
     <div className="card-container">
-      <div className="card-title-container">
-        <TitleBlock chartId={props.item.chartId} title={props.item.title} />
-      </div>
-      <div className="card-content">
-        <ChartBlock
-          type={props.item.type}
-          data={chartData}
-          options={props.item.options}
-        />
-      </div>
+      <TitleBlock chartId={props.item.data.id} title={props.item.title} />
+      <ChartBlock
+        type={props.item.type}
+        data={chartData}
+        options={props.item.data.option}
+      />
     </div>
   );
 });

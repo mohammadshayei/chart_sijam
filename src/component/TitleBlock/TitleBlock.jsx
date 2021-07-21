@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
+import "./TitleBlock.scss";
 
 import { data } from "../../assets/dummy_data/TestData";
 import { lightTheme } from "../../styles/theme";
@@ -7,14 +7,6 @@ import { lightTheme } from "../../styles/theme";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
-import {
-  FcBarChart,
-  FcLineChart,
-  FcDoughnutChart,
-  FcPieChart,
-  FcRadarPlot,
-} from "react-icons/fc";
-import { MdBubbleChart } from "react-icons/md";
 
 import DropDown from "./../UI/DropDown/DropDown";
 
@@ -44,35 +36,12 @@ const TitleBlock = React.memo((props) => {
   const starStyles = {
     color: lightTheme.star_color,
   };
-  const dropDownItems = [
-    "ستونی",
-    "حبابی",
-    "دونات",
-    "خطی",
-    "دایره ای",
-    "مساحت",
-    "راداری",
-    "divider",
-    "کوچک",
-    "متوسط",
-    "بزرگ",
-  ];
-  const dropDownIcons = [
-    <FcBarChart />,
-    <MdBubbleChart />,
-    <FcDoughnutChart />,
-    <FcLineChart />,
-    <FcPieChart />,
-    <FcPieChart />,
-    <FcRadarPlot />,
-  ];
+
   const ref = useRef();
 
   const onStarClickHandler = (e) => {
-    // ripple(e, 'red');
     setIsFav(!isFav);
   };
-
   useOnClickOutside(ref, () => {
     setDropDown(false);
   });
@@ -80,24 +49,25 @@ const TitleBlock = React.memo((props) => {
   useEffect(() => {
     let tempDetails;
     if (data) {
-      data.forEach((item) => {
-        if (item.id === props.chartId.substring(0, 3)) {
-          tempDetails = [item.name];
-          if (item.companies) {
-            item.companies.forEach((cp) => {
-              if (cp.id === props.chartId.substring(0, 6)) {
-                tempDetails = [...tempDetails, cp.name];
-                cp.softwares.forEach((sf) => {
-                  if (sf.id === props.chartId.substring(0, 9)) {
-                    tempDetails = [...tempDetails, sf.name];
-                    setDetails(tempDetails);
-                  }
-                });
-              }
-            });
-          }
-        }
-      });
+      // console.log(props.chartId);
+      // data.forEach((item) => {
+      //   if (item.id === props.chartId.substring(0, 3)) {
+      //     tempDetails = [item.name];
+      //     if (item.companies) {
+      //       item.companies.forEach((cp) => {
+      //         if (cp.id === props.chartId.substring(0, 6)) {
+      //           tempDetails = [...tempDetails, cp.name];
+      //           cp.softwares.forEach((sf) => {
+      //             if (sf.id === props.chartId.substring(0, 9)) {
+      //               tempDetails = [...tempDetails, sf.name];
+      //               setDetails(tempDetails);
+      //             }
+      //           });
+      //         }
+      //       });
+      //     }
+      //   }
+      // });
     }
   }, [props.chartId]);
 
@@ -106,13 +76,7 @@ const TitleBlock = React.memo((props) => {
       <div className="card-source-name">
         <div className="setting-container">
           <div ref={ref}>
-            {dropDown && (
-              <DropDown
-                dropDownItems={dropDownItems}
-                dropDownIcons={dropDownIcons}
-                setDropDown={setDropDown}
-              />
-            )}
+            {dropDown && <DropDown setDropDown={setDropDown} />}
             <SettingsOutlinedIcon
               className="card-setting"
               onClick={() => {
@@ -136,7 +100,5 @@ const TitleBlock = React.memo((props) => {
     </div>
   );
 });
-
-TitleBlock.propTypes = {};
 
 export default TitleBlock;

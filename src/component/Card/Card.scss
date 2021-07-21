@@ -14,13 +14,9 @@ $xxl: 1600px;
   border-radius: 5px;
   background-color: white;
   transition: 0.3s;
-  animation: ease-in;
-  // width: 90%;
-  min-width: 90%;
-  min-height: 90%;
-
-  width: 30rem;
-  height: 30rem;
+  animation: ease-in;  
+  display: flex;
+  flex-direction: column;
 
   @media screen and (max-width: $xl) and (min-width: $md) {
     // width: 300px;

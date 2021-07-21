@@ -26,8 +26,10 @@ const selectSoftware = (state, action) => {
   };
 };
 const addBank = (state, action) => {
-  let count = state.banks?state.banks.length:0;
-  let newBanks = state.banks?state.banks.filter((bk) => bk.id !== action.bank.id):[];
+  let count = state.banks ? state.banks.length : 0;
+  let newBanks = state.banks
+    ? state.banks.filter((bk) => bk.id !== action.bank.id)
+    : [];
   if (count === newBanks.length) newBanks.push(action.bank);
   return {
     ...state,
@@ -60,20 +62,6 @@ const clearBanks = (state) => {
   };
 };
 
-const setChartType = (state, action) => {
-  const { key, value, item } = action.payload;
-  return {
-    ...state,
-    data: {
-      ...state.data,
-      [key]: {
-        ...state.data[key],
-        [item]: value
-      }
-    }
-  };
-}
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_HOLDING:
@@ -92,8 +80,6 @@ const reducer = (state = initialState, action) => {
       return clearSoftware(state);
     case actionTypes.CLEAR_MY_BANKS:
       return clearBanks(state);
-    case actionTypes.SET_CHART_TYPE:
-      return setChartType(state, action);
     default:
       return state;
   }

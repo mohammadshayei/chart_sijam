@@ -46,10 +46,3 @@ export const clearBanks = () => {
   };
 };
 
-export const setType = ({ key, value, item }) => dispatch => {
-  dispatch({
-    type: actionTypes.SET_CHART_TYPE,
-    payload: { key, value, item }
-  });
-};
-

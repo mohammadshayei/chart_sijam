@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {
   Bar,
   Bubble,
@@ -32,11 +31,5 @@ const ChartBlock = React.memo((props) => {
       return null;
   }
 });
-
-ChartBlock.propTypes = {
-  type: PropTypes.string.isRequired,
-  data: PropTypes.array.isRequired,
-  options: PropTypes.array.isRequired,
-};
 
 export default ChartBlock;
