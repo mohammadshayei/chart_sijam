@@ -40,13 +40,15 @@ const Card = React.memo((props) => {
   }, [props.item]);
 
   return (
-    <div className="card-container">
+    <div className="card">
       <TitleBlock chartId={props.item.data.id} title={props.item.title} />
-      <ChartBlock
-        type={props.item.type}
-        data={chartData}
-        options={props.item.data.option}
-      />
+      <div className="card-body">
+        <ChartBlock
+          type={props.item.type}
+          data={chartData}
+          options={props.item.data.option}
+        />
+      </div>
     </div>
   );
 });

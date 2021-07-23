@@ -4,6 +4,7 @@ import "./Body.scss";
 import CardContainer from "./../CardContainer/CardContainer";
 import { useDispatch, useSelector } from "react-redux";
 import * as chartActions from "../../store/actions/chart.js";
+import Card from "./../../component/Card/Card";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -53,17 +54,19 @@ const Body = (props) => {
       isDraggable
       isRearrangeable
       isResizable
-      // draggableHandle=".grid-item"
-      breakpoints={{ lg: 1280 }} /*, md: 992, sm: 767, xs: 480, xxs: 0  */
-      cols={{ lg: 12 }} /*, md: 10, sm: 6, xs: 4, xxs: 2  */
-      rowHeight={281}
-      width={1200}
+      autoSize
+      isBounded
+      margin={[25, 25]}
+      breakpoints={{ lg: 1280, md: 992, sm: 767, xs: 480, xxs: 0 }}
+      cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
     >
-      {chartsData.data
-        ? Object.entries(chartsData.data).map(([k, v]) => (
-            <CardContainer key={k} item={v} />
-          ))
-        : null}
+      {Object.entries(chartsData.data).map(([k, v]) => (
+        // <CardContainer key={k} item={v} />
+        // <Card key={k} item={v} />
+        <div key={k} className="card-container">
+          <Card item={v} />
+        </div>
+      ))}
     </ResponsiveGridLayout>
   ) : null;
 };

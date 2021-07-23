@@ -49,25 +49,24 @@ const TitleBlock = React.memo((props) => {
   useEffect(() => {
     let tempDetails;
     if (data) {
-      // console.log(props.chartId);
-      // data.forEach((item) => {
-      //   if (item.id === props.chartId.substring(0, 3)) {
-      //     tempDetails = [item.name];
-      //     if (item.companies) {
-      //       item.companies.forEach((cp) => {
-      //         if (cp.id === props.chartId.substring(0, 6)) {
-      //           tempDetails = [...tempDetails, cp.name];
-      //           cp.softwares.forEach((sf) => {
-      //             if (sf.id === props.chartId.substring(0, 9)) {
-      //               tempDetails = [...tempDetails, sf.name];
-      //               setDetails(tempDetails);
-      //             }
-      //           });
-      //         }
-      //       });
-      //     }
-      //   }
-      // });
+      data.forEach((item) => {
+        if (item.id === props.chartId.substring(0, 3)) {
+          tempDetails = [item.name];
+          if (item.companies) {
+            item.companies.forEach((cp) => {
+              if (cp.id === props.chartId.substring(0, 6)) {
+                tempDetails = [...tempDetails, cp.name];
+                cp.softwares.forEach((sf) => {
+                  if (sf.id === props.chartId.substring(0, 9)) {
+                    tempDetails = [...tempDetails, sf.name];
+                    setDetails(tempDetails);
+                  }
+                });
+              }
+            });
+          }
+        }
+      });
     }
   }, [props.chartId]);
 

@@ -1,51 +1,11 @@
-@import "../../assets/config/global";
-
-$xs: 480px;
-$sm: 576px;
-$md: 768px;
-$lg: 992px;
-$xl: 1200px;
-$xxl: 1600px;
-
-.card-container {
-  position: relative;
-  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
-  margin: 0 0 2.2rem 2.2rem;
-  border-radius: 5px;
-  background-color: white;
-  transition: 0.3s;
-  animation: ease-in;  
+.card {
   display: flex;
   flex-direction: column;
-
-  @media screen and (max-width: $xl) and (min-width: $md) {
-    // width: 300px;
+  flex: 1;
+  position: relative;
+  .card-body {
+    position: relative;
+    background-color: pink;
+    flex: 1;
   }
-  @media screen and (max-width: $md) {
-    // width: 200px;
-  }
-
-  @extend %global-shadow;
-  .card-title-container {
-    margin: 0.5rem 0;
-
-    .card-content {
-      min-width: 100%;
-      min-height: 80%;
-      position: relative;
-      @media screen and (max-width: $xl) and (min-width: $md) {
-        // width: 250px;
-        // height: 250px;
-      }
-      @media screen and (max-width: $md) {
-        // width: 150px;
-        // height: 150px;
-      }
-    }
-  }
-}
-.card-container:hover {
-  transform: scale(1.03);
-  box-shadow: rgba(14, 30, 37, 0.05) 0px 2px 4px 0px,
-    rgba(14, 30, 37, 0.12) 0px 2px 14px 0px;
 }

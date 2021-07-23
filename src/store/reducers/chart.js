@@ -2,7 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   data: {},
-  layouts: {lg:[],md:[],sm:[],xs:[]},
+  layouts: { lg: [], md: [], sm: [], xs: [] },
   breakpoint: "lg",
 };
 
@@ -39,50 +39,58 @@ const setChartData = (state, action) => {
 
 const setChartsData = (state, action) => {
   let newData = state.data;
-  let newLayouts=state.layouts
-  Object.entries(action.data).map(([k, v]) => {
-    newLayouts={
-      "lg":[
+  let newLayouts = state.layouts;
+  Object.entries(action.data).map(([k, v], index) => {
+    newLayouts = {
+      lg: [
         ...newLayouts.lg,
         {
-          w:5,
-          h:5,
-          x:0,
-          y:0,
-          i:k
-        }
+          minW: 2,
+          minH: 2,
+          w: 8,
+          h: 3,
+          x: ((index + 1) * 8) % 12,
+          y: 0,
+          i: k,
+        },
       ],
-      "md":[
+      md: [
         ...newLayouts.md,
         {
-          w:3,
-          h:2,
-          x:0,
-          y:0,
-          i:k
-        }
+          minW: 2,
+          minH: 2,
+          w: 5,
+          h: 2,
+          x: ((index + 1) * 5) % 10,
+          y: 0,
+          i: k,
+        },
       ],
-      "sm":[
+      sm: [
         ...newLayouts.sm,
         {
-          w:2,
-          h:1,
-          x:0,
-          y:0,
-          i:k
-        }
+          minW: 2,
+          minH: 2,
+          w: 3,
+          h: 2,
+          x: ((index + 1) * 3) % 6,
+          y: 0,
+          i: k,
+        },
       ],
-      "xs":[
+      xs: [
         ...newLayouts.xs,
         {
-          w:1,
-          h:1,
-          x:0,
-          y:0,
-          i:k
-        }
+          minW: 2,
+          minH: 2,
+          w: 2,
+          h: 2,
+          x: ((index + 1) * 2) % 4,
+          y: 0,
+          i: k,
+        },
       ],
-    }
+    };
     newData = {
       ...newData,
       [k]: v,
@@ -91,7 +99,7 @@ const setChartsData = (state, action) => {
   return {
     ...state,
     data: newData,
-    layouts:newLayouts,
+    layouts: newLayouts,
   };
 };
 
