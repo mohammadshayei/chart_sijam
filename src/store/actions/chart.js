@@ -1,6 +1,6 @@
 import * as actionTypes from "./actionTypes";
 
-export const setType =
+export const setChartType =
   ({ key, value, item }) =>
   (dispatch) => {
     dispatch({

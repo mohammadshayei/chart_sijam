@@ -75,7 +75,9 @@ const TitleBlock = React.memo((props) => {
       <div className="card-source-name">
         <div className="setting-container">
           <div ref={ref}>
-            {dropDown && <DropDown setDropDown={setDropDown} />}
+            {dropDown && (
+              <DropDown chartId={props.chartId} setDropDown={setDropDown} />
+            )}
             <SettingsOutlinedIcon
               className="card-setting"
               onClick={() => {

@@ -6,7 +6,7 @@ const initialState = {
   breakpoint: "lg",
 };
 
-// chartData: {
+// chartId: {
 //   type: "",
 //   title: "",
 //   data: [],
@@ -45,9 +45,9 @@ const setChartsData = (state, action) => {
       lg: [
         ...newLayouts.lg,
         {
-          minW: 2,
+          minW: 4,
           minH: 2,
-          w: 8,
+          w: 12,
           h: 3,
           x: ((index + 1) * 8) % 12,
           y: 0,

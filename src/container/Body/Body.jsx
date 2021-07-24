@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
+import { withSize } from "react-sizeme";
 import "./Body.scss";
-import CardContainer from "./../CardContainer/CardContainer";
 import { useDispatch, useSelector } from "react-redux";
 import * as chartActions from "../../store/actions/chart.js";
 import Card from "./../../component/Card/Card";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const Body = (props) => {
-  // const [charts, setCharts] = useState(null);
+const Body = (props, { size }) => {
 
   const chartsData = useSelector((state) => state.chart);
 
@@ -38,7 +37,7 @@ const Body = (props) => {
             borderWidth: item.borderWidth,
             borderRadius: item.borderRadius,
             database: item.database,
-            option: item.option,
+            options: item.options,
             id: item.id,
           },
         },
@@ -56,18 +55,20 @@ const Body = (props) => {
       isResizable
       autoSize
       isBounded
-      margin={[25, 25]}
+      // onBreakpointChange={console.log("BreakpointChanged !")}
+      measureBeforeMount={true}
+      // useCSSTransforms={true}
+      margin={[30, 30]}
+      // width={size.width}
       breakpoints={{ lg: 1280, md: 992, sm: 767, xs: 480, xxs: 0 }}
       cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
     >
       {Object.entries(chartsData.data).map(([k, v]) => (
-        // <CardContainer key={k} item={v} />
-        // <Card key={k} item={v} />
         <div key={k} className="card-container">
-          <Card item={v} />
+          <Card key={k} item={v} />
         </div>
       ))}
     </ResponsiveGridLayout>
   ) : null;
 };
-export default Body;
+export default withSize()(Body);

@@ -7,8 +7,8 @@ import {
   Pie,
   PolarArea,
   Radar,
-  Scatter,
-  defaults,
+  // Scatter,
+  // defaults,
 } from "react-chartjs-2";
 
 const ChartBlock = React.memo((props) => {

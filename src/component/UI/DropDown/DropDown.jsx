@@ -1,8 +1,8 @@
 import React from "react";
 import "./DropDown.scss";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { setType } from "../../../store/actions/chart.js";
+import * as chartActions from "../../../store/actions/chart.js";
 import chartTypes from "../../../constants/chart-types";
 import {
   FcBarChart,
@@ -10,6 +10,8 @@ import {
   FcDoughnutChart,
   FcPieChart,
   FcRadarPlot,
+  FcScatterPlot,
+  FcSettings,
 } from "react-icons/fc";
 import { MdBubbleChart } from "react-icons/md";
 
@@ -22,10 +24,17 @@ const DropDown = (props) => {
     <FcPieChart />,
     <FcPieChart />,
     <FcRadarPlot />,
+    <FcScatterPlot />,
+    <FcSettings />,
   ];
 
+  const dispatch = useDispatch();
+  const setChartType = (chartType) => {
+    dispatch(chartActions.setChartType(chartType));
+  };
+
   const handleClick = (value) => {
-    setType({ key: props.chartId, value, item: "type" });
+    setChartType({ key: props.chartId, value, item: "type" });
     props.setDropDown(false); //state of dropdown activate
   };
 
@@ -42,13 +51,18 @@ const DropDown = (props) => {
         </div>
       ))}
       <div className="dropdown-divider"></div>
-      <li>
-        <Link className="dropdown-item" to={`/create_chart`}>
-          ویرایش
-        </Link>
-      </li>
+      <Link
+        className="dropdown-item"
+        to={`/create_chart`}
+        style={{ textDecoration: "none", color: "black" }}
+      >
+        ویرایش
+        <div className="dropdown-icon">
+          {dropDownIcons[dropDownIcons.length - 1]}
+        </div>
+      </Link>
     </div>
   );
 };
 
-export default connect(null, { setType })(DropDown);
+export default DropDown;
