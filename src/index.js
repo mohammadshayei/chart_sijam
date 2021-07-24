@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App.jsx";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 
 import reportWebVitals from "./reportWebVitals";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
@@ -10,28 +10,31 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import detailReducer from "./store/reducers/detail";
 import banksDataReducer from "./store/reducers/banksData";
+import chartReducer from "./store/reducers/chart";
 
-
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 const rootReducer = combineReducers({
-  detail:detailReducer,
-  banks:banksDataReducer
+  detail: detailReducer,
+  banks: banksDataReducer,
+  chart: chartReducer,  
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk)),
 );
 
 const app = (
   <Provider store={store}>
     <BrowserRouter basename="admin">
-        <App />
-      </BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>
-)
+);
 
 ReactDOM.render(
   <React.StrictMode>{app}</React.StrictMode>,

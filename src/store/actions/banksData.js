@@ -6,4 +6,3 @@ export const setBankData = (data) => {
     data: data,
   };
 };
-

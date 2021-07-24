@@ -1,30 +1,66 @@
 import React from "react";
 import "./DropDown.scss";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import * as chartActions from "../../../store/actions/chart.js";
+import chartTypes from "../../../constants/chart-types";
+import {
+  FcBarChart,
+  FcLineChart,
+  FcDoughnutChart,
+  FcPieChart,
+  FcRadarPlot,
+  FcScatterPlot,
+  FcSettings,
+} from "react-icons/fc";
+import { MdBubbleChart } from "react-icons/md";
 
 const DropDown = (props) => {
+  const dropDownIcons = [
+    <FcBarChart />,
+    <MdBubbleChart />,
+    <FcDoughnutChart />,
+    <FcLineChart />,
+    <FcPieChart />,
+    <FcPieChart />,
+    <FcRadarPlot />,
+    <FcScatterPlot />,
+    <FcSettings />,
+  ];
+
+  const dispatch = useDispatch();
+  const setChartType = (chartType) => {
+    dispatch(chartActions.setChartType(chartType));
+  };
+
+  const handleClick = (value) => {
+    setChartType({ key: props.chartId, value, item: "type" });
+    props.setDropDown(false); //state of dropdown activate
+  };
+
   return (
     <div className="dropdown">
-      {props.dropDownItems.map(
-        (
-          item,
-          index //items of your dropdown
-        ) =>
-          item === "divider" ? (
-            <div className="dropdown-divider"></div>
-          ) : (
-            <div
-              key={`${item}`}
-              onClick={(e) => {
-                props.setSelected(item); //state of selected item
-                props.setDropDown(false); //state of dropdown activate
-              }}
-              className="dropdown-item"
-            >
-              {item}
-              <div className="dropdown-icon">{props.dropDownIcons[index]}</div>
-            </div>
-          )
-      )}
+      {chartTypes.map(({ label, value }, index) => (
+        <div
+          key={`${value}`}
+          onClick={() => handleClick(value)}
+          className="dropdown-item"
+        >
+          {label}
+          <div className="dropdown-icon">{dropDownIcons[index]}</div>
+        </div>
+      ))}
+      <div className="dropdown-divider"></div>
+      <Link
+        className="dropdown-item"
+        to={`/create_chart`}
+        style={{ textDecoration: "none", color: "black" }}
+      >
+        ویرایش
+        <div className="dropdown-icon">
+          {dropDownIcons[dropDownIcons.length - 1]}
+        </div>
+      </Link>
     </div>
   );
 };
