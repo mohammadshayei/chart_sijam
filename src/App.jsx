@@ -9,7 +9,6 @@ const App = () => {
       <div className={classes.AppContainer}>
         <Route path="/view" exact component={LayoutContent}></Route>
         <Route path="/create_chart" exact component={CreateCharts}></Route>
-
       </div>
     </Switch>
   );

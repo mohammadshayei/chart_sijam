@@ -1,10 +1,10 @@
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
 import { lightTheme } from "../../../styles/theme";
-import './EditTitle.scss'
+import "./EditTitle.scss";
 const EditTitle = (props) => {
   return (
-    <div className="EditTitleContainer">
+    <div className="EditTitleContainer" style={props.style}>
       <p>{props.title ? props.title : stringFa.title}</p>
       <EditRoundedIcon
         style={{

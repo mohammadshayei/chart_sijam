@@ -21,13 +21,23 @@
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      .SettingVertical{
+        position: relative;
+        top: 1.5rem;
+        left: 4.2rem;
+      }
+      .SettingBanksColor{
+        position: relative;
+        top: 1.5rem;
+        left: -2.5rem;
+      }
     }
     .CardContent {
       width: 100%;
       height: 100%;
       .CardContentTop {
-        height: calc(100% - 5rem);
+        height: calc(100% - 7rem);
         display: flex;
         .SwapVerticalContainer{
             width: 3rem;
@@ -43,18 +53,26 @@
         }
       }
       .CardContentBottom {
-        height: 5rem;
+        height: 3rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         .SwapAxisContainer {
           position: relative;
-          top: -2rem;
+          top: -1.5rem;
+          left:2rem;
           transform: rotate(-135deg);
+        }
+        .SwapHorizontalContainer{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding-top: 1rem;
         }
         .SettingHoriAxis {
           position: relative;
-          top: -2rem;
+          top: -3rem;
+          right: .4rem;
         }
       }
     }

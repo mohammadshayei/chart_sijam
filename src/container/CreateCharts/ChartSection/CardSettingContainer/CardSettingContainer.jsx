@@ -12,11 +12,25 @@ const CardSettingContainer = (props) => {
   return (
     <div className="CardSettingContainer">
       <div className="CartBodyLeftSection">
-        <EditTitle />
+        <EditTitle style={{ marginBottom: "1.3rem", marginLeft: "5rem" }} />
       </div>
       <div className="CartBodyRightSection">
         <div className="CardSettingHeader">
+          <div className="SettingVertical">
+            <SettingsRoundedIcon
+              style={{
+                cursor: "pointer",
+              }}
+            />
+          </div>
           <EditTitle />
+          <div className="SettingBanksColor">
+            <SettingsRoundedIcon
+              style={{
+                cursor: "pointer",
+              }}
+            />
+          </div>
         </div>
         <div className="CardContent">
           <div className="CardContentTop">
@@ -25,11 +39,12 @@ const CardSettingContainer = (props) => {
                 style={{
                   color: lightTheme.clicked_darken_color,
                   fontSize: "2.4rem",
+                  cursor: "pointer",
                 }}
               />
             </div>
             <div className="ChartShowContainer">
-              <LineChart data={props.data} option={props.options}  />
+              <LineChart data={props.data} option={props.options} />
             </div>
           </div>
           <div className="CardContentBottom">
@@ -37,6 +52,8 @@ const CardSettingContainer = (props) => {
               <UndoRoundedIcon
                 style={{
                   color: lightTheme.clicked_darken_color,
+                  fontSize: "2rem",
+                  cursor: "pointer",
                 }}
               />
             </div>
@@ -45,12 +62,17 @@ const CardSettingContainer = (props) => {
                 style={{
                   fontSize: "2.4rem",
                   color: lightTheme.clicked_darken_color,
+                  cursor: "pointer",
                 }}
               />
               <EditTitle />
             </div>
             <div className="SettingHoriAxis">
-              <SettingsRoundedIcon />
+              <SettingsRoundedIcon
+                style={{
+                  cursor: "pointer",
+                }}
+              />
             </div>
           </div>
         </div>
