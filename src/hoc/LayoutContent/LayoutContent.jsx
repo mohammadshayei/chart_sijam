@@ -78,6 +78,7 @@ const LayoutContent = (props) => {
           {detail.software || detail.company || detail.holding ? (
             banksData.banks ? (
               <Body
+                isMenuOpen={isMenuOpen}
                 data={
                   detail.banks && detail.banks.length > 0
                     ? banksData.banks.filter((item) =>

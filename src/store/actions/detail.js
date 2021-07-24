@@ -45,3 +45,4 @@ export const clearBanks = () => {
     type: actionTypes.CLEAR_MY_BANKS,
   };
 };
+

@@ -29,7 +29,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -121,7 +121,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               maintainAspectRatio: false,
               plugins: {
@@ -233,7 +233,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -325,7 +325,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               maintainAspectRatio: false,
               plugins: {
@@ -437,7 +437,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -529,7 +529,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -647,7 +647,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -739,7 +739,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -852,7 +852,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -944,7 +944,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
 
               responsive: true,
@@ -1058,7 +1058,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -1150,7 +1150,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
 
               responsive: true,
@@ -1269,7 +1269,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -1361,7 +1361,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -1474,7 +1474,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -1566,7 +1566,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -1679,7 +1679,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -1771,7 +1771,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -1884,7 +1884,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -1976,7 +1976,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -2094,7 +2094,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -2186,7 +2186,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -2299,7 +2299,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -2391,7 +2391,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -2504,7 +2504,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -2596,7 +2596,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -2714,7 +2714,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -2806,7 +2806,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -2924,7 +2924,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -3016,7 +3016,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -3134,7 +3134,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -3226,7 +3226,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -3344,7 +3344,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -3436,7 +3436,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -3554,7 +3554,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -3646,7 +3646,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -3759,7 +3759,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -3851,7 +3851,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -3964,7 +3964,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -4056,7 +4056,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -4174,7 +4174,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -4266,7 +4266,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
@@ -4384,7 +4384,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               responsive: true,
               maintainAspectRatio: false,
               cutout: "65%",
@@ -4476,7 +4476,7 @@ export const data = [
                 },
               ],
             },
-            option: {
+            options: {
               tension: 0.2,
               responsive: true,
               maintainAspectRatio: false,
