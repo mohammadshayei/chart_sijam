@@ -79,7 +79,7 @@ const TitleBlock = React.memo((props) => {
               <DropDown chartId={props.chartId} setDropDown={setDropDown} />
             )}
             <SettingsOutlinedIcon
-              className="card-setting"
+              className={`card-setting ${ !dropDown && `card-setting-animation` }`}
               onClick={() => {
                 setDropDown(!dropDown);
               }}
