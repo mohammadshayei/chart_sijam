@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { chartsType } from "../../../../assets/dummy_data/TestData";
+import { chartsType } from "../../../../constants/chart-types";
 import ChartItem from "./ChartItem/ChartItem";
 import "./ChartSelection.scss";
 const ChartSelection = (props) => {
