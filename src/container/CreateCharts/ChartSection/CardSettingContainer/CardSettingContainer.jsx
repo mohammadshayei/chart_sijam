@@ -1,5 +1,4 @@
 import React from "react";
-import LineChart from "../../../../component/Charts/line";
 import "./CardSettingContainer.scss";
 import { lightTheme } from "../../../../styles/theme";
 import EditTitle from "../../../../component/UI/EditTitle/EditTitle";
@@ -28,8 +27,7 @@ const CardSettingContainer = (props) => {
                 }}
               />
             </div>
-            <div className="ChartShowContainer">
-              <LineChart data={props.data} option={props.options}  />
+            <div className="ChartShowContainer">Line
             </div>
           </div>
           <div className="CardContentBottom">

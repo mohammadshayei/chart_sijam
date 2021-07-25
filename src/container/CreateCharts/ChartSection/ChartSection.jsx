@@ -1,7 +1,6 @@
 import React from "react";
 import "./ChartSection.scss";
 import ChartSelection from "./ChartSelection/ChartSelection";
-import LineChart from "../../../component/Charts/line";
 import CardSettingContainer from "./CardSettingContainer/CardSettingContainer";
 const ChartSection = (props) => {
   const data = {
