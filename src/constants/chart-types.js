@@ -1,4 +1,4 @@
-export default chartTypes = [
+export default [
   {
     id: 1,
     label: "ستونی",

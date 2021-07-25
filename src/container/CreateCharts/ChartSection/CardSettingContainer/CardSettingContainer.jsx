@@ -1,6 +1,5 @@
 import React from "react";
 import "./CardSettingContainer.scss";
-import { ChartBlock } from "../../../../component/ChartBlock.jsx";
 import { lightTheme } from "../../../../styles/theme";
 import EditTitle from "../../../../component/UI/EditTitle/EditTitle";
 import SwapHorizRoundedIcon from "@material-ui/icons/SwapHorizRounded";
