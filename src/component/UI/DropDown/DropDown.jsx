@@ -14,6 +14,8 @@ import {
   FcSettings,
 } from "react-icons/fc";
 import { MdBubbleChart } from "react-icons/md";
+import { stringFa } from "./../../../assets/strings/stringFaCollection";
+import { EditRoundedIcon } from "@material-ui/icons/EditRounded";
 
 const DropDown = (props) => {
   const dropDownIcons = [
@@ -53,10 +55,15 @@ const DropDown = (props) => {
       <div className="dropdown-divider"></div>
       <Link
         className="dropdown-item"
-        to={`/create_chart`}
+        to={{
+          pathname: `/create_chart`,
+          state: {
+            chartId: props.chartId,
+          },
+        }}
         style={{ textDecoration: "none", color: "black" }}
       >
-        ویرایش
+        {stringFa.Edit}
         <div className="dropdown-icon">
           {dropDownIcons[dropDownIcons.length - 1]}
         </div>

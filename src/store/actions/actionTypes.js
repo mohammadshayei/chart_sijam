@@ -9,5 +9,6 @@ export const CLEAR_MY_BANKS = "CLEAR_MY_BANKS";
 export const SET_BANKS_DATA = "SET_BANKS_DATA";
 export const SET_CHART_TYPE = "SET_CHART_TYPE";
 export const SET_CHART_DATA = "SET_CHART_DATA";
+export const SET_CHART_OPTIONS = "SET_CHART_OPTIONS";
 export const SET_CHARTS_DATA = "SET_CHARTS_DATA";
 

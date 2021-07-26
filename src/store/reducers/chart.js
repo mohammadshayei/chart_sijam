@@ -37,6 +37,20 @@ const setChartData = (state, action) => {
   };
 };
 
+const setChartOptions = (state, action) => {
+  const { chartId, chartOptions } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [chartId]: {
+        ...state.data[chartId],
+        data: {...state.data[chartId].data, options: chartOptions},
+      },
+    },
+  };
+};
+
 const setChartsData = (state, action) => {
   let newData = state.data;
   let newLayouts = state.layouts;
@@ -109,6 +123,8 @@ const reducer = (state = initialState, action) => {
       return setChartType(state, action);
     case actionTypes.SET_CHART_DATA:
       return setChartData(state, action);
+    case actionTypes.SET_CHART_OPTIONS:
+      return setChartOptions(state, action);
     case actionTypes.SET_CHARTS_DATA:
       return setChartsData(state, action);
     default:
