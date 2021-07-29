@@ -75,7 +75,7 @@ const GaugeChart = (props) => {
     hand.events.on("propertychanged", function (ev) {
       range0.endValue = ev.target.value;
       range1.value = ev.target.value;
-      label.text = axis2.positionToValue(hand.currentPosition).toFixed(1);
+      label.text = axis2.positionToValue(hand.currentPosition).toFixed(0);
       axis2.invalidate();
     });
     setInterval(function () {
