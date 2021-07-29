@@ -3,7 +3,7 @@ import "./DropDown.scss";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as chartActions from "../../../store/actions/chart.js";
-import chartTypes from "../../../constants/chart-types";
+import { chartTypes } from "../../../constants/chart-types";
 import {
   FcBarChart,
   FcLineChart,
@@ -15,7 +15,7 @@ import {
 } from "react-icons/fc";
 import { MdBubbleChart } from "react-icons/md";
 import { stringFa } from "./../../../assets/strings/stringFaCollection";
-import { EditRoundedIcon } from "@material-ui/icons/EditRounded";
+// import { EditRoundedIcon } from "@material-ui/icons/EditRounded";
 
 const DropDown = (props) => {
   const dropDownIcons = [

@@ -1,4 +1,4 @@
-export default [
+export const chartTypes = [
   {
     id: 1,
     label: "ستونی",

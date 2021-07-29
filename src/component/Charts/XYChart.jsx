@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import am4themes_material from "@amcharts/amcharts4/themes/material";
-import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
+// import am4themes_material from "@amcharts/amcharts4/themes/material";
+// import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
 
-// am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_animated);
 // am4core.useTheme(am4themes_material);
 // am4core.useTheme(am4themes_microchart);
 am4core.addLicense("ch-custom-attribution");
@@ -28,8 +28,9 @@ const XYChart = (props) => {
 
       // Create series
       function createSeries(field, name) {
+        var series;
         if (props.xyType === "Line") {
-          var series = xyChart.series.push(new am4charts.LineSeries());
+          series = xyChart.series.push(new am4charts.LineSeries());
           // var series = xyChart.series.push(new am4charts.OHLCSeries());          //OHLC
           // var series = xyChart.series.push(new am4charts.StepLineSeries());      //stepLine
           series.dataFields.valueY = field;
@@ -43,16 +44,16 @@ const XYChart = (props) => {
           // bullet.circle.strokeWidth =5;
         } else if (props.xyType === "Column") {
           // var series = xyChart.series.push(new am4charts.CandlestickSeries());
-          var series = xyChart.series.push(new am4charts.ColumnSeries());
+          series = xyChart.series.push(new am4charts.ColumnSeries());
           // var series = xyChart.series.push(new am4charts.ColumnSeries3D());
           // var series = xyChart.series.push(new am4charts.ConeSeries());
           // var series = xyChart.series.push(new am4charts.CurvedColumnSeries());
           series.dataFields.valueY = field;
           series.dataFields.categoryX = "date";
           series.name = name;
-          // series.stacked = true;      //stack columns top of each other
+          series.stacked = true;      //stack columns top of each other
         } else if (props.xyType === "Radar") {
-          var series = xyChart.series.push(new am4charts.RadarSeries());
+          series = xyChart.series.push(new am4charts.RadarSeries());
           series.dataFields.valueY = field;
           series.dataFields.categoryX = "date";
           series.name = name;
