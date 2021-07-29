@@ -28,15 +28,7 @@ const Body = (props) => {
         [item.id]: {
           title: item.title,
           type: item.type,
-          data: {
-            backGroundColor: item.backGroundColor,
-            borderColor: item.borderColor,
-            borderWidth: item.borderWidth,
-            borderRadius: item.borderRadius,
-            database: item.database,
-            options: item.options,
-            id: item.id,
-          },
+          data: item.data,
         },
       };
     });
@@ -63,12 +55,11 @@ const Body = (props) => {
       >
         {Object.entries(chartsData.data).map(([k, v]) => (
           <div key={k} className="card-container">
-            <Card key={k} item={v} />
+            <Card key={k} chartId={k} item={v} />
           </div>
         ))}
       </ResponsiveGridLayout>
     </div>
   ) : null;
-
 };
 export default withSize()(Body);

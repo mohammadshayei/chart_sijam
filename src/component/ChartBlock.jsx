@@ -1,35 +1,73 @@
 import React from "react";
-import {
-  Bar,
-  Bubble,
-  Doughnut,
-  Line,
-  Pie,
-  PolarArea,
-  Radar,
-  // Scatter,
-  // defaults,
-} from "react-chartjs-2";
+import XYChart from "./Charts/XYChart.jsx";
+import PieChart from "./Charts/PieChart";
+import GaugeChart from "./Charts/GaugeChart";
 
-const ChartBlock = React.memo((props) => {
+const ChartBlock = (props) => {
   switch (props.type) {
-    case "Bar":
-      return <Bar data={props.data} options={props.options} />;
-    case "Bubble":
-      return <Bubble data={props.data} options={props.options} />;
-    case "Doughnut":
-      return <Doughnut data={props.data} options={props.options} />;
     case "Line":
-      return <Line data={props.data} options={props.options} />;
-    case "Pie":
-      return <Pie data={props.data} options={props.options} />;
-    case "PolarArea":
-      return <PolarArea data={props.data} options={props.options} />;
+      return (
+        <XYChart
+          xyType={props.type}
+          chartId={props.chartId}
+          data={props.data}
+        />
+      );
+    case "Column":
+      return (
+        <XYChart
+          xyType={props.type}
+          chartId={props.chartId}
+          data={props.data}
+        />
+      );
     case "Radar":
-      return <Radar data={props.data} options={props.options} />;
+      return (
+        <XYChart
+          xyType={props.type}
+          chartId={props.chartId}
+          data={props.data}
+        />
+      );
+    case "Pie":
+      return <PieChart chartId={props.chartId} data={props.data} />;
+    case "Gauge":
+      return <GaugeChart chartId={props.chartId} data={props.data} />;
+
     default:
-      return null;
+      return <div>mismatch type!</div>;
   }
-});
+};
 
 export default ChartBlock;
+
+// case "TreeMap":
+//   chart = am4core.create("chartdiv", am4charts.TreeMap);
+//   break;
+// case "SankeyDiagram":
+//   chart = am4core.create("chartdiv", am4charts.SankeyDiagram);
+//   break;
+// case "Gauge":
+//   chart = am4core.create("chartdiv", am4charts.GaugeChart);
+//   break;
+// case "ChordDiagram":
+//   chart = am4core.create("chartdiv", am4charts.ChordDiagram);
+//   break;
+// case "SlicedChart":
+//   chart = am4core.create("chartdiv", am4charts.SlicedChart);
+//   break;
+// case "Sunburst":
+//   chart = am4core.create("chartdiv", am4plugins_sunburst.Sunburst);
+//   break;
+// case "ForceDirectedTree":
+//   chart = am4core.create(
+//     "chartdiv",
+//     am4plugins_forceDirected.ForceDirectedTree
+//   );
+//   break;
+// case "VennDiagram":
+//   chart = am4core.create("chartdiv", am4plugins_venn.VennDiagram);
+//   break;
+// case "CurveChart":         //TimeLine
+//   chart = am4core.create("chartdiv", am4plugins_timeline.CurveChart);
+//   break;

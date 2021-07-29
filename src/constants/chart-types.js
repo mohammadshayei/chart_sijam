@@ -2,17 +2,17 @@ export default [
   {
     id: 1,
     label: "ستونی",
-    value: "Bar",
+    value: "Column",
   },
   {
     id: 2,
     label: "حبابی",
-    value: "Bubble",
+    value: "XYChart",
   },
   {
     id: 3,
     label: "دونات",
-    value: "Doughnut",
+    value: "Pie",
   },
   {
     id: 4,
@@ -26,8 +26,8 @@ export default [
   },
   {
     id: 6,
-    label: "مساحت",
-    value: "PolarArea",
+    label: "مساحت قطبی",
+    value: "Radar",
   },
   {
     id: 7,
@@ -36,7 +36,12 @@ export default [
   },
   {
     id: 8,
-    label: "پراکندگی",
-    value: "Scatter",
+    label: "خط زمانی",
+    value: "TimeLine",
+  },
+  {
+    id: 9,
+    label: "گیج",
+    value: "TimeLine",
   },
 ];

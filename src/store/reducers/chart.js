@@ -59,11 +59,11 @@ const setChartsData = (state, action) => {
       lg: [
         ...newLayouts.lg,
         {
-          minW: 4,
+          minW: 5,
           minH: 2,
-          w: 12,
+          w: 6,
           h: 3,
-          x: ((index + 1) * 8) % 12,
+          x: ((index + 1) * 6) % 12,
           y: 0,
           i: k,
         },
