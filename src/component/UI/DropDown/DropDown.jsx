@@ -13,6 +13,7 @@ import {
   FcScatterPlot,
   FcSettings,
 } from "react-icons/fc";
+import { IoSpeedometerOutline } from "react-icons/io5";
 import { MdBubbleChart } from "react-icons/md";
 import { stringFa } from "./../../../assets/strings/stringFaCollection";
 // import { EditRoundedIcon } from "@material-ui/icons/EditRounded";
@@ -26,7 +27,7 @@ const DropDown = (props) => {
     <FcPieChart />,
     <FcPieChart />,
     <FcRadarPlot />,
-    <FcScatterPlot />,
+    <IoSpeedometerOutline />,
     <FcSettings />,
   ];
 

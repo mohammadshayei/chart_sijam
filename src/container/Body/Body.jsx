@@ -29,6 +29,7 @@ const Body = (props) => {
           title: item.title,
           type: item.type,
           data: item.data,
+          options: item.options,
         },
       };
     });

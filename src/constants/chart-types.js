@@ -7,12 +7,12 @@ export const chartTypes = [
   {
     id: 2,
     label: "حبابی",
-    value: "XYChart",
+    value: "Bubble",
   },
   {
     id: 3,
     label: "دونات",
-    value: "Pie",
+    value: "Doughnut",
   },
   {
     id: 4,
@@ -36,12 +36,12 @@ export const chartTypes = [
   },
   {
     id: 8,
-    label: "خط زمانی",
-    value: "TimeLine",
-  },
-  {
-    id: 9,
     label: "گیج",
-    value: "TimeLine",
+    value: "Gauge",
   },
+  // {
+  //   id: 9,
+  //   label: "خط زمانی",
+  //   value: "TimeLine",
+  // },
 ];

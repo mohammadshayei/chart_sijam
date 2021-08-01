@@ -1,42 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import XYChart from "./Charts/XYChart.jsx";
 import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 
 const ChartBlock = (props) => {
-  switch (props.type) {
-    case "Line":
-      return (
-        <XYChart
-          xyType={props.type}
-          chartId={props.chartId}
-          data={props.data}
-        />
-      );
-    case "Column":
-      return (
-        <XYChart
-          xyType={props.type}
-          chartId={props.chartId}
-          data={props.data}
-        />
-      );
-    case "Radar":
-      return (
-        <XYChart
-          xyType={props.type}
-          chartId={props.chartId}
-          data={props.data}
-        />
-      );
-    case "Pie":
-      return <PieChart chartId={props.chartId} data={props.data} />;
-    case "Gauge":
-      return <GaugeChart chartId={props.chartId} data={props.data} />;
+  const [chart, setChart] = useState(null);
+  useEffect(() => {
+    switch (props.chartProps.type) {
+      case "Line":
+      case "Column":
+      case "Bubble":
+      case "Radar":
+        setChart(
+          <XYChart chartId={props.chartId} chartProps={props.chartProps} />
+        );
+        break;
+      case "Pie":
+      case "Doughnut":
+        setChart(
+          <PieChart chartId={props.chartId} chartProps={props.chartProps} />
+        );
+        break;
+      case "Gauge":
+        setChart(
+          <GaugeChart chartId={props.chartId} chartProps={props.chartProps} />
+        );
+        break;
+      default:
+        setChart(<div>mismatch type!</div>);
+    }
+  }, [props.chartProps]);
 
-    default:
-      return <div>mismatch type!</div>;
-  }
+  return chart;
 };
 
 export default ChartBlock;
@@ -46,9 +41,6 @@ export default ChartBlock;
 //   break;
 // case "SankeyDiagram":
 //   chart = am4core.create("chartdiv", am4charts.SankeyDiagram);
-//   break;
-// case "Gauge":
-//   chart = am4core.create("chartdiv", am4charts.GaugeChart);
 //   break;
 // case "ChordDiagram":
 //   chart = am4core.create("chartdiv", am4charts.ChordDiagram);

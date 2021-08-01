@@ -7,8 +7,8 @@ const initialState = {
 };
 
 // chartId: {
+  //   title: "",
 //   type: "",
-//   title: "",
 //   data: [],
 // },
 
