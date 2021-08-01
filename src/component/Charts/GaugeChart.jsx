@@ -9,9 +9,10 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 // am4core.useTheme(am4themes_material);
 // am4core.useTheme(am4themes_microchart);
 am4core.addLicense("ch-custom-attribution");
+am4core.options.autoDispose = true;
 
 const GaugeChart = React.memo((props) => {
-  const { data, type, options } = props.chartProps;
+  const { data, options } = props.chartProps;
   const [beforeValue, setBeforeValue] = useState(data.score);
   let chart;
   useEffect(() => {

@@ -10,7 +10,7 @@ import {
   FcDoughnutChart,
   FcPieChart,
   FcRadarPlot,
-  FcScatterPlot,
+  // FcScatterPlot,
   FcSettings,
 } from "react-icons/fc";
 import { IoSpeedometerOutline } from "react-icons/io5";

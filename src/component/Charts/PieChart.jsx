@@ -9,6 +9,7 @@ am4core.useTheme(am4themes_animated);
 // am4core.useTheme(am4themes_material);
 // am4core.useTheme(am4themes_microchart);
 am4core.addLicense("ch-custom-attribution");
+am4core.options.autoDispose = true;
 
 const PieChart = React.memo((props) => {
   const { data, type, options } = props.chartProps;

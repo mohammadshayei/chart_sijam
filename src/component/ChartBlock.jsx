@@ -29,7 +29,7 @@ const ChartBlock = (props) => {
       default:
         setChart(<div>mismatch type!</div>);
     }
-  }, [props.chartProps]);
+  }, [props.chartId, props.chartProps]);
 
   return chart;
 };
