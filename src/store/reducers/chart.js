@@ -2,12 +2,12 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   data: {},
-  layouts: { lg: [], md: [], sm: [], xs: [] },
+  layouts: { lg: [], md: [], sm: [], xs: [], xxs: [] },
   breakpoint: "lg",
 };
 
 // chartId: {
-  //   title: "",
+//   title: "",
 //   type: "",
 //   data: [],
 // },
@@ -45,7 +45,7 @@ const setChartOptions = (state, action) => {
       ...state.data,
       [chartId]: {
         ...state.data[chartId],
-        data: {...state.data[chartId].data, options: chartOptions},
+        data: { ...state.data[chartId].data, options: chartOptions },
       },
     },
   };
@@ -60,9 +60,9 @@ const setChartsData = (state, action) => {
         ...newLayouts.lg,
         {
           minW: 5,
-          minH: 2,
+          minH: 4,
           w: 6,
-          h: 3,
+          h: 6,
           x: ((index + 1) * 6) % 12,
           y: 0,
           i: k,
@@ -71,10 +71,10 @@ const setChartsData = (state, action) => {
       md: [
         ...newLayouts.md,
         {
-          minW: 2,
-          minH: 2,
+          minW: 5,
+          minH: 4,
           w: 5,
-          h: 2,
+          h: 4,
           x: ((index + 1) * 5) % 10,
           y: 0,
           i: k,
@@ -83,11 +83,11 @@ const setChartsData = (state, action) => {
       sm: [
         ...newLayouts.sm,
         {
-          minW: 2,
-          minH: 2,
-          w: 3,
-          h: 2,
-          x: ((index + 1) * 3) % 6,
+          minW: 4,
+          minH: 4,
+          w: 6,
+          h: 4,
+          x: ((index + 1) * 6) % 6,
           y: 0,
           i: k,
         },
@@ -95,11 +95,23 @@ const setChartsData = (state, action) => {
       xs: [
         ...newLayouts.xs,
         {
+          minW: 3,
+          minH: 3,
+          w: 4,
+          h: 4,
+          x: ((index + 1) * 4) % 4,
+          y: 0,
+          i: k,
+        },
+      ],
+      xxs: [
+        ...newLayouts.xxs,
+        {
           minW: 2,
-          minH: 2,
-          w: 2,
-          h: 2,
-          x: ((index + 1) * 2) % 4,
+          minH: 3,
+          w: 3,
+          h: 3,
+          x: ((index + 1) * 3) % 4,
           y: 0,
           i: k,
         },

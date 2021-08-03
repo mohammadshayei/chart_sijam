@@ -12,7 +12,7 @@ const Body = (props) => {
   const dispatch = useDispatch();
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
-  };
+  };  
 
   useEffect(() => {
     let tempData = [];
@@ -46,13 +46,15 @@ const Body = (props) => {
         isResizable
         autoSize
         isBounded
-        // onBreakpointChange={console.log("BreakpointChanged !")}
+        // onBreakpointChange={console.log({breakpoint})}
         measureBeforeMount={true}
         // useCSSTransforms={true}
         margin={[30, 30]}
         width={props.size.width}
+        rowHeight={60}
         breakpoints={{ lg: 1280, md: 992, sm: 767, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        // onLayoutChange={onLayoutChange}
       >
         {Object.entries(chartsData.data).map(([k, v]) => (
           <div key={k} className="card-container">

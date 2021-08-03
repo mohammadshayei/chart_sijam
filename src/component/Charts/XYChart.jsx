@@ -19,6 +19,10 @@ const XYChart = React.memo((props) => {
       type === "Radar"
         ? (xyChart = am4core.create(`${props.chartId}`, am4charts.RadarChart))
         : (xyChart = am4core.create(`${props.chartId}`, am4charts.XYChart));
+      xyChart.paddingBottom = -10;
+      xyChart.paddingLeft = -10;
+      xyChart.responsive.enabled = true;
+      xyChart.responsive.useDefault = true;
       let series;
       xyChart.data = data;
       if (type === "Line" || type === "Column" || type === "Radar") {
@@ -28,8 +32,16 @@ const XYChart = React.memo((props) => {
         categoryAxis.renderer.grid.template.location =
           options.xAxes.gridTemplateLocation;
         categoryAxis.renderer.minGridDistance = options.xAxes.minGridDistance;
+        if (type === "Line" || type === "Column") {
+          categoryAxis.renderer.labels.template.horizontalCenter = "right";
+          categoryAxis.renderer.labels.template.verticalCenter = "middle";
+          // categoryAxis.renderer.minHeight = 10;
+          categoryAxis.renderer.labels.template.rotation = 315;
+        }
 
         var valueAxis = xyChart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.labels.fill = "#000";
+        valueAxis.renderer.labels.fillOpacity = 0;
 
         // Create series
         function createSeries(field, name) {
@@ -150,7 +162,155 @@ const XYChart = React.memo((props) => {
 
       if (options.legend.display) {
         xyChart.legend = new am4charts.Legend();
+        xyChart.legend.position = "top";
+        xyChart.legend.valueLabels.template.align = "right";
+        xyChart.legend.valueLabels.template.textAlign = "end";
+        xyChart.legend.reverseOrder = true; //rtl
+        xyChart.legend.itemContainers.template.reverseOrder = true; //rtl
+        xyChart.legend.paddingTop = 0;
+        xyChart.legend.paddingBottom = 0;
       }
+
+      /*
+       * ========================================================
+       *              Enabling responsive features
+       * ========================================================
+       */
+      xyChart.responsive.rules.push({
+        relevant: am4core.ResponsiveBreakpoints.widthS,
+        state: function (target, stateId) {
+          if (type === "Line" || type === "Bubble" || type === "Column") {
+            if (target instanceof am4charts.Chart) {
+              var state = target.states.create(stateId);
+              state.properties.paddingTop = 1;
+              state.properties.paddingRight = 10;
+              state.properties.paddingBottom = 1;
+              state.properties.paddingLeft = 10;
+              return state;
+            }
+
+            if (target instanceof am4charts.AxisRendererY) {
+              var state = target.states.create(stateId);
+              state.properties.inside = true;
+              state.properties.maxLabelPosition = 0.99;
+              return state;
+            }
+
+            if (
+              target instanceof am4charts.AxisLabel &&
+              target.parent instanceof am4charts.AxisRendererY
+            ) {
+              var state = target.states.create(stateId);
+              state.properties.dy = -15;
+              state.properties.paddingTop = 3;
+              state.properties.paddingRight = 5;
+              state.properties.paddingBottom = 3;
+              state.properties.paddingLeft = 5;
+
+              // Create a separate state for background
+              target.setStateOnChildren = true;
+              var bgstate = target.background.states.create(stateId);
+              bgstate.properties.fill = am4core.color("#fff");
+              bgstate.properties.fillOpacity = 0.7;
+
+              return state;
+            }
+
+            if (
+              target instanceof am4charts.AxisLabel &&
+              target.parent instanceof am4charts.AxisRendererX
+            ) {
+              var state = target.states.create(stateId);
+              state.properties.dy = 0;
+              state.properties.paddingTop = 0;
+              state.properties.paddingRight = 5;
+              state.properties.paddingBottom = 0;
+              state.properties.paddingLeft = 5;
+
+              return state;
+            }
+          } else if (type === "Radar") {
+            if (target instanceof am4charts.Chart) {
+              var state = target.states.create(stateId);
+              state.properties.paddingTop = -15;
+              state.properties.paddingRight = 1;
+              state.properties.paddingBottom = -15;
+              state.properties.paddingLeft = 1;
+              return state;
+            }
+
+            if (target instanceof am4charts.AxisLabel) {
+              var state = target.states.create(stateId);
+              state.properties.disabled = true;
+              return state;
+            }
+
+            if (target instanceof am4charts.Legend) {
+              var state = target.states.create(stateId);
+              state.properties.disabled = false;
+              return state;
+            }
+          }
+
+          if (target instanceof am4core.Scrollbar) {
+            var state = target.states.create(stateId);
+            state.properties.marginLeft = -10;
+            return state;
+          }
+
+          if (target instanceof am4charts.Legend) {
+            var state = target.states.create(stateId);
+            state.properties.disabled = true;
+            return state;
+          }
+
+          return null;
+        },
+      });
+      xyChart.responsive.rules.push({
+        relevant: function (target) {
+          if (target.pixelHeight <= 350) {
+            return true;
+          }
+          return false;
+        },
+        state: function (target, stateId) {
+          if (target instanceof am4core.Scrollbar) {
+            var state = target.states.create(stateId);
+            state.properties.marginBottom = -10;
+            return state;
+          }
+
+          if (target instanceof am4charts.Legend) {
+            var state = target.states.create(stateId);
+            state.properties.position = "right";
+            state.properties.paddingTop = -25;
+            return state;
+          }
+
+          return null;
+        },
+      });
+      xyChart.responsive.rules.push({
+        relevant: am4core.ResponsiveBreakpoints.heightS,
+        state: function (target, stateId) {
+          if (target instanceof am4charts.Chart) {
+            var state = target.states.create(stateId);
+            state.properties.paddingBottom = 10;
+            return state;
+          }
+
+          if (
+            target instanceof am4charts.AxisLabel &&
+            target.parent instanceof am4charts.AxisRendererX
+          ) {
+            var state = target.states.create(stateId);
+            state.properties.disabled = true;
+            return state;
+          }
+          return null;
+        },
+      });
     }
   }, [props.chartId, props.chartProps]);
 

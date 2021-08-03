@@ -16,6 +16,7 @@ const PieChart = React.memo((props) => {
   let pieChart;
   useEffect(() => {
     pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
+    pieChart.rtl = true;
     pieChart.data = data;
     if (type === "Doughnut") {
       // cut a hole in Pie chart
@@ -26,6 +27,8 @@ const PieChart = React.memo((props) => {
       );
       pieChart.hiddenState.properties.radius = am4core.percent(100);
     }
+    pieChart.responsive.enabled = true;
+    pieChart.responsive.useDefault = true;
     // make a half circle
     pieChart.startAngle = options.startAngle;
     pieChart.endAngle = options.endAngle;
@@ -91,6 +94,12 @@ const PieChart = React.memo((props) => {
       pieChart.legend.position = options.legend.position;
       pieChart.legend.valueLabels.template.text =
         options.legend.valueLabelsText;
+      pieChart.legend.valueLabels.template.align = "right";
+      pieChart.legend.valueLabels.template.textAlign = "end";
+      pieChart.legend.reverseOrder = true; //rtl
+      pieChart.legend.itemContainers.template.reverseOrder = true; //rtl
+      pieChart.legend.maxHeight = undefined;
+      pieChart.legend.maxWidth = undefined;
     }
     // sum labels inside doughnut
     if (options.insideLabel) {
@@ -110,6 +119,53 @@ const PieChart = React.memo((props) => {
     let hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter());
     hoverShadow.opacity = 0.7;
     hoverShadow.blur = 5;
+
+    /*
+     * ========================================================
+     *              Enabling responsive features
+     * ========================================================
+     */
+
+    pieChart.responsive.rules.push({
+      relevant: am4core.ResponsiveBreakpoints.maybeXS,
+      state: function (target, stateId) {
+        if (target instanceof am4charts.PieSeries) {
+          var state = target.states.create(stateId);
+
+          var labelState = target.labels.template.states.create(stateId);
+          labelState.properties.disabled = true;
+
+          var tickState = target.ticks.template.states.create(stateId);
+          tickState.properties.disabled = true;
+
+          return state;
+        }
+        if (target instanceof am4charts.Legend) {
+          var state = target.states.create(stateId);
+          state.properties.disabled = true;
+          return state;
+        }
+
+        return null;
+      },
+    });
+    pieChart.responsive.rules.push({
+      relevant: function (target) {
+        if (target.pixelHeight <= 300) {
+          return true;
+        }
+        return false;
+      },
+      state: function (target, stateId) {
+        if (target instanceof am4charts.Legend) {
+          var state = target.states.create(stateId);
+          state.properties.position = "right";
+          state.properties.paddingTop = 0;
+          return state;
+        }
+        return null;
+      },
+    });
   }, [props.chartId, props.chartProps]);
   return (
     <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>
