@@ -18,6 +18,8 @@ const GaugeChart = React.memo((props) => {
   useEffect(() => {
     let colorSet = new am4core.ColorSet();
     chart = am4core.create(`${props.chartId}`, am4charts.GaugeChart);
+    chart.responsive.enabled = true;
+    chart.responsive.useDefault = true;
     chart.innerRadius = am4core.percent(82);
     // Create normal axis
     let axis = chart.xAxes.push(new am4charts.ValueAxis());
@@ -88,6 +90,25 @@ const GaugeChart = React.memo((props) => {
         am4core.ease.cubicOut
       ).start();
     }, 1000);
+
+    /*
+     * ========================================================
+     *              Enabling responsive features
+     * ========================================================
+     */
+
+    chart.responsive.rules.push({
+      relevant: function (target) {
+        if (target.pixelHeight <= 300) {
+          return true;
+        }
+        return false;
+      },
+      state: function (target, stateId) {
+        
+        return null;
+      },
+    });
   }, [props.chartId, props.chartProps]);
 
   return (
