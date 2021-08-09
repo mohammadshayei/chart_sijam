@@ -6,7 +6,7 @@ import ChartBlock from "../ChartBlock";
 
 const Card = React.memo((props) => {
   return (
-    <div key={props.key} className="card">
+    <div key={props.key} className="card card-container">
       <TitleBlock chartId={props.chartId} title={props.item.title} />
       <div className="card-body">
         <ChartBlock chartId={props.chartId} chartProps={props.item} />
