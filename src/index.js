@@ -11,6 +11,8 @@ import thunk from "redux-thunk";
 import detailReducer from "./store/reducers/detail";
 import banksDataReducer from "./store/reducers/banksData";
 import chartReducer from "./store/reducers/chart";
+import authReducer from "./store/reducers/auth";
+
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -19,6 +21,7 @@ const rootReducer = combineReducers({
   detail: detailReducer,
   banks: banksDataReducer,
   chart: chartReducer,  
+  auth:authReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

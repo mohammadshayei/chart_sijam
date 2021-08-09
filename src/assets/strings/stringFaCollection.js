@@ -8,4 +8,7 @@ export const stringFa = {
   select_bank: "انتخاب بانک",
   title: "عنوان",
   Edit: "ویرایش",
+  your_phone:'تلفن شما',
+  select_your_country:'لطفا کشور خود را انتخاب کنید',
+  select:'انتخاب کنید'
 };
