@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import * as bankActions from "../../store/actions/banksData";
+import { Link } from "react-router-dom";
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -91,10 +92,16 @@ const LayoutContent = (props) => {
               />
             ) : (
               <div className="BodyContent">
-                <div className="CreateChartContainer">
+                <Link
+                  className="CreateChartContainer"
+                  to={{
+                    pathname: `/create_chart`,
+                  }}
+                  style={{ textDecoration: "none" }}
+                >
                   <AddRoundedIcon />
                   <p>{stringFa.create_chart}</p>
-                </div>
+                </Link>
                 {stringFa.no_exist_charts}
               </div>
             )

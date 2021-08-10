@@ -6,7 +6,6 @@
   src: url("./assets/fonts/iran-sans/eot/IRANSansWeb\(NoEn\)_Medium.eot");
   src: url("./assets/fonts/iran-sans/ttf/IRANSansWeb\(NoEn\)_Medium.ttf");
   src: url("./assets/fonts/iran-sans/woff/IRANSansWeb\(NoEn\)_Medium.woff");
-
 }
 * {
   margin: 0;
@@ -22,15 +21,13 @@
   min-width: 800px;
 }
 
-
 /* width */
 ::-webkit-scrollbar {
-  width:8px;
+  width: 8px;
   display: flex;
 }
 *:hover::-webkit-scrollbar {
   display: flex;
-
 }
 /* Track */
 ::-webkit-scrollbar-track {

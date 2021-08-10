@@ -12,7 +12,7 @@ const Body = (props) => {
   const dispatch = useDispatch();
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
-  };  
+  };
 
   useEffect(() => {
     let tempData = [];
@@ -57,7 +57,7 @@ const Body = (props) => {
         // onLayoutChange={onLayoutChange}
       >
         {Object.entries(chartsData.data).map(([k, v]) => (
-          <div key={k} className="card-container">
+          <div key={k} >
             <Card key={k} chartId={k} item={v} />
           </div>
         ))}

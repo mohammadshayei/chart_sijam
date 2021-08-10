@@ -6,16 +6,11 @@ import { useSelector } from "react-redux";
 
 const ChartSection = (props) => {
   const chartsData = useSelector((state) => state.chart.data[props.chartId]);
-
   return chartsData ? (
     <div className="ChartSectionContainer">
       <ChartSelection />
-      <CardSettingContainer
-        type={chartsData.type}
-        data={chartsData.data}
-        options={chartsData.data.options}
-      />
+      <CardSettingContainer chartId={props.chartId} chartProps={chartsData} />
     </div>
-  ) : null;
+  ) : <div>Select Chart</div>;
 };
 export default ChartSection;

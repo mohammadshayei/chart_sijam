@@ -45,7 +45,7 @@ const DropDown = (props) => {
     <div className="dropdown">
       {chartTypes.map(({ label, value }, index) => (
         <div
-          key={`${value}`}
+          key={label}
           onClick={() => handleClick(value)}
           className="dropdown-item"
         >
