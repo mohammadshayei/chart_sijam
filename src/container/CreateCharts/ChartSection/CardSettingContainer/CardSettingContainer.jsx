@@ -11,45 +11,12 @@ import ChartBlock from "./../../../../component/ChartBlock";
 import * as chartActions from "../../../../store/actions/chart.js";
 
 const CardSettingContainer = (props) => {
-  const [chartData, setChartData] = useState(null);
   const dispatch = useDispatch();
   const setChartOptions = (chartOptions) => {
     dispatch(
-      chartActions.setChartOptions({ chartId: props.data.id, chartOptions })
+      chartActions.setChartOptions({ chartId: props.chartId, chartOptions })
     );
   };
-
-  useEffect(() => {
-    if (
-      (props.type === "Line" ||
-        props.type === "Doughnut" ||
-        props.type === "Pie" ||
-        props.type === "PolarArea" ||
-        props.type === "Bar" ||
-        props.type === "Radar") &&
-      props.data.database
-    ) {
-      setChartData({
-        labels: props.data.database.labels,
-        datasets: props.data.database.data.map((item, index) => {
-          return {
-            label: item.label,
-            data: item.data,
-            backgroundColor:
-              props.data.database.data.length === 1
-                ? props.data.backGroundColor
-                : props.data.backGroundColor[index],
-            borderColor:
-              props.data.database.data.length === 1
-                ? props.data.borderColor
-                : props.data.borderColor[index],
-            borderRadius: props.data.borderRadius,
-            borderWidth: props.data.borderWidth,
-          };
-        }),
-      });
-    }
-  }, [props.data]);
 
   const swapVertClickHandler = () => {
     setChartOptions({
@@ -124,9 +91,8 @@ const CardSettingContainer = (props) => {
             </div>
             <div className="ChartShowContainer">
               <ChartBlock
-                type={props.type}
-                data={chartData}
-                options={props.options}
+                chartId={props.chartId}
+                chartProps={props.chartProps}
               />
             </div>
           </div>
