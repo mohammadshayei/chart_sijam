@@ -10,5 +10,7 @@ export const stringFa = {
   Edit: "ویرایش",
   your_phone:'تلفن شما',
   select_your_country:'لطفا کشور خود را انتخاب کنید',
-  select:'انتخاب کنید'
+  select:'انتخاب کنید',
+  search:"جستجو کنید",
+  country_not_found:"کشوری یافت نشد"
 };

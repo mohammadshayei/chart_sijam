@@ -12,5 +12,7 @@ export const lightTheme = {
   ripple_bank_color:"#332b8b",
   ripple_star_color:"#fa9435",
   ripple_holding_menu_item_color:"rgba(46, 46, 46, 0.05)",
+  background:"rgb(113, 158, 158)",
+  borderBlur:"rgb(165, 162, 162)",
   // ripple_company_menu_item_color:""
 };

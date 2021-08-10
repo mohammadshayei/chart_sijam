@@ -2,6 +2,7 @@
   width: calc(100% - 8rem);
   height: calc(100% - 6rem);
   background-color: white;
+  user-select: none;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
   border-radius: 1rem;

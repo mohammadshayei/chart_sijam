@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import UnderlineInput from "../../../container/inputs/UnderlineInput/UnderlineInput";
 import "./Input.scss";
 const Input = (props) => {
   const [inputElement, setInputElement] = useState(null);
@@ -13,13 +14,14 @@ const Input = (props) => {
                 ? "invalid"
                 : ""
             }`}
-            className={`InputElement`}
+            style={props.style}
             onChange={props.onChange}
             value={props.value}
             {...props.config}
           />
         );
         break;
+
       default:
         setInputElement(
           <input
@@ -28,6 +30,7 @@ const Input = (props) => {
                 ? "invalid"
                 : ""
             }`}
+            style={props.style}
             onChange={props.onChange}
             value={props.value}
             {...props.config}
@@ -37,9 +40,7 @@ const Input = (props) => {
     }
   }, [props.elementType, props.value]);
 
-
   return <div className="input-container">{inputElement}</div>;
-  
 };
 
 export default Input;

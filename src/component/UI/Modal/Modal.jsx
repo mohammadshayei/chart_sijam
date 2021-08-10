@@ -1,21 +1,27 @@
-import React, {  } from "react";
+import React, { useEffect, useState } from "react";
 import Backdrop from "../Backdrop/Backdrop";
 import classes from "./Modal.module.css";
-const Modal = React.memo(props=>{
-    let myClassName=[classes.Modal]
-    if(props.className)myClassName.push(props.className)
+const Modal = React.memo((props) => {
+  const [myClassName, setMyClassName] = useState([classes.Modal]);
+  useEffect(() => {
+    switch (props.type) {
+      case "countries_code":
+        setMyClassName([...myClassName,classes.CountriedCodeContainer]);
+        break;
+
+      default:
+        break;
+    }
+  }, [props.type]);
   return (
     <>
-      <Backdrop
-        show={props.show}
-        clicked={props.modalClosed}
-      ></Backdrop>
+      <Backdrop show={props.show} clicked={props.modalClosed}></Backdrop>
       <div
-        className={myClassName.join(' ')}
+        className={myClassName.join(" ")}
         style={{
           marginTop: props.show ? "0" : "-100vh",
           opacity: props.show ? "1" : "0",
-          ...props.style
+          ...props.style,
         }}
       >
         {props.children}

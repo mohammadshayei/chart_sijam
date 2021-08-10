@@ -8,6 +8,7 @@ import Login from "./container/Auth/Login/Login.js";
 import Auth from './container/Auth/Auth.jsx';
 import * as actions from './store/actions/index'
 import { useDispatch } from 'react-redux';
+import { lightTheme } from './styles/theme.js';
 const App = () => {
   const dispatch = useDispatch()
   const authSuccess=(token,userId)=> dispatch(actions.authSuccess(token,userId))
@@ -17,7 +18,7 @@ const App = () => {
   },[])
   return (
     <Switch>
-      <div className={classes.AppContainer}>
+      <div className={classes.AppContainer} style={{backgroundColor:lightTheme.background}}>
         {/* <Route path="/view" exact component={LayoutContent}></Route>
         <Route path="/create_chart" exact component={CreateCharts}></Route> */}
         <Route path="/signup" exact component={Auth}></Route>
