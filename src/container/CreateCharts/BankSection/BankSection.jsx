@@ -61,9 +61,9 @@ const BankSection = (props) => {
   ]);
   return (
     <div className="BankSectionContainer">
-      <div className="BankHeaderContainer">
+      {/* <div className="BankHeaderContainer">
         <EditTitle />
-      </div>
+      </div> */}
       <div className="BankTableContainer">
         <Table columns={columns} data={data} />
       </div>

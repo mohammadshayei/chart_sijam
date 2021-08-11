@@ -8,4 +8,8 @@ export const stringFa = {
   select_bank: "انتخاب بانک",
   title: "عنوان",
   Edit: "ویرایش",
+  chart_setting: "تنظیمات نمودار",
+  chart_setting_description:
+    ".برای نمایش بصری داده ها در صفحه خود ، نمودار ایجاد کنید",
+  done: "انجام",
 };
