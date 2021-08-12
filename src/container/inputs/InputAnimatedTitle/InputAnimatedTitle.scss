@@ -1,0 +1,97 @@
+.input-animated-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: 1.5rem;
+  margin-bottom: 1rem ;
+  cursor: pointer;
+  .input-animated-class {
+    padding-right: 0.2rem;
+    border: none;
+    border-bottom: 1px green solid;
+    direction: rtl;
+    transition: border 200ms ease-out;
+    color:black;
+    font-weight: 400;
+    font-size: 1rem;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .input-animated-focus-class {
+
+  }
+
+  .p-animated-blur-class {
+    margin-right: 0.2rem;
+    position: absolute;
+    animation: inputAnimatedFocus 200ms ease-out forwards;
+
+  }
+  .p-animated-focus-class {
+    margin-right: 0.2rem;
+    position: absolute;
+    animation: inputAnimatedBlur 200ms ease-out forwards;
+  }
+  .p-animated-error{
+    color:red;
+    margin-top: .2rem;
+    font-size: .7rem;
+    font-weight: 100;
+
+    
+  }
+}
+@keyframes inputAnimatedBlur {
+  0% {
+    margin-top: -0.2rem;
+    margin-right: 0.5rem;
+    color: rgba(24, 23, 23, 0.7);
+    transform: scale(0.9);
+  }
+  25% {
+    margin-top: -0.7rem;
+    margin-right: 0.4rem;
+    color: rgba(13, 13, 13, 0.8);
+    transform: scale(0.93);
+  }
+  50% {
+    margin-top: -1.3rem;
+    margin-right: 0.3rem;
+    color: rgba(7, 7, 7, 0.9);
+    transform: scale(0.97);
+  }
+  100% {
+    margin-top: -1.7rem;
+    margin-right: 0.1rem;
+    color: rgba(0, 0, 0, 1);
+    transform: scale(1);
+  }
+}
+@keyframes inputAnimatedFocus {
+  0% {
+    margin-top: -1.7rem;
+    margin-right: 0.1rem;
+    color: rgba(0, 0, 0, 1);
+    transform: scale(1);
+  }
+  25% {
+    margin-top: -1.3rem;
+    margin-right: 0.3rem;
+    color: rgba(7, 7, 7, 0.9);
+    transform: scale(0.97);
+  }
+  50% {
+    margin-top: -0.7rem;
+    margin-right: 0.4rem;
+    color: rgba(13, 13, 13, 0.8);
+    transform: scale(0.93);
+  }
+  100% {
+    margin-top: -0.2rem;
+    margin-right: 0.5rem;
+    color: rgba(24, 23, 23, 0.7);
+    transform: scale(0.9);
+  }
+}

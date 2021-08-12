@@ -7,27 +7,30 @@ const InputPhoneNumber = (props) => {
   const [selected, setSelected] = useState("code");
   return (
     <div className="input-phone-container">
-        <InputCountryPhoneCode 
-            config={{
-                maxLength:4,
-                type:'text',
-                placeholder:'',
-
-            }}
-            onChange={props.onChangeCode}
-            value={props.codeValue}
-            onFocus={() => {
-              setSelected("code");
-            }}
-            onBlur={() => {
-              setSelected("");
-            }}
-            inputStyle={{
-              borderBottom: `${
-                selected === "code" ? lightTheme.background : lightTheme.borderBlur
-              } ${selected === "code" ? "2px" : "1px"} solid`,
-            }}
-        />
+      <InputCountryPhoneCode
+        config={{
+          maxLength: 4,
+          type: "text",
+          placeholder: "",
+        }}
+        onChange={props.onChangeCode}
+        value={props.codeValue}
+        onFocus={() => {
+          setSelected("code");
+        }}
+        onBlur={() => {
+          setSelected("");
+        }}
+        inputStyle={{
+          borderBottom: `${
+            !props.correctCode
+              ? "red"
+              : selected === "code"
+              ? lightTheme.background
+              : lightTheme.borderBlur
+          } ${selected === "code" ? "2px" : "1px"} solid`,
+        }}
+      />
       <UnderlineInput
         className="phone-input"
         config={{
@@ -50,7 +53,11 @@ const InputPhoneNumber = (props) => {
         width={15}
         inputStyle={{
           borderBottom: `${
-            selected === "phone" ? lightTheme.background : lightTheme.borderBlur
+            !props.isValidPhone
+              ? "red"
+              : selected === "phone"
+              ? lightTheme.background
+              : lightTheme.borderBlur
           } ${selected === "phone" ? "2px" : "1px"} solid`,
         }}
       />

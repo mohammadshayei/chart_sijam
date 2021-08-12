@@ -11,7 +11,12 @@ const SelectCountry = (props) => {
         width: "20rem",
         justifyContent: "space-between",
         borderRadius:'0',
-        borderBottom:`${lightTheme.borderBlur} 1px solid`,
+        // borderBottom:`${lightTheme.borderBlur} 1px solid`,
+        borderBottom: `${
+          !props.countryName
+            ? "red":
+             lightTheme.background
+        } 1px solid`,
         marginBottom: "1rem",
         padding: "0rem .2rem",
         display: "flex",

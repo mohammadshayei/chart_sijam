@@ -2,7 +2,6 @@ import React from "react";
 import "./UnderlineInput.scss";
 const UnderlineInput = (props) => {
   const lineWidth = ((props.width- 2*props.padding ) / props.maxLength )- props.space;
-  console.log(lineWidth);
   return (
     <div
       className="underline-input-container"
