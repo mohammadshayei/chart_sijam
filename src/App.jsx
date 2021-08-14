@@ -4,11 +4,11 @@ import CreateCharts from "./container/CreateCharts/CreateCharts.jsx";
 import classes from "./App.module.scss";
 import { Route, Switch } from "react-router-dom";
 import ProtectedRoute from './hoc/ProtectedRoute/ProtectedRoute'
-import Login from "./container/Auth/Login/Login.js";
 import Auth from './container/Auth/Auth.jsx';
 import * as actions from './store/actions/index'
 import { useDispatch } from 'react-redux';
 import { lightTheme } from './styles/theme.js';
+import Login from './container/Auth/LoginTR/Login.js';
 const App = () => {
   const dispatch = useDispatch()
   const authSuccess=(token,userId)=> dispatch(actions.authSuccess(token,userId))
@@ -22,7 +22,7 @@ const App = () => {
         {/* <Route path="/view" exact component={LayoutContent}></Route>
         <Route path="/create_chart" exact component={CreateCharts}></Route> */}
         <Route path="/signup" exact component={Auth}></Route>
-        <Route path="/login" exact component={Login}></Route>
+        <Route path="/login" exact component={Auth}></Route>
         <ProtectedRoute path='/'  exact component={LayoutContent}></ProtectedRoute>
       </div>
     </Switch>

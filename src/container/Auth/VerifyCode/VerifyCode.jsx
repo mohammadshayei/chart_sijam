@@ -22,7 +22,7 @@ const VerifyCode = (props) => {
     props.setStage(1);
   };
   return (
-    <div className="verify-code-container">
+    <form className="verify-code-container">
       <div className="header-verify-contianer">
         <h5>لطفا کد ارسال شده را وارد کنید</h5>
       </div>
@@ -76,7 +76,7 @@ const VerifyCode = (props) => {
           </Button>
         </Link>
       </div>
-    </div>
+    </form>
   );
 };
 
