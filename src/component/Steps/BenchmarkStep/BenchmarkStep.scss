@@ -26,10 +26,41 @@
             }
           }
         }
-        .benchmark-line-label {
-        }
+      }
+      .item-list-item-actions {
+        flex: 0 0 auto;
       }
     }
+    .settings-multiple-item-footer {
+      margin-top: 8px;
+      text-align: right;
+    }
+  }
+}
+
+.sijam-style-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  padding: 4px 8px;
+  height: 32px;
+  min-width: 32px;
+  background-color: white;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #323338;
+  white-space: nowrap;
+  transition: transform 50ms, min-width 0.1s cubic-bezier(0, 0, 0.35, 1);
+  &:hover {
+    background-color: #e6e9ef;
+  }
+  &:active {
+    transform: scale(0.95);
   }
 }
 
