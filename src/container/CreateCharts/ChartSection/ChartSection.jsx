@@ -4,7 +4,6 @@ import CardSettingContainer from "./CardSettingContainer/CardSettingContainer";
 import { useSelector } from "react-redux";
 
 const ChartSection = (props) => {
-  const chartsData = useSelector((state) => state.chart.data[props.chartId]);
   const data = {
     title: "کارایی",
     type: "Line",
@@ -128,6 +127,8 @@ const ChartSection = (props) => {
       },
     },
   };
+  const chartsData = useSelector((state) => state.chart.data[props.chartId]);
+  
   return chartsData ? (
     <div className="ChartSectionContainer">
       <CardSettingContainer chartId={props.chartId} chartProps={chartsData} />

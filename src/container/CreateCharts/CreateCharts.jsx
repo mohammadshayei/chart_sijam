@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import BankSection from "./BankSection/BankSection";
+import Steps from "../../component/Steps/Steps";
 import { useLocation } from "react-router";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { lightTheme } from "./../../styles/theme";
 import { VscSplitVertical } from "react-icons/vsc";
-import DropBox from "./../../component/DropBox/DropBox";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -110,17 +110,7 @@ const CreateCharts = (props) => {
             </div>
           </div>
         </div>
-        <div className="section-settings-steps-component">
-          <DropBox isOpen={true} title={"نوع نمودار"}>
-            نوع نمودار
-          </DropBox>
-          <DropBox isOpen={false} title={"X محور"}>
-            محورX
-          </DropBox>
-          <DropBox isOpen={false} title={"Y محور"}>
-            محورY
-          </DropBox>
-        </div>
+        <Steps type={"Line"} />
       </div>
     </div>
   );
