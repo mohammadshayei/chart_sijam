@@ -1,0 +1,32 @@
+.input-container {
+    width: 20rem;
+    box-sizing: border-box;
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    margin: 0 1rem 2rem 0;
+  
+    // padding: 2rem;
+  
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .InputElement {
+      outline: none;
+      border: 1px solid #ccc;
+      background-color: white;
+      font: inherit;
+      padding: 6px 10px;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .invalid {
+      border: 1px solid red;
+      background-color: #fda49a;
+    }
+  }
+  
+  

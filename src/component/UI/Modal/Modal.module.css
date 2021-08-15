@@ -1,0 +1,69 @@
+.Modal {
+  position: fixed;
+  z-index: 500;
+  background-color: white;
+  width: 70%;
+  /* box-shadow: 1px 1px 1px black; */
+  padding: 1rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  overflow: hidden;
+}
+.CountriedCodeContainer {
+  width: 500px;
+  padding: 0;
+  border: none;
+}
+
+/* For extremely small screen devices (595px and below) */
+@media only screen and (max-width: 595px) {
+  .Modal {
+    width: 400px;
+  }
+  .CountriedCodeContainer {
+    width: 400px;
+  }
+}
+
+/* Small screen devices (600px and above) */
+@media only screen and (min-width: 600px) {
+  .Modal {
+    width: 500px;
+  }
+  .CountriedCodeContainer {
+    width: 400px;
+  }
+}
+
+/* Medium screen devices (768px and above) */
+@media only screen and (min-width: 768px) {
+  .Modal {
+    width: 600px;
+  }
+  .CountriedCodeContainer {
+    width: 420px;
+  }
+}
+
+/* Big screen devices (889px and above) */
+@media only screen and (min-width: 889px) {
+  .Modal {
+    width: 700px;
+  }
+  .CountriedCodeContainer {
+    width: 450px;
+  }
+}
+
+/* Extra big screen devices (1200px and above) */
+@media only screen and (min-width: 1200px) {
+  .Modal {
+    width: 700px;
+  }
+  .CountriedCodeContainer {
+    width: 500px;
+  }
+}

@@ -1,0 +1,21 @@
+.FromContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .LoginForm {
+    > div {
+      margin-bottom: .5rem;
+    }
+    .SubmitButton {
+      padding: .5rem 1rem;
+      border: none;
+      outline: none;
+      background: dodgerblue;
+      color: #fff;
+      border-radius: 5px;
+      width: 100%;
+      cursor: pointer;
+    }
+  }
+}

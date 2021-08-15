@@ -1,0 +1,23 @@
+.input-code-container {
+    width: 5rem;
+    display: flex;
+    p {
+      position: absolute;
+      font-size: 1rem;
+      margin-top: 0.05rem;
+      margin-left: 0.2rem;
+    }
+    .code-input {
+      width: 3.5rem;
+      border: none;
+      border-bottom: 1px black solid;
+      margin-right: 2rem;
+      padding-left: 1rem;
+      font-size: 1rem;
+      transition : border 200ms ease-out;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  
