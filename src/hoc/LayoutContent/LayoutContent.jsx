@@ -3,7 +3,7 @@ import "./LayoutContent.scss";
 import Drawer from "../../component/Navigation/Drawer/Drawer";
 import Body from "../../container/Body/Body";
 import { data } from "../../assets/DummyData/data";
-import { lightTheme } from "../../styles/theme";
+import { useTheme } from "../../styles/ThemeProvider";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
@@ -22,6 +22,8 @@ const LayoutContent = (props) => {
   const setChartsData = (banks) => {
     dispatch(bankActions.setBankData(banks));
   };
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
 
   useEffect(() => {
     if (detail.software) {
@@ -52,7 +54,7 @@ const LayoutContent = (props) => {
   return (
     <div
       className="LayoutContentContainer"
-      style={{ backgroundColor: lightTheme.background_color }}
+      style={{ backgroundColor: theme.background_color }}
     >
       <div
         className={`LeftSectionContaienr ${isMenuOpen ? "Reduce" : "extend"}`}

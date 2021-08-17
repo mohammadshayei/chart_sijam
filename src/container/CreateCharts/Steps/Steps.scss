@@ -8,7 +8,7 @@
 
   .container-border {
     border-radius: 8px;
-    border: 1px solid #e6e9ef;
+    border: 1px solid;
   }
   .step-container {
     flex-shrink: 0;
@@ -51,7 +51,6 @@
     .open {
       flex-basis: calc(40px - 4px);
       border-bottom: 1px solid;
-      border-bottom-color: #e6e9ef;
       margin-bottom: 16px;
       &:hover {
         background-color: white;

@@ -4,7 +4,7 @@ import { MdCancel } from "react-icons/md";
 
 const BenchmarkLine = (props) => {
   return (
-    <div className="item-list-item">
+    <div key={props.propKey} className="item-list-item">
       <div className="settings-field-component item-list-item-field">
         <div className="settings-field-component benchmark-line-value">
           <div className="settings-field-title-wrapper">

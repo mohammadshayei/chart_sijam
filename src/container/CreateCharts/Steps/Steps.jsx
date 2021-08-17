@@ -4,9 +4,12 @@ import XAxisStep from "./XAxisStep/XAxisStep.jsx";
 import Gallery from "./Gallery/Gallery.jsx";
 import "./Steps.scss";
 import BenchmarkStep from "./BenchmarkStep/BenchmarkStep.jsx";
+import { useTheme } from "../../../styles/ThemeProvider";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
 
   useEffect(() => {
     switch (props.type) {
@@ -87,12 +90,16 @@ const Steps = (props) => {
           <div
             key={k}
             className={`step-container ${v.isOpen && "open"} container-border`}
+            style={{ borderColor: theme.border_color }}
           >
             <div
               className={`step-title-container ${v.isOpen && "open"}`}
+              style={{ borderColor: theme.border_color }}
               onClick={(e) => onClickHandler(e, k)}
             >
-              <div className="title">{v.title}</div>
+              <div className="title" style={{ color: theme.text_color }}>
+                {v.title}
+              </div>
               <div className={`arrow-icon ${v.isOpen && "open"}`}>
                 <IoIosArrowDown />
               </div>

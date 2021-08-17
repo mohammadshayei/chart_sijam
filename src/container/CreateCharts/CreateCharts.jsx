@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import BankSection from "./BankSection/BankSection";
-import Steps from "../../component/Steps/Steps";
+import Steps from "./Steps/Steps";
 import { useLocation } from "react-router";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
-import { lightTheme } from "./../../styles/theme";
 import { VscSplitVertical } from "react-icons/vsc";
+import { CgDarkMode } from "react-icons/cg";
+import { useTheme } from "../../styles/ThemeProvider.js";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -32,6 +33,8 @@ const CreateCharts = (props) => {
   const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const location = useLocation();
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
 
   const ref = useRef();
 
@@ -45,11 +48,20 @@ const CreateCharts = (props) => {
   });
 
   return (
-    <div className="create-charts-container">
-      <div className="section-header-wrapper">
+    <div
+      className="create-charts-container"
+      style={{
+        backgroundColor: theme.background_color,
+        color: theme.text_color,
+      }}
+    >
+      <div
+        className="section-header-wrapper"
+        style={{ borderColor: theme.border_color }}
+      >
         <Button
           ButtonStyle={{
-            backgroundColor: lightTheme.clicked_darken_color,
+            backgroundColor: theme.clicked_darken_color,
             flex: "0 0 auto",
             fontWeight: 400,
             fontSize: "1rem",
@@ -59,16 +71,33 @@ const CreateCharts = (props) => {
         >
           {stringFa.done}
         </Button>
+        <button
+          className="dark-mode-toggle"
+          onClick={() => themeState.toggle()}
+        >
+          <CgDarkMode />
+        </button>
         <div className="settings-title-and-description">
-          <div className="settings-title">{stringFa.chart_setting}</div>
-          <div className="settings-description">
+          <div className="settings-title" style={{ color: theme.text_color }}>
+            {stringFa.chart_setting}
+          </div>
+          <div
+            className="settings-description"
+            style={{ color: theme.text_color }}
+          >
             {stringFa.chart_setting_description}
           </div>
         </div>
       </div>
       <div className="section-settings-wrapper">
-        <div className="section-settings">
-          <div className="section-settings-header-wrapper"></div>
+        <div
+          className="section-settings"
+          style={{ borderColor: theme.border_color }}
+        >
+          <div
+            className="section-settings-header-wrapper"
+            style={{ borderColor: theme.border_color }}
+          ></div>
           <div className="section-settings-display-type-switcher-wrapper">
             <VscSplitVertical />
           </div>
@@ -95,7 +124,7 @@ const CreateCharts = (props) => {
                       />
                     ) : (
                       <div className="text-component" dir="rtl">
-                        <span>نمودار</span>
+                        <span style={{ color: theme.text_color }}>نمودار</span>
                       </div>
                     )}
                   </div>

@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./TitleBlock.scss";
-
 import { data } from "../../assets/dummy_data/TestData";
-import { lightTheme } from "../../styles/theme";
-
+import { useTheme } from "../../styles/ThemeProvider";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
-
 import DropDown from "./../UI/DropDown/DropDown";
 
 function useOnClickOutside(ref, handler) {
@@ -33,10 +30,11 @@ const TitleBlock = React.memo((props) => {
   const [dropDown, setDropDown] = useState(false);
   const [details, setDetails] = useState([]);
   const [isFav, setIsFav] = useState(false);
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const starStyles = {
-    color: lightTheme.star_color,
+    color: theme.star_color,
   };
-
   const ref = useRef();
 
   const onStarClickHandler = (e) => {
@@ -79,7 +77,9 @@ const TitleBlock = React.memo((props) => {
               <DropDown chartId={props.chartId} setDropDown={setDropDown} />
             )}
             <SettingsOutlinedIcon
-              className={`card-setting ${ !dropDown && `card-setting-animation` }`}
+              className={`card-setting ${
+                !dropDown && `card-setting-animation`
+              }`}
               onClick={() => {
                 setDropDown(!dropDown);
               }}

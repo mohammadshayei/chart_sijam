@@ -58,6 +58,7 @@ const SettingsColor = () => {
     <div className="settings-color-component">
       {Object.entries(colors).map(([key, item]) => (
         <a
+          key={key}
           className={`settings-color-button ${item.active && "active"}`}
           onClick={() => onClickHandler(item)}
           style={{ background: `${item.color}` }}

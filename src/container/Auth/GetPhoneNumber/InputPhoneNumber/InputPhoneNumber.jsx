@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { lightTheme } from "../../../../styles/theme";
 import InputCountryPhoneCode from "../../../inputs/InputCountryPhoneCode/InputCountryPhoneCode";
 import UnderlineInput from "../../../inputs/UnderlineInput/UnderlineInput";
 import "./InputPhoneNumber.scss";
+import { useTheme } from "../../../../styles/ThemeProvider";
+
 const InputPhoneNumber = (props) => {
   const [selected, setSelected] = useState("code");
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+
   return (
     <div className="input-phone-container">
       <InputCountryPhoneCode
@@ -26,8 +30,8 @@ const InputPhoneNumber = (props) => {
             !props.correctCode
               ? "red"
               : selected === "code"
-              ? lightTheme.background
-              : lightTheme.borderBlur
+              ? theme.background
+              : theme.borderBlur
           } ${selected === "code" ? "2px" : "1px"} solid`,
         }}
       />
@@ -56,8 +60,8 @@ const InputPhoneNumber = (props) => {
             !props.isValidPhone
               ? "red"
               : selected === "phone"
-              ? lightTheme.background
-              : lightTheme.borderBlur
+              ? theme.background
+              : theme.borderBlur
           } ${selected === "phone" ? "2px" : "1px"} solid`,
         }}
       />

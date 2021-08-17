@@ -3,23 +3,25 @@ import "./Header.scss";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import IMAGE from "../../../../assets/images/simamIcon.png";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
-import { lightTheme } from "../../../../styles/theme";
+import { useTheme } from "../../../../styles/ThemeProvider";
+
 const Header = (props) => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+
   return (
-    <div
-      className={`HeaderContainer`}
-    >
+    <div className={`HeaderContainer`}>
       <MenuRoundedIcon
         style={{
           width: "30px",
           height: "30px",
-          color: lightTheme.clicked_darken_color,
-          cursor:'pointer'
+          color: theme.clicked_darken_color,
+          cursor: "pointer",
         }}
         onClick={props.onToggleMenu}
       />
       <div className="LogoContainer">
-        <span style={{ color: lightTheme.clicked_darken_color }}>
+        <span style={{ color: theme.clicked_darken_color }}>
           {stringFa.fekrafzar}
         </span>
         <img src={IMAGE} alt="" />

@@ -1,8 +1,11 @@
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
-import { lightTheme } from "../../../styles/theme";
+import { useTheme } from "../../../styles/ThemeProvider";
 import "./EditTitle.scss";
 const EditTitle = (props) => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+
   switch (props.type) {
     case "title":
       return props.options ? (
@@ -11,18 +14,19 @@ const EditTitle = (props) => {
             {
               // props.data.title.text
               // ? props.data.title.text
-              // : 
-              stringFa.title}
+              // :
+              stringFa.title
+            }
           </p>
           <EditRoundedIcon
             style={{
               fontSize: "1rem",
-              color: lightTheme.text_color,
+              color: theme.text_color,
               marginLeft: ".4rem",
             }}
           />
         </div>
-      ) : null
+      ) : null;
     case "titleX":
       return props.options ? (
         <div className="EditTitleContainer" style={props.style}>
@@ -30,18 +34,19 @@ const EditTitle = (props) => {
             {
               // props.options.scales.x.title
               // ? props.options.scales.x.title.text
-              // : 
-              stringFa.title}
+              // :
+              stringFa.title
+            }
           </p>
           <EditRoundedIcon
             style={{
               fontSize: "1rem",
-              color: lightTheme.text_color,
+              color: theme.text_color,
               marginLeft: ".4rem",
             }}
           />
         </div>
-      ) : null
+      ) : null;
     case "titleY":
       return props.options ? (
         <div className="EditTitleContainer" style={props.style}>
@@ -49,18 +54,19 @@ const EditTitle = (props) => {
             {
               // props.options.scales.y.title
               // ? props.options.scales.y.title.text
-              // : 
-              stringFa.title}
+              // :
+              stringFa.title
+            }
           </p>
           <EditRoundedIcon
             style={{
               fontSize: "1rem",
-              color: lightTheme.text_color,
+              color: theme.text_color,
               marginLeft: ".4rem",
             }}
           />
         </div>
-      ) : null
+      ) : null;
     default:
       return null;
   }

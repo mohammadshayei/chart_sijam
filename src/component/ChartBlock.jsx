@@ -3,7 +3,7 @@ import XYChart from "./Charts/XYChart.jsx";
 import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 
-const ChartBlock = (props) => {
+const ChartBlock = React.memo((props) => {
   const [chart, setChart] = useState(null);
   useEffect(() => {
     switch (props.chartProps.type) {
@@ -32,7 +32,7 @@ const ChartBlock = (props) => {
   }, [props.chartId, props.chartProps]);
 
   return chart;
-};
+});
 
 export default ChartBlock;
 

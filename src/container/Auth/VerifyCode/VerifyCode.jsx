@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
 import Button from "../../../component/UI/Button/Button";
-import { lightTheme } from "../../../styles/theme";
+import { useTheme } from "../../../styles/ThemeProvider";
 import UnderlineInput from "../../inputs/UnderlineInput/UnderlineInput";
 import "./VerifyCode.scss";
+
 const VerifyCode = (props) => {
   const [value, setValue] = useState("");
   const [selected, setSelected] = useState(false);
@@ -14,6 +15,8 @@ const VerifyCode = (props) => {
   const phone = searchParams.get("phone");
   const country_code = searchParams.get("country_code");
   const maxLength = 5;
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const onChange = (e) => {
     setValue(e.target.value);
     setCount(maxLength - e.target.value.length);
@@ -21,6 +24,7 @@ const VerifyCode = (props) => {
   const onClickButtonContinueHandler = (e) => {
     props.setStage(1);
   };
+
   return (
     <form className="verify-code-container">
       <div className="header-verify-contianer">
@@ -47,7 +51,7 @@ const VerifyCode = (props) => {
         width={15}
         inputStyle={{
           borderBottom: `${
-            selected === "phone" ? lightTheme.background : lightTheme.borderBlur
+            selected === "phone" ? theme.background : theme.borderBlur
           } ${selected === "phone" ? "2px" : "1px"} solid`,
         }}
       />
@@ -56,19 +60,19 @@ const VerifyCode = (props) => {
           style={{ textDecoration: "none" }}
           to={{
             pathname: "/signup",
-            search: `?p=3&token=${props.tokenId}&phone=${phone}&country_code=+${country_code.trim()}`,
+            search: `?p=3&token=${
+              props.tokenId
+            }&phone=${phone}&country_code=+${country_code.trim()}`,
           }}
         >
           <Button
-            hoverBGColor={lightTheme.hover_background}
+            hoverBGColor={theme.hover_background}
             disabled={count > 0}
             ButtonStyle={{
               width: "15rem",
               backgroundColor:
-                value.length === 5
-                  ? lightTheme.background
-                  : lightTheme.button_disabled,
-              color: lightTheme.text_clicked_menu_color,
+                value.length === 5 ? theme.background : theme.button_disabled,
+              color: theme.text_clicked_menu_color,
               paddingTop: ".2rem",
             }}
           >

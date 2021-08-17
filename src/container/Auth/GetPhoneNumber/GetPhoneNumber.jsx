@@ -7,8 +7,9 @@ import InputPhoneNumber from "./InputPhoneNumber/InputPhoneNumber";
 import CountryCodes from "../../ModalContent/CountryCodes/CountryCodes";
 import { countryCodes } from "../../../assets/DummyData/CountryCode";
 import "./GetPhoneNumber.scss";
-import { lightTheme } from "../../../styles/theme";
+import { useTheme } from "../../../styles/ThemeProvider";
 import { Link } from "react-router-dom";
+
 const GetPhoneNumber = (props) => {
   const [show, setShow] = useState(false);
   const [isValidPhone, setIsValidPhone] = useState(true);
@@ -17,6 +18,8 @@ const GetPhoneNumber = (props) => {
   );
   const [count, setCount] = useState(10);
   const [phone, setPhone] = useState("");
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const maxLength = 10;
   const closeModal = () => {
     setShow(false);
@@ -91,7 +94,7 @@ const GetPhoneNumber = (props) => {
               }}
             >
               <Button
-                hoverBGColor={lightTheme.hover_background}
+                hoverBGColor={theme.hover_background}
                 disabled={
                   !(isValidPhone && resultCountry && phone.length !== 0)
                 }
@@ -99,13 +102,13 @@ const GetPhoneNumber = (props) => {
                   width: "15rem",
                   backgroundColor:
                     isValidPhone && resultCountry && phone.length !== 0
-                      ? lightTheme.background
-                      : lightTheme.button_disabled,
-                  color: lightTheme.text_clicked_menu_color,
+                      ? theme.background
+                      : theme.button_disabled,
+                  color: theme.text_clicked_menu_color,
                   paddingTop: ".2rem",
                 }}
-                onClick={()=>{
-                  props.setTokenId(generate_token(30))
+                onClick={() => {
+                  props.setTokenId(generate_token(30));
                 }}
               >
                 <p>{stringFa.continue}</p>

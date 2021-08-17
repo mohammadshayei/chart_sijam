@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import "./Gallery.scss";
+import { useTheme } from "../../../../styles/ThemeProvider";
 
 const Gallery = (props) => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const [groups, setGroups] = useState({
     Line: {
       title: "خطی",
@@ -99,7 +102,9 @@ const Gallery = (props) => {
         return (
           <div key={k} className="gallery-group">
             <div className="gallery-group-title">
-              <span style={{ fontSize: 12 }}>{v.title}</span>
+              <span style={{ color: theme.text_color, fontSize: 12 }}>
+                {v.title}
+              </span>
             </div>
             <div className="gallery-group-content">
               {Object.entries(v.items).map(([key, item]) => {
@@ -107,7 +112,7 @@ const Gallery = (props) => {
                   <div key={key} className="gallery-item-wrapper">
                     <div
                       className={`gallery-item ${item.selected && "selected"}`}
-                      onClick={(e) => onClickHandler(e,v, key)}
+                      onClick={(e) => onClickHandler(e, v, key)}
                     >
                       <span className="gallery-item-text">
                         <img

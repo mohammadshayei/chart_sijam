@@ -5,7 +5,7 @@ import BenchmarkLine from "./BenchmarkLine.jsx";
 const BenchmarkStep = () => {
   let onRemoveHandler;
   const [benchmarkLines, setBenchmarkLines] = useState([
-    <BenchmarkLine onRemove={onRemoveHandler} index="0" />,
+    <BenchmarkLine propKey="0" onRemove={onRemoveHandler} index="0" />,
   ]);
   onRemoveHandler = (index) => {
     let newArray = [...benchmarkLines];
@@ -28,6 +28,7 @@ const BenchmarkStep = () => {
               setBenchmarkLines([
                 ...benchmarkLines,
                 <BenchmarkLine
+                  propKey={benchmarkLines.length}
                   onRemove={onRemoveHandler}
                   index={benchmarkLines.length}
                 />,

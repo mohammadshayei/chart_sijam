@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import classes from "./ProfileDetail.module.scss";
 import IMAGE from "../../../assets/images/avatar.png";
-import { lightTheme } from "../../../styles/theme";
+import { useTheme } from "../../../styles/ThemeProvider";
 import ArrowDropDownCircleRoundedIcon from "@material-ui/icons/ArrowDropDownCircleRounded";
+
 const ProfileDetail = (props) => {
   const [isHover, setIsHover] = useState(false);
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const onMouseEnter = () => {
     setIsHover(true);
   };
@@ -14,7 +17,7 @@ const ProfileDetail = (props) => {
   return (
     <div className={classes.ProfileDetailContainer}>
       <img src={IMAGE} alt="profile" />
-      <span style={{ color: lightTheme.text_color }}>کاربر مهمان</span>
+      <span style={{ color: theme.text_color }}>کاربر مهمان</span>
       <div
         className={classes.DropDownContainer}
         onMouseEnter={onMouseEnter}
