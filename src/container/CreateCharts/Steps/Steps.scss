@@ -44,17 +44,11 @@
       .open {
         transform: rotateX(180deg) translateY(0.8rem);
       }
-      &:hover {
-        background-color: #e6e9ef;
-      }
     }
     .open {
       flex-basis: calc(40px - 4px);
       border-bottom: 1px solid;
       margin-bottom: 16px;
-      &:hover {
-        background-color: white;
-      }
     }
     .step-setting-fields-container {
       flex: 1 1 auto;

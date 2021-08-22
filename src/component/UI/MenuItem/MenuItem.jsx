@@ -32,9 +32,11 @@ const MenuItem = (props) => {
       style={{
         background:
           detail.holding && detail.holding.id === props.id
-            ? theme.holding_menu_item_color
+            ? themeState.isDark
+              ? theme.surface_24dp
+              : theme.background_color
             : detail.company && detail.company.id === props.id
-            ? `linear-gradient(150deg,${theme.clicked_darken_color},${theme.clicked_lighten_color})`
+            ? `linear-gradient(150deg,${theme.primary},${theme.secondary})`
             : "",
         boxShadow:
           detail.company && detail.company.id === props.id
@@ -45,10 +47,14 @@ const MenuItem = (props) => {
         ripple(
           e,
           detail.company && detail.company.id === props.id
-            ? theme.clicked_darken_color
+            ? theme.on_primary
             : detail.holding && detail.holding.id === props.id
-            ? theme.ripple_holding_menu_item_color
-            : "black"
+            ? themeState.isDark
+              ? theme.surface_42dp
+              : theme.surface
+            : themeState.isDark
+            ? theme.surface_42dp
+            : theme.surface
         );
         props.onClick(
           props.id,
@@ -70,7 +76,7 @@ const MenuItem = (props) => {
               height: "13px",
               color:
                 detail.company && detail.company.id === props.id
-                  ? theme.text_clicked_menu_color
+                  ? theme.on_primary
                   : theme.arrows_color,
             }}
           />
@@ -82,10 +88,10 @@ const MenuItem = (props) => {
           style={{
             color:
               detail.software && detail.software.id === props.id
-                ? theme.clicked_darken_color
+                ? theme.primary
                 : detail.company && detail.company.id === props.id
-                ? theme.text_clicked_menu_color
-                : theme.text_color,
+                ? theme.on_primary
+                : theme.on_background,
             fontWeight: detail.software
               ? detail.software.id === props.id
                 ? "bold"
@@ -111,7 +117,7 @@ const MenuItem = (props) => {
                 ...styleIcon,
                 color:
                   detail.company && detail.company.id === props.id
-                    ? theme.text_clicked_menu_color
+                    ? theme.on_primary
                     : theme.arrows_color,
                 width: 12,
                 height: 12,

@@ -25,4 +25,8 @@ export const stringFa = {
   username_error: "نام کاربری باید بیشتر از ۲ حرف باشد",
   password: "رمز عبور",
   password_error: "رمز عبور باید بیشتر از ۶ حرف باشد",
+  add_benchmark_line: "اضافه کردن خط معیار +",
+  benchmark_line: "خط معیار",
+  benchmark_line_label: "برچسب خط معیار",
+  number_value: "مقدار",
 };

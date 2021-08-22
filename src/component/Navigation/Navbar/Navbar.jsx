@@ -24,7 +24,10 @@ const Navbar = (props) => {
   };
 
   return (
-    <div className={classes.NavbarContainer}>
+    <div
+      className={classes.NavbarContainer}
+      style={{ borderColor: theme.border_color }}
+    >
       <div className={classes.ProfileSectionContainer}>
         <ProfileDetail />
         <div className={classes.IconContainer}>
@@ -35,7 +38,6 @@ const Navbar = (props) => {
               <StarBorderRoundedIcon style={starStyles} />
             )}
           </div>
-
           {props.isMenuOpen ? null : (
             <MenuRoundedIcon
               style={{

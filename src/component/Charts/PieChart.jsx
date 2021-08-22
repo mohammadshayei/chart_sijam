@@ -2,19 +2,25 @@ import React, { useEffect } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-// import am4themes_material from "@amcharts/amcharts4/themes/material";
+import am4themes_dark from "@amcharts/amcharts4/themes/dark";
+import { useTheme } from "../../styles/ThemeProvider.js";
+import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
 // import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
 
 am4core.useTheme(am4themes_animated);
-// am4core.useTheme(am4themes_material);
 // am4core.useTheme(am4themes_microchart);
 am4core.addLicense("ch-custom-attribution");
 am4core.options.autoDispose = true;
 
 const PieChart = React.memo((props) => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const { data, type, options } = props.chartProps;
   let pieChart;
   useEffect(() => {
+    themeState.isDark
+      ? am4core.useTheme(am4themes_dark)
+      : am4core.useTheme(am4themes_frozen);
     pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
@@ -48,7 +54,7 @@ const PieChart = React.memo((props) => {
         function (radius, target) {
           //  keep labels out of chart
           if (target.dataItem.values.value.percent < 10) {
-            target.fill = am4core.color("#000");
+            target.fill = theme.on_surface;
             return 10;
           }
           return radius;
@@ -59,7 +65,7 @@ const PieChart = React.memo((props) => {
       //  keep labels striate
       pieSeries.labels.template.adapter.add("bent", function (bent, target) {
         if (target.dataItem.values.value.percent < 10) {
-          target.fill = am4core.color("#000");
+          target.fill = theme.on_surface;
           return false;
         }
         return bent;
@@ -166,7 +172,7 @@ const PieChart = React.memo((props) => {
         return null;
       },
     });
-  }, [props.chartId, props.chartProps]);
+  }, [props.chartId, props.chartProps, themeState.isDark]);
   return (
     <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>
   );

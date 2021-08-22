@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 import "./BenchmarkStep.scss";
 import BenchmarkLine from "./BenchmarkLine.jsx";
+import { stringFa } from "../../../../assets/strings/stringFaCollection";
+import { useTheme } from "../../../../styles/ThemeProvider";
 
 const BenchmarkStep = () => {
+  const [isHover, setIsHover] = useState(false);
   let onRemoveHandler;
   const [benchmarkLines, setBenchmarkLines] = useState([
     <BenchmarkLine propKey="0" onRemove={onRemoveHandler} index="0" />,
   ]);
+  const onMouseEnter = () => {
+    setIsHover(true);
+  };
+  const onMouseLeave = () => {
+    setIsHover(false);
+  };
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   onRemoveHandler = (index) => {
     let newArray = [...benchmarkLines];
     if (index !== -1) {
@@ -34,8 +45,16 @@ const BenchmarkStep = () => {
                 />,
               ])
             }
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            style={{
+              color: theme.on_background,
+              backgroundColor: isHover
+                ? theme.surface_1dp
+                : theme.background_color,
+            }}
           >
-            اضافه کردن خط معیار +
+            {stringFa.add_benchmark_line}
           </button>
         </div>
       </div>

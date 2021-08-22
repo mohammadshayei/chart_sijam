@@ -7,7 +7,6 @@ import { useLocation } from "react-router";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { VscSplitVertical } from "react-icons/vsc";
-import { CgDarkMode } from "react-icons/cg";
 import { useTheme } from "../../styles/ThemeProvider.js";
 
 function useOnClickOutside(ref, handler) {
@@ -47,12 +46,17 @@ const CreateCharts = (props) => {
     setInput(false);
   });
 
+  const clickDoneHandler = () => {
+    window.location = "/admin/view";
+  };
+
   return (
     <div
       className="create-charts-container"
       style={{
         backgroundColor: theme.background_color,
-        color: theme.text_color,
+        borderColor: theme.border_color,
+        color: theme.on_background,
       }}
     >
       <div
@@ -61,30 +65,20 @@ const CreateCharts = (props) => {
       >
         <Button
           ButtonStyle={{
-            backgroundColor: theme.clicked_darken_color,
+            backgroundColor: theme.primary,
             flex: "0 0 auto",
             fontWeight: 400,
             fontSize: "1rem",
             color: "white",
             marginBottom: "1rem",
           }}
+          onClick={clickDoneHandler}
         >
           {stringFa.done}
         </Button>
-        <button
-          className="dark-mode-toggle"
-          onClick={() => themeState.toggle()}
-        >
-          <CgDarkMode />
-        </button>
         <div className="settings-title-and-description">
-          <div className="settings-title" style={{ color: theme.text_color }}>
-            {stringFa.chart_setting}
-          </div>
-          <div
-            className="settings-description"
-            style={{ color: theme.text_color }}
-          >
+          <div className="settings-title">{stringFa.chart_setting}</div>
+          <div className="settings-description">
             {stringFa.chart_setting_description}
           </div>
         </div>
@@ -124,7 +118,7 @@ const CreateCharts = (props) => {
                       />
                     ) : (
                       <div className="text-component" dir="rtl">
-                        <span style={{ color: theme.text_color }}>نمودار</span>
+                        <span>نمودار</span>
                       </div>
                     )}
                   </div>
@@ -134,9 +128,9 @@ const CreateCharts = (props) => {
             <div className="section-chart-content-container">
               <ChartSection chartId={id} />
             </div>
-            <div className="table-component-container">
+            {/* <div className="table-component-container">
               <BankSection />
-            </div>
+            </div> */}
           </div>
         </div>
         <Steps type={"Line"} />

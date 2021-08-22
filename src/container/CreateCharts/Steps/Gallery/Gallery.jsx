@@ -111,7 +111,12 @@ const Gallery = (props) => {
                 return (
                   <div key={key} className="gallery-item-wrapper">
                     <div
-                      className={`gallery-item ${item.selected && "selected"}`}
+                      style={{
+                        borderColor: item.selected
+                          ? theme.primary
+                          : theme.border_color,
+                      }}
+                      className={`gallery-item`}
                       onClick={(e) => onClickHandler(e, v, key)}
                     >
                       <span className="gallery-item-text">

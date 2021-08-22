@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./XAxisStep.scss";
 import { BiChevronDown } from "react-icons/bi";
 import DropDownMenu from "./DropDownMenu/DropDownMenu.jsx";
+import { useTheme } from "../../../../styles/ThemeProvider";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -25,6 +26,8 @@ function useOnClickOutside(ref, handler) {
 const XAxisStep = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("آیتم سازنده");
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const dropDownMenuItems = [
     "تاریخ",
     "آیتم سازنده",
@@ -59,6 +62,7 @@ const XAxisStep = (props) => {
           <div
             className={`dropdown-wrapper ${isOpen && "open"}`}
             onClick={() => setIsOpen(!isOpen)}
+            style={{ borderColor: theme.border_color }}
           >
             <div className="dropdown-indicator">
               <div className={`dropdown-indicator-icon ${isOpen && "rotate"}`}>

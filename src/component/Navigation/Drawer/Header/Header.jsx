@@ -15,15 +15,13 @@ const Header = (props) => {
         style={{
           width: "30px",
           height: "30px",
-          color: theme.clicked_darken_color,
+          color: theme.primary,
           cursor: "pointer",
         }}
         onClick={props.onToggleMenu}
       />
       <div className="LogoContainer">
-        <span style={{ color: theme.clicked_darken_color }}>
-          {stringFa.fekrafzar}
-        </span>
+        <span style={{ color: theme.primary }}>{stringFa.fekrafzar}</span>
         <img src={IMAGE} alt="" />
       </div>
     </div>

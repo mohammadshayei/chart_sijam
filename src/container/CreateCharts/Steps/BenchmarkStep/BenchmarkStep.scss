@@ -18,7 +18,7 @@
             width: 100%;
             .settings-field-title {
               display: inline-flex;
-              justify-content: space-between;
+              justify-content: flex-end;
               align-items: center;
               width: 100%;
               margin-bottom: 0.5rem;
@@ -49,16 +49,12 @@
   padding: 4px 8px;
   height: 32px;
   min-width: 32px;
-  background-color: white;
+  background-color: transparent;
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
-  color: #323338;
   white-space: nowrap;
   transition: transform 50ms, min-width 0.1s cubic-bezier(0, 0, 0.35, 1);
-  &:hover {
-    background-color: #e6e9ef;
-  }
   &:active {
     transform: scale(0.95);
   }
@@ -68,7 +64,7 @@
   width: 100%;
   outline: none;
   padding: 0.25rem 0.5rem;
-  border: 1px solid #e6e9ef;
+  border: 1px solid;
   border-radius: 4px;
   font-family: inherit;
   font-size: inherit;
@@ -89,6 +85,11 @@
   border-top: 1px solid;
   border-top-color: #c5c7d0;
   padding-top: 1rem;
+}
+
+.settings-color-component {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .settings-color-button {

@@ -3,6 +3,7 @@ import classes from "./ProfileDetail.module.scss";
 import IMAGE from "../../../assets/images/avatar.png";
 import { useTheme } from "../../../styles/ThemeProvider";
 import ArrowDropDownCircleRoundedIcon from "@material-ui/icons/ArrowDropDownCircleRounded";
+import { CgDarkMode } from "react-icons/cg";
 
 const ProfileDetail = (props) => {
   const [isHover, setIsHover] = useState(false);
@@ -28,13 +29,18 @@ const ProfileDetail = (props) => {
       >
         <ArrowDropDownCircleRoundedIcon
           style={{
-            color: "black",
-            borderColor: "red",
+            color: theme.on_surface,
             width: "17px",
             height: "17px",
           }}
         />
       </div>
+      <button
+        className={classes.darkModeToggle}
+        onClick={() => themeState.toggle()}
+      >
+        <CgDarkMode />
+      </button>
     </div>
   );
 };

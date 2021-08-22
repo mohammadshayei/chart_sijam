@@ -69,7 +69,7 @@ const TitleBlock = React.memo((props) => {
   }, [props.chartId]);
 
   return (
-    <div className="title-container">
+    <div className="title-container" style={{ color: theme.on_surface }}>
       <div className="card-source-name">
         <div className="setting-container">
           <div ref={ref}>
@@ -83,6 +83,7 @@ const TitleBlock = React.memo((props) => {
               onClick={() => {
                 setDropDown(!dropDown);
               }}
+              style={{ color: theme.on_surface }}
             />
           </div>
         </div>

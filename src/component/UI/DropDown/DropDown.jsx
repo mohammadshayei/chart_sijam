@@ -16,6 +16,7 @@ import {
 import { IoSpeedometerOutline } from "react-icons/io5";
 import { MdBubbleChart } from "react-icons/md";
 import { stringFa } from "./../../../assets/strings/stringFaCollection";
+import { useTheme } from "../../../styles/ThemeProvider.js";
 // import { EditRoundedIcon } from "@material-ui/icons/EditRounded";
 
 const DropDown = (props) => {
@@ -30,6 +31,8 @@ const DropDown = (props) => {
     <IoSpeedometerOutline />,
     <FcSettings />,
   ];
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
 
   const dispatch = useDispatch();
   const setChartType = (chartType) => {
@@ -42,18 +45,28 @@ const DropDown = (props) => {
   };
 
   return (
-    <div className="dropdown">
+    <div
+      className="dropdown"
+      style={{
+        backgroundColor: theme.surface_12dp,
+        borderColor: theme.border_color,
+      }}
+    >
       {chartTypes.map(({ label, value }, index) => (
         <div
           key={label}
           onClick={() => handleClick(value)}
           className="dropdown-item"
+          style={{ color: theme.on_background }}
         >
           {label}
           <div className="dropdown-icon">{dropDownIcons[index]}</div>
         </div>
       ))}
-      <div className="dropdown-divider"></div>
+      <div
+        className="dropdown-divider"
+        style={{ borderColor: theme.border_color }}
+      ></div>
       <Link
         className="dropdown-item"
         to={{
@@ -62,7 +75,7 @@ const DropDown = (props) => {
             chartId: props.chartId,
           },
         }}
-        style={{ textDecoration: "none", color: "black" }}
+        style={{ textDecoration: "none", color: theme.on_background }}
       >
         {stringFa.Edit}
         <div className="dropdown-icon">

@@ -1,25 +1,39 @@
-.ProfileDetailContainer{
-    height: 100%;
+.ProfileDetailContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    width: 55px;
+    height: 55px;
+  }
+  span {
+    font-size: 12px;
+    margin-left: 0.5rem;
+  }
+  .DropDownContainer {
+    width: 29px;
+    height: 29px;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    img{
-        width:55px;
-        height:55px;
-    }
-    span{
-        font-size: 12px;
-        margin-left: .5rem;
-    }
-    .DropDownContainer{
-        width: 29px;
-        height: 29px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 0.4rem;
-        border-radius: 50%;
-        transition: background-color 500ms;
-        cursor: pointer;
-    }
+    justify-content: center;
+    margin-left: 0.4rem;
+    border-radius: 50%;
+    transition: background-color 500ms;
+    cursor: pointer;
+  }
+
+  .darkModeToggle {
+    position: absolute;
+    z-index: 100;
+    top: 1.7em;
+    left: 13.5em;
+    color: var(--foreground);
+    padding: 6px;
+    background: transparent;
+    border: 0px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+  }
 }

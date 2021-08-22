@@ -12,7 +12,6 @@
       display: flex;
       flex-direction: row;
       justify-content: center;
-      color: rgba(0, 0, 0, 0.5);
       user-select: none;
       font-size: 0.8rem;
       // @media screen and (max-width: $xl) and (min-width: $md) {
@@ -27,7 +26,7 @@
       .card-setting {
         display: flex;
         align-items: center;
-        color: rgba(116, 114, 114, 0.459);
+        // color: rgba(116, 114, 114, 0.459);
         font-size: 1.4rem;
         &:hover {
           cursor: pointer;

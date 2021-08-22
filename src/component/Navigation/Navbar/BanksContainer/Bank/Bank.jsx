@@ -20,22 +20,24 @@ const Bank = React.memo(function Bank(props) {
     if (detail.banks && detail.banks.find((bk) => bk.id === props.data.id)) {
       setClicked(true);
       setStyle({
-        background: `linear-gradient(150deg,${theme.clicked_darken_color},${theme.clicked_lighten_color})`,
-        color: theme.text_clicked_menu_color,
+        background: `linear-gradient(150deg,${theme.primary},${theme.secondary})`,
+        color: theme.on_primary,
       });
     } else {
       setClicked(false);
       setStyle({
         background: "",
-        color: theme.text_color,
+        color: theme.on_background,
       });
     }
   }, [detail.banks, props.data]);
   const onMouseEnter = () => {
     if (!clicked) {
       setStyle({
-        background: theme.holding_menu_item_color,
-        color: theme.text_color,
+        background: themeState.isDark
+          ? theme.surface_1dp
+          : theme.background_color,
+        color: theme.on_background,
       });
     }
   };
@@ -43,7 +45,7 @@ const Bank = React.memo(function Bank(props) {
     if (!clicked) {
       setStyle({
         background: "",
-        color: theme.text_color,
+        color: theme.on_background,
       });
     }
   };

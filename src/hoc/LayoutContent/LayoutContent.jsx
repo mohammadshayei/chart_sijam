@@ -54,13 +54,23 @@ const LayoutContent = (props) => {
   return (
     <div
       className="LayoutContentContainer"
-      style={{ backgroundColor: theme.background_color }}
+      style={{
+        backgroundColor: theme.background_color,
+        color: theme.on_background,
+      }}
     >
       <div
         className={`LeftSectionContaienr ${isMenuOpen ? "Reduce" : "extend"}`}
         style={{ width: isMenuOpen ? "87%" : "100%" }}
       >
-        <div className="NavbarConainer">
+        <div
+          className="NavbarConainer"
+          style={{
+            backgroundColor: themeState.isDark
+              ? theme.surface_4dp
+              : theme.surface,
+          }}
+        >
           <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
         </div>
         <div

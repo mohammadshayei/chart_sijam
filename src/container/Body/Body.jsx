@@ -5,9 +5,12 @@ import "./Body.scss";
 import { useDispatch, useSelector } from "react-redux";
 import * as chartActions from "../../store/actions/chart.js";
 import Card from "./../../component/Card/Card";
+import { useTheme } from "../../styles/ThemeProvider";
 
 const Body = (props) => {
   const chartsData = useSelector((state) => state.chart);
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
 
   const dispatch = useDispatch();
   const setChartsData = (chartsData) => {
@@ -37,7 +40,13 @@ const Body = (props) => {
   }, [props.data]);
 
   return chartsData.layouts && chartsData.data ? (
-    <div className="body-container">
+    <div
+      className="body-container"
+      style={{
+        backgroundColor: theme.background_color,
+        color: theme.on_background,
+      }}
+    >
       <ResponsiveGridLayout
         className="layout"
         layouts={chartsData.layouts}
@@ -57,7 +66,7 @@ const Body = (props) => {
         // onLayoutChange={onLayoutChange}
       >
         {Object.entries(chartsData.data).map(([k, v]) => (
-          <div key={k} >
+          <div key={k}>
             <Card key={k} chartId={k} item={v} />
           </div>
         ))}

@@ -2,19 +2,25 @@ import React, { useEffect } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-// import am4themes_material from "@amcharts/amcharts4/themes/material";
+import am4themes_dark from "@amcharts/amcharts4/themes/dark";
+import { useTheme } from "../../styles/ThemeProvider.js";
+import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
 // import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
 
 am4core.useTheme(am4themes_animated);
-// am4core.useTheme(am4themes_material);
 // am4core.useTheme(am4themes_microchart);
 am4core.addLicense("ch-custom-attribution");
 am4core.options.autoDispose = true;
 
 const XYChart = React.memo((props) => {
+  const themeState = useTheme();
   const { data, type, options } = props.chartProps;
+
   let xyChart;
   useEffect(() => {
+    themeState.isDark
+      ? am4core.useTheme(am4themes_dark)
+      : am4core.useTheme(am4themes_frozen);
     if (props.chartId) {
       if (type === "Radar") {
         xyChart = am4core.create(`${props.chartId}`, am4charts.RadarChart);
@@ -375,7 +381,7 @@ const XYChart = React.memo((props) => {
         },
       });
     }
-  }, [props.chartId, props.chartProps]);
+  }, [props.chartId, props.chartProps, themeState.isDark]);
 
   return (
     <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>

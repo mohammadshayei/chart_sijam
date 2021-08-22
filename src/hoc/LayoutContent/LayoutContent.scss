@@ -3,11 +3,12 @@
 .LayoutContentContainer {
   height: 100%;
   width: 100%;
-  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
-    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  // box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+  //   rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   display: flex;
   flex-direction: row;
   overflow-x: hidden;
+  transition: color 0.2s ease-out, background 0.2s ease-out;
   .LeftSectionContaienr {
     width: 87%;
     margin-left: 0;
@@ -22,8 +23,7 @@
       height: calc(100% - 7.5rem);
       margin-top: 0;
       width: 100%;
-      box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px inset;
-      background-color: rgb(249, 249, 249);
+      // box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px inset;
       overflow-y: auto;
       .BodyContent {
         display: flex;
