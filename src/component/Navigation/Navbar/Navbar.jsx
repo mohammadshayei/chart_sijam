@@ -7,6 +7,8 @@ import { useTheme } from "../../../styles/ThemeProvider";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import BanksContainer from "./BanksContainer/BanksContainer";
 import { ripple } from "../../../assets/config/ripple";
+import { stringFa } from "../../../assets/strings/stringFaCollection.js";
+import ToolsContainer from "./ToolsContainer/ToolsContainer";
 
 const Navbar = (props) => {
   const [isFav, setIsFav] = useState(false);
@@ -50,6 +52,12 @@ const Navbar = (props) => {
             />
           )}
         </div>
+      </div>
+      <div
+        className={classes.ToolsContainer}
+        style={{ borderColor: theme.border_color, color: theme.on_background }}
+      >
+        <ToolsContainer />
       </div>
       <div className={classes.BanksContainer}>
         <BanksContainer />

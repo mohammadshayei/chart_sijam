@@ -1,0 +1,15 @@
+.tools-container {
+  display: flex;
+  justify-content: flex-end;
+  height: auto;
+  width: 100%;
+  padding: 0.5rem 0.5rem;
+  .create-chart {
+    display: flex;
+    .add-icon {
+      display: flex;
+      align-items: center;
+      margin-left: 0.5rem;
+    }
+  }
+}

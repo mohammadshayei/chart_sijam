@@ -3,19 +3,13 @@ import SettingsColor from "./SettingsColor.jsx";
 import { MdCancel } from "react-icons/md";
 import { stringFa } from "./../../../../assets/strings/stringFaCollection";
 import { useTheme } from "../../../../styles/ThemeProvider";
+import StyledButton from "./../../../../component/UI/Button/StyledButton";
 
 const BenchmarkLine = (props) => {
-  const [isHover, setIsHover] = useState(false);
   const [inputsOrder, setInputsOrder] = useState({
     0: { isFocus: false },
     1: { isFocus: false },
   });
-  const onMouseEnter = () => {
-    setIsHover(true);
-  };
-  const onMouseLeave = () => {
-    setIsHover(false);
-  };
   const handleFocus = (index) => {
     let updatedOrder = { ...inputsOrder };
     index === 0
@@ -33,25 +27,15 @@ const BenchmarkLine = (props) => {
     <div key={props.propKey} className="item-list-item">
       {props.index !== "0" && (
         <div className="item-list-item-actions">
-          <button
-            className="sijam-style-button"
+          <StyledButton
             onClick={() => props.onRemove(props.index)}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            style={{
-              marginRight: "0.3rem",
-              color: theme.on_background,
-              backgroundColor: isHover
-                ? themeState.isDark
-                  ? theme.surface_1dp
-                  : theme.background_color
-                : themeState.isDark
-                ? theme.background_color
-                : theme.surface,
-            }}
+            ButtonStyle={{ marginRight: "0.3rem" }}
+            hover={
+              themeState.isDark ? theme.surface_1dp : theme.background_color
+            }
           >
             <MdCancel />
-          </button>
+          </StyledButton>
         </div>
       )}
       <div className="settings-field-component item-list-item-field">

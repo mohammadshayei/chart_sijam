@@ -2,22 +2,16 @@ import React, { useState } from "react";
 import "./BenchmarkStep.scss";
 import BenchmarkLine from "./BenchmarkLine.jsx";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
-import { useTheme } from "../../../../styles/ThemeProvider";
+import StyledButton from "./../../../../component/UI/Button/StyledButton";
+import { useTheme } from "../../../../styles/ThemeProvider.js";
 
 const BenchmarkStep = () => {
-  const [isHover, setIsHover] = useState(false);
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   let onRemoveHandler;
   const [benchmarkLines, setBenchmarkLines] = useState([
     <BenchmarkLine propKey="0" onRemove={onRemoveHandler} index="0" />,
   ]);
-  const onMouseEnter = () => {
-    setIsHover(true);
-  };
-  const onMouseLeave = () => {
-    setIsHover(false);
-  };
-  const themeState = useTheme();
-  const theme = themeState.computedTheme;
   onRemoveHandler = (index) => {
     let newArray = [...benchmarkLines];
     if (index !== -1) {
@@ -33,8 +27,7 @@ const BenchmarkStep = () => {
           {benchmarkLines.map((item) => item)}
         </div>
         <div className="settings-multiple-item-footer">
-          <button
-            className="sijam-style-button"
+          <StyledButton
             onClick={() =>
               setBenchmarkLines([
                 ...benchmarkLines,
@@ -45,21 +38,12 @@ const BenchmarkStep = () => {
                 />,
               ])
             }
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            style={{
-              color: theme.on_background,
-              backgroundColor: isHover
-                ? themeState.isDark
-                  ? theme.surface_1dp
-                  : theme.background_color
-                : themeState.isDark
-                ? theme.background_color
-                : theme.surface,
-            }}
+            hover={
+              themeState.isDark ? theme.surface_1dp : theme.background_color
+            }
           >
             {stringFa.add_benchmark_line}
-          </button>
+          </StyledButton>
         </div>
       </div>
     </div>
