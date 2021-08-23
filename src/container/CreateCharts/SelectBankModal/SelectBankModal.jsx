@@ -1,10 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { stringFa } from "../../../assets/strings/stringFaCollection.js";
 import { useTheme } from "../../../styles/ThemeProvider.js";
 import "./SelectBankModal.scss";
 import Button from "./../../../component/UI/Button/Button";
 
-const SelectBankModal = () => {
+function useOnClickOutside(ref, handler) {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, [ref, handler]);
+}
+
+const SelectBankModal = (props) => {
   const [bankAddress, setBankAddress] = useState({
     holding: { name: `${stringFa.holding}`, active: true },
     company: { name: `${stringFa.company}`, active: false },
@@ -12,9 +31,14 @@ const SelectBankModal = () => {
     database: { name: `${stringFa.database}`, active: false },
   });
   const [placeHolder, setPlaceHolder] = useState(null);
-  
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const ref = useRef();
+
+  useOnClickOutside(ref, () => {
+    props.isModalOpen(false);
+  });
 
   useEffect(() => {
     for (const item in bankAddress) {
@@ -35,6 +59,7 @@ const SelectBankModal = () => {
 
   return (
     <div
+      ref={ref}
       className="select-bank-modal-container"
       style={{
         backgroundColor: themeState.isDark ? theme.surface_1dp : theme.surface,

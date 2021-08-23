@@ -57,7 +57,7 @@ const Navbar = (props) => {
         className={classes.ToolsContainer}
         style={{ borderColor: theme.border_color, color: theme.on_background }}
       >
-        <ToolsContainer />
+        <ToolsContainer isModalOpen={props.isModalOpen} />
       </div>
       <div className={classes.BanksContainer}>
         <BanksContainer />

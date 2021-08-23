@@ -5,10 +5,12 @@ import { FaPlusCircle } from "react-icons/fa";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import StyledButton from "./../../../UI/Button/StyledButton";
 
-const ToolsContainer = () => {
+const ToolsContainer = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const clickHandler = (e) => {};
+  const clickHandler = (e) => {
+    props.isModalOpen(true);
+  };
   return (
     <div className="tools-container">
       <StyledButton

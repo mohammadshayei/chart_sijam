@@ -14,6 +14,7 @@ import SelectBankModal from "../../container/CreateCharts/SelectBankModal/Select
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -60,9 +61,11 @@ const LayoutContent = (props) => {
         color: theme.on_background,
       }}
     >
-      <div className="ModalOverlay">
-        <SelectBankModal />
-      </div>
+      {isModalOpen && (
+        <div className="ModalOverlay">
+          <SelectBankModal isModalOpen={setIsModalOpen} />
+        </div>
+      )}
       <div
         className={`LeftSectionContainer ${isMenuOpen ? "Reduce" : "extend"}`}
         style={{ width: isMenuOpen ? "87%" : "100%" }}
@@ -75,7 +78,11 @@ const LayoutContent = (props) => {
               : theme.surface,
           }}
         >
-          <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
+          <Navbar
+            onToggleMenu={onToggleMenu}
+            isMenuOpen={isMenuOpen}
+            isModalOpen={setIsModalOpen}
+          />
         </div>
         <div
           className="BodyContainer"
