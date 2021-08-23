@@ -6,6 +6,9 @@ export const stringFa = {
   no_exist_charts: " .نموداری وجود ندارد",
   create_chart: "ایجاد نمودار",
   select_bank: "انتخاب بانک",
+  select_database: "انتخاب بانک اطلاعاتی",
+  select_database_description:
+    "جستجو و انتخاب بانک اطلاعاتی مورد نظر برای نمایش در نمودار",
   title: "عنوان",
   Edit: "ویرایش",
   chart_setting: "تنظیمات نمودار",
@@ -29,4 +32,8 @@ export const stringFa = {
   benchmark_line: "خط معیار",
   benchmark_line_label: "برچسب خط معیار",
   number_value: "مقدار",
+  holding: "هلدینگ",
+  company: "شرکت",
+  software: "برنامه",
+  database: "بانک اطلاعاتی",
 };

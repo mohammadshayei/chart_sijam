@@ -8,9 +8,11 @@ import StyledButton from "./../../../UI/Button/StyledButton";
 const ToolsContainer = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const clickHandler = (e) => {};
   return (
-    <div className="tools-container sijam-style-button">
+    <div className="tools-container">
       <StyledButton
+        onClick={(e) => clickHandler(e)}
         hover={themeState.isDark ? theme.surface_12dp : theme.background_color}
       >
         <div className="create-chart">

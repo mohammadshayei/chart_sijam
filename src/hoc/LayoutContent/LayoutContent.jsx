@@ -10,6 +10,7 @@ import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import * as bankActions from "../../store/actions/banksData";
 import { Link } from "react-router-dom";
+import SelectBankModal from "../../container/CreateCharts/SelectBankModal/SelectBankModal.jsx";
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -59,12 +60,15 @@ const LayoutContent = (props) => {
         color: theme.on_background,
       }}
     >
+      <div className="ModalOverlay">
+        <SelectBankModal />
+      </div>
       <div
-        className={`LeftSectionContaienr ${isMenuOpen ? "Reduce" : "extend"}`}
+        className={`LeftSectionContainer ${isMenuOpen ? "Reduce" : "extend"}`}
         style={{ width: isMenuOpen ? "87%" : "100%" }}
       >
         <div
-          className="NavbarConainer"
+          className="NavbarContainer"
           style={{
             backgroundColor: themeState.isDark
               ? theme.surface_4dp
