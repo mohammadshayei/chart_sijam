@@ -54,7 +54,9 @@ const CreateCharts = (props) => {
     <div
       className="create-charts-container"
       style={{
-        backgroundColor: theme.background_color,
+        backgroundColor: themeState.isDark
+          ? theme.background_color
+          : theme.surface,
         borderColor: theme.border_color,
         color: theme.on_background,
       }}

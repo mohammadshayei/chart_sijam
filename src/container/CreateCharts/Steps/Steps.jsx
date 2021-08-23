@@ -36,11 +36,11 @@ const Steps = (props) => {
             content: <BenchmarkStep />,
             isOpen: false,
           },
-          moreSetting: {
-            title: "تنظیمات بیشتر",
-            content: "test2",
-            isOpen: false,
-          },
+          // moreSetting: {
+          //   title: "تنظیمات بیشتر",
+          //   content: "test2",
+          //   isOpen: false,
+          // },
         });
         break;
       case "Pie":

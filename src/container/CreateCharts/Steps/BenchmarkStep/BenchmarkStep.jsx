@@ -50,8 +50,12 @@ const BenchmarkStep = () => {
             style={{
               color: theme.on_background,
               backgroundColor: isHover
-                ? theme.surface_1dp
-                : theme.background_color,
+                ? themeState.isDark
+                  ? theme.surface_1dp
+                  : theme.background_color
+                : themeState.isDark
+                ? theme.background_color
+                : theme.surface,
             }}
           >
             {stringFa.add_benchmark_line}

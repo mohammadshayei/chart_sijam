@@ -6,18 +6,26 @@ import { useTheme } from "../../../../styles/ThemeProvider";
 
 const BenchmarkLine = (props) => {
   const [isHover, setIsHover] = useState(false);
-  const [isFocus, setIsFocus] = useState(false);
+  const [inputsOrder, setInputsOrder] = useState({
+    0: { isFocus: false },
+    1: { isFocus: false },
+  });
   const onMouseEnter = () => {
     setIsHover(true);
   };
   const onMouseLeave = () => {
     setIsHover(false);
   };
-  const handleFocus = () => {
-    setIsFocus(true);
+  const handleFocus = (index) => {
+    let updatedOrder = { ...inputsOrder };
+    index === 0
+      ? (updatedOrder = { 0: { isFocus: true }, 1: { isFocus: false } })
+      : (updatedOrder = { 0: { isFocus: false }, 1: { isFocus: true } });
+    setInputsOrder(updatedOrder);
   };
-  const handleBlur = () => {
-    setIsFocus(false);
+  const handleBlur = (index) => {
+    let updatedOrder = { ...inputsOrder, [index]: { isFocus: false } };
+    setInputsOrder(updatedOrder);
   };
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -34,8 +42,12 @@ const BenchmarkLine = (props) => {
               marginRight: "0.3rem",
               color: theme.on_background,
               backgroundColor: isHover
-                ? theme.surface_1dp
-                : theme.background_color,
+                ? themeState.isDark
+                  ? theme.surface_1dp
+                  : theme.background_color
+                : themeState.isDark
+                ? theme.background_color
+                : theme.surface,
             }}
           >
             <MdCancel />
@@ -54,12 +66,16 @@ const BenchmarkLine = (props) => {
             placeholder={stringFa.number_value}
             className="input"
             dir="rtl"
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocus={() => handleFocus(0)}
+            onBlur={() => handleBlur(0)}
             style={{
-              background: theme.background_color,
+              background: themeState.isDark
+                ? theme.background_color
+                : theme.surface,
               color: theme.on_background,
-              borderColor: isFocus ? theme.primary : theme.border_color,
+              borderColor: inputsOrder[0].isFocus
+                ? theme.primary
+                : theme.border_color,
             }}
           />
         </div>
@@ -69,12 +85,16 @@ const BenchmarkLine = (props) => {
             placeholder={stringFa.benchmark_line_label}
             className="input"
             dir="rtl"
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocus={() => handleFocus(1)}
+            onBlur={() => handleBlur(1)}
             style={{
-              background: theme.background_color,
+              background: themeState.isDark
+                ? theme.background_color
+                : theme.surface,
               color: theme.on_background,
-              borderColor: isFocus ? theme.primary : theme.border_color,
+              borderColor: inputsOrder[1].isFocus
+                ? theme.primary
+                : theme.border_color,
             }}
           />
         </div>
