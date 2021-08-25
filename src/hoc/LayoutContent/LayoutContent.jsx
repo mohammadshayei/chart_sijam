@@ -62,7 +62,7 @@ const LayoutContent = (props) => {
       }}
     >
       {isModalOpen && (
-        <div className="ModalOverlay">
+        <div className="ModalOverlay" style={{ opacity: isModalOpen ? 1 : 0 }}>
           <SelectBankModal isModalOpen={setIsModalOpen} />
         </div>
       )}

@@ -35,5 +35,7 @@ export const stringFa = {
   holding: "هلدینگ",
   company: "شرکت",
   software: "برنامه",
+  active_backup: "پشتیبان فعال",
   database: "بانک اطلاعاتی",
+  error_message: "خطای دریافت اطلاعات. لطفا مجددا تلاش کنید",
 };

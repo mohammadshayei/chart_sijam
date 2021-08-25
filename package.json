@@ -35,6 +35,7 @@
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
+    "use-animate-presence": "^0.5.2",
     "uuid": "^8.3.2",
     "web-animations-js": "^2.3.2",
     "web-vitals": "^1.0.1"

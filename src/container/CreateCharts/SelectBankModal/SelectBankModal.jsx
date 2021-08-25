@@ -5,6 +5,8 @@ import "./SelectBankModal.scss";
 import Button from "./../../../component/UI/Button/Button";
 import axios from "axios";
 import { baseUrl } from "./../../../constants/Config";
+import { IoIosSearch } from "react-icons/io";
+import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -26,17 +28,25 @@ function useOnClickOutside(ref, handler) {
 }
 
 const SelectBankModal = (props) => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [focus, setFocus] = useState(false);
   const [data, setData] = useState(null);
   const [bankAddress, setBankAddress] = useState({
-    holding: { name: `${stringFa.holding}`, active: true, verified: false },
-    company: { name: `${stringFa.company}`, active: false, verified: false },
-    software: { name: `${stringFa.software}`, active: false, verified: false },
-    database: { name: `${stringFa.database}`, active: false, verified: false },
+    holdings: { name: `${stringFa.holding}`, active: true, verified: false },
+    companies: { name: `${stringFa.company}`, active: false, verified: false },
+    softwares: { name: `${stringFa.software}`, active: false, verified: false },
+    active_backup: {
+      name: `${stringFa.active_backup}`,
+      active: false,
+      verified: false,
+    },
+    banks: { name: `${stringFa.database}`, active: false, verified: false },
   });
   const [placeHolder, setPlaceHolder] = useState(null);
   const [isDone, setIsDone] = useState(false);
-  const themeState = useTheme();
-  const theme = themeState.computedTheme;
   const ref = useRef();
 
   useOnClickOutside(ref, () => {
@@ -44,9 +54,16 @@ const SelectBankModal = (props) => {
   });
 
   useEffect(async () => {
-    const result = await axios.get(baseUrl + "/get_holdings");
-    setData(result);
-  }, [bankAddress]);
+    try {
+      const result = await axios.get(baseUrl + "/get_holdings");
+      setData(result.data.message.result);
+      setLoading(false);
+    } catch (error) {
+      setError(
+        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+      );
+    }
+  }, []);
 
   useEffect(() => {
     for (const item in bankAddress) {
@@ -55,7 +72,14 @@ const SelectBankModal = (props) => {
     }
   }, [bankAddress]);
 
-  const updateAddress =async (event, name, code) => {
+  const onFocusHandler = () => {
+    setFocus(true);
+  };
+  const onBlurHandler = () => {
+    setFocus(false);
+  };
+
+  const updateAddress = async (event, name, value) => {
     if (event.key === "Enter" || event.type === "click") {
       let updatedAddress = { ...bankAddress };
       let key = null;
@@ -89,9 +113,21 @@ const SelectBankModal = (props) => {
           // event.target.value = "";
         }
       updatedAddress[key].verified = true;
-      const payload={code}
-      const result = await axios.post(baseUrl + "/get_companies",payload);
-      setData(result);
+      let payload;
+      if (nextKey === "active_backup" || nextKey === "banks")
+        payload = { id: value };
+      else payload = { code: value };
+      setLoading(true);
+      console.log(payload);
+      try {
+        const result = await axios.post(`${baseUrl}/get_${nextKey}`, payload);
+        setData(result.data.message.result);
+        setLoading(false);
+      } catch (error) {
+        setError(
+          <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+        );
+      }
     }
   };
 
@@ -100,11 +136,12 @@ const SelectBankModal = (props) => {
       ref={ref}
       className="select-bank-modal-container"
       style={{
-        backgroundColor: themeState.isDark ? theme.surface_1dp : theme.surface,
+        backgroundColor: themeState.isDark ? theme.surface_24dp : theme.surface,
         color: theme.on_surface,
         borderColor: theme.border_color,
       }}
     >
+      {error}
       <div className="select-bank-title">
         <div className="title">{stringFa.select_database}</div>
         <div className="title description">
@@ -116,12 +153,12 @@ const SelectBankModal = (props) => {
           {Object.entries(bankAddress).map(([k, v]) => {
             return (
               <div className="address-part" key={k}>
-                {k !== "database" ? "  /  " : ""}
+                {k !== "banks" ? "  /  " : ""}
                 <div
                   className="address-item"
                   style={{
                     color: v.active
-                      ? theme.primary
+                      ? theme.on_background
                       : v.verified
                       ? "green"
                       : theme.on_background,
@@ -135,26 +172,58 @@ const SelectBankModal = (props) => {
           })}
         </div>
         <input
-          className="input"
+          type="text"
+          className="input-class"
+          style={{
+            background: themeState.isDark ? theme.surface_1dp : theme.surface,
+            color: theme.on_background,
+            borderColor: focus ? theme.primary : theme.border_color,
+          }}
           dir="rtl"
           placeholder={placeHolder}
           onKeyDown={(e) => updateAddress(e)}
+          onFocus={onFocusHandler}
+          onBlur={onBlurHandler}
         ></input>
+        <div className="search-icon">
+          <IoIosSearch />
+        </div>
       </div>
-      <div className="select-bank-picker">
-        {data &&
-          Object.entries(data.data.message.result).map(([k, v]) => {
-            return (
-              <div
-                key={k}
-                className="selection-item"
-                onClick={(e) => updateAddress(e, v.name, v.code)}
-              >
-                {v.name}
-              </div>
-            );
-          })}
-      </div>
+      {loading ? (
+        <div className="loading">
+          <img
+            opacity="0.7"
+            height="60"
+            width="60"
+            src={process.env.PUBLIC_URL + "/logo-loading.gif"}
+            alt="logo"
+          />
+        </div>
+      ) : (
+        <div className="select-bank-picker">
+          {data &&
+            Object.entries(data).map(([k, v]) => {
+              return (
+                <div
+                  key={k}
+                  className="selection-item"
+                  onClick={(e) =>
+                    updateAddress(
+                      e,
+                      v.name,
+                      bankAddress.softwares.active ||
+                        bankAddress.active_backup.active
+                        ? v.id
+                        : v.code
+                    )
+                  }
+                >
+                  {bankAddress.banks.active ? v.bank.groups_title : v.name}
+                </div>
+              );
+            })}
+        </div>
+      )}
       <div className="modal-footer">
         <Button
           ButtonStyle={{
