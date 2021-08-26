@@ -56,6 +56,7 @@ const SelectBankModal = (props) => {
   });
   const [placeHolder, setPlaceHolder] = useState(null);
   const [isDone, setIsDone] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
   const ref = useRef();
 
   useOnClickOutside(ref, () => {
@@ -73,6 +74,10 @@ const SelectBankModal = (props) => {
       );
     }
   }, []);
+
+  useEffect(() => {
+    setSearchResult(data);
+  }, [data]);
 
   useEffect(() => {
     for (const item in bankAddress) {
@@ -169,6 +174,14 @@ const SelectBankModal = (props) => {
     setBankAddress(clearedAddress);
   };
 
+  const onChangeHandler = (event) => {
+    setSearchResult(
+      data.filter((item) => {
+        return item.name.indexOf(event.target.value) >= 0;
+      })
+    );
+  };
+
   return (
     <div
       ref={ref}
@@ -241,6 +254,7 @@ const SelectBankModal = (props) => {
             dir="rtl"
             placeholder={placeHolder}
             onKeyDown={(e) => updateAddress(e)}
+            onChange={(e) => onChangeHandler(e)}
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
           ></input>
@@ -263,8 +277,8 @@ const SelectBankModal = (props) => {
         ) : (
           <div className="select-bank-picker">
             <div className="select-bank-data">
-              {data &&
-                Object.entries(data).map(([k, v]) => {
+              {searchResult &&
+                Object.entries(searchResult).map(([k, v]) => {
                   return (
                     <div
                       key={k}
@@ -301,7 +315,7 @@ const SelectBankModal = (props) => {
           }}
           disabled={isDone ? false : true}
           onClick={() => {
-            console.log("ok");
+            console.log(data[0].bank._id);
           }}
         >
           {stringFa.done}
