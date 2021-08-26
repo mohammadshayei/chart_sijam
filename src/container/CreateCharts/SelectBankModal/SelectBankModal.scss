@@ -11,80 +11,151 @@
   max-height: 90vh;
   max-width: 1020px;
   transform: translate(-50%, -50%);
-  transition: all 2s ease 0s;
+  transition: all 0.2s ease 0s;
   will-change: width;
   // box-shadow: 0px 6px 20px 0px rgb(0 0 0);
-  .select-bank-title {
-    width: 100%;
-    margin-bottom: 0.5rem;
-    .title {
-      display: flex;
-      justify-content: flex-end;
-      font-size: 1.3rem;
-      margin-bottom: 0.2rem;
-    }
-    .description {
-      font-size: 0.7rem;
-      opacity: 0.5;
-    }
-  }
-  .select-bank-input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  .select-bank-modal-top {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    .select-bank-address {
-      display: flex;
-      flex-direction: row-reverse;
-      font-size: 13px;
-      margin: 0.3rem;
-      .address-part {
+    flex: 1 1 auto;
+    overflow: hidden;
+    height: 100%;
+    .select-bank-title {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      .title {
         display: flex;
-        .address-item {
-          padding: 0 0.3rem;
+        justify-content: flex-end;
+        font-size: 1.3rem;
+        margin-bottom: 0.2rem;
+      }
+      .description {
+        font-size: 0.7rem;
+        opacity: 0.5;
+      }
+    }
+    .select-bank-input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+      .select-bank-address {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 13px;
+        margin: 0.3rem;
+        .address-part {
+          display: flex;
+          .address-item {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            padding: 0 0.3rem;
+            .clear-address {
+              position: absolute;
+              display: flex;
+              justify-content: center;
+              inset: 0 0 0 0;
+              opacity: 0;
+              color: crimson;
+              transition: transform 200ms cubic-bezier(0.15, 0.91, 0.43, 1.43),
+                font-size 200ms cubic-bezier(0.15, 0.91, 0.43, 1.43);
+              &:hover {
+                font-size: 1.1rem;
+                opacity: 1;
+                transform: translateY(-18px);
+                cursor: pointer;
+                min-height: 40px;
+                cursor: m;
+              }
+              &:active {
+                font-size: 0.9rem;
+              }
+            }
+          }
+        }
+        .success-checkbox-icon {
+          display: flex;
+          align-items: center;
+          font-size: 1rem;
+        }
+      }
+      .input-class,
+      select {
+        width: 100%;
+        display: inline-block;
+        font-size: 13px;
+        padding: 0.2rem;
+        border: 1px solid;
+        border-radius: 4px;
+        box-sizing: border-box;
+        outline: none;
+      }
+      .search-icon {
+        position: absolute;
+        left: 2rem;
+        top: 8.1rem;
+      }
+    }
+    .loading {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+      opacity: 0.9;
+    }
+    .success {
+      display: flex;
+      margin: 1rem;
+      justify-content: center;
+    }
+    .select-bank-picker {
+      flex: 1 1 auto;
+      overflow: auto;
+      font-size: 0.8rem;
+      .selection-item {
+        cursor: pointer;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 4px;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      }
+      .select-bank-recent-use {
+        .recent-use-title {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          margin: 0.5rem 0.25rem;
+        }
+        .recent-use-content {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          width: 100%;
+          opacity: 0.65;
+          padding: 0.1rem 0;
+          &:hover {
+            opacity: 1;
+            cursor: pointer;
+          }
         }
       }
     }
-    .input-class,
-    select {
-      width: 100%;
-      display: inline-block;
-      font-size: 13px;
-      padding: 0.2rem;
-      border: 1px solid;
-      border-radius: 4px;
-      box-sizing: border-box;
-      outline: none;
-    }
-    .search-icon {
-      position: absolute;
-      left: 2rem;
-      top: 8rem;
-    }
   }
-  .loading {
+  .select-bank-modal-footer {
+    position: relative;
     display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    opacity: 0.9;
-  }
-  .select-bank-picker {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 1rem 0.3rem;
-    .selection-item {
-      &:hover {
-        cursor: pointer;
-      }
-    }
-  }
-  .modal-footer {
-    display: flex;
-    padding-top: 1rem;
-    // padding-left: 1rem;
-    padding-bottom: 1rem;
+    justify-content: flex-start;
+    padding: 0.5rem 0;
     align-items: center;
   }
 }
