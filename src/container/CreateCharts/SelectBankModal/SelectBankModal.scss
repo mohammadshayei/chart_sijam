@@ -117,6 +117,10 @@
       flex: 1 1 auto;
       overflow: auto;
       font-size: 0.8rem;
+      .select-bank-data {
+        text-align: center;
+        margin: 0.5rem auto;
+      }
       .selection-item {
         cursor: pointer;
         display: flex;

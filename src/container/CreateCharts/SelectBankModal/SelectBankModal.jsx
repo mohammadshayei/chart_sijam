@@ -34,57 +34,42 @@ const SelectBankModal = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [focus, setFocus] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({ error: "", result: null });
   const [bankAddress, setBankAddress] = useState({
-    holdings: { name: `${stringFa.holdings}`, active: true, verified: false },
+    holdings: {
+      id: 0,
+      name: `${stringFa.holdings}`,
+      active: true,
+      verified: false,
+    },
     companies: {
+      id: 0,
       name: `${stringFa.companies}`,
       active: false,
       verified: false,
     },
     softwares: {
+      id: 0,
       name: `${stringFa.softwares}`,
       active: false,
       verified: false,
     },
     active_backup: {
+      id: 0,
       name: `${stringFa.active_backup}`,
       active: false,
       verified: false,
     },
-    banks: { name: `${stringFa.banks}`, active: false, verified: false },
+    banks: { id: 0, name: `${stringFa.banks}`, active: false, verified: false },
   });
   const [placeHolder, setPlaceHolder] = useState(null);
   const [isDone, setIsDone] = useState(false);
-  const [searchResult, setSearchResult] = useState(null);
+  const [searchResult, setSearchResult] = useState({ error: "", result: null });
   const ref = useRef();
 
   useOnClickOutside(ref, () => {
     props.isModalOpen(false);
   });
-
-  useEffect(async () => {
-    try {
-      const result = await axios.get(baseUrl + "/get_holdings");
-      setData(result.data.message.result);
-      setLoading(false);
-    } catch (error) {
-      setError(
-        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    setSearchResult(data);
-  }, [data]);
-
-  useEffect(() => {
-    for (const item in bankAddress) {
-      if (bankAddress[item].active)
-        setPlaceHolder(`جستجوی ${bankAddress[item].name}`);
-    }
-  }, [bankAddress]);
 
   const onFocusHandler = () => {
     setFocus(true);
@@ -99,87 +84,139 @@ const SelectBankModal = (props) => {
     }
   };
 
-  const addressItemClick = (key) => {};
-
-  const updateAddress = async (event, name, addressPartId) => {
-    if (event.key === "Enter" || event.type === "click") {
-      let updatedAddress = { ...bankAddress };
-      let key = null;
-      let nextKey;
-      for (const item in updatedAddress) {
-        if (key !== null) {
-          nextKey = item;
-          break;
-        }
-        if (updatedAddress[item].active) key = item;
-      }
-      for (const item in updatedAddress) {
-        updatedAddress[item].active = false;
-      }
-      if (event.type === "keydown")
-        if (updatedAddress[key].name !== event.target.value) {
-          updatedAddress[key].name = event.target.value;
-          key !== "banks"
-            ? (updatedAddress[nextKey].active = true)
-            : setIsDone(true);
-          setBankAddress(updatedAddress);
-          event.target.value = "";
-        }
-      if (event.type === "click")
-        if (updatedAddress[key].name !== name) {
-          updatedAddress[key].name = name;
-          key !== "banks"
-            ? (updatedAddress[nextKey].active = true)
-            : setIsDone(true);
-          setBankAddress(updatedAddress);
-          // event.target.value = "";
-        }
-      updatedAddress[key].verified = true;
-      if (key !== "banks") {
-        let payload;
-        if (nextKey === "active_backup" || nextKey === "banks")
-          payload = { id: addressPartId };
-        else payload = { code: addressPartId };
-        setLoading(true);
-        try {
-          const result = await axios.post(`${baseUrl}/get_${nextKey}`, payload);
-          setData(result.data.message.result);
-          setLoading(false);
-        } catch (error) {
-          setError(
-            <ErrorDialog onClose={setError}>
-              {stringFa.error_message}
-            </ErrorDialog>
-          );
-        }
-      }
-    }
-  };
-
-  const clearAddress = (event, key, addressPart) => {
-    let clearedAddress = { ...bankAddress };
-    let isKey = false;
-    for (const item in clearedAddress) {
-      if (item === key) {
-        clearedAddress[item].active = true;
-        isKey = true;
-      }
-      if (isKey) {
-        if (item !== key) clearedAddress[item].active = false;
-        clearedAddress[item].name = `${stringFa[item]}`;
-        clearedAddress[item].verified = false;
-      }
-    }
-    setIsDone(false);
-    setBankAddress(clearedAddress);
-  };
-
   const onChangeHandler = (event) => {
-    setSearchResult(
-      data.filter((item) => {
-        return item.name.indexOf(event.target.value) >= 0;
-      })
-    );
+    let updatedResult = { ...searchResult };
+    updatedResult.error = data.error;
+    updatedResult.result = data.result.filter((item) => {
+      return item.name.indexOf(event.target.value) >= 0;
+    });
+    setSearchResult(updatedResult);
+  };
+
+  useEffect(async () => {
+    for (const item in bankAddress) {
+      if (bankAddress[item].active)
+        setPlaceHolder(`جستجوی ${bankAddress[item].name}`);
+    }
+    if (bankAddress.holdings.active) {
+      try {
+        const result = await axios.get(baseUrl + "/get_holdings");
+        if (result.data.message.result.length === 0)
+          result.data.message.error = `.${stringFa.holdings} وجود ندارد`;
+        setData({
+          error: result.data.message.error,
+          result: result.data.message.result,
+        });
+        setSearchResult({
+          error: result.data.message.error,
+          result: result.data.message.result,
+        });
+        setLoading(false);
+      } catch (error) {
+        setError(
+          <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+        );
+      }
+    }
+  }, [bankAddress]);
+
+  const updateAddress = async (name, addressPartId) => {
+    let updatedAddress = { ...bankAddress };
+    let key = null;
+    let nextKey;
+    for (const item in updatedAddress) {
+      if (key !== null) {
+        nextKey = item;
+        break;
+      }
+      if (updatedAddress[item].active) key = item;
+    }
+    for (const item in updatedAddress) {
+      updatedAddress[item].active = false;
+    }
+    if (updatedAddress[key].name !== name) {
+      updatedAddress[key].name = name;
+      updatedAddress[key].id = addressPartId;
+      key !== "banks"
+        ? (updatedAddress[nextKey].active = true)
+        : setIsDone(true);
+      setBankAddress(updatedAddress);
+    }
+    updatedAddress[key].verified = true;
+    if (key !== "banks") {
+      let payload;
+      if (nextKey === "active_backup" || nextKey === "banks")
+        payload = { id: addressPartId };
+      else payload = { code: addressPartId };
+      setLoading(true);
+      try {
+        const result = await axios.post(`${baseUrl}/get_${nextKey}`, payload);
+        if (result.data.message.result.length === 0)
+          result.data.message.error = `.${stringFa[nextKey]} وجود ندارد`;
+        setData({
+          error: result.data.message.error,
+          result: result.data.message.result,
+        });
+        setSearchResult({
+          error: result.data.message.error,
+          result: result.data.message.result,
+        });
+        setLoading(false);
+      } catch (error) {
+        setError(
+          <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+        );
+      }
+    }
+  };
+
+  const clearAddress = async (key) => {
+    let updatedClearAddress = { ...bankAddress };
+    let start = false;
+    let id;
+    for (const itemKey in updatedClearAddress) {
+      if (itemKey === key) start = true;
+      if (!start) id = bankAddress[itemKey].id;
+      if (start) {
+        updatedClearAddress[itemKey].id = 0;
+        updatedClearAddress[itemKey].name = `${stringFa[itemKey]}`;
+        if (itemKey === key) updatedClearAddress[itemKey].active = true;
+        else updatedClearAddress[itemKey].active = false;
+        updatedClearAddress[itemKey].verified = false;
+      }
+    }
+    setBankAddress(updatedClearAddress);
+    setIsDone(false);
+    if (key === "holdings") return;
+    if (key !== "banks") {
+      let payload;
+      if (key === "banks" || key === "active_backup") payload = { id };
+      else payload = { code: id };
+      setLoading(true);
+      try {
+        const result = await axios.post(`${baseUrl}/get_${key}`, payload);
+        if (result.data.message.result.length === 0)
+          result.data.message.error = `.${stringFa[key]} وجود ندارد`;
+        setData({
+          error: result.data.message.error,
+          result: result.data.message.result,
+        });
+        setSearchResult({
+          error: result.data.message.error,
+          result: result.data.message.result,
+        });
+        setLoading(false);
+      } catch (error) {
+        setError(
+          <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+        );
+      }
+    }
+  };
+
+  const submitHandler = async (id) => {
+    const result = await axios.post(`${baseUrl}/get_data`, { id });
+    console.log(result.data.result);
   };
 
   return (
@@ -219,12 +256,11 @@ const SelectBankModal = (props) => {
                       opacity: v.active ? 1 : v.verified ? 1 : 0.5,
                       fontStyle: v.verified ? "italic" : "",
                     }}
-                    onClick={v.active ? addressItemClick(k) : null}
                   >
                     {v.verified && (
                       <div
                         className="clear-address"
-                        onClick={(e) => clearAddress(e, k, v)}
+                        onClick={() => clearAddress(k)}
                       >
                         <IoMdCloseCircle />
                       </div>
@@ -243,24 +279,45 @@ const SelectBankModal = (props) => {
               </div>
             )}
           </div>
-          <input
-            type="text"
-            className="input-class"
-            style={{
-              background: themeState.isDark ? theme.surface_1dp : theme.surface,
-              color: theme.on_background,
-              borderColor: focus ? theme.primary : theme.border_color,
-            }}
-            dir="rtl"
-            placeholder={placeHolder}
-            onKeyDown={(e) => updateAddress(e)}
-            onChange={(e) => onChangeHandler(e)}
-            onFocus={onFocusHandler}
-            onBlur={onBlurHandler}
-          ></input>
-          <div className="search-icon">
-            <IoIosSearch />
-          </div>
+          {!isDone && (
+            <input
+              type="text"
+              className="input-class"
+              style={{
+                background: themeState.isDark
+                  ? theme.surface_1dp
+                  : theme.surface,
+                color: theme.on_background,
+                borderColor: focus ? theme.primary : theme.border_color,
+              }}
+              dir="rtl"
+              placeholder={placeHolder}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.target.value = "";
+                  updateAddress(
+                    bankAddress.banks.active
+                      ? searchResult.result[0].bank.groups_title
+                      : searchResult.result[0].name,
+                    bankAddress.softwares.active ||
+                      bankAddress.active_backup.active
+                      ? searchResult.result[0].id
+                      : bankAddress.banks.active
+                      ? searchResult.result[0].bank._id
+                      : searchResult.result[0].code
+                  );
+                }
+              }}
+              onChange={(e) => onChangeHandler(e)}
+              onFocus={onFocusHandler}
+              onBlur={onBlurHandler}
+            ></input>
+          )}
+          {!isDone && (
+            <div className="search-icon">
+              <IoIosSearch />
+            </div>
+          )}
         </div>
         {loading ? (
           <div className="loading">
@@ -277,31 +334,34 @@ const SelectBankModal = (props) => {
         ) : (
           <div className="select-bank-picker">
             <div className="select-bank-data">
-              {searchResult &&
-                Object.entries(searchResult).map(([k, v]) => {
-                  return (
-                    <div
-                      key={k}
-                      className="selection-item"
-                      onClick={(e) =>
-                        updateAddress(
-                          e,
-                          bankAddress.banks.active
+              {searchResult.result &&
+                (searchResult.error === ""
+                  ? Object.entries(searchResult.result).map(([k, v]) => {
+                      return (
+                        <div
+                          key={k}
+                          className="selection-item"
+                          onClick={() =>
+                            updateAddress(
+                              bankAddress.banks.active
+                                ? v.bank.groups_title
+                                : v.name,
+                              bankAddress.softwares.active ||
+                                bankAddress.active_backup.active
+                                ? v.id
+                                : bankAddress.banks.active
+                                ? v.bank._id
+                                : v.code
+                            )
+                          }
+                        >
+                          {bankAddress.banks.active
                             ? v.bank.groups_title
-                            : v.name,
-                          bankAddress.softwares.active ||
-                            bankAddress.active_backup.active
-                            ? v.id
-                            : bankAddress.banks.active
-                            ? v.bank._id
-                            : v.code
-                        )
-                      }
-                    >
-                      {bankAddress.banks.active ? v.bank.groups_title : v.name}
-                    </div>
-                  );
-                })}
+                            : v.name}
+                        </div>
+                      );
+                    })
+                  : searchResult.error)}
             </div>
           </div>
         )}
@@ -314,9 +374,7 @@ const SelectBankModal = (props) => {
             color: theme.on_primary,
           }}
           disabled={isDone ? false : true}
-          onClick={() => {
-            console.log(data[0].bank._id);
-          }}
+          onClick={() => submitHandler(bankAddress.banks.id)}
         >
           {stringFa.done}
         </Button>
