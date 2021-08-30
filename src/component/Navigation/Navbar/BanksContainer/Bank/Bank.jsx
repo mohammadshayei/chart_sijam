@@ -17,7 +17,7 @@ const Bank = React.memo(function Bank(props) {
     dispatch(detailActions.selectBank(bank));
   };
   useEffect(() => {
-    if (detail.banks && detail.banks.find((bk) => bk.id === props.data.id)) {
+    if (detail.banks && detail.banks.find((bk) => bk._id === props.data._id)) {
       setClicked(true);
       setStyle({
         background: `linear-gradient(150deg,${theme.primary},${theme.secondary})`,
@@ -61,7 +61,7 @@ const Bank = React.memo(function Bank(props) {
       style={{ ...style }}
       onClick={onBankClickHandler}
     >
-      <span style={{ fontSize: 12 }}>{props.data.name}</span>
+      <span style={{ fontSize: 12 }}>{props.data.groups_title}</span>
     </div>
   );
 });

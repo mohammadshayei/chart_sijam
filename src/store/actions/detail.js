@@ -18,7 +18,12 @@ export const selectSoftware = (software) => {
     software: software,
   };
 };
-
+export const selectActiveBackup = (activeBackup) => {
+  return {
+    type: actionTypes.SELECT_ACTIVE_BACKUP,
+    activeBackup,
+  };
+};
 export const selectBank = (bank) => {
   return {
     type: actionTypes.SELECT_BANK,
@@ -40,9 +45,13 @@ export const clearSoftware = () => {
     type: actionTypes.CLEAR_SOFTWARE,
   };
 };
+export const clearActiveBackup = () => {
+  return {
+    type: actionTypes.CLEAR_ACTIVE_BACKUP,
+  };
+};
 export const clearBanks = () => {
   return {
     type: actionTypes.CLEAR_MY_BANKS,
   };
 };
-

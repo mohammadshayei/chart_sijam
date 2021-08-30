@@ -334,8 +334,8 @@ const SelectBankModal = (props) => {
               opacity="0.7"
               height="60"
               width="60"
-              src={process.env.PUBLIC_URL + "/logo-loading.gif"}
               alt="loading"
+              src={process.env.PUBLIC_URL + "/logo-loading.gif"}
             />
           </div>
         ) : isDone ? (

@@ -25,10 +25,15 @@ const MenuItem = (props) => {
       ? setClicked(true)
       : setClicked(false);
   }, [detail.holding, detail.company, props.id]);
-
+  const onContextMenuHandler=e=>{
+    if(props.type!=='software')return
+    e.preventDefault()
+    console.log('software')
+  }
   return (
     <div
       className="MenuItemContainer"
+      onContextMenu={onContextMenuHandler}
       style={{
         background:
           detail.holding && detail.holding.id === props.id
@@ -56,17 +61,11 @@ const MenuItem = (props) => {
             ? theme.surface_42dp
             : theme.surface
         );
-        props.onClick(
-          props.id,
-          props.type,
-          props.data,
-          props.index,
-          props.name
-        );
+        props.onClick(props.id, props.type, props.parent);
       }}
     >
       <div className="DropDownIcon">
-        {props.data && props.type !== "software" ? (
+        {props.type === "holding" || props.type === "company" ? (
           <ArrowBackIosRoundedIcon
             className={`${clicked ? "DropDownOpenRotate" : ""}
             ${props.unClicked === props.id ? "DropDownCloseRotate" : ""}

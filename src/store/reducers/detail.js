@@ -4,6 +4,7 @@ const initialState = {
   holding: null,
   company: null,
   software: null,
+  activeBackup: null,
   banks: null,
 };
 
@@ -25,10 +26,16 @@ const selectSoftware = (state, action) => {
     software: action.software,
   };
 };
+const selectActiveBackup = (state, action) => {
+  return {
+    ...state,
+    activeBackup: action.activeBackup,
+  };
+};
 const addBank = (state, action) => {
   let count = state.banks ? state.banks.length : 0;
   let newBanks = state.banks
-    ? state.banks.filter((bk) => bk.id !== action.bank.id)
+    ? state.banks.filter((bk) => bk._id !== action.bank._id)
     : [];
   if (count === newBanks.length) newBanks.push(action.bank);
   return {
@@ -54,6 +61,12 @@ const clearSoftware = (state) => {
     software: null,
   };
 };
+const clearActiveBackup = (state) => {
+  return {
+    ...state,
+    activeBackup: null,
+  };
+};
 
 const clearBanks = (state) => {
   return {
@@ -70,6 +83,8 @@ const reducer = (state = initialState, action) => {
       return selectCompany(state, action);
     case actionTypes.SELECT_SOFTWARE:
       return selectSoftware(state, action);
+    case actionTypes.SELECT_ACTIVE_BACKUP:
+      return selectActiveBackup(state, action);
     case actionTypes.SELECT_BANK:
       return addBank(state, action);
     case actionTypes.CLEAR_HOLDING:
@@ -78,6 +93,8 @@ const reducer = (state = initialState, action) => {
       return clearCompany(state);
     case actionTypes.CLEAR_SOFTWARE:
       return clearSoftware(state);
+    case actionTypes.CLEAR_ACTIVE_BACKUP:
+      return clearActiveBackup(state);
     case actionTypes.CLEAR_MY_BANKS:
       return clearBanks(state);
     default:

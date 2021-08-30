@@ -38,4 +38,5 @@ export const stringFa = {
   active_backup: "پشتیبان فعال",
   banks: "بانک اطلاعاتی",
   error_message: "خطای دریافت اطلاعات. لطفا مجددا تلاش کنید",
+  please_wait:'...لطفا منتظر باشید',
 };
