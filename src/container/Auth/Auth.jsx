@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Redirect, useHistory, useLocation } from "react-router";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Logo from "../../component/UI/Logo/Logo";
@@ -7,6 +7,13 @@ import GetPhoneNumber from "./GetPhoneNumber/GetPhoneNumber";
 import ImageSection from "./ImageSection/ImageSection";
 import MainAuth from "./MainAuth/MainAuth";
 import VerifyCode from "./VerifyCode/VerifyCode";
+import axios from "axios";
+import { baseUrl } from "../../constants/Config";
+import Loading from "../../component/UI/Loading/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../../store/actions/index";
+import ErrorDialog from "../../component/UI/Error/ErrorDialog";
+
 const Auth = (props) => {
   const [orderAuth, setOrderAuth] = useState({
     signup: {
@@ -98,7 +105,7 @@ const Auth = (props) => {
       isValid: false,
     },
   });
-
+  const [loginError, setLoginError] = useState(false);
   const [tokenId, setTokenId] = useState("");
   const locaiton = useLocation();
   const history = useHistory();
@@ -110,6 +117,13 @@ const Auth = (props) => {
   const country_name = searchParams.get("country_name");
   const token = searchParams.get("token");
 
+  const dispatch = useDispatch();
+  const auth = (username, password, url) => {
+    dispatch(actions.auth(username, password, url));
+  };
+  const userId = useSelector((state) => state.auth.userId);
+  const loading = useSelector((state) => state.auth.loading);
+  const error = useSelector((state) => state.auth.error);
   const checkValidaty = (value, rules) => {
     let isValid = true;
     if (!rules) {
@@ -179,11 +193,31 @@ const Auth = (props) => {
     UpdatedOrderAuth[pageName].orderForm = UpdatedOrderForm;
     setOrderAuth(UpdatedOrderAuth);
   };
-  const onsubmitHandler = (e, pageName) => {
+  const loginHandler = useCallback((e) => {
     e.preventDefault();
-    alert("helo");
-  };
+    auth(
+      orderAuth.login.orderForm.username.value,
+      orderAuth.login.orderForm.password.value,
+      `${baseUrl}/login`
+    );
+  }, []);
 
+  useEffect(() => {
+    setLoginError(error);
+  }, [error]);
+  const onsubmitHandler = async (e, pageName) => {
+    if (pageName === "login") {
+      loginHandler(e);
+      // const payload = {
+      //   username: orderAuth.login.orderForm.username.value,
+      //   password: orderAuth.login.orderForm.password.value,
+      // };
+      // setIsLoading(true);
+      // const result = await axios.post(`${baseUrl}/login`, payload);
+      // setIsLoading(false);
+    } else {
+    }
+  };
   let body = null;
   if (locaiton.pathname === "/signup") {
     switch (p) {
@@ -220,10 +254,10 @@ const Auth = (props) => {
               onBlur={onBlur}
               onFocus={onFocus}
               tokenId={tokenId}
-              pageName={'signup'}
+              pageName={"signup"}
               orderForm={orderAuth.signup.orderForm}
               formIsValid={orderAuth.signup.isValid}
-              onsubmit={(e)=>onsubmitHandler(e,'signup')}
+              onsubmit={(e) => onsubmitHandler(e, "signup")}
             />
           );
         else {
@@ -248,15 +282,17 @@ const Auth = (props) => {
         onBlur={onBlur}
         onFocus={onFocus}
         tokenId={tokenId}
-        pageName={'login'}
+        pageName={"login"}
         orderForm={orderAuth.login.orderForm}
         formIsValid={orderAuth.login.isValid}
-        onsubmit={(e)=>onsubmitHandler(e,'login')}
+        onsubmit={(e) => onsubmitHandler(e, "login")}
       />
     );
   }
   return (
     <div className="auth-container">
+      {loginError ? <ErrorDialog onClose={setLoginError} >{error}</ErrorDialog> : null}
+      {/* onClose={setError} */}
       <ImageSection />
       <div className="auth-content">
         <Logo
@@ -266,7 +302,32 @@ const Auth = (props) => {
             backgroundColor: "transparent",
           }}
         />
-        <div className="auth-body">{body}</div>
+        <div className="auth-body">
+          {loading ? (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Loading
+                imageConfig={{
+                  opacity: "0.7",
+                  height: "60",
+                  width: "60",
+                  alt: "loading",
+                }}
+              />
+              <p className="text-loading">{stringFa.please_wait}</p>
+            </div>
+          ) : (
+            body
+          )}
+        </div>
       </div>
     </div>
   );
