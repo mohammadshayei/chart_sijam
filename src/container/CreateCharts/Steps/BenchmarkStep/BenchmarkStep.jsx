@@ -12,6 +12,7 @@ const BenchmarkStep = () => {
   const [benchmarkLines, setBenchmarkLines] = useState([
     <BenchmarkLine propKey="0" onRemove={onRemoveHandler} index="0" />,
   ]);
+  
   onRemoveHandler = (index) => {
     let newArray = [...benchmarkLines];
     if (index !== -1) {

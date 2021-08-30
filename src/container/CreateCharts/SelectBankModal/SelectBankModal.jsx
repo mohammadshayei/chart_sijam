@@ -8,6 +8,9 @@ import { baseUrl } from "./../../../constants/Config";
 import { IoIosSearch, IoMdCloseCircle } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
 import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
+import * as addChartActions from "../../../store/actions/addChart";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -82,6 +85,11 @@ const SelectBankModal = (props) => {
     if (e.key === "Escape") {
       props.isModalOpen(false);
     }
+  };
+
+  const dispatch = useDispatch();
+  const setChartsData = (data) => {
+    dispatch(addChartActions.selectChartData(data));
   };
 
   const onChangeHandler = (event) => {
@@ -216,7 +224,8 @@ const SelectBankModal = (props) => {
 
   const submitHandler = async (id) => {
     const result = await axios.post(`${baseUrl}/get_data`, { id });
-    console.log(result.data.result);
+    setChartsData(result.data.result);
+    props.isModalOpen(false);
   };
 
   return (
@@ -367,17 +376,25 @@ const SelectBankModal = (props) => {
         )}
       </div>
       <div className="select-bank-modal-footer">
-        <Button
-          ButtonStyle={{
-            backgroundColor: isDone ? theme.primary : "gray",
-            cursor: isDone ? "pointer" : "default",
-            color: theme.on_primary,
+        <Link
+          onClick={(e) => !isDone && e.preventDefault()}
+          style={{ textDecoration: "none" }}
+          to={{
+            pathname: `/create_chart`,
           }}
-          disabled={isDone ? false : true}
-          onClick={() => submitHandler(bankAddress.banks.id)}
         >
-          {stringFa.done}
-        </Button>
+          <Button
+            ButtonStyle={{
+              backgroundColor: isDone ? theme.primary : "gray",
+              cursor: isDone ? "pointer" : "default",
+              color: theme.on_primary,
+            }}
+            disabled={isDone ? false : true}
+            onClick={() => submitHandler(bankAddress.banks.id)}
+          >
+            {stringFa.done}
+          </Button>
+        </Link>
       </div>
     </div>
   );

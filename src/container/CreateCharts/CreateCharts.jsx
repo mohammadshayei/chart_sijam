@@ -8,6 +8,8 @@ import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { VscSplitVertical } from "react-icons/vsc";
 import { useTheme } from "../../styles/ThemeProvider.js";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -29,6 +31,7 @@ function useOnClickOutside(ref, handler) {
 }
 
 const CreateCharts = (props) => {
+  const chartData = useSelector((state) => state.addChart);
   const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const location = useLocation();
@@ -37,18 +40,14 @@ const CreateCharts = (props) => {
 
   const ref = useRef();
 
-  useEffect(() => {
-    const { chartId } = location.state;
-    setId(chartId);
-  }, [location.state.chartId]);
+  // useEffect(() => {
+  //   const { chartId } = location.state;
+  //   setId(chartId);
+  // }, [location.state.chartId]);
 
   useOnClickOutside(ref, () => {
     setInput(false);
   });
-
-  const clickDoneHandler = () => {
-    window.location = "/admin/view";
-  };
 
   return (
     <div
@@ -65,19 +64,25 @@ const CreateCharts = (props) => {
         className="section-header-wrapper"
         style={{ borderColor: theme.border_color }}
       >
-        <Button
-          ButtonStyle={{
-            backgroundColor: theme.primary,
-            flex: "0 0 auto",
-            fontWeight: 400,
-            fontSize: "1rem",
-            color: "white",
-            marginBottom: "1rem",
+        <Link
+          style={{ textDecoration: "none" }}
+          to={{
+            pathname: `/view`,
           }}
-          onClick={clickDoneHandler}
         >
-          {stringFa.done}
-        </Button>
+          <Button
+            ButtonStyle={{
+              backgroundColor: theme.primary,
+              flex: "0 0 auto",
+              fontWeight: 400,
+              fontSize: "1rem",
+              color: "white",
+              marginBottom: "1rem",
+            }}
+          >
+            {stringFa.done}
+          </Button>
+        </Link>
         <div className="settings-title-and-description">
           <div className="settings-title">{stringFa.chart_setting}</div>
           <div className="settings-description">

@@ -11,16 +11,10 @@ export const SET_CHART_TYPE = "SET_CHART_TYPE";
 export const SET_CHART_DATA = "SET_CHART_DATA";
 export const SET_CHART_OPTIONS = "SET_CHART_OPTIONS";
 export const SET_CHARTS_DATA = "SET_CHARTS_DATA";
-export const AUTH_START = 'AUTH_START';
-export const AUTH_SUCCESS = 'AUTH_SUCCESS';
-export const AUTH_FAIL = 'AUTH_FAIL';
-export const AUTH_LOGOUT = 'AUTH_LOGOUT';
-export const SET_AUTH_REDIRECT_PATH = 'SET_AUTH_REDIRECT_PATH';
-export const CHECK_AUTH_STATE = 'CHECK_AUTH_STATE';
-
-
-
-
-
-
-
+export const AUTH_START = "AUTH_START";
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAIL = "AUTH_FAIL";
+export const AUTH_LOGOUT = "AUTH_LOGOUT";
+export const SET_AUTH_REDIRECT_PATH = "SET_AUTH_REDIRECT_PATH";
+export const CHECK_AUTH_STATE = "CHECK_AUTH_STATE";
+export const SELECT_DATA_ADD_CHART = "SELECT_DATA_ADD_CHART";

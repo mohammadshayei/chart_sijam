@@ -3,6 +3,7 @@ import "./XAxisStep.scss";
 import { BiChevronDown } from "react-icons/bi";
 import DropDownMenu from "./DropDownMenu/DropDownMenu.jsx";
 import { useTheme } from "../../../../styles/ThemeProvider";
+import { useSelector } from "react-redux";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -24,19 +25,24 @@ function useOnClickOutside(ref, handler) {
 }
 
 const XAxisStep = (props) => {
+  const chartData = useSelector((state) => state.addChart);
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("آیتم سازنده");
+  const [dropDownMenuItems, setDropDownMenuItems] = useState(null);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const dropDownMenuItems = [
-    "تاریخ",
-    "آیتم سازنده",
-    "شرح فارسی",
-    "کد کالا",
-    "جمع قیمت",
-  ];
 
   const ref = useRef();
+
+  useEffect(() => {
+    let fieldTitles;
+    if (chartData.data[0]) {
+      fieldTitles = Object.entries(chartData.data[0]).map(([key]) => {
+        return key;
+      });
+      setDropDownMenuItems(fieldTitles);
+    }
+  }, [chartData.data]);
 
   useOnClickOutside(ref, () => {
     setIsOpen(false);
