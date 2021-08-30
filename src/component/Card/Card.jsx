@@ -32,7 +32,11 @@ const Card = React.memo((props) => {
         borderColor: theme.border_color,
       }}
     >
-      <TitleBlock chartId={props.chartId} title={props.item.title} />
+      <TitleBlock
+        chartId={props.chartId}
+        chartType={props.item.type}
+        title={props.item.title}
+      />
       <div className="card-body">
         <ChartBlock chartId={props.chartId} chartProps={props.item} />
       </div>
