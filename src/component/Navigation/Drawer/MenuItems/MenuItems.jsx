@@ -4,13 +4,18 @@ import "./MenuItems.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { data } from "../../../../assets/dummy_data/TestData";
 import * as actions from "../../../../store/actions/detail";
-
+import axios from "axios";
+import { baseUrl } from "../../../../constants/Config";
 const MenuItems = () => {
-  const [dataItems, setDataItems] = useState([]);
   const [unClicked, setUnClicked] = useState("");
+  const [orders, setOrders] = useState([]);
+  const [items, setItems] = useState({ holdings: [] });
   const dispatch = useDispatch();
   const detail = useSelector((state) => state.detail);
 
+  const selectActiveBackup = (activeBackup) => {
+    dispatch(actions.selectActiveBackup(activeBackup));
+  };
   const selectSoftware = (software) => {
     dispatch(actions.selectSoftware(software));
   };
@@ -32,148 +37,163 @@ const MenuItems = () => {
   const clearBanks = () => {
     dispatch(actions.clearBanks());
   };
-  const setMenuData = (inputData, arrType, index) => {
-    let newData = dataItems;
-    newData.splice(
-      index + 1,
-      0,
-      ...inputData.map((item) => ({
-        data: arrType ? item[arrType] : null,
-        id: item.id,
-        name: item.name,
-        type: item.type,
-      }))
-    );
-    setDataItems([...newData]);
+  const clearActiveBackup = () => {
+    dispatch(actions.clearActiveBackup());
   };
-  const onMenuItemClickHandler = (id, type, inputData, index, name) => {
+  const onMenuItemClickHandler = async (id, type, parent) => {
     setUnClicked("");
+    clearActiveBackup();
     clearBanks();
-    let arrType;
     if (type === "holding") {
-      arrType = "softwares";
-    } else if (type === "company") {
-      arrType = "banks";
-    } else if (type === "software") {
-    } else if (type === "banks") {
-      arrType = "";
-    }
-    // let finded = clickedList.find((item) => item === `${type}${name}`);
-    switch (type) {
-      case "holding":
-        if (detail.holding && detail.holding.id === id) {
-          setUnClicked(id);
-          clearHolding();
-          clearSoftware();
-          clearCompany();
-          let newDataItmes = dataItems.filter((i) => i.type === "holding");
-          setDataItems([...newDataItmes]);
-        } else {
-          selectHolding({
-            id,
-            name,
-            companies: inputData,
-            type,
-          });
-          setMenuData(inputData, arrType, index);
+      let updatedItems = { ...items };
+      let updatedHoldings = [...updatedItems.holdings];
+      const updatedHoldingIndex = updatedHoldings.findIndex(
+        (holding) => holding.id === id
+      );
+      if (updatedHoldingIndex < 0) return;
+      if (detail.holding && detail.holding.id === id) {
+        setUnClicked(id);
+        clearHolding();
+        clearSoftware();
+        clearCompany();
+        updatedHoldings[updatedHoldingIndex].isActive = false;
+      } else {
+        for (let index = 0; index < updatedHoldings.length; index++) {
+          updatedHoldings[index].isActive = false;
         }
-        break;
-      case "company":
-        if (detail.company && detail.company.id === id) {
-          setUnClicked(id);
-          clearCompany();
-          clearSoftware();
-          let newDataItmes = dataItems;
-          newDataItmes.splice(index + 1, inputData.length);
-          setDataItems(newDataItmes);
-        } else {
-          if (detail.company) {
-            setUnClicked(detail.company.id);
-            clearCompany();
-            clearSoftware();
-            let newDataItmes = dataItems;
-            newDataItmes.splice(
-              detail.company.indx + 1,
-              detail.company.softwares.length
-            );
-            let newIndex =
-              detail.company.indx < index
-                ? index - detail.company.softwares.length
-                : index;
-            newDataItmes.splice(
-              newIndex + 1,
-              0,
-              ...inputData.map((item) => ({
-                data: arrType ? item[arrType] : null,
-                id: item.id,
-                name: item.name,
-                type: item.type,
-              }))
-            );
-            setDataItems([...newDataItmes]);
-            selectCompany({
-              id,
-              name,
-              softwares: inputData,
-              type,
-              indx: newIndex,
-            });
-            // setDataItems(newDataItmes);
-          } else {
-            selectCompany({
-              id,
-              name,
-              softwares: inputData,
-              type,
-              indx: index,
-            });
-            setMenuData(inputData, arrType, index);
-          }
-        }
-        break;
-      case "software":
-        selectSoftware({
-          id,
-          name,
-          banks: inputData,
-          type,
+        selectHolding(updatedHoldings[updatedHoldingIndex]);
+        updatedHoldings[updatedHoldingIndex].isActive = true;
+        const result = await axios.post(`${baseUrl}/get_companies`, {
+          code: updatedHoldings[updatedHoldingIndex].code,
         });
-        break;
+        updatedHoldings[updatedHoldingIndex].companies =
+          result.data.message.result;
+      }
+      updatedItems.holdings = updatedHoldings;
+      setItems(updatedItems);
+    } else if (type === "company") {
+      let updatedItems = { ...items };
+      let updatedHoldings = [...updatedItems.holdings];
+      let updatedHoldingIndex = updatedHoldings.findIndex(
+        (holding) => holding.id === parent[0]
+      );
+      if (updatedHoldingIndex < 0) return;
+      let updatedCompanies = [
+        ...updatedHoldings[updatedHoldingIndex].companies,
+      ];
+      let updatedComapnyIndex = updatedCompanies.findIndex(
+        (comapny) => comapny.id === id
+      );
+      if (updatedComapnyIndex < 0) return;
 
-      default:
-        break;
+      if (detail.company && detail.company.id === id) {
+        setUnClicked(id);
+        clearSoftware();
+        clearCompany();
+        updatedCompanies[updatedComapnyIndex].isActive = false;
+      } else {
+        for (let index = 0; index < updatedCompanies.length; index++) {
+          updatedCompanies[index].isActive = false;
+        }
+        selectCompany(updatedCompanies[updatedComapnyIndex]);
+        updatedCompanies[updatedComapnyIndex].isActive = true;
+        const result = await axios.post(`${baseUrl}/get_softwares`, {
+          code: updatedCompanies[updatedComapnyIndex].code,
+        });
+        updatedCompanies[updatedComapnyIndex].softwares =
+          result.data.message.result;
+      }
+      updatedHoldings[updatedHoldingIndex].companies = updatedCompanies;
+      updatedItems.holdings = updatedHoldings;
+      setItems(updatedItems);
+    } else if (type === "software") {
+      let updatedItems = { ...items };
+      let updatedHoldings = [...updatedItems.holdings];
+      let updatedHoldingIndex = updatedHoldings.findIndex(
+        (holding) => holding.id === parent[0]
+      );
+      if (updatedHoldingIndex < 0) return;
+      let updatedCompanies = [
+        ...updatedHoldings[updatedHoldingIndex].companies,
+      ];
+      let updatedComapnyIndex = updatedCompanies.findIndex(
+        (comapny) => comapny.id === parent[1]
+      );
+      if (updatedComapnyIndex < 0) return;
+      let software = updatedHoldings[updatedHoldingIndex].companies[
+        updatedComapnyIndex
+      ].softwares.find((software) => software.id === id);
+      selectSoftware(software);
+      const softwareReq = await axios.post(`${baseUrl}/get_active_backup`, {
+        id: software.id,
+      });
+      const activeBackup = softwareReq.data.message.result[0];
+      selectActiveBackup(activeBackup);
     }
   };
+
+  useEffect(async () => {
+    const result = await axios.get(`${baseUrl}/get_holdings`);
+    const holdings = result.data.message.result.map((item) => {
+      return {
+        ...item,
+        companies: [],
+        isActive: false,
+      };
+    });
+    setItems({
+      type: "holding",
+      url: "get_holdings",
+      holdings: [...holdings],
+    });
+  }, []);
 
   useEffect(() => {
-    setDataItems(
-      data.map((item) => ({
-        id: item.id,
-        data: item.companies,
-        name: item.name,
-        type: item.type,
-        parent: item.parent,
-      }))
-    );
-  }, []);
-  useEffect(() => {}, [dataItems]);
+    let updatedOrders = [];
+    items.holdings.forEach((holding) => {
+      updatedOrders.push({
+        type: "holding",
+        parent: [],
+        content: holding,
+      });
+      if (holding.companies && holding.isActive) {
+        holding.companies.forEach((company) => {
+          updatedOrders.push({
+            type: "company",
+            parent: [holding.id],
+            content: company,
+          });
+          if (company.softwares && company.isActive) {
+            company.softwares.forEach((software) => {
+              updatedOrders.push({
+                type: "software",
+                parent: [holding.id, company.id],
+                content: software,
+              });
+            });
+          }
+        });
+      }
+    });
+    setOrders(updatedOrders);
+  }, [items]);
   return (
     <div className="MenuItemsContainer">
-      {dataItems.length > 0
-        ? dataItems.map((item, index) => (
+      {orders &&
+        orders.map((item, index) => {
+          return (
             <MenuItem
               onClick={onMenuItemClickHandler}
-              key={item.id}
-              data={item.data}
-              id={item.id}
-              name={item.name}
+              key={item.content.id}
+              id={item.content.id}
+              name={item.content.name}
               type={item.type}
               parent={item.parent}
               index={index}
               unClicked={unClicked}
             />
-          ))
-        : null}
+          );
+        })}
     </div>
   );
 };
