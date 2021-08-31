@@ -3,27 +3,58 @@ import * as actionTypes from "../actions/actionTypes";
 const initialState = {
   data: {},
   chartData: {
-    title: "",
-    type: "",
+    title: "عنوان نمودار",
+    type: "Line",
     data: {
       isCategoryAdded: false,
       valueCount: 0,
       data: [],
       options: {
         fieldNames: {
-          field1: "شرح سند",
+          field1: "",
         },
-        legend: { display: true },
+        radius: 70,
+        innerRadius: 40,
+        startAngle: 0,
+        endAngle: 360,
+        insideLabel: true,
+        legend: {
+          display: true,
+          position: "bottom",
+          valueLabelsText: " : {value}",
+        },
         xyCursor: false,
         xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
         series: {
+          labels: {
+            bent: false,
+            radius: 10,
+            padding: 0,
+            disabled: false,
+            text: "{category}",
+            color: "#000",
+            maxWidth: 130,
+            wrap: true,
+          },
+          alignLabels: false,
+          stacked: false,
           strokeWidth: 2,
-          smoothing: "monotoneX",
+          // smoothing: "monotoneX",
+          tensionX: 0.77,
           bullet: {
             display: true,
             strokeColor: "#fff",
             strokeWidth: 0,
           },
+        },
+        slices: {
+          draggable: false,
+          tooltip: {
+            display: true,
+            text: "{category}: {value.value}",
+          },
+          cornerRadius: 10,
+          innerCornerRadius: 7,
         },
       },
     },

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Gallery.scss";
 import { useTheme } from "../../../../styles/ThemeProvider";
+import { useSelector, useDispatch } from "react-redux";
+import * as addChartActions from "../../../../store/actions/addChart";
 
 const Gallery = (props) => {
+  const takenData = useSelector((state) => state.addChart);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const [groups, setGroups] = useState({
@@ -65,24 +68,96 @@ const Gallery = (props) => {
         },
       },
     },
-    Gauge: {
-      title: "گیج",
-      items: {
-        gauge: {
-          img: "https://raw.githubusercontent.com/antoinebeland/d3-simple-gauge/HEAD/doc/gauge.PNG",
-          selected: false,
-        },
-      },
-    },
+    // Gauge: {
+    //   title: "گیج",
+    //   items: {
+    //     gauge: {
+    //       img: "https://raw.githubusercontent.com/antoinebeland/d3-simple-gauge/HEAD/doc/gauge.PNG",
+    //       selected: false,
+    //     },
+    //   },
+    // },
   });
 
-  // useEffect(() => {
-  //   for (const item in groups) {
-  //     if (item === props.type) {
-  //       onClickHandler(groups[item], "smooth");
-  //     }
-  //   }
-  // }, [props.type]);
+  const dispatch = useDispatch();
+  const setChartData = (chartData) => {
+    dispatch(addChartActions.setChartData(chartData));
+  };
+
+  useEffect(() => {
+    const updatedGroups = { ...groups };
+    if (takenData.chartData.type) {
+      for (const type in updatedGroups) {
+        for (const style in updatedGroups[type].items) {
+          updatedGroups[type].items[style].selected = false;
+        }
+        if (type === takenData.chartData.type) {
+          switch (type) {
+            case "Line": {
+              if (takenData.chartData.data.options.series.tensionX < 1)
+                updatedGroups[type].items["smooth"].selected = true;
+              else updatedGroups[type].items["line"].selected = true;
+              break;
+            }
+            case "Column": {
+              if (takenData.chartData.data.options.series.stacked)
+                updatedGroups[type].items["stackedBar"].selected = true;
+              else updatedGroups[type].items["bar"].selected = true;
+              break;
+            }
+            case "Pie": {
+              updatedGroups[type].items["pie"].selected = true;
+              break;
+            }
+            case "Pie": {
+              updatedGroups[type].items["donut"].selected = true;
+              break;
+            }
+            default:
+              break;
+          }
+        }
+      }
+    }
+  }, [takenData.chartData]);
+
+  useEffect(() => {
+    let chartData = { ...takenData.chartData };
+    for (const group in groups) {
+      for (const item in groups[group].items) {
+        if (groups[group].items[item].selected) {
+          switch (item) {
+            case "smooth":
+              chartData.type = "Line";
+              chartData.data.options.series.tensionX = 0.77;
+              break;
+            case "line":
+              chartData.type = "Line";
+              chartData.data.options.series.tensionX = 1;
+              break;
+            case "stackedBar":
+              chartData.type = "Column";
+              chartData.data.options.series.stacked = true;
+              break;
+            case "bar":
+              chartData.type = "Column";
+              chartData.data.options.series.stacked = false;
+              break;
+            case "pie":
+              chartData.type = "Pie";
+              break;
+            case "donut":
+              chartData.type = "Doughnut";
+              break;
+
+            default:
+              break;
+          }
+        }
+      }
+    }
+    setChartData(chartData);
+  }, [groups]);
 
   const onClickHandler = (e, grp, item) => {
     let updatedGroups = { ...groups };

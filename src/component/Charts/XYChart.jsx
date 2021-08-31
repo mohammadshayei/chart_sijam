@@ -63,7 +63,8 @@ const XYChart = React.memo((props) => {
             series.name = name;
             // series.tooltipText = "{dateX}: [b]{valueY}[/]";
             series.strokeWidth = options.series.strokeWidth;
-            series.smoothing = options.series.smoothing;
+            // series.smoothing = options.series.smoothing;
+            series.tensionX = options.series.tensionX;
             if (options.series.bullet.display) {
               var bullet = series.bullets.push(new am4charts.CircleBullet());
               bullet.circle.stroke = am4core.color(

@@ -11,34 +11,16 @@ const ChartBlock = (props) => {
   useEffect(() => {
     if (chartData.data.data) {
       setData({
-        title: "کارایی",
-        type: "Column",
+        title: chartData.title,
+        type: chartData.type,
         data: chartData.data.data,
-        options: {
-          fieldNames: {
-            field1: "شرح سند",
-          },
-          legend: { display: true },
-          xyCursor: false,
-          xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
-          series: {
-            stacked: true,
-            strokeWidth: 2,
-            smoothing: "monotoneX",
-            bullet: {
-              display: true,
-              strokeColor: "#fff",
-              strokeWidth: 0,
-            },
-          },
-        },
+        options: chartData.data.options,
       });
     }
   }, [chartData]);
 
   useEffect(() => {
     if (data) {
-      console.log(data.type);
       switch (data.type) {
         case "Line":
         case "Column":
@@ -48,10 +30,10 @@ const ChartBlock = (props) => {
           break;
         case "Pie":
         case "Doughnut":
-          setChart(<PieChart chartProps={props.chartProps} />);
+          setChart(<PieChart chartProps={data} />);
           break;
         case "Gauge":
-          setChart(<GaugeChart chartProps={props.chartProps} />);
+          setChart(<GaugeChart chartProps={data} />);
           break;
         default:
           setChart(<div>mismatch type!</div>);
