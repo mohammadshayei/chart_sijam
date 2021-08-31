@@ -25,11 +25,13 @@ const MenuItem = (props) => {
       ? setClicked(true)
       : setClicked(false);
   }, [detail.holding, detail.company, props.id]);
-  const onContextMenuHandler=e=>{
-    if(props.type!=='software')return
-    e.preventDefault()
-    console.log('software')
-  }
+
+  const onContextMenuHandler = (e) => {
+    if (props.type !== "software") return;
+    e.preventDefault();
+    props.onRightClickHandler(e,props.id, props.type, props.parent);
+  };
+ 
   return (
     <div
       className="MenuItemContainer"
@@ -64,6 +66,8 @@ const MenuItem = (props) => {
         props.onClick(props.id, props.type, props.parent);
       }}
     >
+     
+
       <div className="DropDownIcon">
         {props.type === "holding" || props.type === "company" ? (
           <ArrowBackIosRoundedIcon
