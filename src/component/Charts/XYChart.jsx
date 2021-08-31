@@ -21,11 +21,12 @@ const XYChart = React.memo((props) => {
     themeState.isDark
       ? am4core.useTheme(am4themes_dark)
       : am4core.useTheme(am4themes_frozen);
-    if (props.chartId) {
+    if (true) {
+      //props.chartId
       if (type === "Radar") {
-        xyChart = am4core.create(`${props.chartId}`, am4charts.RadarChart);
+        xyChart = am4core.create("123456789", am4charts.RadarChart); //`${props.chartId}`
       } else {
-        xyChart = am4core.create(`${props.chartId}`, am4charts.XYChart);
+        xyChart = am4core.create("123456789", am4charts.XYChart); //`${props.chartId}`
         xyChart.paddingBottom = -10;
         xyChart.paddingLeft = -10;
       }
@@ -90,10 +91,10 @@ const XYChart = React.memo((props) => {
           return series;
         }
         createSeries("field1", options.fieldNames.field1); // name will get from user
-        createSeries("field2", options.fieldNames.field2);
-        createSeries("field3", options.fieldNames.field3);
-        createSeries("field4", options.fieldNames.field4);
-        createSeries("field5", options.fieldNames.field5); // & ...
+        // createSeries("field2", options.fieldNames.field2);
+        // createSeries("field3", options.fieldNames.field3);
+        // createSeries("field4", options.fieldNames.field4);
+        // createSeries("field5", options.fieldNames.field5); // & ...
       } else if (type === "Bubble") {
         // Create Axis
         let valueAxisX = xyChart.xAxes.push(new am4charts.ValueAxis());
@@ -381,11 +382,9 @@ const XYChart = React.memo((props) => {
         },
       });
     }
-  }, [props.chartId, props.chartProps, themeState.isDark]);
+  }, [props.chartProps, themeState.isDark]);
 
-  return (
-    <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>
-  );
+  return <div id="123456789" style={{ width: "100%", height: "100%" }}></div>;
 });
 
 export default XYChart;

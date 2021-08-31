@@ -2,37 +2,65 @@ import React, { useState, useEffect } from "react";
 import XYChart from "./Charts/XYChart.jsx";
 import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
+import { useSelector } from "react-redux";
 
-const ChartBlock = React.memo((props) => {
+const ChartBlock = (props) => {
   const [chart, setChart] = useState(null);
+  const [data, setData] = useState(null);
+  const chartData = useSelector((state) => state.addChart.chartData);
   useEffect(() => {
-    switch (props.chartProps.type) {
-      case "Line":
-      case "Column":
-      case "Bubble":
-      case "Radar":
-        setChart(
-          <XYChart chartId={props.chartId} chartProps={props.chartProps} />
-        );
-        break;
-      case "Pie":
-      case "Doughnut":
-        setChart(
-          <PieChart chartId={props.chartId} chartProps={props.chartProps} />
-        );
-        break;
-      case "Gauge":
-        setChart(
-          <GaugeChart chartId={props.chartId} chartProps={props.chartProps} />
-        );
-        break;
-      default:
-        setChart(<div>mismatch type!</div>);
+    if (chartData.data.data) {
+      setData({
+        title: "کارایی",
+        type: "Column",
+        data: chartData.data.data,
+        options: {
+          fieldNames: {
+            field1: "شرح سند",
+          },
+          legend: { display: true },
+          xyCursor: false,
+          xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
+          series: {
+            stacked: true,
+            strokeWidth: 2,
+            smoothing: "monotoneX",
+            bullet: {
+              display: true,
+              strokeColor: "#fff",
+              strokeWidth: 0,
+            },
+          },
+        },
+      });
     }
-  }, [props.chartId, props.chartProps]);
+  }, [chartData]);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data.type);
+      switch (data.type) {
+        case "Line":
+        case "Column":
+        case "Bubble":
+        case "Radar":
+          setChart(<XYChart chartProps={data} />);
+          break;
+        case "Pie":
+        case "Doughnut":
+          setChart(<PieChart chartProps={props.chartProps} />);
+          break;
+        case "Gauge":
+          setChart(<GaugeChart chartProps={props.chartProps} />);
+          break;
+        default:
+          setChart(<div>mismatch type!</div>);
+      }
+    }
+  }, [data]);
 
   return chart;
-});
+};
 
 export default ChartBlock;
 

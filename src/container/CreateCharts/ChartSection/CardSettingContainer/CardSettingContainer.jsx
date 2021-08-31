@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "./CardSettingContainer.scss";
 // import { lightTheme } from "../../../../styles/theme";
@@ -12,10 +12,9 @@ const CardSettingContainer = (props) => {
       chartActions.setChartOptions({ chartId: props.chartId, chartOptions })
     );
   };
-
   return (
     <div className="ChartShowContainer">
-      <ChartBlock chartId={props.chartId} chartProps={props.chartProps} />
+      <ChartBlock />
     </div>
   );
 };

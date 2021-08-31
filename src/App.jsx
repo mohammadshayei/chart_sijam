@@ -25,9 +25,9 @@ const App = () => {
         className={classes.AppContainer}
         style={{ backgroundColor: theme.background_color }}
       >
-        {/* <Route path="/view" exact component={LayoutContent}></Route>
-        <Route path="/create_chart" exact component={CreateCharts}></Route> */}
-        <ProtectedRoute  path='/' component={LayoutContent}></ProtectedRoute>
+        <Route path="/view" exact component={LayoutContent}></Route>
+        {/* <ProtectedRoute path="/"  component={LayoutContent}></ProtectedRoute> */}
+        <Route path="/create_chart" exact component={CreateCharts}></Route>
         <Route path="/signup" exact component={Auth}></Route>
         <Route path="/login" exact component={Auth}></Route>
       </div>

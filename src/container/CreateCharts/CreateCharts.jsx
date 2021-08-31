@@ -8,7 +8,8 @@ import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { VscSplitVertical } from "react-icons/vsc";
 import { useTheme } from "../../styles/ThemeProvider.js";
-import { useSelector } from "react-redux";
+import * as addChartActions from "../../store/actions/addChart";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 function useOnClickOutside(ref, handler) {
@@ -31,7 +32,7 @@ function useOnClickOutside(ref, handler) {
 }
 
 const CreateCharts = (props) => {
-  const chartData = useSelector((state) => state.addChart);
+  const takenData = useSelector((state) => state.addChart);
   const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const location = useLocation();
@@ -48,6 +49,11 @@ const CreateCharts = (props) => {
   useOnClickOutside(ref, () => {
     setInput(false);
   });
+
+  const dispatch = useDispatch();
+  const setChartData = (chartData) => {
+    dispatch(addChartActions.selectChartData(chartData));
+  };
 
   return (
     <div
@@ -133,7 +139,7 @@ const CreateCharts = (props) => {
               </div>
             </div>
             <div className="section-chart-content-container">
-              <ChartSection chartId={id} />
+              <ChartSection />
             </div>
             {/* <div className="table-component-container">
               <BankSection />

@@ -22,20 +22,20 @@ const Steps = (props) => {
             isOpen: true,
           },
           xAxis: {
-            title: "X محور",
+            title: "انتخاب فیلد",
             content: <XAxisStep />,
             isOpen: false,
           },
-          yAxis: {
-            title: "Y محور",
-            content: <XAxisStep />,
-            isOpen: false,
-          },
-          benchmark: {
-            title: "خطوط معیار",
-            content: <BenchmarkStep />,
-            isOpen: false,
-          },
+          // yAxis: {
+          //   title: "Y محور",
+          //   content: <XAxisStep />,
+          //   isOpen: false,
+          // },
+          // benchmark: {
+          //   title: "خطوط معیار",
+          //   content: <BenchmarkStep />,
+          //   isOpen: false,
+          // },
           // moreSetting: {
           //   title: "تنظیمات بیشتر",
           //   content: "test2",

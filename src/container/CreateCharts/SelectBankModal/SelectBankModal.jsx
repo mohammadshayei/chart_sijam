@@ -8,8 +8,8 @@ import { baseUrl } from "./../../../constants/Config";
 import { IoIosSearch, IoMdCloseCircle } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
 import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
-import * as addChartActions from "../../../store/actions/addChart";
-import { useDispatch, useSelector } from "react-redux";
+import * as selectDatabaseActions from "../../../store/actions/addChart";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 function useOnClickOutside(ref, handler) {
@@ -88,8 +88,8 @@ const SelectBankModal = (props) => {
   };
 
   const dispatch = useDispatch();
-  const setChartsData = (data) => {
-    dispatch(addChartActions.selectChartData(data));
+  const selectChartDatabase = (data) => {
+    dispatch(selectDatabaseActions.selectChartData(data));
   };
 
   const onChangeHandler = (event) => {
@@ -224,7 +224,7 @@ const SelectBankModal = (props) => {
 
   const submitHandler = async (id) => {
     const result = await axios.post(`${baseUrl}/get_data`, { id });
-    setChartsData(result.data.result);
+    selectChartDatabase(result.data.result);
     props.isModalOpen(false);
   };
 
