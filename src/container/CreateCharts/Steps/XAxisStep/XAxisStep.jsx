@@ -28,8 +28,16 @@ const XAxisStep = (props) => {
       const fieldTitles = Object.entries(takenData.data[0]).map(([key]) => {
         return key;
       });
-      updatedDropDown.categories.menuItems = fieldTitles;
-      updatedDropDown.values.menuItems = fieldTitles;
+      for (let index = 1; index <= fieldTitles.length; index++) {
+        updatedDropDown.categories.menuItems = [
+          ...updatedDropDown.categories.menuItems,
+          { name: fieldTitles[index], id: index },
+        ];
+        updatedDropDown.values.menuItems = [
+          ...updatedDropDown.values.menuItems,
+          { name: fieldTitles[index], id: index },
+        ];
+      }
       setDropDownContent(updatedDropDown);
     }
   }, [takenData.data]);
@@ -175,6 +183,12 @@ const XAxisStep = (props) => {
         <div className="setting-dropdown-component">
           {dropDownContent.categories.isOpen && (
             <DropDown
+              divStyle={{
+                transform: "translateY(1.1rem)",
+                maxHeight: "40vh",
+                minWidth: "23.5vw",
+                overflow: "auto",
+              }}
               items={dropDownContent.categories.menuItems}
               setSelected={setSelectedCategory}
               setDropDown={setCategoryIsOpen}
@@ -215,7 +229,12 @@ const XAxisStep = (props) => {
         <div className="setting-dropdown-component">
           {dropDownContent.values.isOpen && (
             <DropDown
-              divStyle={{ top: 0, left: 0 }}
+              divStyle={{
+                transform: "translateY(1.1rem)",
+                maxHeight: "40vh",
+                minWidth: "23.5vw",
+                overflow: "auto",
+              }}
               items={dropDownContent.values.menuItems}
               setSelected={setSelectedValue}
               setDropDown={setValueIsOpen}

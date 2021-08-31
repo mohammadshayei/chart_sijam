@@ -224,7 +224,7 @@ const SelectBankModal = (props) => {
 
   const submitHandler = async (id) => {
     const result = await axios.post(`${baseUrl}/get_data`, { id });
-    selectChartDatabase(result.data.result);
+    selectChartDatabase(result.data.result.data);
     props.isModalOpen(false);
   };
 
