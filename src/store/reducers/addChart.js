@@ -1,6 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
+  id: "",
   data: {},
   chartData: {
     title: "عنوان نمودار",
@@ -109,6 +110,14 @@ const setValueCount = (state, action) => {
   };
 };
 
+const setAddChartId = (state, action) => {
+  const { id } = action;
+  return {
+    ...state,
+    id,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -119,6 +128,8 @@ const reducer = (state = initialState, action) => {
       return setCategoryAdded(state, action);
     case actionTypes.SET_VALUE_COUNT:
       return setValueCount(state, action);
+    case actionTypes.SET_ADD_CHART_ID:
+      return setAddChartId(state, action);
     default:
       return state;
   }

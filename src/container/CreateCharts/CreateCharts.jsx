@@ -11,6 +11,8 @@ import { useTheme } from "../../styles/ThemeProvider.js";
 import * as addChartActions from "../../store/actions/addChart";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { baseUrl } from "./../../constants/Config";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -55,6 +57,17 @@ const CreateCharts = (props) => {
     dispatch(addChartActions.selectChartData(chartData));
   };
 
+  const doneClickHandler = async () => {
+    const payload = {
+      title: takenData.chartData.title,
+      type: takenData.chartData.type,
+      data: takenData.chartData.data.data,
+      options: takenData.chartData.data.options,
+      bankId: takenData.id,
+    };
+    const result = await axios.post(`${baseUrl}/create_chart`, payload);
+  };
+
   return (
     <div
       className="create-charts-container"
@@ -85,6 +98,7 @@ const CreateCharts = (props) => {
               color: "white",
               marginBottom: "1rem",
             }}
+            onClick={doneClickHandler}
           >
             {stringFa.done}
           </Button>
