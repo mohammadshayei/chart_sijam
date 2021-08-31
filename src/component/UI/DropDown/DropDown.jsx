@@ -1,18 +1,43 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import "./DropDown.scss";
 import { useTheme } from "../../../styles/ThemeProvider.js";
+import ReactDom from "react-dom";
+
+function useOnClickOutside(ref, handler) {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, [ref, handler]);
+}
 
 const DropDown = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const divRef = useRef();
+
+  useOnClickOutside(divRef, () => {
+    props.setDropDown(false);
+  });
+
   const handleClick = (value) => {
     props.onClick && props.onClick(value);
     props.setSelected && props.setSelected(value);
     props.setDropDown(false); //state of dropdown activate
   };
 
-  return (
+  return ReactDom.createPortal(
     <div
       ref={divRef}
       className="dropdown"
@@ -37,7 +62,8 @@ const DropDown = (props) => {
           </div>
         ))}
       {props.extraItem && props.extraItem}
-    </div>
+    </div>,
+    document.getElementById("portal")
   );
 };
 

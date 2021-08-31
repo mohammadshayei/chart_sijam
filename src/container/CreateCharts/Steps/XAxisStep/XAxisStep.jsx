@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./XAxisStep.scss";
 import { BiChevronDown } from "react-icons/bi";
 import DropDownMenu from "./DropDownMenu/DropDownMenu.jsx";
@@ -8,25 +8,6 @@ import { stringFa } from "../../../../assets/strings/stringFaCollection.js";
 import * as addChartActions from "../../../../store/actions/addChart";
 import { useSelector, useDispatch } from "react-redux";
 
-function useOnClickOutside(ref, handler) {
-  useEffect(() => {
-    const listener = (event) => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
-      }
-      handler(event);
-    };
-
-    document.addEventListener("mousedown", listener);
-    document.addEventListener("touchstart", listener);
-
-    return () => {
-      document.removeEventListener("mousedown", listener);
-      document.removeEventListener("touchstart", listener);
-    };
-  }, [ref, handler]);
-}
-
 const XAxisStep = (props) => {
   const takenData = useSelector((state) => state.addChart);
   const [dropDownContent, setDropDownContent] = useState({
@@ -35,8 +16,6 @@ const XAxisStep = (props) => {
   });
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-
-  const ref = useRef();
 
   const dispatch = useDispatch();
   const setChartData = (chartData) => {
@@ -149,13 +128,6 @@ const XAxisStep = (props) => {
     }
   }, [dropDownContent.values.selected]);
 
-  useOnClickOutside(ref, () => {
-    let updatedDropDown = { ...dropDownContent };
-    updatedDropDown.categories.isOpen = false;
-    updatedDropDown.values.isOpen = false;
-    setDropDownContent(updatedDropDown);
-  });
-
   const setCategoryIsOpen = (value) => {
     let updatedDropDown = { ...dropDownContent };
     updatedDropDown.categories.isOpen = value;
@@ -243,6 +215,7 @@ const XAxisStep = (props) => {
         <div className="setting-dropdown-component">
           {dropDownContent.values.isOpen && (
             <DropDown
+              divStyle={{ top: 0, left: 0 }}
               items={dropDownContent.values.menuItems}
               setSelected={setSelectedValue}
               setDropDown={setValueIsOpen}
