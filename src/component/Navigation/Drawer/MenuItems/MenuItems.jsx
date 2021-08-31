@@ -6,12 +6,18 @@ import { data } from "../../../../assets/dummy_data/TestData";
 import * as actions from "../../../../store/actions/detail";
 import axios from "axios";
 import { baseUrl } from "../../../../constants/Config";
+import DropDown from "../../../UI/DropDown/DropDown";
 const MenuItems = () => {
   const [unClicked, setUnClicked] = useState("");
   const [orders, setOrders] = useState([]);
+  const [rightClick, setRightClick] = useState(false);
   const [items, setItems] = useState({ holdings: [] });
   const dispatch = useDispatch();
   const detail = useSelector((state) => state.detail);
+  const [activeBackups, setActiveBackups] = useState(null);
+  const [isSoftwareClicked, setIsSoftwareClicked] = useState(false);
+  const [popupStyle, setPopupStyle] = useState({});
+  const [popupContentStyle, setPopupContentStyle] = useState({});
 
   const selectActiveBackup = (activeBackup) => {
     dispatch(actions.selectActiveBackup(activeBackup));
@@ -40,11 +46,47 @@ const MenuItems = () => {
   const clearActiveBackup = () => {
     dispatch(actions.clearActiveBackup());
   };
+  const onRightClickHandler = (e, id, type, parent) => {
+    setPopupStyle({
+      top: e.nativeEvent.clientY,
+      left: e.nativeEvent.clientX,
+      transform: "translate(-100%,-30%)",
+    });
+    setPopupContentStyle({
+      padding: "1rem",
+      backgroundColor:"red"
+    });
+    setRightClick(true);
+    if (type === "software") {
+      setIsSoftwareClicked(true);
+      let updatedItems = { ...items };
+      let updatedHoldings = [...updatedItems.holdings];
+      let updatedHoldingIndex = updatedHoldings.findIndex(
+        (holding) => holding.id === parent[0]
+      );
+      if (updatedHoldingIndex < 0) return;
+      let updatedCompanies = [
+        ...updatedHoldings[updatedHoldingIndex].companies,
+      ];
+      let updatedComapnyIndex = updatedCompanies.findIndex(
+        (comapny) => comapny.id === parent[1]
+      );
+      if (updatedComapnyIndex < 0) return;
+      let software = updatedHoldings[updatedHoldingIndex].companies[
+        updatedComapnyIndex
+      ].softwares.find((software) => software.id === id);
+      selectSoftware(software);
+    }
+  };
+  const onPopupItemClickHandler = (value) => {
+    console.log("hellwo " + value);
+  };
   const onMenuItemClickHandler = async (id, type, parent) => {
     setUnClicked("");
     clearActiveBackup();
     clearBanks();
     if (type === "holding") {
+      setIsSoftwareClicked(false);
       let updatedItems = { ...items };
       let updatedHoldings = [...updatedItems.holdings];
       const updatedHoldingIndex = updatedHoldings.findIndex(
@@ -72,6 +114,8 @@ const MenuItems = () => {
       updatedItems.holdings = updatedHoldings;
       setItems(updatedItems);
     } else if (type === "company") {
+      setIsSoftwareClicked(false);
+
       let updatedItems = { ...items };
       let updatedHoldings = [...updatedItems.holdings];
       let updatedHoldingIndex = updatedHoldings.findIndex(
@@ -107,6 +151,7 @@ const MenuItems = () => {
       updatedItems.holdings = updatedHoldings;
       setItems(updatedItems);
     } else if (type === "software") {
+      setIsSoftwareClicked(true);
       let updatedItems = { ...items };
       let updatedHoldings = [...updatedItems.holdings];
       let updatedHoldingIndex = updatedHoldings.findIndex(
@@ -131,6 +176,17 @@ const MenuItems = () => {
       selectActiveBackup(activeBackup);
     }
   };
+  useEffect(async () => {
+    if (!isSoftwareClicked || !rightClick) return;
+    if (detail.software) {
+      const result = await axios.post(`${baseUrl}/get_active_backup`, {
+        id: detail.software.id,
+      });
+      if (result.data.success) {
+        setActiveBackups(result.data.message.result);
+      }
+    }
+  }, [detail.software, isSoftwareClicked]);
 
   useEffect(async () => {
     const result = await axios.get(`${baseUrl}/get_holdings`);
@@ -179,6 +235,16 @@ const MenuItems = () => {
   }, [items]);
   return (
     <div className="MenuItemsContainer">
+      {rightClick && (
+        <DropDown
+          divStyle={{ ...popupStyle }}
+          contentStyle={{ ...popupContentStyle }}
+
+          items={activeBackups}
+          onClick={() => {}}
+          setDropDown={setRightClick}
+        />
+      )}
       {orders &&
         orders.map((item, index) => {
           return (
@@ -191,6 +257,7 @@ const MenuItems = () => {
               parent={item.parent}
               index={index}
               unClicked={unClicked}
+              onRightClickHandler={onRightClickHandler}
             />
           );
         })}
