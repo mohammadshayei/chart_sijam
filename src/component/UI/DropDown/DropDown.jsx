@@ -29,7 +29,6 @@ const DropDown = (props) => {
   useOnClickOutside(divRef, () => {
     props.setDropDown(false);
   });
-
   const handleClick = (value) => {
     props.onClick && props.onClick(value);
     props.setSelected && props.setSelected(value);
