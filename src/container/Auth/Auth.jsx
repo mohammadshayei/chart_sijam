@@ -7,7 +7,6 @@ import GetPhoneNumber from "./GetPhoneNumber/GetPhoneNumber";
 import ImageSection from "./ImageSection/ImageSection";
 import MainAuth from "./MainAuth/MainAuth";
 import VerifyCode from "./VerifyCode/VerifyCode";
-import axios from "axios";
 import { baseUrl } from "../../constants/Config";
 import Loading from "../../component/UI/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";

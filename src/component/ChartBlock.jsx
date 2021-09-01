@@ -3,21 +3,30 @@ import XYChart from "./Charts/XYChart.jsx";
 import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router";
 
 const ChartBlock = (props) => {
   const [chart, setChart] = useState(null);
   const [data, setData] = useState(null);
+  const location = useLocation();
+
   const chartData = useSelector((state) => state.addChart.chartData);
   useEffect(() => {
-    if (chartData.data.data) {
-      setData({
-        title: chartData.title,
-        type: chartData.type,
-        data: chartData.data.data,
-        options: chartData.data.options,
-      });
+    if (location.pathname === "/create_chart") {
+      if (chartData.data.data) {
+        setData({
+          title: chartData.title,
+          type: chartData.type,
+          data: chartData.data.data,
+          options: chartData.data.options,
+        });
+      }
+    } else {
+      if (props.chartProps) {
+        setData(props.chartProps);
+      }
     }
-  }, [chartData]);
+  }, [chartData, props.chartProps]);
 
   useEffect(() => {
     if (data) {

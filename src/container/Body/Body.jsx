@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import * as chartActions from "../../store/actions/chart.js";
 import Card from "./../../component/Card/Card";
 import { useTheme } from "../../styles/ThemeProvider";
+import axios from "axios";
+import { baseUrl } from "./../../constants/Config";
 
 const Body = (props) => {
   const chartsData = useSelector((state) => state.chart);
+  const detail = useSelector((state) => state.detail);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -17,27 +20,47 @@ const Body = (props) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
 
-  useEffect(() => {
-    let tempData = [];
-    if (props.data) {
-      props.data.forEach((item) => {
-        tempData = [...tempData, ...item.charts];
+  useEffect(async () => {
+    let result;
+    if (detail.activeBackup) {
+      result = await axios.post(`${baseUrl}/get_charts`, {
+        type: "4",
+        id: detail.activeBackup.id,
+      });
+    } else if (detail.software) {
+      result = await axios.post(`${baseUrl}/get_charts`, {
+        type: "3",
+        id: detail.software.id,
+      });
+      console.log(result);
+    } else if (detail.company) {
+      result = await axios.post(`${baseUrl}/get_charts`, {
+        type: "2",
+        id: detail.company.id,
+      });
+    } else if (detail.holding) {
+      result = await axios.post(`${baseUrl}/get_charts`, {
+        type: "1",
+        id: detail.holding.id,
       });
     }
-    let newChartsData = {};
-    tempData.forEach((item) => {
-      newChartsData = {
-        ...newChartsData,
-        [item.id]: {
-          title: item.title,
-          type: item.type,
-          data: item.data,
-          options: item.options,
-        },
-      };
-    });
-    setChartsData(newChartsData);
-  }, [props.data]);
+    if (result) {
+      let receivedData = result.data.message.result;
+      let newChartsData = {};
+      receivedData.forEach((item) => {
+        newChartsData = {
+          ...newChartsData,
+          [item._id]: {
+            title: item.title,
+            type: item.type,
+            data: item.data,
+            options: item.options,
+          },
+        };
+      });
+      setChartsData(newChartsData);
+    }
+  }, [detail]);
 
   return chartsData.layouts && chartsData.data ? (
     <div

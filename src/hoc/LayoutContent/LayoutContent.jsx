@@ -99,20 +99,20 @@ const LayoutContent = (props) => {
               : "center",
           }}
         >
-          {detail.software || detail.company || detail.holding ? (
-            banksData.banks ? (
-              <Body
-                isMenuOpen={isMenuOpen}
-                data={
-                  detail.banks && detail.banks.length > 0
-                    ? banksData.banks.filter((item) =>
-                        detail.banks.find(
-                          (detailBank) => detailBank.id === item.bankId
-                        )
-                      )
-                    : banksData.banks
-                }
-              />
+          <Body
+            isMenuOpen={isMenuOpen}
+            data={
+              detail.banks && detail.banks.length > 0
+                ? banksData.banks.filter((item) =>
+                    detail.banks.find(
+                      (detailBank) => detailBank.id === item.bankId
+                    )
+                  )
+                : banksData.banks
+            }
+          />
+          {/* {detail.software || detail.company || detail.holding ? (
+            banksData.activeBackup ? (null
             ) : (
               <div className="BodyContent">
                 <Link
@@ -132,7 +132,7 @@ const LayoutContent = (props) => {
             <div className="BodyContent">
               {stringFa.clicked_software_to_see_charts}
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
