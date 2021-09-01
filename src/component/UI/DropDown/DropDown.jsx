@@ -26,7 +26,6 @@ const DropDown = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const divRef = useRef();
-
   useOnClickOutside(divRef, () => {
     props.setDropDown(false);
   });
@@ -35,8 +34,8 @@ const DropDown = (props) => {
     props.setSelected && props.setSelected(value);
     props.setDropDown(false); //state of dropdown activate
   };
-
-  return ReactDom.createPortal(
+  // ReactDom.createPortal
+  return (
     <div
       ref={divRef}
       className="dropdown"
@@ -50,7 +49,7 @@ const DropDown = (props) => {
         props.items.map((item, index) => (
           <div
             key={item.name}
-            onClick={() => handleClick(item)}
+            onClick={() => handleClick(item.name)}
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}
           >
@@ -61,8 +60,9 @@ const DropDown = (props) => {
           </div>
         ))}
       {props.extraItem && props.extraItem}
-    </div>,
-    document.getElementById("portal")
+    </div>
+    // ,
+    // document.getElementById("portal")
   );
 };
 

@@ -33,3 +33,10 @@ export const setValueCount =
       payload: { valueCount },
     });
   };
+
+export const setAddChartId = (id) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_ADD_CHART_ID,
+    id: id,
+  });
+};

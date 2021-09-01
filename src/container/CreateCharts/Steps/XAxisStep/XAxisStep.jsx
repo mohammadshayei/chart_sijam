@@ -24,21 +24,28 @@ const XAxisStep = (props) => {
 
   useEffect(() => {
     let updatedDropDown = { ...dropDownContent };
-    if (takenData.data[0]) {
-      const fieldTitles = Object.entries(takenData.data[0]).map(([key]) => {
-        return key;
-      });
-      updatedDropDown.categories.menuItems = fieldTitles;
-      updatedDropDown.values.menuItems = fieldTitles;
+    if (takenData.data.fieldsType) {
+      for (const title in takenData.data.fieldsType) {
+        for (const key in takenData.data.fieldsType[title]) {
+          updatedDropDown.categories.menuItems = [
+            ...updatedDropDown.categories.menuItems,
+            { name: key, id: title },
+          ];
+          updatedDropDown.values.menuItems = [
+            ...updatedDropDown.values.menuItems,
+            { name: key, id: title },
+          ];
+        }
+      }
       setDropDownContent(updatedDropDown);
     }
   }, [takenData.data]);
 
   useEffect(() => {
-    if (takenData.data && dropDownContent.categories.selected !== "") {
+    if (takenData.data.data && dropDownContent.categories.selected !== "") {
       let chartData = { ...takenData.chartData };
       let fieldValues = [];
-      Object.entries(takenData.data).map(([key, value]) => {
+      Object.entries(takenData.data.data).map(([key, value]) => {
         Object.entries(value).map(([k, v]) => {
           if (k === dropDownContent.categories.selected) {
             fieldValues = [...fieldValues, v];
@@ -84,10 +91,10 @@ const XAxisStep = (props) => {
   }, [dropDownContent.categories.selected]);
 
   useEffect(() => {
-    if (takenData.data && dropDownContent.values.selected !== "") {
+    if (takenData.data.data && dropDownContent.values.selected !== "") {
       let chartData = { ...takenData.chartData };
       let fieldValues = [];
-      Object.entries(takenData.data).map(([key, value]) => {
+      Object.entries(takenData.data.data).map(([key, value]) => {
         Object.entries(value).map(([k, v]) => {
           if (k === dropDownContent.values.selected) {
             fieldValues = [...fieldValues, v];
@@ -175,6 +182,12 @@ const XAxisStep = (props) => {
         <div className="setting-dropdown-component">
           {dropDownContent.categories.isOpen && (
             <DropDown
+              divStyle={{
+                transform: "translateY(1.1rem)",
+                maxHeight: "40vh",
+                minWidth: "23.5vw",
+                overflow: "auto",
+              }}
               items={dropDownContent.categories.menuItems}
               setSelected={setSelectedCategory}
               setDropDown={setCategoryIsOpen}
@@ -215,7 +228,12 @@ const XAxisStep = (props) => {
         <div className="setting-dropdown-component">
           {dropDownContent.values.isOpen && (
             <DropDown
-              divStyle={{ top: 0, left: 0 }}
+              divStyle={{
+                transform: "translateY(1.1rem)",
+                maxHeight: "40vh",
+                minWidth: "23.5vw",
+                overflow: "auto",
+              }}
               items={dropDownContent.values.menuItems}
               setSelected={setSelectedValue}
               setDropDown={setValueIsOpen}

@@ -92,6 +92,10 @@ const SelectBankModal = (props) => {
     dispatch(selectDatabaseActions.selectChartData(data));
   };
 
+  const setId = (id) => {
+    dispatch(selectDatabaseActions.setAddChartId(id));
+  };
+
   const onChangeHandler = (event) => {
     let updatedResult = { ...searchResult };
     updatedResult.error = data.error;
@@ -225,6 +229,7 @@ const SelectBankModal = (props) => {
   const submitHandler = async (id) => {
     const result = await axios.post(`${baseUrl}/get_data`, { id });
     selectChartDatabase(result.data.result);
+    setId(id);
     props.isModalOpen(false);
   };
 

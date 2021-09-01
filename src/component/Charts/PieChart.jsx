@@ -21,7 +21,7 @@ const PieChart = React.memo((props) => {
     themeState.isDark
       ? am4core.useTheme(am4themes_dark)
       : am4core.useTheme(am4themes_frozen);
-    pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
+    pieChart = am4core.create("12345679", am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
     if (type === "Doughnut") {
@@ -42,7 +42,7 @@ const PieChart = React.memo((props) => {
     // Add and configure Series
     let pieSeries = pieChart.series.push(new am4charts.PieSeries());
     pieSeries.hiddenState.transitionDuration = 5000;
-    pieSeries.dataFields.value = "value";
+    pieSeries.dataFields.value = "field1";
     pieSeries.dataFields.category = "category";
     // ticks and labels
     pieSeries.alignLabels = options.series.alignLabels;
@@ -172,10 +172,8 @@ const PieChart = React.memo((props) => {
         return null;
       },
     });
-  }, [props.chartId, props.chartProps, themeState.isDark]);
-  return (
-    <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>
-  );
+  }, [props.chartProps, themeState.isDark]);
+  return <div id={"12345679"} style={{ width: "100%", height: "100%" }}></div>;
 });
 
 export default PieChart;

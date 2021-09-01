@@ -10,10 +10,10 @@
 }
 
 .dropdown {
-  position: absolute;
+  position: fixed;
   overflow: hidden;
   margin-top: 1.5rem;
-  z-index: 1000;
+  z-index: 1000 !important;
   border: 1px solid;
   border-radius: 5px;
   box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.08);
