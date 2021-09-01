@@ -21,12 +21,11 @@ const XYChart = React.memo((props) => {
     themeState.isDark
       ? am4core.useTheme(am4themes_dark)
       : am4core.useTheme(am4themes_frozen);
-    if (true) {
-      //props.chartId
+    if (props.chartId) {
       if (type === "Radar") {
-        xyChart = am4core.create("123456789", am4charts.RadarChart); //`${props.chartId}`
+        xyChart = am4core.create(`${props.chartId}`, am4charts.RadarChart);
       } else {
-        xyChart = am4core.create("123456789", am4charts.XYChart); //`${props.chartId}`
+        xyChart = am4core.create(`${props.chartId}`, am4charts.XYChart);
         xyChart.paddingBottom = -10;
         xyChart.paddingLeft = -10;
       }
@@ -383,9 +382,27 @@ const XYChart = React.memo((props) => {
         },
       });
     }
-  }, [props.chartProps, themeState.isDark]);
+  }, [props.chartId, props.chartProps, themeState.isDark]);
 
-  return <div id="123456789" style={{ width: "100%", height: "100%" }}></div>;
+  return (
+    <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>
+  );
 });
 
-export default XYChart;
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.chartProps && nextProps.chartProps) {
+    if (prevProps.chartProps.data !== nextProps.chartProps.data) {
+      return false;
+    } else if (prevProps.chartProps.options !== nextProps.chartProps.options)
+      return false;
+    else if (prevProps.chartProps.type !== nextProps.chartProps.type)
+      return false;
+    else if (prevProps.chartProps.title !== nextProps.chartProps.title)
+      return true;
+  }
+  return false;
+};
+
+export default React.memo(XYChart, areEqual);
+
+// export default XYChart;

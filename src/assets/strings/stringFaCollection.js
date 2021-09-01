@@ -41,4 +41,5 @@ export const stringFa = {
   please_wait: "...لطفا منتظر باشید",
   column_type: "نوع ستون",
   values: "مقادیر",
+  cancel: "انصراف",
 };

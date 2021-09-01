@@ -38,7 +38,7 @@ const Card = React.memo((props) => {
         title={props.item.title}
       />
       <div className="card-body">
-        <ChartBlock chartProps={props.item} />
+        <ChartBlock chartId={props.chartId} chartProps={props.item} />
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ const CardSettingContainer = (props) => {
   };
   return (
     <div className="ChartShowContainer">
-      <ChartBlock />
+      <ChartBlock chartId="123456789" />
     </div>
   );
 };

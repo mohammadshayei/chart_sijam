@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
+import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -35,9 +36,11 @@ function useOnClickOutside(ref, handler) {
 
 const CreateCharts = (props) => {
   const takenData = useSelector((state) => state.addChart);
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
-  const location = useLocation();
+  const [error, setError] = useState(null);
+  const [path, setPath] = useState(`/create_chart`);
+  // const location = useLocation();
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -53,8 +56,17 @@ const CreateCharts = (props) => {
   });
 
   const dispatch = useDispatch();
-  const setChartData = (chartData) => {
-    dispatch(addChartActions.selectChartData(chartData));
+  const setChartTitle = (chartTitle) => {
+    dispatch(addChartActions.setChartTitle(chartTitle));
+  };
+
+  const setTitleHandler = (e) => {
+    if (e.type === "keydown") {
+      if (e.key === "Enter") {
+        setChartTitle({ title: e.target.value });
+        setInput(false);
+      }
+    } else setChartTitle({ title: e.target.value });
   };
 
   const doneClickHandler = async () => {
@@ -66,8 +78,14 @@ const CreateCharts = (props) => {
       bankId: takenData.id,
     };
     const result = await axios.post(`${baseUrl}/create_chart`, payload);
+    if (!result.data.success) {
+      setError(
+        <ErrorDialog onClose={setError}>
+          {result.data.message.error}
+        </ErrorDialog>
+      );
+    } else setPath(`/view`);
   };
-
   return (
     <div
       className="create-charts-container"
@@ -79,30 +97,53 @@ const CreateCharts = (props) => {
         color: theme.on_background,
       }}
     >
+      {error}
       <div
         className="section-header-wrapper"
         style={{ borderColor: theme.border_color }}
       >
-        <Link
-          style={{ textDecoration: "none" }}
-          to={{
-            pathname: `/view`,
-          }}
-        >
-          <Button
-            ButtonStyle={{
-              backgroundColor: theme.primary,
-              flex: "0 0 auto",
-              fontWeight: 400,
-              fontSize: "1rem",
-              color: "white",
-              marginBottom: "1rem",
+        <div className="header-buttons">
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{
+              pathname: path,
             }}
-            onClick={doneClickHandler}
           >
-            {stringFa.done}
-          </Button>
-        </Link>
+            <Button
+              ButtonStyle={{
+                backgroundColor: theme.primary,
+                flex: "0 0 auto",
+                fontWeight: 400,
+                fontSize: "1rem",
+                color: theme.on_primary,
+                marginBottom: "1rem",
+                marginRight: "0.5rem",
+              }}
+              onClick={doneClickHandler}
+            >
+              {stringFa.done}
+            </Button>
+          </Link>
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{
+              pathname: `\view`,
+            }}
+          >
+            <Button
+              ButtonStyle={{
+                backgroundColor: "gray",
+                flex: "0 0 auto",
+                fontWeight: 400,
+                fontSize: "0.9rem",
+                color: theme.on_primary,
+                marginBottom: "1rem",
+              }}
+            >
+              {stringFa.cancel}
+            </Button>
+          </Link>
+        </div>
         <div className="settings-title-and-description">
           <div className="settings-title">{stringFa.chart_setting}</div>
           <div className="settings-description">
@@ -141,11 +182,18 @@ const CreateCharts = (props) => {
                       <input
                         className="editable-input"
                         dir="rtl"
-                        value="نمودار"
+                        placeholder={stringFa.title}
+                        Value={takenData.chartData.title}
+                        onChange={setTitleHandler}
+                        onKeyDown={setTitleHandler}
                       />
                     ) : (
                       <div className="text-component" dir="rtl">
-                        <span>نمودار</span>
+                        <span>
+                          {takenData.chartData.title
+                            ? takenData.chartData.title
+                            : stringFa.title}
+                        </span>
                       </div>
                     )}
                   </div>

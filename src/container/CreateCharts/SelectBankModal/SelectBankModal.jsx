@@ -390,7 +390,7 @@ const SelectBankModal = (props) => {
         >
           <Button
             ButtonStyle={{
-              backgroundColor: isDone ? theme.primary : "gray",
+              backgroundColor: isDone ? theme.primary : "lightslategray",
               cursor: isDone ? "pointer" : "default",
               color: theme.on_primary,
             }}

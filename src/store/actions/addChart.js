@@ -40,3 +40,12 @@ export const setAddChartId = (id) => (dispatch) => {
     id: id,
   });
 };
+
+export const setChartTitle =
+  ({ title }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_TITLE_ADD_CHART,
+      payload: { title },
+    });
+  };

@@ -21,7 +21,7 @@ const PieChart = React.memo((props) => {
     themeState.isDark
       ? am4core.useTheme(am4themes_dark)
       : am4core.useTheme(am4themes_frozen);
-    pieChart = am4core.create("12345679", am4charts.PieChart);
+    pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
     if (type === "Doughnut") {
@@ -172,8 +172,24 @@ const PieChart = React.memo((props) => {
         return null;
       },
     });
-  }, [props.chartProps, themeState.isDark]);
-  return <div id={"12345679"} style={{ width: "100%", height: "100%" }}></div>;
+  }, [props.chartId, props.chartProps, themeState.isDark]);
+  return (
+    <div id={props.chartId} style={{ width: "100%", height: "100%" }}></div>
+  );
 });
 
-export default PieChart;
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.chartProps && nextProps.chartProps) {
+    if (prevProps.chartProps.data !== nextProps.chartProps.data) return false;
+    else if (prevProps.chartProps.options !== nextProps.chartProps.options)
+      return false;
+    else if (prevProps.chartProps.type !== nextProps.chartProps.type)
+      return false;
+    else return true;
+  }
+  return false;
+};
+
+export default React.memo(PieChart, areEqual);
+
+// export default PieChart;

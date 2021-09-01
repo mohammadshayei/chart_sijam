@@ -4,7 +4,7 @@ const initialState = {
   id: "",
   data: {},
   chartData: {
-    title: "عنوان نمودار",
+    title: "",
     type: "Line",
     data: {
       isCategoryAdded: false,
@@ -118,6 +118,17 @@ const setAddChartId = (state, action) => {
   };
 };
 
+const setChartTitle = (state, action) => {
+  const { title } = action.payload;
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      title,
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -130,6 +141,8 @@ const reducer = (state = initialState, action) => {
       return setValueCount(state, action);
     case actionTypes.SET_ADD_CHART_ID:
       return setAddChartId(state, action);
+    case actionTypes.SET_TITLE_ADD_CHART:
+      return setChartTitle(state, action);
     default:
       return state;
   }

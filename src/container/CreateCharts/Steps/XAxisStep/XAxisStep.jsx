@@ -101,7 +101,6 @@ const XAxisStep = (props) => {
           }
         });
       });
-      console.log(takenData.chartData.data.isCategoryAdded);
       switch (takenData.chartData.data.valueCount) {
         case 0:
           {

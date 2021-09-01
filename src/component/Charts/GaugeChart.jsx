@@ -120,4 +120,18 @@ const GaugeChart = React.memo((props) => {
   );
 });
 
-export default GaugeChart;
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.chartProps && nextProps.chartProps) {
+    if (prevProps.chartProps.data !== nextProps.chartProps.data) return false;
+    else if (prevProps.chartProps.options !== nextProps.chartProps.options)
+      return false;
+    else if (prevProps.chartProps.type !== nextProps.chartProps.type)
+      return false;
+    else return true;
+  }
+  return false;
+};
+
+export default React.memo(GaugeChart, areEqual);
+
+// export default GaugeChart;

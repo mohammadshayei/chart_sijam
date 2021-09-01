@@ -5,12 +5,13 @@ import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-const ChartBlock = (props) => {
+const ChartBlock = React.memo((props) => {
   const [chart, setChart] = useState(null);
   const [data, setData] = useState(null);
   const location = useLocation();
 
   const chartData = useSelector((state) => state.addChart.chartData);
+
   useEffect(() => {
     if (location.pathname === "/create_chart") {
       if (chartData.data.data) {
@@ -35,14 +36,14 @@ const ChartBlock = (props) => {
         case "Column":
         case "Bubble":
         case "Radar":
-          setChart(<XYChart chartProps={data} />);
+          setChart(<XYChart chartId={props.chartId} chartProps={data} />);
           break;
         case "Pie":
         case "Doughnut":
-          setChart(<PieChart chartProps={data} />);
+          setChart(<PieChart chartId={props.chartId} chartProps={data} />);
           break;
         case "Gauge":
-          setChart(<GaugeChart chartProps={data} />);
+          setChart(<GaugeChart chartId={props.chartId} chartProps={data} />);
           break;
         default:
           setChart(<div>mismatch type!</div>);
@@ -51,7 +52,7 @@ const ChartBlock = (props) => {
   }, [data]);
 
   return chart;
-};
+});
 
 export default ChartBlock;
 
