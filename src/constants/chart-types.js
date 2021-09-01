@@ -1,47 +1,59 @@
+import {
+  FcBarChart,
+  FcLineChart,
+  FcDoughnutChart,
+  FcPieChart,
+  FcRadarPlot,
+  // FcScatterPlot,
+} from "react-icons/fc";
+import { IoSpeedometerOutline } from "react-icons/io5";
+import { MdBubbleChart } from "react-icons/md";
+
 export const chartTypes = [
   {
-    id: 1,
-    label: "ستونی",
-    value: "Column",
+    name: "ستونی",
+    id: "Column",
+    icon: <FcBarChart />,
   },
   {
-    id: 2,
-    label: "حبابی",
-    value: "Bubble",
+    name: "حبابی",
+    id: "Bubble",
+    icon: <MdBubbleChart />,
   },
   {
-    id: 3,
-    label: "دونات",
-    value: "Doughnut",
+    name: "دونات",
+    id: "Doughnut",
+    icon: <FcDoughnutChart />,
   },
   {
-    id: 4,
-    label: "خطی",
-    value: "Line",
+    name: "خطی",
+    id: "Line",
+    icon: <FcLineChart />,
   },
   {
-    id: 5,
-    label: "دایره ای",
-    value: "Pie",
+    name: "دایره ای",
+    id: "Pie",
+    icon: <FcPieChart />,
   },
   {
-    id: 6,
-    label: "مساحت قطبی",
-    value: "Radar",
+    name: "مساحت قطبی",
+    id: "Radar",
+    icon: <FcPieChart />,
   },
   {
-    id: 7,
-    label: "راداری",
-    value: "Radar",
+    name: "راداری",
+    id: "Radar",
+    icon: <FcRadarPlot />,
   },
   {
-    id: 8,
-    label: "گیج",
-    value: "Gauge",
+    name: "گیج",
+    id: "Gauge",
+    icon: <IoSpeedometerOutline />,
   },
   // {
-  //   id: 9,
-  //   label: "خط زمانی",
-  //   value: "TimeLine",
+
+  //   name: "خط زمانی",
+  //   id: "TimeLine",
+  // icon:
   // },
 ];

@@ -51,10 +51,11 @@ const MenuItems = () => {
       top: e.nativeEvent.clientY,
       left: e.nativeEvent.clientX,
       transform: "translate(-100%,-30%)",
+      animation: "none",
     });
     setPopupContentStyle({
-      padding: "1rem",
-      backgroundColor:"red"
+      padding: "0.5rem",
+      minWidth: "10rem",
     });
     setRightClick(true);
     if (type === "software") {
@@ -239,7 +240,6 @@ const MenuItems = () => {
         <DropDown
           divStyle={{ ...popupStyle }}
           contentStyle={{ ...popupContentStyle }}
-
           items={activeBackups}
           onClick={() => {}}
           setDropDown={setRightClick}

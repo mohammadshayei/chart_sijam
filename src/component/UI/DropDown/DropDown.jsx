@@ -54,9 +54,7 @@ const DropDown = (props) => {
             style={{ ...props.contentStyle, color: theme.on_background }}
           >
             {item.name}
-            {props.icons && (
-              <div className="dropdown-icon">{props.icons[index]}</div>
-            )}
+            {item.icon && <div className="dropdown-icon">{item.icon}</div>}
           </div>
         ))}
       {props.extraItem && props.extraItem}

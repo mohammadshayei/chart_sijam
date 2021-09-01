@@ -11,17 +11,7 @@ import { Link } from "react-router-dom";
 import { stringFa } from "./../../assets/strings/stringFaCollection";
 import { chartTypes } from "../../constants/chart-types";
 import { useDispatch } from "react-redux";
-import {
-  FcBarChart,
-  FcLineChart,
-  FcDoughnutChart,
-  FcPieChart,
-  FcRadarPlot,
-  // FcScatterPlot,
-  FcSettings,
-} from "react-icons/fc";
-import { IoSpeedometerOutline } from "react-icons/io5";
-import { MdBubbleChart } from "react-icons/md";
+import { FcSettings } from "react-icons/fc";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -52,18 +42,7 @@ const TitleBlock = React.memo((props) => {
   const starStyles = {
     color: theme.star_color,
   };
-  const dropDownIcons = [
-    <FcBarChart />,
-    <MdBubbleChart />,
-    <FcDoughnutChart />,
-    <FcLineChart />,
-    <FcPieChart />,
-    <FcPieChart />,
-    <FcRadarPlot />,
-    <IoSpeedometerOutline />,
-    <FcSettings />,
-  ];
-  const types = chartTypes.map(({ label }) => label);
+
   const extraItem = (
     <div>
       <div
@@ -81,11 +60,9 @@ const TitleBlock = React.memo((props) => {
         style={{ textDecoration: "none", color: theme.on_background }}
       >
         {stringFa.Edit}
-        {/* {props.icons && (
-          <div className="dropdown-icon">
-            {props.icons[props.icons.length - 1]}
-          </div>
-        )} */}
+        <div className="dropdown-icon">
+          <FcSettings />
+        </div>
       </Link>
     </div>
   );
@@ -147,9 +124,8 @@ const TitleBlock = React.memo((props) => {
           <div ref={ref}>
             {dropDown && (
               <DropDown
-                items={types}
+                items={chartTypes}
                 extraItem={extraItem}
-                icons={dropDownIcons}
                 setSelected={setSelected}
                 setDropDown={setDropDown}
               />
