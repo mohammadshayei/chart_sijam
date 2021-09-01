@@ -14,6 +14,7 @@ const XAxisStep = (props) => {
     categories: { menuItems: [], isOpen: false, selected: "" },
     values: { menuItems: [], isOpen: false, selected: "" },
   });
+  const [initial, setInitial] = useState(true);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -23,39 +24,58 @@ const XAxisStep = (props) => {
   };
 
   useEffect(() => {
-    let updatedDropDown = { ...dropDownContent };
-    if (takenData.data.fieldsType) {
-      for (const title in takenData.data.fieldsType) {
-        for (const key in takenData.data.fieldsType[title]) {
-          updatedDropDown.categories.menuItems = [
-            ...updatedDropDown.categories.menuItems,
-            { name: key, id: title },
-          ];
-          updatedDropDown.values.menuItems = [
-            ...updatedDropDown.values.menuItems,
-            { name: key, id: title },
-          ];
+    if (initial) {
+      if (takenData.data.fieldsType) {
+        let updatedDropDown = { ...dropDownContent };
+        let firstCategory = true,
+          firstValue = true;
+        for (const title in takenData.data.fieldsType) {
+          for (const key in takenData.data.fieldsType[title]) {
+            if (
+              firstCategory &&
+              takenData.data.fieldsType[title][key] === "عبارت‌"
+            ) {
+              updatedDropDown.categories.selected = key;
+              firstCategory = false;
+            }
+            updatedDropDown.categories.menuItems = [
+              ...updatedDropDown.categories.menuItems,
+              { name: key, id: title },
+            ];
+            if (takenData.data.fieldsType[title][key] === "عدد") {
+              if (firstValue) {
+                updatedDropDown.values.selected = key;
+                firstValue = false;
+              }
+              updatedDropDown.values.menuItems = [
+                ...updatedDropDown.values.menuItems,
+                { name: key, id: title },
+              ];
+            }
+          }
         }
+        setDropDownContent(updatedDropDown);
+        setInitial(false);
       }
-      setDropDownContent(updatedDropDown);
     }
-  }, [takenData.data]);
-
-  useEffect(() => {
-    if (takenData.data.data && dropDownContent.categories.selected !== "") {
+    if (takenData.data.data) {
       let chartData = { ...takenData.chartData };
-      let fieldValues = [];
+      let fieldCategories = [],
+        fieldValues = [];
       Object.entries(takenData.data.data).map(([key, value]) => {
         Object.entries(value).map(([k, v]) => {
-          if (k === dropDownContent.categories.selected) {
+          if (k === dropDownContent.values.selected) {
             fieldValues = [...fieldValues, v];
+          }
+          if (k === dropDownContent.categories.selected) {
+            fieldCategories = [...fieldCategories, v];
           }
         });
       });
-      if (!takenData.chartData.data.isCategoryAdded) {
-        switch (takenData.chartData.data.valueCount) {
-          case 0:
-            for (let index = 0; index < fieldValues.length; index++) {
+      if (dropDownContent.categories.selected !== "") {
+        if (!chartData.data.isCategoryAdded) {
+          if (chartData.data.valueCount === 0) {
+            for (let index = 0; index < fieldCategories.length; index++) {
               chartData = {
                 ...chartData,
                 data: {
@@ -64,75 +84,56 @@ const XAxisStep = (props) => {
                     ...chartData.data.data,
                     {
                       ...chartData.data.data[index],
-                      category: fieldValues[index],
+                      category: fieldCategories[index],
                     },
                   ],
                 },
               };
             }
-            break;
-          case 1:
-            for (let index = 0; index < fieldValues.length; index++) {
+          } else
+            for (let index = 0; index < fieldCategories.length; index++) {
               chartData.data.data[index] = {
                 ...chartData.data.data[index],
-                category: fieldValues[index],
+                category: fieldCategories[index],
               };
             }
-          default:
-            break;
-        }
-        chartData.data.isCategoryAdded = true;
-      } else
-        for (let index = 0; index < fieldValues.length; index++) {
-          chartData.data.data[index].category = fieldValues[index];
-        }
-      setChartData(chartData);
-    }
-  }, [dropDownContent.categories.selected]);
-
-  useEffect(() => {
-    if (takenData.data.data && dropDownContent.values.selected !== "") {
-      let chartData = { ...takenData.chartData };
-      let fieldValues = [];
-      Object.entries(takenData.data.data).map(([key, value]) => {
-        Object.entries(value).map(([k, v]) => {
-          if (k === dropDownContent.values.selected) {
-            fieldValues = [...fieldValues, v];
+          chartData.data.isCategoryAdded = true;
+        } else
+          for (let index = 0; index < fieldCategories.length; index++) {
+            chartData.data.data[index].category = fieldCategories[index];
           }
-        });
-      });
-      switch (takenData.chartData.data.valueCount) {
-        case 0:
-          {
-            if (!takenData.chartData.data.isCategoryAdded) {
-              for (let index = 0; index < fieldValues.length; index++) {
-                chartData = {
-                  ...chartData,
-                  data: {
-                    ...chartData.data,
-                    data: [
-                      ...chartData.data.data,
-                      {
-                        ...chartData.data.data[index],
-                        field1: fieldValues[index],
-                      },
-                    ],
+      }
+      if (dropDownContent.values.selected !== "") {
+        if (!chartData.data.isCategoryAdded) {
+          for (let index = 0; index < fieldValues.length; index++) {
+            chartData = {
+              ...chartData,
+              data: {
+                ...chartData.data,
+                data: [
+                  ...chartData.data.data,
+                  {
+                    ...chartData.data.data[index],
+                    field1: fieldValues[index],
                   },
-                };
-              }
-            } else
-              for (let index = 0; index < fieldValues.length; index++) {
-                chartData.data.data[index].field1 = fieldValues[index];
-              }
-            chartData.data.valueCount = 1;
+                ],
+              },
+            };
           }
-          break;
-        default:
-          break;
+        } else {
+          for (let index = 0; index < fieldValues.length; index++) {
+            chartData.data.data[index].field1 = fieldValues[index];
+          }
+        }
+        chartData.data.valueCount = 1;
       }
       setChartData(chartData);
     }
-  }, [dropDownContent.values.selected]);
+  }, [
+    takenData.data,
+    dropDownContent.categories.selected,
+    dropDownContent.values.selected,
+  ]);
 
   const setCategoryIsOpen = (value) => {
     let updatedDropDown = { ...dropDownContent };

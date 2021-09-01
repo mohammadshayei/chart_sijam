@@ -86,6 +86,7 @@ const CreateCharts = (props) => {
       );
     } else setPath(`/view`);
   };
+
   return (
     <div
       className="create-charts-container"
