@@ -12,10 +12,10 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   }, []);
   const userId = localStorage.getItem("userId");
   const body =
-    location.pathname === "/view" ? (
-      <Redirect to={{ pathname: "/view" }} />
-    ) : (
+    location.pathname === "/create_chart" ? (
       <Redirect to={{ pathname: "/create_chart" }} />
+    ) : (
+      <Redirect to={{ pathname: "/view" }} />
     );
 
   const cmp = (
