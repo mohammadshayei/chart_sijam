@@ -3,7 +3,7 @@ import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import BankSection from "./BankSection/BankSection";
 import Steps from "./Steps/Steps";
-import { useLocation } from "react-router";
+import { useLocation, Redirect } from "react-router";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { VscSplitVertical } from "react-icons/vsc";
@@ -39,7 +39,8 @@ const CreateCharts = (props) => {
   // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
-  const [path, setPath] = useState(`/create_chart`);
+  const [saved, setSaved] = useState(false);
+  const [redirect, setRedirect] = useState(false);
   // const location = useLocation();
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -60,6 +61,12 @@ const CreateCharts = (props) => {
     dispatch(addChartActions.setChartTitle(chartTitle));
   };
 
+  useEffect(() => {
+    if (saved) {
+      setRedirect(<Redirect to="/view" />);
+    }
+  }, [saved]);
+
   const setTitleHandler = (e) => {
     if (e.type === "keydown") {
       if (e.key === "Enter") {
@@ -77,14 +84,20 @@ const CreateCharts = (props) => {
       options: takenData.chartData.data.options,
       bankId: takenData.id,
     };
-    const result = await axios.post(`${baseUrl}/create_chart`, payload);
-    if (!result.data.success) {
+    try {
+      const result = await axios.post(`${baseUrl}/create_chart`, payload);
+      if (!result.data.success) {
+        setError(
+          <ErrorDialog onClose={setError}>
+            {result.data.message.error}
+          </ErrorDialog>
+        );
+      } else setSaved(true);
+    } catch (error) {
       setError(
-        <ErrorDialog onClose={setError}>
-          {result.data.message.error}
-        </ErrorDialog>
+        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
       );
-    } else setPath(`/view`);
+    }
   };
 
   return (
@@ -98,33 +111,27 @@ const CreateCharts = (props) => {
         color: theme.on_background,
       }}
     >
+      {redirect}
       {error}
       <div
         className="section-header-wrapper"
         style={{ borderColor: theme.border_color }}
       >
         <div className="header-buttons">
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{
-              pathname: path,
+          <Button
+            ButtonStyle={{
+              backgroundColor: theme.primary,
+              flex: "0 0 auto",
+              fontWeight: 400,
+              fontSize: "1rem",
+              color: theme.on_primary,
+              marginBottom: "1rem",
+              marginRight: "0.5rem",
             }}
+            onClick={doneClickHandler}
           >
-            <Button
-              ButtonStyle={{
-                backgroundColor: theme.primary,
-                flex: "0 0 auto",
-                fontWeight: 400,
-                fontSize: "1rem",
-                color: theme.on_primary,
-                marginBottom: "1rem",
-                marginRight: "0.5rem",
-              }}
-              onClick={doneClickHandler}
-            >
-              {stringFa.done}
-            </Button>
-          </Link>
+            {stringFa.done}
+          </Button>
           <Link
             style={{ textDecoration: "none" }}
             to={{
