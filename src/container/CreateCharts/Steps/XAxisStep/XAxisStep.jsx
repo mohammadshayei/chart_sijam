@@ -186,6 +186,7 @@ const XAxisStep = (props) => {
                 maxHeight: "40vh",
                 minWidth: "23.5vw",
                 overflow: "auto",
+                animation: "none",
               }}
               items={dropDownContent.categories.menuItems}
               setSelected={setSelectedCategory}
@@ -232,6 +233,7 @@ const XAxisStep = (props) => {
                 maxHeight: "40vh",
                 minWidth: "23.5vw",
                 overflow: "auto",
+                animation: "none",
               }}
               items={dropDownContent.values.menuItems}
               setSelected={setSelectedValue}
