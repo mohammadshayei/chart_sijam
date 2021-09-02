@@ -7,6 +7,8 @@ import * as actions from "../../../../store/actions/detail";
 import axios from "axios";
 import { baseUrl } from "../../../../constants/Config";
 import DropDown from "../../../UI/DropDown/DropDown";
+import SkeletonMenuItem from "../../../Skeletons/skeletonMenuItem.jsx";
+
 const MenuItems = () => {
   const [unClicked, setUnClicked] = useState("");
   const [orders, setOrders] = useState([]);
@@ -46,6 +48,7 @@ const MenuItems = () => {
   const clearActiveBackup = () => {
     dispatch(actions.clearActiveBackup());
   };
+
   const onRightClickHandler = (e, id, type, parent) => {
     setPopupStyle({
       top: e.nativeEvent.clientY,
@@ -79,9 +82,11 @@ const MenuItems = () => {
       selectSoftware(software);
     }
   };
+
   const onPopupItemClickHandler = (value) => {
     console.log("hellwo " + value);
   };
+
   const onMenuItemClickHandler = async (id, type, parent) => {
     setUnClicked("");
     clearActiveBackup();
@@ -177,6 +182,7 @@ const MenuItems = () => {
       selectActiveBackup(activeBackup);
     }
   };
+
   useEffect(async () => {
     if (!isSoftwareClicked || !rightClick) return;
     if (detail.software) {
@@ -234,6 +240,7 @@ const MenuItems = () => {
     });
     setOrders(updatedOrders);
   }, [items]);
+
   return (
     <div className="MenuItemsContainer">
       {rightClick && (
@@ -261,6 +268,8 @@ const MenuItems = () => {
             />
           );
         })}
+      {orders.length === 0 &&
+        [1, 2, 3].map((n) => <SkeletonMenuItem key={n} />)}
     </div>
   );
 };
