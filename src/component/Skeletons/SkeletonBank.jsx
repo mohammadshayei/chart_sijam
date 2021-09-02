@@ -1,9 +1,8 @@
 import React from "react";
 import { useTheme } from "../../styles/ThemeProvider";
-import Shimmer from "./Shimmer";
 import SkeletonElement from "./SkeletonElement.jsx";
 
-const SkeletonTextItem = () => {
+const SkeletonBank = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -14,16 +13,15 @@ const SkeletonTextItem = () => {
         backgroundColor: themeState.isDark
           ? theme.surface_1dp
           : "rgb(240, 240, 240)",
-        height: "10px",
-        width: "100%",
+        width: "140px",
+        margin: "0 5px",
       }}
     >
-      <div className="skeleton-text-item">
+      <div className="skeleton-bank">
         <SkeletonElement type="text" />
-        <Shimmer />
       </div>
     </div>
   );
 };
 
-export default SkeletonTextItem;
+export default SkeletonBank;

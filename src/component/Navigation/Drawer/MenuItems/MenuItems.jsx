@@ -9,7 +9,7 @@ import { baseUrl } from "../../../../constants/Config";
 import DropDown from "../../../UI/DropDown/DropDown";
 import SkeletonMenuItem from "../../../Skeletons/skeletonMenuItem.jsx";
 import ErrorDialog from "../../../UI/Error/ErrorDialog.jsx";
-import SkeletonTextItem from "../../../Skeletons/SkeletonTextItem";
+import SkeletonElement from "../../../Skeletons/SkeletonElement.jsx";
 
 const MenuItems = () => {
   const [unClicked, setUnClicked] = useState("");
@@ -260,7 +260,9 @@ const MenuItems = () => {
           divStyle={{ ...popupStyle }}
           contentStyle={{ ...popupContentStyle }}
           items={
-            activeBackups ? activeBackups : [{ name: <SkeletonTextItem /> }]
+            activeBackups
+              ? activeBackups
+              : [{ name: <SkeletonElement type="text" /> }]
           }
           onClick={() => {}}
           setDropDown={setRightClick}

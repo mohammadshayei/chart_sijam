@@ -1,6 +1,5 @@
 import React from "react";
 import { useTheme } from "../../styles/ThemeProvider";
-import Shimmer from "./Shimmer";
 import SkeletonElement from "./SkeletonElement.jsx";
 
 const SkeletonCard = ({ childKey }) => {
@@ -22,7 +21,6 @@ const SkeletonCard = ({ childKey }) => {
         <SkeletonElement type="text" />
         <SkeletonElement type="title" />
         <SkeletonElement type="thumbnail" />
-        <Shimmer />
       </div>
     </div>
   );

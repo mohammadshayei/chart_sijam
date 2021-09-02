@@ -1,6 +1,5 @@
 import React from "react";
 import { useTheme } from "../../styles/ThemeProvider";
-import Shimmer from "./Shimmer";
 import SkeletonElement from "./SkeletonElement.jsx";
 
 const SkeletonMenuItem = () => {
@@ -23,7 +22,6 @@ const SkeletonMenuItem = () => {
         <div>
           <SkeletonElement type="avatar" />
         </div>
-        <Shimmer />
       </div>
     </div>
   );
