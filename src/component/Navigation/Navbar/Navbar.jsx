@@ -7,11 +7,12 @@ import { useTheme } from "../../../styles/ThemeProvider";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
 import BanksContainer from "./BanksContainer/BanksContainer";
 import { ripple } from "../../../assets/config/ripple";
-import { stringFa } from "../../../assets/strings/stringFaCollection.js";
 import ToolsContainer from "./ToolsContainer/ToolsContainer";
+import { useSelector } from "react-redux";
 
 const Navbar = (props) => {
   const [isFav, setIsFav] = useState(false);
+  const detail = useSelector((state) => state.detail);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const onStarClickHandler = (e) => {
@@ -60,7 +61,7 @@ const Navbar = (props) => {
         <ToolsContainer isModalOpen={props.isModalOpen} />
       </div>
       <div className={classes.BanksContainer}>
-        <BanksContainer />
+        {detail.software && <BanksContainer />}
       </div>
     </div>
   );
