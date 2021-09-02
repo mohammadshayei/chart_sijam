@@ -8,6 +8,8 @@ import axios from "axios";
 import { baseUrl } from "../../../../constants/Config";
 import DropDown from "../../../UI/DropDown/DropDown";
 import SkeletonMenuItem from "../../../Skeletons/skeletonMenuItem.jsx";
+import ErrorDialog from "../../../UI/Error/ErrorDialog.jsx";
+import SkeletonTextItem from "../../../Skeletons/SkeletonTextItem";
 
 const MenuItems = () => {
   const [unClicked, setUnClicked] = useState("");
@@ -20,6 +22,7 @@ const MenuItems = () => {
   const [isSoftwareClicked, setIsSoftwareClicked] = useState(false);
   const [popupStyle, setPopupStyle] = useState({});
   const [popupContentStyle, setPopupContentStyle] = useState({});
+  const [error, setError] = useState(null);
 
   const selectActiveBackup = (activeBackup) => {
     dispatch(actions.selectActiveBackup(activeBackup));
@@ -186,11 +189,19 @@ const MenuItems = () => {
   useEffect(async () => {
     if (!isSoftwareClicked || !rightClick) return;
     if (detail.software) {
-      const result = await axios.post(`${baseUrl}/get_active_backup`, {
-        id: detail.software.id,
-      });
-      if (result.data.success) {
-        setActiveBackups(result.data.message.result);
+      setActiveBackups(null);
+      let result;
+      try {
+        result = await axios.post(`${baseUrl}/get_active_backup`, {
+          id: detail.software.id,
+        });
+        if (result.data.success) {
+          setActiveBackups(result.data.message.result);
+        }
+      } catch (error) {
+        setError(
+          <ErrorDialog onClose={setError}>خطا در دریافت اطلاعات</ErrorDialog>
+        );
       }
     }
   }, [detail.software, isSoftwareClicked]);
@@ -243,11 +254,14 @@ const MenuItems = () => {
 
   return (
     <div className="MenuItemsContainer">
+      {error}
       {rightClick && (
         <DropDown
           divStyle={{ ...popupStyle }}
           contentStyle={{ ...popupContentStyle }}
-          items={activeBackups}
+          items={
+            activeBackups ? activeBackups : [{ name: <SkeletonTextItem /> }]
+          }
           onClick={() => {}}
           setDropDown={setRightClick}
         />
