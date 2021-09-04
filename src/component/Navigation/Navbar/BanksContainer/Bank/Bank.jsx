@@ -61,7 +61,9 @@ const Bank = React.memo(function Bank(props) {
       style={{ ...style }}
       onClick={onBankClickHandler}
     >
-      <span style={{ fontSize: 12 }}>{props.data.groups_title}</span>
+      <span style={{ color: theme.on_background, fontSize: 12 }}>
+        {props.data.groups_title}
+      </span>
     </div>
   );
 });
