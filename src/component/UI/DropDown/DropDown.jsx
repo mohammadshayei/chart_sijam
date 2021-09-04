@@ -49,7 +49,7 @@ const DropDown = (props) => {
         props.items.map((item, index) => (
           <div
             key={item.name}
-            onClick={() => handleClick(item.name)}
+            onClick={() => handleClick(item.id)}
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}
           >

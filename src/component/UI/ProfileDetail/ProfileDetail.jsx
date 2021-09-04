@@ -2,19 +2,34 @@ import React, { useState } from "react";
 import classes from "./ProfileDetail.module.scss";
 import IMAGE from "../../../assets/images/avatar.png";
 import { useTheme } from "../../../styles/ThemeProvider";
+import DropDown from "../../UI/DropDown/DropDown";
 import ArrowDropDownCircleRoundedIcon from "@material-ui/icons/ArrowDropDownCircleRounded";
 import { CgDarkMode } from "react-icons/cg";
+import { stringFa } from "./../../../assets/strings/stringFaCollection";
 
 const ProfileDetail = (props) => {
   const [isHover, setIsHover] = useState(false);
+  const [userMenu, setUserMenu] = useState(false);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const userMenuItems = [
+    {
+      name: themeState.isDark ? stringFa.light_theme : stringFa.dark_theme,
+      id: "change_theme",
+    },
+    { name: stringFa.log_out, id: "log_out" },
+  ];
   const onMouseEnter = () => {
     setIsHover(true);
   };
   const onMouseLeave = () => {
     setIsHover(false);
   };
+
+  const handleUserMenu = (id) => {
+    if (id === "change_theme") themeState.toggle();
+  };
+
   return (
     <div className={classes.ProfileDetailContainer}>
       <img src={IMAGE} alt="profile" />
@@ -26,6 +41,9 @@ const ProfileDetail = (props) => {
         style={{
           backgroundColor: isHover ? "rgba(0, 0, 0,0.2)" : "",
         }}
+        onClick={() => {
+          setUserMenu(!userMenu);
+        }}
       >
         <ArrowDropDownCircleRoundedIcon
           style={{
@@ -35,12 +53,16 @@ const ProfileDetail = (props) => {
           }}
         />
       </div>
-      <button
-        className={classes.darkModeToggle}
-        onClick={() => themeState.toggle()}
-      >
-        <CgDarkMode />
-      </button>
+      {userMenu && (
+        <DropDown
+          divStyle={{
+            top: "1.6rem",
+          }}
+          items={userMenuItems}
+          setDropDown={setUserMenu}
+          onClick={handleUserMenu}
+        />
+      )}
     </div>
   );
 };

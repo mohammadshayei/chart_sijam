@@ -42,4 +42,8 @@ export const stringFa = {
   column_type: "نوع ستون",
   values: "مقادیر",
   cancel: "انصراف",
+  log_out: "خروج از حساب",
+  change_theme: "تغییر تم",
+  dark_theme: "تم تیره",
+  light_theme: "تم روشن",
 };
