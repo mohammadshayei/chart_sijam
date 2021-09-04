@@ -46,4 +46,9 @@ export const stringFa = {
   change_theme: "تغییر تم",
   dark_theme: "تم تیره",
   light_theme: "تم روشن",
+  delete: "حذف",
+  error_delete_chart: "خطایی در حذف نمودار رخ داد. لطفا مجددا تلاش کنید",
+  delete_chart_success: "نمودار مورد نظر با موفقیت حذف شد",
+  deleting_chart: "در حال حذف نمودار...",
+  undo: "بازگردانی",
 };

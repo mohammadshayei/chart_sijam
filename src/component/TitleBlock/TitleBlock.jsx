@@ -11,7 +11,10 @@ import { Link } from "react-router-dom";
 import { stringFa } from "./../../assets/strings/stringFaCollection";
 import { chartTypes } from "../../constants/chart-types";
 import { useDispatch, useSelector } from "react-redux";
-import { FcSettings } from "react-icons/fc";
+import { FcSettings, FcFullTrash } from "react-icons/fc";
+import axios from "axios";
+import { baseUrl } from "./../../constants/Config";
+import ErrorDialog from "./../UI/Error/ErrorDialog";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -36,37 +39,19 @@ const TitleBlock = React.memo((props) => {
   const [dropDown, setDropDown] = useState(false);
   const [details, setDetails] = useState([]);
   const [isFav, setIsFav] = useState(false);
-  const [selected, setSelected] = useState(props.chartType);
+  const [error, setError] = useState(null);
   const chartsData = useSelector((state) => state.chart);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const starStyles = {
     color: theme.star_color,
   };
+  let deletedChart;
 
-  const extraItem = (
-    <div>
-      <div
-        className="dropdown-divider"
-        style={{ borderColor: theme.border_color }}
-      ></div>
-      <Link
-        className="dropdown-item"
-        to={{
-          pathname: `/create_chart`,
-          state: {
-            chartId: props.chartId,
-          },
-        }}
-        style={{ textDecoration: "none", color: theme.on_background }}
-      >
-        {stringFa.Edit}
-        <div className="dropdown-icon">
-          <FcSettings />
-        </div>
-      </Link>
-    </div>
-  );
+  const extraItems = [
+    { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
+    { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },
+  ];
 
   const ref = useRef();
 
@@ -81,18 +66,64 @@ const TitleBlock = React.memo((props) => {
   const setChartType = (chartType) => {
     dispatch(chartActions.setChartType(chartType));
   };
+  const deleteChart = (chartId) => {
+    dispatch(chartActions.deleteChart(chartId));
+  };
+  const setChart = (chartData) => {
+    dispatch(chartActions.setChartData(chartData));
+  };
 
-  useEffect(() => {
-    let value;
-    chartTypes.forEach((element) => {
-      if (selected === element.label) {
-        value = element.value;
-      } else {
-        value = selected;
-      }
-    });
-    setChartType({ key: props.chartId, value, item: "type" });
-  }, [selected]);
+  const undoDeleteChartHandler = () => {
+    setChart({ chartId: props.chartId, chartData: deletedChart[0] });
+  };
+
+  const settingMenuHandler = async (id) => {
+    if (id === "setting") {
+      console.log("go to setting");
+    } else if (id === "delete") {
+      deletedChart = Object.keys(chartsData.data)
+        .filter((key) => key === props.chartId)
+        .map((key) => {
+          return chartsData.data[key];
+        });
+
+      deleteChart({ chartId: props.chartId });
+
+      setError(
+        <ErrorDialog
+          success={true}
+          undoClick={undoDeleteChartHandler}
+          onClose={setError}
+        >
+          {stringFa.delete_chart_success}
+        </ErrorDialog>
+      );
+      setTimeout(async () => {
+        // console.log(error);
+        // if (error) {
+        let result;
+        try {
+          result = await axios.post(`${baseUrl}/delete_chart`, {
+            id: props.chartId,
+          });
+          setError(null);
+        } catch (error) {
+          setError(
+            <ErrorDialog onClose={setError}>
+              {stringFa.error_delete_chart}
+            </ErrorDialog>
+          );
+        }
+        // }
+      }, 3000);
+    } else {
+      chartTypes.forEach((type) => {
+        if (id === type.id) {
+          setChartType({ key: props.chartId, value: id, item: "type" });
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     let tempDetails;
@@ -120,22 +151,21 @@ const TitleBlock = React.memo((props) => {
 
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
+      {error}
       <div className="card-source-name">
         <div className="setting-container">
           <div ref={ref}>
             {dropDown && (
               <DropDown
                 items={chartTypes}
-                extraItem={extraItem}
-                setSelected={setSelected}
+                extraItems={extraItems}
+                onClick={settingMenuHandler}
                 setDropDown={setDropDown}
               />
             )}
             {chartsData.editMode && (
               <SettingsOutlinedIcon
-                className={`card-setting ${
-                  !dropDown && `card-setting-animation`
-                }`}
+                className="card-setting"
                 onClick={() => {
                   setDropDown(!dropDown);
                 }}

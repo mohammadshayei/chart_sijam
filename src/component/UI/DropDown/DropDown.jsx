@@ -29,11 +29,13 @@ const DropDown = (props) => {
   useOnClickOutside(divRef, () => {
     props.setDropDown(false);
   });
-  const handleClick = (value) => {
-    props.onClick && props.onClick(value);
+
+  const handleClick = (value, id) => {
+    props.onClick && props.onClick(id);
     props.setSelected && props.setSelected(value);
     props.setDropDown(false); //state of dropdown activate
   };
+
   // ReactDom.createPortal
   return (
     <div
@@ -49,7 +51,7 @@ const DropDown = (props) => {
         props.items.map((item, index) => (
           <div
             key={item.name}
-            onClick={() => handleClick(item.id)}
+            onClick={() => handleClick(item.name, item.id)}
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}
           >
@@ -57,7 +59,24 @@ const DropDown = (props) => {
             {item.icon && <div className="dropdown-icon">{item.icon}</div>}
           </div>
         ))}
-      {props.extraItem && props.extraItem}
+      {props.extraItems && (
+        <div
+          className="dropdown-divider"
+          style={{ borderColor: theme.border_color }}
+        ></div>
+      )}
+      {props.extraItems &&
+        props.extraItems.map((item, index) => (
+          <div
+            key={item.name}
+            onClick={() => handleClick(item.name, item.id)}
+            className="dropdown-item"
+            style={{ ...props.contentStyle, color: theme.on_background }}
+          >
+            {item.name}
+            {item.icon && <div className="dropdown-icon">{item.icon}</div>}
+          </div>
+        ))}
     </div>
     // ,
     // document.getElementById("portal")

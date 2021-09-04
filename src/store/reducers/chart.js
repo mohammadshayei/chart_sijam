@@ -138,6 +138,22 @@ const setEditMode = (state, action) => {
   };
 };
 
+const deleteChart = (state, action) => {
+  const { chartId } = action.payload;
+  let newData = {};
+  Object.entries(state.data).map(([k, v]) => {
+    if (k !== chartId)
+      newData = {
+        ...newData,
+        [k]: v,
+      };
+  });
+  return {
+    ...state,
+    data: newData,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CHART_TYPE:
@@ -150,6 +166,8 @@ const reducer = (state = initialState, action) => {
       return setChartsData(state, action);
     case actionTypes.SET_EDIT_MODE:
       return setEditMode(state, action);
+    case actionTypes.DELETE_CHART:
+      return deleteChart(state, action);
     default:
       return state;
   }

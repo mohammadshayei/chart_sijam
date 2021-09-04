@@ -42,3 +42,12 @@ export const setEditMode =
       payload: { isEdit },
     });
   };
+
+export const deleteChart =
+  ({ chartId }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.DELETE_CHART,
+      payload: { chartId },
+    });
+  };
