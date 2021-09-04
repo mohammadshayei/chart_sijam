@@ -10,7 +10,7 @@ import DropDown from "./../UI/DropDown/DropDown";
 import { Link } from "react-router-dom";
 import { stringFa } from "./../../assets/strings/stringFaCollection";
 import { chartTypes } from "../../constants/chart-types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FcSettings } from "react-icons/fc";
 
 function useOnClickOutside(ref, handler) {
@@ -37,6 +37,7 @@ const TitleBlock = React.memo((props) => {
   const [details, setDetails] = useState([]);
   const [isFav, setIsFav] = useState(false);
   const [selected, setSelected] = useState(props.chartType);
+  const chartsData = useSelector((state) => state.chart);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const starStyles = {
@@ -130,15 +131,17 @@ const TitleBlock = React.memo((props) => {
                 setDropDown={setDropDown}
               />
             )}
-            <SettingsOutlinedIcon
-              className={`card-setting ${
-                !dropDown && `card-setting-animation`
-              }`}
-              onClick={() => {
-                setDropDown(!dropDown);
-              }}
-              style={{ color: theme.on_surface }}
-            />
+            {chartsData.editMode && (
+              <SettingsOutlinedIcon
+                className={`card-setting ${
+                  !dropDown && `card-setting-animation`
+                }`}
+                onClick={() => {
+                  setDropDown(!dropDown);
+                }}
+                style={{ color: theme.on_surface }}
+              />
+            )}
           </div>
         </div>
         <p className="details">{details ? details.join(" / ") : ""}</p>

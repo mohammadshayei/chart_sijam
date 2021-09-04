@@ -2,57 +2,85 @@ import React, { useState, useEffect } from "react";
 import "./LayoutContent.scss";
 import Drawer from "../../component/Navigation/Drawer/Drawer";
 import Body from "../../container/Body/Body";
-import { data } from "../../assets/DummyData/data";
 import { useTheme } from "../../styles/ThemeProvider";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { stringFa } from "../../assets/strings/stringFaCollection";
-import * as bankActions from "../../store/actions/banksData";
 import { Link } from "react-router-dom";
 import SelectBankModal from "../../container/CreateCharts/SelectBankModal/SelectBankModal.jsx";
+import * as chartActions from "../../store/actions/chart.js";
+import axios from "axios";
+import { baseUrl } from "./../../constants/Config";
+import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState(null);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-  const dispatch = useDispatch();
-  const banksData = useSelector((state) => state.banks);
-  const detail = useSelector((state) => state.detail);
-  const setChartsData = (banks) => {
-    dispatch(bankActions.setBankData(banks));
   };
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
-  useEffect(() => {
-    if (detail.software) {
-      let softwareData = data.find(
-        (dt) => dt.softwareId === detail.software.id
-      );
-      if (softwareData) {
-        setChartsData(softwareData.banks);
-      } else {
-        setChartsData();
+  const dispatch = useDispatch();
+
+  const detail = useSelector((state) => state.detail);
+  const chartsData = useSelector((state) => state.chart);
+
+  const setChartsData = (chartsData) => {
+    dispatch(chartActions.setChartsData(chartsData));
+  };
+
+  useEffect(async () => {
+    let result;
+    try {
+      if (detail.activeBackup) {
+        result = await axios.post(`${baseUrl}/get_charts`, {
+          type: "4",
+          id: detail.activeBackup.id,
+        });
+      } else if (detail.software) {
+        result = await axios.post(`${baseUrl}/get_charts`, {
+          type: "3",
+          id: detail.software.id,
+        });
+      } else if (detail.company) {
+        result = await axios.post(`${baseUrl}/get_charts`, {
+          type: "2",
+          id: detail.company.id,
+        });
+      } else if (detail.holding) {
+        result = await axios.post(`${baseUrl}/get_charts`, {
+          type: "1",
+          id: detail.holding.id,
+        });
       }
-    } else if (detail.company) {
-      let softwaresTemp = [];
-      data.forEach((item) => {
-        if (item.softwareId.substring(0, 6) === detail.company.id)
-          softwaresTemp = [...softwaresTemp, ...item.banks];
+      setError(null);
+    } catch (error) {
+      setError(
+        <ErrorDialog onClose={setError}>خطا در دریافت نمودارها</ErrorDialog>
+      );
+    }
+    if (result) {
+      let receivedData = result.data.message.result;
+      let newChartsData = {};
+      receivedData.forEach((item) => {
+        newChartsData = {
+          ...newChartsData,
+          [item._id]: {
+            title: item.title,
+            type: item.type,
+            data: item.data,
+            options: item.options,
+          },
+        };
       });
-      setChartsData(softwaresTemp);
-    } else if (detail.holding) {
-      let softwaresTemp = [];
-      data.forEach((item) => {
-        if (item.softwareId.substring(0, 3) === detail.holding.id)
-          softwaresTemp = [...softwaresTemp, ...item.banks];
-      });
-      setChartsData(softwaresTemp);
+      setChartsData(newChartsData);
     }
   }, [detail.software, detail.holding, detail.company]);
+
   return (
     <div
       className="LayoutContentContainer"
@@ -61,6 +89,7 @@ const LayoutContent = (props) => {
         color: theme.on_background,
       }}
     >
+      {error}
       {isModalOpen && (
         <div className="ModalOverlay" style={{ opacity: isModalOpen ? 1 : 0 }}>
           <SelectBankModal isModalOpen={setIsModalOpen} />
@@ -87,32 +116,29 @@ const LayoutContent = (props) => {
         <div
           className="BodyContainer"
           style={{
-            alignItems: detail.software
-              ? banksData.banks
-                ? "flex-start"
-                : "center"
-              : "center",
-            justifyContent: detail.software
-              ? banksData.banks
-                ? ""
-                : "center"
-              : "center",
+            // alignItems: detail.software
+            //   ? banksData.banks
+            //     ? "flex-start"
+            //     : "center"
+            //   : "center",
+            // justifyContent: detail.software
+            //   ? banksData.banks
+            //     ? ""
+            //     : "center"
+            //   : "center",
+            backgroundImage:
+              detail.holding && chartsData.editMode
+                ? `radial-gradient(${theme.border_color} 2px, transparent 2px)`
+                : theme.background_color,
+            backgroundSize:
+              detail.holding && chartsData.editMode ? "50px 50px" : "0",
           }}
         >
-          <Body
-            isMenuOpen={isMenuOpen}
-            data={
-              detail.banks && detail.banks.length > 0
-                ? banksData.banks.filter((item) =>
-                    detail.banks.find(
-                      (detailBank) => detailBank.id === item.bankId
-                    )
-                  )
-                : banksData.banks
-            }
-          />
-          {/* {detail.software || detail.company || detail.holding ? (
-            banksData.activeBackup ? (null
+          {detail.software || detail.company || detail.holding ? (
+            error ? (
+              <Body />
+            ) : chartsData.data && chartsData.data !== {} ? (
+              <Body />
             ) : (
               <div className="BodyContent">
                 <Link
@@ -132,7 +158,7 @@ const LayoutContent = (props) => {
             <div className="BodyContent">
               {stringFa.clicked_software_to_see_charts}
             </div>
-          )} */}
+          )}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 const lightTheme = {
-  background_color: "#F7F7F7",
+  background_color: "#EEEEEE",
   surface: "#FFFFFF",
   primary: "#554ac5",
   primary_variant: "#4637ae",

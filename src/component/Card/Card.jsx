@@ -17,7 +17,6 @@ const Card = React.memo((props) => {
 
   return (
     <div
-      key={props.key}
       className="card card-container"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -29,7 +28,6 @@ const Card = React.memo((props) => {
           : themeState.isDark
           ? theme.surface_1dp
           : theme.surface,
-        borderColor: theme.border_color,
       }}
     >
       <TitleBlock

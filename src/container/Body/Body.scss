@@ -1,12 +1,5 @@
 @import "../../assets/config/global";
 
-$xs: 480px;
-$sm: 576px;
-$md: 768px;
-$lg: 992px;
-$xl: 1200px;
-$xxl: 1600px;
-
 .body-container {
   .react-grid-layout {
     position: relative;
@@ -17,7 +10,8 @@ $xxl: 1600px;
     transition-property: left, top;
   }
   .react-grid-item.react-grid-placeholder {
-    background: rgb(132, 124, 196);
+    background: transparent;
+    border: 4px dashed rgb(132, 124, 196);
     opacity: 0.2;
     border-radius: 10px;
     transition-duration: 100ms;
@@ -42,34 +36,15 @@ $xxl: 1600px;
     display: none;
   }
   .card-container {
-    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
     position: relative;
-    cursor: pointer;
-    transform: translate3d(0px, 0px, 0px);
+    // transform: translate3d(0px, 0px, 0px);
     margin-bottom: 16px;
-    border-width: 1px;
-    border-style: solid;
-    border-image: initial;
-    border-color: #e6e9ef;
     border-radius: 10px;
-    transition: box-shadow 0.2s ease 0s, transform 0.2s ease 0s;
     overflow: visible;
+    color:#bbbbbb;
     animation: 0.3s linear 0s 1 normal none running automationCard;
-
-    @media screen and (max-width: $xl) and (min-width: $md) {
-      // width: 300px;
-    }
-    @media screen and (max-width: $md) {
-      // width: 200px;
-    }
   }
-  .card-container:hover {
-    // transform: scale(1.03);
-    // box-shadow: rgba(14, 30, 37, 0.05) 0px 2px 4px 0px,
-    //   rgba(14, 30, 37, 0.12) 0px 2px 14px 0px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 24px 0px;
-    transform: translate3d(0px, -4px, 0px);
-    background-color: white;
-    border-color: transparent;
-  }
+  // .card-container:hover {
+  //   transform: translate3d(0px, -4px, 0px);
+  // }
 }

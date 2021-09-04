@@ -33,3 +33,12 @@ export const setChartsData = (data) => (dispatch) => {
     data: data,
   });
 };
+
+export const setEditMode =
+  ({ isEdit }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_EDIT_MODE,
+      payload: { isEdit },
+    });
+  };

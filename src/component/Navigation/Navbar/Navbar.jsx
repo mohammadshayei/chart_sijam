@@ -9,6 +9,7 @@ import BanksContainer from "./BanksContainer/BanksContainer";
 import { ripple } from "../../../assets/config/ripple";
 import ToolsContainer from "./ToolsContainer/ToolsContainer";
 import { useSelector } from "react-redux";
+import GroupButton from "../../UI/GroupButton/GroupButton.jsx";
 
 const Navbar = (props) => {
   const [isFav, setIsFav] = useState(false);
@@ -33,6 +34,7 @@ const Navbar = (props) => {
     >
       <div className={classes.ProfileSectionContainer}>
         <ProfileDetail />
+        <GroupButton buttonNames={["نمایش", "ویرایش"]} />
         <div className={classes.IconContainer}>
           <div className={classes.StarContainer} onClick={onStarClickHandler}>
             {isFav ? (
@@ -46,7 +48,7 @@ const Navbar = (props) => {
               style={{
                 width: "30px",
                 height: "30px",
-                color: theme.clicked_darken_color,
+                color: theme.primary,
                 cursor: "pointer",
               }}
               onClick={props.onToggleMenu}

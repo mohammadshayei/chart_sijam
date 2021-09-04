@@ -4,6 +4,7 @@ const initialState = {
   data: {},
   layouts: { lg: [], md: [], sm: [], xs: [], xxs: [] },
   breakpoint: "lg",
+  editMode: false,
 };
 
 // chartId: {
@@ -129,6 +130,14 @@ const setChartsData = (state, action) => {
   };
 };
 
+const setEditMode = (state, action) => {
+  const { isEdit } = action.payload;
+  return {
+    ...state,
+    editMode: isEdit,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CHART_TYPE:
@@ -139,6 +148,8 @@ const reducer = (state = initialState, action) => {
       return setChartOptions(state, action);
     case actionTypes.SET_CHARTS_DATA:
       return setChartsData(state, action);
+    case actionTypes.SET_EDIT_MODE:
+      return setEditMode(state, action);
     default:
       return state;
   }
