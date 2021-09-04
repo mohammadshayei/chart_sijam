@@ -9,15 +9,8 @@ import SkeletonCard from "./../../component/Skeletons/SkeletonCard";
 
 const Body = (props) => {
   const chartsData = useSelector((state) => state.chart);
-  const [isHover, setIsHover] = useState(false);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const onMouseEnter = () => {
-    setIsHover(true);
-  };
-  const onMouseLeave = () => {
-    setIsHover(false);
-  };
   const skeletonLayouts = {};
 
   return (
@@ -61,17 +54,8 @@ const Body = (props) => {
               <div
                 className="card-container"
                 key={k}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 style={{
                   backgroundColor: theme.background_color,
-                  border: chartsData.editMode
-                    ? isHover
-                      ? `1px solid ${theme.primary}`
-                      : `1px solid ${theme.border_color}`
-                    : `1px solid ${theme.border_color}`,
-                  cursor: "mouse",
-                  cursor: chartsData.editMode && "move",
                 }}
               >
                 <Card chartId={k} item={v} />
