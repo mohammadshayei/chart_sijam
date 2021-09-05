@@ -3,14 +3,19 @@ import classes from "./ProfileDetail.module.scss";
 import IMAGE from "../../../assets/images/avatar.png";
 import { useTheme } from "../../../styles/ThemeProvider";
 import DropDown from "../../UI/DropDown/DropDown";
+import { useDispatch } from "react-redux";
 import ArrowDropDownCircleRoundedIcon from "@material-ui/icons/ArrowDropDownCircleRounded";
-import { CgDarkMode } from "react-icons/cg";
 import { stringFa } from "./../../../assets/strings/stringFaCollection";
+import * as actions from "../../../store/actions/index";
 
 const ProfileDetail = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const themeState = useTheme();
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch(actions.logout());
+  };
   const theme = themeState.computedTheme;
   const userMenuItems = [
     {
@@ -28,6 +33,7 @@ const ProfileDetail = (props) => {
 
   const handleUserMenu = (id) => {
     if (id === "change_theme") themeState.toggle();
+    else if (id === "log_out") logout();
   };
 
   return (

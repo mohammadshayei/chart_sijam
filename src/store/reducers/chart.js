@@ -51,6 +51,12 @@ const setChartOptions = (state, action) => {
     },
   };
 };
+const clearCharts = (state, action) => {
+  return {
+    ...state,
+    data: {},
+  };
+};
 
 const setChartsData = (state, action) => {
   let newData = state.data;
@@ -168,6 +174,8 @@ const reducer = (state = initialState, action) => {
       return setEditMode(state, action);
     case actionTypes.DELETE_CHART:
       return deleteChart(state, action);
+    case actionTypes.CLEAR_CHARTS:
+      return clearCharts(state, action);
     default:
       return state;
   }

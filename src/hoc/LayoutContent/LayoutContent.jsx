@@ -32,8 +32,12 @@ const LayoutContent = (props) => {
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
+  const clearCharts= () => {
+    dispatch(chartActions.clearCharts());
+  };
 
   useEffect(async () => {
+    clearCharts()
     let result;
     try {
       if (detail.activeBackup) {

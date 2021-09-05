@@ -28,3 +28,4 @@ export const SET_ADD_CHART_ID = "SET_ADD_CHART_ID";
 export const SET_TITLE_ADD_CHART = "SET_TITLE_ADD_CHART";
 export const SET_EDIT_MODE = "SET_EDIT_MODE";
 export const DELETE_CHART = "DELETE_CHART";
+export const CLEAR_CHARTS = "CLEAR_CHARTS";
