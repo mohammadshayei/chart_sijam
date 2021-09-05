@@ -13,7 +13,7 @@ import * as chartActions from "../../store/actions/chart.js";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
-
+const PERIOD_INTRAVEL = 5000;
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,12 +32,20 @@ const LayoutContent = (props) => {
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
-  const clearCharts= () => {
+  const updateChartData = (chartData) => {
+    dispatch(chartActions.updateChartData(chartData));
+  };
+  const clearCharts = () => {
     dispatch(chartActions.clearCharts());
   };
 
+  function getDifferenceInMinutes(date1, date2) {
+    const diffInMs = Math.abs(date2 - date1);
+    return Math.floor(diffInMs / (1000 * 60));
+  }
+
   useEffect(async () => {
-    clearCharts()
+    clearCharts();
     let result;
     try {
       if (detail.activeBackup) {
@@ -78,12 +86,43 @@ const LayoutContent = (props) => {
             type: item.type,
             data: item.data,
             options: item.options,
+            config: item.config,
+            lastBankUpdate: item.updatedAt,
           },
         };
       });
       setChartsData(newChartsData);
     }
   }, [detail.software, detail.holding, detail.company]);
+
+  const timer = async () => {
+    let result;
+    for (const chartId in chartsData.data) {
+      let lastUpdate = new Date(chartsData.data[chartId].config.last_update);
+      let period = chartsData.data[chartId].config.period;
+      let now = new Date(
+        new Date(new Date()).setHours(new Date().getHours() + 1)
+      );
+      if (getDifferenceInMinutes(now, lastUpdate) > period) {
+        console.log(chartId);
+        result = await axios.post(`${baseUrl}/get_chart`, {
+          id: chartId,
+        });
+        if (result) {
+          updateChartData({ chartId, chartData: result.data.message.result });
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const updateChart = setInterval(() => {
+      timer();
+    }, PERIOD_INTRAVEL);
+    return () => {
+      clearInterval(updateChart);
+    };
+  }, [chartsData]);
 
   return (
     <div
