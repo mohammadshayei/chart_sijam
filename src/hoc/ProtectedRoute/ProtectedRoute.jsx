@@ -1,23 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Redirect, useLocation } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions/index";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const checkAuth = () => dispatch(actions.authCheckState());
+  const userId = useSelector((state) => state.auth.userId);
+  const [body, setBody] = useState(null);
   useEffect(() => {
     checkAuth();
   }, []);
-  const userId = localStorage.getItem("userId");
-  const body =
-    location.pathname === "/create_chart" ? (
-      <Redirect to={{ pathname: "/create_chart" }} />
-    ) : (
-      <Redirect to={{ pathname: "/view" }} />
+  useEffect(() => {
+    setBody(
+      location.pathname === "/create_chart" ? (
+        <Redirect to={{ pathname: "/create_chart" }} />
+      ) : (
+        <Redirect to={{ pathname: "/view" }} />
+      )
     );
-
+  }, [userId]);
   const cmp = (
     <Route
       {...rest}
