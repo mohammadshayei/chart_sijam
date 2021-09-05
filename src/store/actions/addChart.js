@@ -49,3 +49,12 @@ export const setChartTitle =
       payload: { title },
     });
   };
+
+export const setChartTimer =
+  ({ period }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_TIMER_ADD_CHART,
+      payload: { period },
+    });
+  };

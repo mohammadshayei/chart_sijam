@@ -5,6 +5,7 @@ import Gallery from "./Gallery/Gallery.jsx";
 import "./Steps.scss";
 import BenchmarkStep from "./BenchmarkStep/BenchmarkStep.jsx";
 import { useTheme } from "../../../styles/ThemeProvider";
+import TimerStep from "./TimerStep/TimerStep";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
@@ -15,6 +16,7 @@ const Steps = (props) => {
     switch (props.type) {
       case "Column":
       case "Line":
+      case "Pie":
         setOrderSteps({
           type: {
             title: "نوع نمودار",
@@ -24,6 +26,11 @@ const Steps = (props) => {
           xAxis: {
             title: "انتخاب فیلد",
             content: <XAxisStep />,
+            isOpen: false,
+          },
+          timer: {
+            title: "دوره های به روزرسانی",
+            content: <TimerStep />,
             isOpen: false,
           },
           // yAxis: {
@@ -41,30 +48,6 @@ const Steps = (props) => {
           //   content: "test2",
           //   isOpen: false,
           // },
-        });
-        break;
-      case "Pie":
-        setOrderSteps({
-          type: {
-            title: "نوع نمودار",
-            content: <Gallery type={props.type} />,
-            isOpen: true,
-          },
-          labels: {
-            title: "برچسب ها",
-            content: "test1",
-            isOpen: false,
-          },
-          values: {
-            title: "مقادیر",
-            content: "test2",
-            isOpen: false,
-          },
-          moreSetting: {
-            title: "تنظیمات بیشتر",
-            content: "test2",
-            isOpen: false,
-          },
         });
         break;
       default:

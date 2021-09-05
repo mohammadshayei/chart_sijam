@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./XAxisStep.scss";
 import { BiChevronDown } from "react-icons/bi";
-import DropDownMenu from "./DropDownMenu/DropDownMenu.jsx";
 import DropDown from "../../../../component/UI/DropDown/DropDown";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import { stringFa } from "../../../../assets/strings/stringFaCollection.js";
