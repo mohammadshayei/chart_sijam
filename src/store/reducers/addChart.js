@@ -6,6 +6,9 @@ const initialState = {
   chartData: {
     title: "",
     type: "Line",
+    config: {
+      period: "",
+    },
     data: {
       isCategoryAdded: false,
       valueCount: 0,
@@ -129,6 +132,19 @@ const setChartTitle = (state, action) => {
   };
 };
 
+const setChartTimer = (state, action) => {
+  const { period } = action.payload;
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      config: {
+        period,
+      },
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -143,6 +159,8 @@ const reducer = (state = initialState, action) => {
       return setAddChartId(state, action);
     case actionTypes.SET_TITLE_ADD_CHART:
       return setChartTitle(state, action);
+    case actionTypes.SET_TIMER_ADD_CHART:
+      return setChartTimer(state, action);
     default:
       return state;
   }

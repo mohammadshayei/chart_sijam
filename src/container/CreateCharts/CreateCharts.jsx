@@ -77,26 +77,35 @@ const CreateCharts = (props) => {
   };
 
   const doneClickHandler = async () => {
-    const payload = {
-      title: takenData.chartData.title,
-      type: takenData.chartData.type,
-      data: takenData.chartData.data.data,
-      options: takenData.chartData.data.options,
-      bankId: takenData.id,
-    };
-    try {
-      const result = await axios.post(`${baseUrl}/create_chart`, payload);
-      if (!result.data.success) {
-        setError(
-          <ErrorDialog onClose={setError}>
-            {result.data.message.error}
-          </ErrorDialog>
-        );
-      } else setSaved(true);
-    } catch (error) {
+    if (!takenData.chartData.title)
       setError(
-        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+        <ErrorDialog onClose={setError}>عنوان تعیین نشده است</ErrorDialog>
       );
+    if (takenData.chartData.title) {
+      const payload = {
+        title: takenData.chartData.title,
+        type: takenData.chartData.type,
+        data: takenData.chartData.data.data,
+        options: takenData.chartData.data.options,
+        bankId: takenData.id,
+        config: {
+          period: parseInt(takenData.chartData.config.period),
+        },
+      };
+      try {
+        const result = await axios.post(`${baseUrl}/create_chart`, payload);
+        if (!result.data.success) {
+          setError(
+            <ErrorDialog onClose={setError}>
+              {result.data.message.error}
+            </ErrorDialog>
+          );
+        } else setSaved(true);
+      } catch (error) {
+        setError(
+          <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+        );
+      }
     }
   };
 
@@ -191,7 +200,7 @@ const CreateCharts = (props) => {
                         className="editable-input"
                         dir="rtl"
                         placeholder={stringFa.title}
-                        Value={takenData.chartData.title}
+                        value={takenData.chartData.title}
                         onChange={setTitleHandler}
                         onKeyDown={setTitleHandler}
                       />

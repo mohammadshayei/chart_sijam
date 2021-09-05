@@ -51,7 +51,7 @@ const ChartBlock = React.memo((props) => {
     }
   }, [data]);
 
-  return chart;
+  return data && data.data.length > 0 ? chart : "Loading...";
 });
 
 export default ChartBlock;
