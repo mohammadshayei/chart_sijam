@@ -51,4 +51,6 @@ export const stringFa = {
   delete_chart_success: "نمودار مورد نظر با موفقیت حذف شد",
   deleting_chart: "در حال حذف نمودار...",
   undo: "بازگردانی",
+  auto_update: "به روزرسانی خودکار",
+  refresh_charts: "به روزرسانی نمودارها",
 };

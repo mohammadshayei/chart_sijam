@@ -29,7 +29,7 @@ const Steps = (props) => {
             isOpen: false,
           },
           timer: {
-            title: "دوره های به روزرسانی",
+            title: "به روزرسانی خودکار",
             content: <TimerStep />,
             isOpen: false,
           },
