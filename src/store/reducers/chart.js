@@ -161,7 +161,7 @@ const deleteChart = (state, action) => {
 };
 
 const updateChartData = (state, action) => {
-  const { chartId, chartData } = action.payload;
+  const { chartId, chartData, lastUpdate } = action.payload;
   return {
     ...state,
     data: {
@@ -169,6 +169,10 @@ const updateChartData = (state, action) => {
       [chartId]: {
         ...state.data[chartId],
         data: chartData,
+        config: {
+          ...state.data[chartId].config,
+          lastUpdate,
+        },
       },
     },
   };

@@ -13,7 +13,8 @@ import * as chartActions from "../../store/actions/chart.js";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
-const PERIOD_INTRAVEL = 5000;
+const PERIOD_INTRAVEL = 60000;
+
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -104,12 +105,15 @@ const LayoutContent = (props) => {
         new Date(new Date()).setHours(new Date().getHours() + 1)
       );
       if (getDifferenceInMinutes(now, lastUpdate) > period) {
-        console.log(chartId);
         result = await axios.post(`${baseUrl}/get_chart`, {
           id: chartId,
         });
         if (result) {
-          updateChartData({ chartId, chartData: result.data.message.result });
+          updateChartData({
+            chartId,
+            chartData: result.data.message.result,
+            lastUpdate: new Date(),
+          });
         }
       }
     }
