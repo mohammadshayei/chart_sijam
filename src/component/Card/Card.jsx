@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Card.scss";
 import TitleBlock from "../TitleBlock/TitleBlock";
 import ChartBlock from "../ChartBlock";
@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const Card = React.memo((props) => {
   const chartsData = useSelector((state) => state.chart);
   const [isHover, setIsHover] = useState(false);
+  const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const onMouseEnter = () => {
@@ -16,6 +17,29 @@ const Card = React.memo((props) => {
   const onMouseLeave = () => {
     setIsHover(false);
   };
+
+  useEffect(() => {
+    let weekday = new Date(props.item.lastBankUpdate).toLocaleString("fa-IR", {
+      weekday: "long",
+    });
+    let day = new Date(props.item.lastBankUpdate).toLocaleString("fa-IR", {
+      day: "numeric",
+    });
+    let month = new Date(props.item.lastBankUpdate).toLocaleString("fa-IR", {
+      month: "long",
+    });
+    let year_Time = new Date(props.item.lastBankUpdate).toLocaleString(
+      "fa-IR",
+      {
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      }
+    );
+    const lastBankUpdate = `${weekday} - ${day} ${month} ${year_Time}`;
+    setLastBankUpdate(lastBankUpdate);
+  }, [props.item.lastBankUpdate]);
 
   return (
     <div
@@ -47,6 +71,7 @@ const Card = React.memo((props) => {
       <div className="card-body">
         <ChartBlock chartId={props.chartId} chartProps={props.item} />
       </div>
+      <div className="card-footer">{lastBankUpdate}</div>
     </div>
   );
 });
