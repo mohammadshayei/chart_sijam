@@ -105,7 +105,7 @@ const LayoutContent = (props) => {
         new Date(new Date()).setHours(new Date().getHours() + 1)
       );
       if (getDifferenceInMinutes(now, lastUpdate) > period) {
-        result = await axios.post(`${baseUrl}/get_chart`, {
+        result = await axios.post(`${baseUrl}api/get_chart`, {
           id: chartId,
         });
         if (result) {
