@@ -88,7 +88,7 @@ const LayoutContent = (props) => {
             data: item.data,
             options: item.options,
             config: item.config,
-            lastBankUpdate: item.updatedAt,
+            lastBankUpdate: item.data_updated_time,
           },
         };
       });

@@ -90,6 +90,7 @@ const CreateCharts = (props) => {
         bankId: takenData.id,
         config: {
           period: parseInt(takenData.chartData.config.period),
+          auto_update: takenData.chartData.config.autoUpdate,
         },
       };
       try {
