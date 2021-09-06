@@ -2,7 +2,7 @@ import React from "react";
 import "./Skeleton.scss";
 import { useTheme } from "../../styles/ThemeProvider";
 
-const SkeletonElement = ({ type }) => {
+const SkeletonElement = ({ type, style }) => {
   const classes = `skeleton ${type}`;
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -11,6 +11,7 @@ const SkeletonElement = ({ type }) => {
     <div
       className={classes}
       style={{
+        ...style,
         backgroundColor: themeState.isDark
           ? theme.surface_4dp
           : "rgb(230, 230, 230)",

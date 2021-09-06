@@ -114,7 +114,7 @@ const MenuItems = () => {
         }
         selectHolding(updatedHoldings[updatedHoldingIndex]);
         updatedHoldings[updatedHoldingIndex].isActive = true;
-        const result = await axios.post(`${baseUrl}/get_companies`, {
+        const result = await axios.post(`${baseUrl}api/get_companies`, {
           code: updatedHoldings[updatedHoldingIndex].code,
         });
         updatedHoldings[updatedHoldingIndex].companies =
@@ -150,7 +150,7 @@ const MenuItems = () => {
         }
         selectCompany(updatedCompanies[updatedComapnyIndex]);
         updatedCompanies[updatedComapnyIndex].isActive = true;
-        const result = await axios.post(`${baseUrl}/get_softwares`, {
+        const result = await axios.post(`${baseUrl}api/get_softwares`, {
           code: updatedCompanies[updatedComapnyIndex].code,
         });
         updatedCompanies[updatedComapnyIndex].softwares =
@@ -178,7 +178,7 @@ const MenuItems = () => {
         updatedComapnyIndex
       ].softwares.find((software) => software.id === id);
       selectSoftware(software);
-      const softwareReq = await axios.post(`${baseUrl}/get_active_backup`, {
+      const softwareReq = await axios.post(`${baseUrl}api/get_active_backup`, {
         id: software.id,
       });
       const activeBackup = softwareReq.data.message.result[0];
@@ -192,7 +192,7 @@ const MenuItems = () => {
       setActiveBackups(null);
       let result;
       try {
-        result = await axios.post(`${baseUrl}/get_active_backup`, {
+        result = await axios.post(`${baseUrl}api/get_active_backup`, {
           id: detail.software.id,
         });
         if (result.data.success) {
@@ -207,7 +207,7 @@ const MenuItems = () => {
   }, [detail.software, isSoftwareClicked]);
 
   useEffect(async () => {
-    const result = await axios.get(`${baseUrl}/get_holdings`);
+    const result = await axios.get(`${baseUrl}api/get_holdings`);
     const holdings = result.data.message.result.map((item) => {
       return {
         ...item,

@@ -41,22 +41,22 @@ const LayoutContent = (props) => {
     let result;
     try {
       if (detail.activeBackup) {
-        result = await axios.post(`${baseUrl}/get_charts`, {
+        result = await axios.post(`${baseUrl}api/get_charts`, {
           type: "4",
           id: detail.activeBackup.id,
         });
       } else if (detail.software) {
-        result = await axios.post(`${baseUrl}/get_charts`, {
+        result = await axios.post(`${baseUrl}api/get_charts`, {
           type: "3",
           id: detail.software.id,
         });
       } else if (detail.company) {
-        result = await axios.post(`${baseUrl}/get_charts`, {
+        result = await axios.post(`${baseUrl}api/get_charts`, {
           type: "2",
           id: detail.company.id,
         });
       } else if (detail.holding) {
-        result = await axios.post(`${baseUrl}/get_charts`, {
+        result = await axios.post(`${baseUrl}api/get_charts`, {
           type: "1",
           id: detail.holding.id,
         });

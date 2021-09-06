@@ -3,6 +3,7 @@ import * as actionTypes from "../actions/actionTypes";
 const initialState = {
   data: {},
   layouts: { lg: [], md: [], sm: [], xs: [], xxs: [] },
+  loading: false,
   breakpoint: "lg",
   editMode: false,
 };

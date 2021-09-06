@@ -112,7 +112,7 @@ const SelectBankModal = (props) => {
     }
     if (bankAddress.holdings.active) {
       try {
-        const result = await axios.get(baseUrl + "/get_holdings");
+        const result = await axios.get(baseUrl + "api/get_holdings");
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa.holdings} وجود ندارد`;
         setData({
@@ -162,7 +162,7 @@ const SelectBankModal = (props) => {
       else payload = { code: addressPartId };
       setLoading(true);
       try {
-        const result = await axios.post(`${baseUrl}/get_${nextKey}`, payload);
+        const result = await axios.post(`${baseUrl}api/get_${nextKey}`, payload);
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa[nextKey]} وجود ندارد`;
         setData({
@@ -206,7 +206,7 @@ const SelectBankModal = (props) => {
       else payload = { code: id };
       setLoading(true);
       try {
-        const result = await axios.post(`${baseUrl}/get_${key}`, payload);
+        const result = await axios.post(`${baseUrl}api/get_${key}`, payload);
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa[key]} وجود ندارد`;
         setData({
@@ -227,7 +227,7 @@ const SelectBankModal = (props) => {
   };
 
   const submitHandler = async (id) => {
-    const result = await axios.post(`${baseUrl}/get_data`, { id });
+    const result = await axios.post(`${baseUrl}api/get_data`, { id });
     selectChartDatabase(result.data.result);
     setId(id);
     props.isModalOpen(false);

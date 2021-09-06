@@ -41,6 +41,8 @@ const TitleBlock = React.memo((props) => {
   const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState(null);
   const chartsData = useSelector((state) => state.chart);
+  const detailsSelection = useSelector((state) => state.detail);
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const starStyles = {
@@ -103,7 +105,7 @@ const TitleBlock = React.memo((props) => {
         // if (error) {
         let result;
         try {
-          result = await axios.post(`${baseUrl}/delete_chart`, {
+          result = await axios.post(`${baseUrl}api/delete_chart`, {
             id: props.chartId,
           });
           setError(null);
@@ -126,28 +128,21 @@ const TitleBlock = React.memo((props) => {
   };
 
   useEffect(() => {
-    let tempDetails;
-    if (data) {
-      data.forEach((item) => {
-        if (item.id === props.chartId.substring(0, 3)) {
-          tempDetails = [item.name];
-          if (item.companies) {
-            item.companies.forEach((cp) => {
-              if (cp.id === props.chartId.substring(0, 6)) {
-                tempDetails = [...tempDetails, cp.name];
-                cp.softwares.forEach((sf) => {
-                  if (sf.id === props.chartId.substring(0, 9)) {
-                    tempDetails = [...tempDetails, sf.name];
-                    setDetails(tempDetails);
-                  }
-                });
-              }
-            });
-          }
-        }
-      });
+    let tempDetails = [];
+    if (detailsSelection.holding) {
+      tempDetails.push(detailsSelection.holding.name);
     }
-  }, [props.chartId]);
+    if (detailsSelection.company) {
+      tempDetails.push(detailsSelection.company.name);
+    }
+    if (detailsSelection.software) {
+      tempDetails.push(detailsSelection.software.name);
+    }
+    if (detailsSelection.activeBackup) {
+      tempDetails.push(detailsSelection.activeBackup.name);
+    }
+    setDetails(tempDetails);
+  }, [detailsSelection]);
 
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>

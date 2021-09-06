@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./ProfileDetail.module.scss";
 import IMAGE from "../../../assets/images/avatar.png";
 import { useTheme } from "../../../styles/ThemeProvider";
 import DropDown from "../../UI/DropDown/DropDown";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ArrowDropDownCircleRoundedIcon from "@material-ui/icons/ArrowDropDownCircleRounded";
 import { stringFa } from "./../../../assets/strings/stringFaCollection";
 import * as actions from "../../../store/actions/index";
+import { baseUrl } from "../../../constants/Config";
+import SkeletonElement from "../../Skeletons/SkeletonElement";
+import SkeletonProfile from "../../Skeletons/SkeletonProfile";
 
 const ProfileDetail = (props) => {
   const [isHover, setIsHover] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const themeState = useTheme();
+  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
   const dispatch = useDispatch();
+  const userDetail = useSelector((state) => state.auth.user);
   const logout = () => {
     dispatch(actions.logout());
   };
@@ -31,15 +36,27 @@ const ProfileDetail = (props) => {
     setIsHover(false);
   };
 
+  useEffect(() => {
+    if (userDetail && userDetail.image) {
+      setImageSrc(userDetail.image);
+    }
+  }, [userDetail]);
   const handleUserMenu = (id) => {
     if (id === "change_theme") themeState.toggle();
     else if (id === "log_out") logout();
   };
-
   return (
     <div className={classes.ProfileDetailContainer}>
-      <img src={IMAGE} alt="profile" />
-      <span style={{ color: theme.text_color }}>کاربر مهمان</span>
+      {userDetail ? (
+        <React.Fragment>
+          <img src={imageSrc} alt="profile" />
+          <span style={{ color: theme.text_color }}>
+            {userDetail.name_family}
+          </span>
+        </React.Fragment>
+      ) : (
+        <SkeletonProfile />
+      )}
       <div
         className={classes.DropDownContainer}
         onMouseEnter={onMouseEnter}

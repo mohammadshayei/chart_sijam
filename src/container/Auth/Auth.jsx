@@ -197,7 +197,7 @@ const Auth = (props) => {
     auth(
       orderAuth.login.orderForm.username.value,
       orderAuth.login.orderForm.password.value,
-      `${baseUrl}/login`
+      `${baseUrl}api/login`
     );
   }, []);
 
@@ -212,7 +212,7 @@ const Auth = (props) => {
       //   password: orderAuth.login.orderForm.password.value,
       // };
       // setIsLoading(true);
-      // const result = await axios.post(`${baseUrl}/login`, payload);
+      // const result = await axios.post(`${baseUrl}api/login`, payload);
       // setIsLoading(false);
     } else {
     }
