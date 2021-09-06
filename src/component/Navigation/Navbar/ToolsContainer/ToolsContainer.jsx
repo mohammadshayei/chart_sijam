@@ -35,15 +35,17 @@ const ToolsContainer = (props) => {
     );
     let result;
     for (const chartId in chartsData.data) {
-      result = await axios.post(`${baseUrl}/get_chart`, {
-        id: chartId,
-      });
-      if (result) {
-        updateChartData({
-          chartId,
-          chartData: result.data.message.result,
-          lastUpdate: new Date(),
+      if (chartsData.data[chartId].config.autoUpdate) {
+        result = await axios.post(`${baseUrl}/get_chart`, {
+          id: chartId,
         });
+        if (result) {
+          updateChartData({
+            chartId,
+            chartData: result.data.message.result,
+            lastUpdate: new Date(),
+          });
+        }
       }
     }
     setLoading(null);
