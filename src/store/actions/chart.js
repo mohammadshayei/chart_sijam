@@ -51,8 +51,18 @@ export const deleteChart =
       payload: { chartId },
     });
   };
+
 export const clearCharts = () => (dispatch) => {
   dispatch({
     type: actionTypes.CLEAR_CHARTS,
   });
 };
+
+export const updateChartData =
+  ({ chartId, chartData }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.UPDATE_CHART_DATA,
+      payload: { chartId, chartData },
+    });
+  };

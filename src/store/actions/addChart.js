@@ -51,10 +51,10 @@ export const setChartTitle =
   };
 
 export const setChartTimer =
-  ({ period }) =>
+  ({ period, autoUpdate }) =>
   (dispatch) => {
     dispatch({
       type: actionTypes.SET_TIMER_ADD_CHART,
-      payload: { period },
+      payload: { period, autoUpdate },
     });
   };

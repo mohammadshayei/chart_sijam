@@ -32,3 +32,4 @@ export const DELETE_CHART = "DELETE_CHART";
 export const CLEAR_CHARTS = "CLEAR_CHARTS";
 export const SET_USER_DATA = "SET_USER_DATA";
 
+export const UPDATE_CHART_DATA = "UPDATE_CHART_DATA";

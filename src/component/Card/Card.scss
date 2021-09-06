@@ -10,4 +10,13 @@
     height: 100%;
     overflow: hidden;
   }
+  .card-footer {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    padding-top: 0.5rem;
+    text-align: right;
+    background-color: transparent;
+    font-size: 0.7rem;
+  }
 }

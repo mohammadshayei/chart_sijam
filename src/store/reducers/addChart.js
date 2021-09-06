@@ -8,6 +8,7 @@ const initialState = {
     type: "Line",
     config: {
       period: "",
+      autoUpdate: false,
     },
     data: {
       isCategoryAdded: false,
@@ -133,13 +134,15 @@ const setChartTitle = (state, action) => {
 };
 
 const setChartTimer = (state, action) => {
-  const { period } = action.payload;
+  const { period, autoUpdate } = action.payload;
   return {
     ...state,
     chartData: {
       ...state.chartData,
       config: {
+        ...state.chartData.config,
         period,
+        autoUpdate,
       },
     },
   };

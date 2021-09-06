@@ -161,6 +161,24 @@ const deleteChart = (state, action) => {
   };
 };
 
+const updateChartData = (state, action) => {
+  const { chartId, chartData, lastUpdate } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [chartId]: {
+        ...state.data[chartId],
+        data: chartData,
+        config: {
+          ...state.data[chartId].config,
+          lastUpdate,
+        },
+      },
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CHART_TYPE:
@@ -177,6 +195,8 @@ const reducer = (state = initialState, action) => {
       return deleteChart(state, action);
     case actionTypes.CLEAR_CHARTS:
       return clearCharts(state, action);
+    case actionTypes.UPDATE_CHART_DATA:
+      return updateChartData(state, action);
     default:
       return state;
   }
