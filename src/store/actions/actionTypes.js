@@ -30,4 +30,6 @@ export const SET_TIMER_ADD_CHART = "SET_TIMER_ADD_CHART";
 export const SET_EDIT_MODE = "SET_EDIT_MODE";
 export const DELETE_CHART = "DELETE_CHART";
 export const CLEAR_CHARTS = "CLEAR_CHARTS";
+export const SET_USER_DATA = "SET_USER_DATA";
+
 export const UPDATE_CHART_DATA = "UPDATE_CHART_DATA";

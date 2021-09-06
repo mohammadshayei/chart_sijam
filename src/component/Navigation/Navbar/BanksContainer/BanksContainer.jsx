@@ -12,7 +12,7 @@ const BanksContainer = () => {
   const detail = useSelector((state) => state.detail);
   useEffect(async () => {
     if (detail.activeBackup) {
-      const result = await axios.post(`${baseUrl}/get_banks`, {
+      const result = await axios.post(`${baseUrl}api/get_banks`, {
         id: detail.activeBackup.id,
       });
       if (result.data.success) {

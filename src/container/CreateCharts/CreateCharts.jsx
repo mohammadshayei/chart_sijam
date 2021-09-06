@@ -94,7 +94,7 @@ const CreateCharts = (props) => {
         },
       };
       try {
-        const result = await axios.post(`${baseUrl}/create_chart`, payload);
+        const result = await axios.post(`${baseUrl}api/create_chart`, payload);
         if (!result.data.success) {
           setError(
             <ErrorDialog onClose={setError}>

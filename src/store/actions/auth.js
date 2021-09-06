@@ -1,8 +1,22 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
+import { baseUrl } from "../../constants/Config";
 export const authStart = () => {
   return {
     type: actionTypes.AUTH_START,
+  };
+};
+
+export const getUserData = (userId) => {
+  return (dispatch) => {
+    return axios
+      .post(`${baseUrl}api/get_user_data`, { id: userId })
+      .then((result) => {
+        dispatch({
+          type: actionTypes.SET_USER_DATA,
+          user: result.data.message.user,
+        });
+      });
   };
 };
 
@@ -61,9 +75,8 @@ export const authCheckState = () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
       dispatch(logout());
-    }else{
+    } else {
       dispatch(authSuccess(userId));
-
     }
   };
 };
