@@ -58,6 +58,12 @@ const clearCharts = (state, action) => {
     data: {},
   };
 };
+const setChartsLoading = (state, action) => {
+  return {
+    ...state,
+    loading: action.loading,
+  };
+};
 
 const setChartsData = (state, action) => {
   let newData = state.data;
@@ -197,6 +203,8 @@ const reducer = (state = initialState, action) => {
       return clearCharts(state, action);
     case actionTypes.UPDATE_CHART_DATA:
       return updateChartData(state, action);
+    case actionTypes.SET_CHARTS_LOADING:
+      return setChartsLoading(state, action);
     default:
       return state;
   }

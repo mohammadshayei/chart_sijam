@@ -2,27 +2,36 @@ import React, { useState, useEffect } from "react";
 import MenuItem from "../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { data } from "../../../../assets/dummy_data/TestData";
 import * as actions from "../../../../store/actions/detail";
+import * as chartActions from "../../../../store/actions/chart";
+
 import axios from "axios";
 import { baseUrl } from "../../../../constants/Config";
 import DropDown from "../../../UI/DropDown/DropDown";
 import SkeletonMenuItem from "../../../Skeletons/skeletonMenuItem.jsx";
 import ErrorDialog from "../../../UI/Error/ErrorDialog.jsx";
 import SkeletonElement from "../../../Skeletons/SkeletonElement.jsx";
+import SkeletTextItem from "../../../Skeletons/SkeletTextItem";
 
 const MenuItems = () => {
   const [unClicked, setUnClicked] = useState("");
+  const [clickedId, setClickedId] = useState(null);
   const [orders, setOrders] = useState([]);
   const [rightClick, setRightClick] = useState(false);
   const [items, setItems] = useState({ holdings: [] });
   const dispatch = useDispatch();
-  const detail = useSelector((state) => state.detail);
   const [activeBackups, setActiveBackups] = useState(null);
   const [isSoftwareClicked, setIsSoftwareClicked] = useState(false);
   const [popupStyle, setPopupStyle] = useState({});
   const [popupContentStyle, setPopupContentStyle] = useState({});
   const [error, setError] = useState(null);
+
+  const detail = useSelector((state) => state.detail);
+  const chartsLoading = useSelector((state) => state.chart.loading);
+
+  const setLoading = (loading) => {
+    dispatch(chartActions.setChartsLoading(loading));
+  };
 
   const selectActiveBackup = (activeBackup) => {
     dispatch(actions.selectActiveBackup(activeBackup));
@@ -86,10 +95,6 @@ const MenuItems = () => {
     }
   };
 
-  const onPopupItemClickHandler = (value) => {
-    console.log("hellwo " + value);
-  };
-
   const onMenuItemClickHandler = async (id, type, parent) => {
     setUnClicked("");
     clearActiveBackup();
@@ -103,20 +108,24 @@ const MenuItems = () => {
       );
       if (updatedHoldingIndex < 0) return;
       if (detail.holding && detail.holding.id === id) {
+        setClickedId(null);
         setUnClicked(id);
         clearHolding();
         clearSoftware();
         clearCompany();
         updatedHoldings[updatedHoldingIndex].isActive = false;
       } else {
+        setClickedId({ id, type });
         for (let index = 0; index < updatedHoldings.length; index++) {
           updatedHoldings[index].isActive = false;
         }
         selectHolding(updatedHoldings[updatedHoldingIndex]);
         updatedHoldings[updatedHoldingIndex].isActive = true;
+        setLoading(true);
         const result = await axios.post(`${baseUrl}api/get_companies`, {
           code: updatedHoldings[updatedHoldingIndex].code,
         });
+        setLoading(false);
         updatedHoldings[updatedHoldingIndex].companies =
           result.data.message.result;
       }
@@ -141,18 +150,22 @@ const MenuItems = () => {
 
       if (detail.company && detail.company.id === id) {
         setUnClicked(id);
+        setClickedId(null);
         clearSoftware();
         clearCompany();
         updatedCompanies[updatedComapnyIndex].isActive = false;
       } else {
+        setClickedId({ id, type });
         for (let index = 0; index < updatedCompanies.length; index++) {
           updatedCompanies[index].isActive = false;
         }
         selectCompany(updatedCompanies[updatedComapnyIndex]);
         updatedCompanies[updatedComapnyIndex].isActive = true;
+        setLoading(true);
         const result = await axios.post(`${baseUrl}api/get_softwares`, {
           code: updatedCompanies[updatedComapnyIndex].code,
         });
+        setLoading(false);
         updatedCompanies[updatedComapnyIndex].softwares =
           result.data.message.result;
       }
@@ -160,6 +173,7 @@ const MenuItems = () => {
       updatedItems.holdings = updatedHoldings;
       setItems(updatedItems);
     } else if (type === "software") {
+      setClickedId({ id, type });
       setIsSoftwareClicked(true);
       let updatedItems = { ...items };
       let updatedHoldings = [...updatedItems.holdings];
@@ -178,9 +192,11 @@ const MenuItems = () => {
         updatedComapnyIndex
       ].softwares.find((software) => software.id === id);
       selectSoftware(software);
+      setLoading(true);
       const softwareReq = await axios.post(`${baseUrl}api/get_active_backup`, {
         id: software.id,
       });
+      setLoading(false);
       const activeBackup = softwareReq.data.message.result[0];
       selectActiveBackup(activeBackup);
     }
@@ -192,9 +208,11 @@ const MenuItems = () => {
       setActiveBackups(null);
       let result;
       try {
+        setLoading(true);
         result = await axios.post(`${baseUrl}api/get_active_backup`, {
           id: detail.software.id,
         });
+        setLoading(false);
         if (result.data.success) {
           setActiveBackups(result.data.message.result);
         }
@@ -207,7 +225,9 @@ const MenuItems = () => {
   }, [detail.software, isSoftwareClicked]);
 
   useEffect(async () => {
+    setLoading(true);
     const result = await axios.get(`${baseUrl}api/get_holdings`);
+    setLoading(false);
     const holdings = result.data.message.result.map((item) => {
       return {
         ...item,
@@ -251,7 +271,40 @@ const MenuItems = () => {
     });
     setOrders(updatedOrders);
   }, [items]);
-
+  useEffect(() => {
+    if (clickedId && clickedId.type === "software") return;
+    if (chartsLoading) {
+      let newOrders = [...orders];
+      orders.forEach((item, index) => {
+        if (item.content.id === clickedId.id) {
+          let addedItems = [
+            {
+              content: {},
+              parent: [],
+              type: "*****loading*****",
+            },
+            {
+              content: {},
+              parent: [],
+              type: "*****loading*****",
+            },
+            {
+              content: {},
+              parent: [],
+              type: "*****loading*****",
+            },
+          ];
+          newOrders.splice(index + 1, 0, ...addedItems);
+        }
+      });
+      setOrders(newOrders);
+    } else {
+      let newOrders = orders.filter(
+        (item) => item.type !== "*****loading*****"
+      );
+      setOrders(newOrders);
+    }
+  }, [chartsLoading]);
   return (
     <div className="MenuItemsContainer">
       {error}
@@ -270,19 +323,24 @@ const MenuItems = () => {
       )}
       {orders &&
         orders.map((item, index) => {
-          return (
-            <MenuItem
-              onClick={onMenuItemClickHandler}
-              key={item.content.id}
-              id={item.content.id}
-              name={item.content.name}
-              type={item.type}
-              parent={item.parent}
-              index={index}
-              unClicked={unClicked}
-              onRightClickHandler={onRightClickHandler}
-            />
-          );
+          if (item.type === "*****loading*****") {
+            if (clickedId.type === "company")
+              return <SkeletTextItem key={item.content.id} />;
+            else return <SkeletonMenuItem key={item.content.id} />;
+          } else
+            return (
+              <MenuItem
+                onClick={onMenuItemClickHandler}
+                key={item.content.id}
+                id={item.content.id}
+                name={item.content.name}
+                type={item.type}
+                parent={item.parent}
+                index={index}
+                unClicked={unClicked}
+                onRightClickHandler={onRightClickHandler}
+              />
+            );
         })}
       {orders.length === 0 &&
         [1, 2, 3].map((n) => <SkeletonMenuItem key={n} />)}

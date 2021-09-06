@@ -66,3 +66,9 @@ export const updateChartData =
       payload: { chartId, chartData },
     });
   };
+export const setChartsLoading = (loading) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_CHARTS_LOADING,
+    loading,
+  });
+};
