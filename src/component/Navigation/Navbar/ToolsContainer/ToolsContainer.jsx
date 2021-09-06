@@ -26,7 +26,7 @@ const ToolsContainer = (props) => {
 
   const refreshClickHandler = async () => {
     setLoading(
-      <div class="lds-ellipsis">
+      <div className="lds-ellipsis">
         <div></div>
         <div></div>
         <div></div>
@@ -36,7 +36,7 @@ const ToolsContainer = (props) => {
     let result;
     for (const chartId in chartsData.data) {
       if (chartsData.data[chartId].config.autoUpdate) {
-        result = await axios.post(`${baseUrl}/get_chart`, {
+        result = await axios.post(`${baseUrl}api/get_chart`, {
           id: chartId,
         });
         if (result) {

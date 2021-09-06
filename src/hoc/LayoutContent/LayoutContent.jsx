@@ -104,11 +104,8 @@ const LayoutContent = (props) => {
       let now = new Date(
         new Date(new Date()).setHours(new Date().getHours() + 1)
       );
-      if (
-        chartsData.data[chartId].config.autoUpdate &&
-        getDifferenceInMinutes(now, lastUpdate) > period
-      ) {
-        result = await axios.post(`${baseUrl}/get_chart`, {
+      if (getDifferenceInMinutes(now, lastUpdate) > period) {
+        result = await axios.post(`${baseUrl}api/get_chart`, {
           id: chartId,
         });
         if (result) {
