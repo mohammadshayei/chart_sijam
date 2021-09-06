@@ -35,7 +35,7 @@ const ToolsContainer = (props) => {
     );
     let result;
     for (const chartId in chartsData.data) {
-      if (chartsData.data[chartId].config.autoUpdate) {
+      if (!chartsData.data[chartId].config.autoUpdate) {
         result = await axios.post(`${baseUrl}api/get_chart`, {
           id: chartId,
         });
