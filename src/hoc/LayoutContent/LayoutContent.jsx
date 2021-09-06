@@ -88,7 +88,7 @@ const LayoutContent = (props) => {
             data: item.data,
             options: item.options,
             config: item.config,
-            lastBankUpdate: item.updatedAt,
+            lastBankUpdate: item.data_updated_time,
           },
         };
       });
@@ -104,7 +104,10 @@ const LayoutContent = (props) => {
       let now = new Date(
         new Date(new Date()).setHours(new Date().getHours() + 1)
       );
-      if (getDifferenceInMinutes(now, lastUpdate) > period) {
+      if (
+        chartsData.data[chartId].config.autoUpdate &&
+        getDifferenceInMinutes(now, lastUpdate) > period
+      ) {
         result = await axios.post(`${baseUrl}/get_chart`, {
           id: chartId,
         });
