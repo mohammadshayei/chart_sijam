@@ -119,13 +119,25 @@ const setChartTimer = (state, action) => {
 const removeDataField = (state, action) => {
   const { index } = action.payload;
   const data = state.chartData.data.data;
+  const fieldNames = state.chartData.data.options.fieldNames;
   let updatedChartData = [];
+  let updatedFieldNames = {};
   for (let i = 0; i < data.length; i++) {
     for (const field in data[i]) {
       if (`${field}` !== `field${index}`) {
-        if (updatedChartData[i])
+        if (!updatedChartData[i])
           updatedChartData = [...updatedChartData, { [field]: data[i][field] }];
+        else
+          updatedChartData[i] = {
+            ...updatedChartData[i],
+            [field]: data[i][field],
+          };
       }
+    }
+  }
+  for (const field in fieldNames) {
+    if (`${field}` !== `field${index}`) {
+      updatedFieldNames = { ...updatedFieldNames, [field]: fieldNames[field] };
     }
   }
   return {
@@ -135,6 +147,10 @@ const removeDataField = (state, action) => {
       data: {
         ...state.chartData.data,
         data: updatedChartData,
+        options: {
+          ...state.chartData.data.options,
+          fieldNames: updatedFieldNames,
+        },
       },
     },
   };

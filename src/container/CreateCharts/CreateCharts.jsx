@@ -81,6 +81,21 @@ const CreateCharts = (props) => {
   };
 
   const cancelClickHandler = () => {
+    let clearedChartData = takenData.chartData;
+    clearedChartData = {
+      ...clearedChartData,
+      title: "",
+      type: "Line",
+      config: {
+        period: "",
+        autoUpdate: false,
+      },
+      data: {
+        data: [],
+        options: { ...clearedChartData.data.options, fieldNames: {} },
+      },
+    };
+    setChartData(clearedChartData);
     setRedirect(<Redirect to="/view" />);
   };
 
