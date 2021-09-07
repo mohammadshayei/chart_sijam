@@ -16,24 +16,6 @@ export const setChartData =
     });
   };
 
-export const setCategoryAdded =
-  ({ isAdded }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_CATEGORY_ADDED,
-      payload: { isAdded },
-    });
-  };
-
-export const setValueCount =
-  ({ valueCount }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_VALUE_COUNT,
-      payload: { valueCount },
-    });
-  };
-
 export const setAddChartId = (id) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_ADD_CHART_ID,
@@ -56,5 +38,14 @@ export const setChartTimer =
     dispatch({
       type: actionTypes.SET_TIMER_ADD_CHART,
       payload: { period, autoUpdate },
+    });
+  };
+
+export const removeDataField =
+  ({ index }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.REMOVE_DATA_FIELD,
+      payload: { index },
     });
   };

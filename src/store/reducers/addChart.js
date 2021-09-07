@@ -11,8 +11,6 @@ const initialState = {
       autoUpdate: false,
     },
     data: {
-      isCategoryAdded: false,
-      valueCount: 0,
       data: [],
       options: {
         fieldNames: {
@@ -86,34 +84,6 @@ const setChartData = (state, action) => {
   };
 };
 
-const setCategoryAdded = (state, action) => {
-  const { isAdded } = action.payload;
-  return {
-    ...state,
-    chartData: {
-      ...state.chartData,
-      data: {
-        ...state.chartData.data,
-        isCategoryAdded: isAdded,
-      },
-    },
-  };
-};
-
-const setValueCount = (state, action) => {
-  const { valueCount } = action.payload;
-  return {
-    ...state,
-    chartData: {
-      ...state.chartData,
-      data: {
-        ...state.chartData.data,
-        valueCount: valueCount,
-      },
-    },
-  };
-};
-
 const setAddChartId = (state, action) => {
   const { id } = action;
   return {
@@ -148,22 +118,49 @@ const setChartTimer = (state, action) => {
   };
 };
 
+const removeDataField = (state, action) => {
+  const { index } = action.payload;
+  const data = state.chartData.data.data;
+  let updatedChartData = [];
+  for (let i = 0; i < data.length; i++) {
+    for (const field in data[i]) {
+      if (`${field}` !== `field${index}`) {
+        if (updatedChartData[i])
+          updatedChartData[i] = {
+            ...updatedChartData[i],
+            [field]: data[i][field],
+          };
+        else
+          updatedChartData = [...updatedChartData, { [field]: data[i][field] }];
+      }
+    }
+  }
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      data: {
+        ...state.chartData.data,
+        data: updatedChartData,
+      },
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
       return selectChartData(state, action);
     case actionTypes.SET_DATA_ADD_CHART:
       return setChartData(state, action);
-    case actionTypes.SET_CATEGORY_ADDED:
-      return setCategoryAdded(state, action);
-    case actionTypes.SET_VALUE_COUNT:
-      return setValueCount(state, action);
     case actionTypes.SET_ADD_CHART_ID:
       return setAddChartId(state, action);
     case actionTypes.SET_TITLE_ADD_CHART:
       return setChartTitle(state, action);
     case actionTypes.SET_TIMER_ADD_CHART:
       return setChartTimer(state, action);
+    case actionTypes.REMOVE_DATA_FIELD:
+      return removeDataField(state, action);
     default:
       return state;
   }

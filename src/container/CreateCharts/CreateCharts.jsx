@@ -76,6 +76,10 @@ const CreateCharts = (props) => {
     } else setChartTitle({ title: e.target.value });
   };
 
+  const cancelClickHandler = () => {
+    setRedirect(<Redirect to="/view" />);
+  };
+
   const doneClickHandler = async () => {
     if (!takenData.chartData.title)
       setError(
@@ -142,25 +146,19 @@ const CreateCharts = (props) => {
           >
             {stringFa.done}
           </Button>
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{
-              pathname: `\view`,
+          <Button
+            ButtonStyle={{
+              backgroundColor: "gray",
+              flex: "0 0 auto",
+              fontWeight: 400,
+              fontSize: "0.9rem",
+              color: theme.on_primary,
+              marginBottom: "1rem",
             }}
+            onClick={cancelClickHandler}
           >
-            <Button
-              ButtonStyle={{
-                backgroundColor: "gray",
-                flex: "0 0 auto",
-                fontWeight: 400,
-                fontSize: "0.9rem",
-                color: theme.on_primary,
-                marginBottom: "1rem",
-              }}
-            >
-              {stringFa.cancel}
-            </Button>
-          </Link>
+            {stringFa.cancel}
+          </Button>
         </div>
         <div className="settings-title-and-description">
           <div className="settings-title">{stringFa.chart_setting}</div>

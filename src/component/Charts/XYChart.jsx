@@ -90,11 +90,10 @@ const XYChart = React.memo((props) => {
           }
           return series;
         }
-        createSeries("field1", options.fieldNames.field1); // name will get from user
-        // createSeries("field2", options.fieldNames.field2);
-        // createSeries("field3", options.fieldNames.field3);
-        // createSeries("field4", options.fieldNames.field4);
-        // createSeries("field5", options.fieldNames.field5); // & ...
+        for (const field in data[0]) {
+          if (field !== "category")
+            createSeries(field, options.fieldNames.field1); // name will get from user
+        }
       } else if (type === "Bubble") {
         // Create Axis
         let valueAxisX = xyChart.xAxes.push(new am4charts.ValueAxis());
