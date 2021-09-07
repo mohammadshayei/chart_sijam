@@ -3,6 +3,7 @@ import "./Gallery.scss";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import { useSelector, useDispatch } from "react-redux";
 import * as addChartActions from "../../../../store/actions/addChart";
+import { baseUrl } from "./../../../../constants/Config";
 
 const Gallery = (props) => {
   const takenData = useSelector((state) => state.addChart);
@@ -13,23 +14,23 @@ const Gallery = (props) => {
       title: "خطی",
       items: {
         line: {
-          img: "https://cdn7.monday.com/images/v2-line-chart-color.svg",
+          img: "images/v2-line-chart-color.svg",
           selected: false,
         },
         smooth: {
-          img: "https://cdn7.monday.com/images/v2-smooth-line-chart-color.svg",
+          img: "images/v2-smooth-line-chart-color.svg",
           selected: true,
         },
         area: {
-          img: "https://cdn7.monday.com/images/v2-area-chart-color.svg",
+          img: "images/v2-area-chart-color.svg",
           selected: false,
         },
         stackedArea: {
-          img: "https://cdn7.monday.com/images/v2-stacked-area-chart-color.svg",
+          img: "images/v2-stacked-area-chart-color.svg",
           selected: false,
         },
         fullStackedArea: {
-          img: "https://cdn7.monday.com/images/v2-100p-stacked-area-chart-color.svg",
+          img: "images/v2-100p-stacked-area-chart-color.svg",
           selected: false,
         },
       },
@@ -38,19 +39,19 @@ const Gallery = (props) => {
       title: "ستونی",
       items: {
         bar: {
-          img: "https://cdn7.monday.com/images/v2-bar-chart-color.svg",
+          img: "images/v2-bar-chart-color.svg",
           selected: false,
         },
         stackedBar: {
-          img: "https://cdn7.monday.com/images/v2-stacked-bar-chart-color.svg",
+          img: "images/v2-stacked-bar-chart-color.svg",
           selected: false,
         },
         horizontal: {
-          img: "https://cdn7.monday.com/images/v2-horizontal-bar-chart-color.svg",
+          img: "images/v2-horizontal-bar-chart-color.svg",
           selected: false,
         },
         horizontalStacked: {
-          img: "https://cdn7.monday.com/images/v2-horizontal-stacked-chart-color.svg",
+          img: "images/v2-horizontal-stacked-chart-color.svg",
           selected: false,
         },
       },
@@ -59,11 +60,11 @@ const Gallery = (props) => {
       title: "دایره ای",
       items: {
         pie: {
-          img: "https://cdn7.monday.com/images/v2-pie-chart-color.svg",
+          img: "images/v2-pie-chart-color.svg",
           selected: false,
         },
         donut: {
-          img: "https://cdn7.monday.com/images/v2-donut-chart-color.svg",
+          img: "images/v2-donut-chart-color.svg",
           selected: false,
         },
       },
@@ -197,7 +198,7 @@ const Gallery = (props) => {
                       <span className="gallery-item-text">
                         <img
                           className="gallery-item-image"
-                          src={item.img}
+                          src={`${baseUrl}${item.img}`}
                           alt=""
                         />
                       </span>
