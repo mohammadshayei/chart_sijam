@@ -64,6 +64,7 @@ const XYChart = React.memo((props) => {
             series.strokeWidth = options.series.strokeWidth;
             // series.smoothing = options.series.smoothing;
             series.tensionX = options.series.tensionX;
+            // series.legendSettings.labelText = "[bold {color}]{name}[/]";
             if (options.series.bullet.display) {
               var bullet = series.bullets.push(new am4charts.CircleBullet());
               bullet.circle.stroke = am4core.color(
@@ -80,19 +81,21 @@ const XYChart = React.memo((props) => {
             series.dataFields.valueY = field;
             series.dataFields.categoryX = "category";
             series.name = name;
+            // series.legendSettings.labelText = "[bold {color}]{name}[/]";
             series.stacked = options.series.stacked; //stack columns top of each other
           } else if (type === "Radar") {
             series = xyChart.series.push(new am4charts.RadarSeries());
             series.dataFields.valueY = field;
             series.dataFields.categoryX = "category";
             series.name = name;
+            // series.legendSettings.labelText = "[bold {color}]{name}[/]";
             series.strokeWidth = options.series.strokeWidth;
           }
           return series;
         }
         for (const field in data[0]) {
           if (field !== "category")
-            createSeries(field, options.fieldNames.field1); // name will get from user
+            createSeries(field, options.fieldNames[field]); // name will get from user
         }
       } else if (type === "Bubble") {
         // Create Axis

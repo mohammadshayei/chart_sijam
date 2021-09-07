@@ -60,6 +60,9 @@ const CreateCharts = (props) => {
   const setChartTitle = (chartTitle) => {
     dispatch(addChartActions.setChartTitle(chartTitle));
   };
+  const setChartData = (chartData) => {
+    dispatch(addChartActions.setChartData(chartData));
+  };
 
   useEffect(() => {
     if (saved) {
@@ -108,7 +111,24 @@ const CreateCharts = (props) => {
               {result.data.message.error}
             </ErrorDialog>
           );
-        } else setSaved(true);
+        } else {
+          let clearedChartData = takenData.chartData;
+          clearedChartData = {
+            ...clearedChartData,
+            title: "",
+            type: "Line",
+            config: {
+              period: "",
+              autoUpdate: false,
+            },
+            data: {
+              data: [],
+              options: { ...clearedChartData.data.options, fieldNames: {} },
+            },
+          };
+          setChartData(clearedChartData);
+          setSaved(true);
+        }
       } catch (error) {
         setError(
           <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>

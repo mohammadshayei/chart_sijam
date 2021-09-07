@@ -13,9 +13,7 @@ const initialState = {
     data: {
       data: [],
       options: {
-        fieldNames: {
-          field1: "",
-        },
+        fieldNames: {},
         radius: 70,
         innerRadius: 40,
         startAngle: 0,
@@ -126,11 +124,6 @@ const removeDataField = (state, action) => {
     for (const field in data[i]) {
       if (`${field}` !== `field${index}`) {
         if (updatedChartData[i])
-          updatedChartData[i] = {
-            ...updatedChartData[i],
-            [field]: data[i][field],
-          };
-        else
           updatedChartData = [...updatedChartData, { [field]: data[i][field] }];
       }
     }

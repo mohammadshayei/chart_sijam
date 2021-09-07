@@ -79,6 +79,16 @@ const FieldPicker = (props) => {
               data: {
                 ...updatedChartsData.data,
                 data: [...updatedChartsData.data.data, { [fieldName]: field }],
+                options:
+                  props.index > 0
+                    ? {
+                        ...updatedChartsData.data.options,
+                        fieldNames: {
+                          ...updatedChartsData.data.options.fieldNames,
+                          [fieldName]: selected,
+                        },
+                      }
+                    : { ...updatedChartsData.data.options },
               },
             };
           });
@@ -87,6 +97,7 @@ const FieldPicker = (props) => {
             const fieldName =
               props.index === 0 ? "category" : `field${props.index}`;
             let chartDataUpdated = takenData.chartData.data.data;
+            let chartOptionsUpdated = takenData.chartData.data.options;
             let found = false;
             for (const key in chartDataUpdated[index]) {
               if (key === fieldName) {
@@ -100,11 +111,22 @@ const FieldPicker = (props) => {
                 [fieldName]: fieldValues[index],
               };
             }
+            chartOptionsUpdated =
+              props.index > 0
+                ? {
+                    ...chartOptionsUpdated,
+                    fieldNames: {
+                      ...chartOptionsUpdated.fieldNames,
+                      [fieldName]: selected,
+                    },
+                  }
+                : { ...chartOptionsUpdated };
             updatedChartsData = {
               ...updatedChartsData,
               data: {
                 ...updatedChartsData.data,
                 data: chartDataUpdated,
+                options: chartOptionsUpdated,
               },
             };
           }
