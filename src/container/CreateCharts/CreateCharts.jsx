@@ -68,6 +68,7 @@ const CreateCharts = (props) => {
   }, [saved]);
 
   const setTitleHandler = (e) => {
+    setError(null);
     if (e.type === "keydown") {
       if (e.key === "Enter") {
         setChartTitle({ title: e.target.value });
@@ -81,10 +82,12 @@ const CreateCharts = (props) => {
   };
 
   const doneClickHandler = async () => {
-    if (!takenData.chartData.title)
+    if (!takenData.chartData.title) {
+      setInput(true);
       setError(
         <ErrorDialog onClose={setError}>عنوان تعیین نشده است</ErrorDialog>
       );
+    }
     if (takenData.chartData.title) {
       const payload = {
         title: takenData.chartData.title,
@@ -202,6 +205,7 @@ const CreateCharts = (props) => {
                         value={takenData.chartData.title}
                         onChange={setTitleHandler}
                         onKeyDown={setTitleHandler}
+                        style={{ borderColor: error ? "red" : "" }}
                       />
                     ) : (
                       <div className="text-component" dir="rtl">
