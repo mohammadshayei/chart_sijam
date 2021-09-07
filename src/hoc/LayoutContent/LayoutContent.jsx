@@ -7,12 +7,12 @@ import Navbar from "../../component/Navigation/Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { stringFa } from "../../assets/strings/stringFaCollection";
-import { Link } from "react-router-dom";
 import SelectBankModal from "../../container/CreateCharts/SelectBankModal/SelectBankModal.jsx";
 import * as chartActions from "../../store/actions/chart.js";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
+import StyledButton from "./../../component/UI/Button/StyledButton";
 const PERIOD_INTRAVEL = 60000;
 
 const LayoutContent = (props) => {
@@ -184,16 +184,13 @@ const LayoutContent = (props) => {
               <Body />
             ) : (
               <div className="BodyContent">
-                <Link
+                <div
                   className="CreateChartContainer"
-                  to={{
-                    pathname: `/create_chart`,
-                  }}
-                  style={{ textDecoration: "none" }}
+                  onClick={() => setIsModalOpen(true)}
                 >
                   <AddRoundedIcon />
                   <p>{stringFa.create_chart}</p>
-                </Link>
+                </div>
                 {stringFa.no_exist_charts}
               </div>
             )
