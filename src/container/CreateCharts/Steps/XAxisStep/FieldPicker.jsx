@@ -133,7 +133,7 @@ const FieldPicker = (props) => {
             divStyle={{
               transform: "translateY(1.1rem)",
               maxHeight: "40vh",
-              minWidth: "23.5vw",
+              minWidth: "22.4rem",
               overflow: "auto",
               animation: "none",
             }}

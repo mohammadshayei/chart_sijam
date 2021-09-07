@@ -8,12 +8,14 @@ import { useLocation } from "react-router";
 const ChartBlock = React.memo((props) => {
   const [chart, setChart] = useState(null);
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(null);
   const location = useLocation();
 
   const chartData = useSelector((state) => state.addChart.chartData);
 
   useEffect(() => {
     if (location.pathname === "/create_chart") {
+      setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
       if (chartData.data.data) {
         setData({
           title: chartData.title,
@@ -23,6 +25,7 @@ const ChartBlock = React.memo((props) => {
         });
       }
     } else {
+      setLoading("Loading...");
       if (props.chartProps) {
         setData(props.chartProps);
       }
@@ -51,7 +54,21 @@ const ChartBlock = React.memo((props) => {
     }
   }, [data]);
 
-  return data && data.data.length > 0 ? chart : "Loading...";
+  return data && data.data.length > 0 ? (
+    chart
+  ) : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      {loading}
+    </div>
+  );
 });
 
 export default ChartBlock;
