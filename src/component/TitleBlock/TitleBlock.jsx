@@ -169,7 +169,7 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         </div>
-        <p className="details">{details ? details.join(" / ") : ""}</p>
+        <p className="details">{props.parent ? props.parent.join(" - ") : ""}</p>
         <div className="star-container" onClick={onStarClickHandler}>
           {isFav ? (
             <StarRoundedIcon style={starStyles} />

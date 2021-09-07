@@ -19,7 +19,7 @@ const StyledButton = (props) => {
   return (
     <button
       className="sijam-style-button"
-      style={{ ...props.ButtonStyle, ...newStyle }}
+      style={{ ...newStyle, ...props.ButtonStyle }}
       onClick={(e) => {
         if (props.onClick) props.onClick();
       }}

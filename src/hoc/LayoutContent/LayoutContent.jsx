@@ -82,13 +82,14 @@ const LayoutContent = (props) => {
       receivedData.forEach((item) => {
         newChartsData = {
           ...newChartsData,
-          [item._id]: {
-            title: item.title,
-            type: item.type,
-            data: item.data,
-            options: item.options,
-            config: item.config,
-            lastBankUpdate: item.data_updated_time,
+          [item.chart._id]: {
+            title: item.chart.title,
+            type: item.chart.type,
+            data: item.chart.data,
+            options: item.chart.options,
+            config: item.chart.config,
+            parent: item.parent,
+            lastBankUpdate: item.chart.data_updated_time,
           },
         };
       });

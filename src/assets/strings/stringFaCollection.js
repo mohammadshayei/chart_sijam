@@ -54,4 +54,9 @@ export const stringFa = {
   auto_update: "به روزرسانی خودکار",
   refresh_charts: "به روزرسانی نمودارها",
   add_value: "مقادیر بیشتر +",
+  add_holding:"اضافه کردن هولدینگ",
+  add_company:"اضافه کردن سازمان",
+  add_software:"اضافه کردن نرم افزار",
+
+
 };
