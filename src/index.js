@@ -13,6 +13,7 @@ import banksDataReducer from "./store/reducers/banksData";
 import chartReducer from "./store/reducers/chart";
 import authReducer from "./store/reducers/auth";
 import addChartReducer from "./store/reducers/addChart";
+import fieldPickerReducer from "./store/reducers/fieldPicker";
 import { ThemeProvider } from "./styles/ThemeProvider.js";
 
 import "react-grid-layout/css/styles.css";
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   chart: chartReducer,
   auth: authReducer,
   addChart: addChartReducer,
+  fieldPicker: fieldPickerReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
