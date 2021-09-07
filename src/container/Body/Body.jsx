@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {} from "react";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { withSize } from "react-sizeme";
 import "./Body.scss";
@@ -6,13 +6,12 @@ import { useSelector } from "react-redux";
 import Card from "./../../component/Card/Card";
 import { useTheme } from "../../styles/ThemeProvider";
 import SkeletonCard from "./../../component/Skeletons/SkeletonCard";
-
 const Body = (props) => {
   const chartsData = useSelector((state) => state.chart);
+  const isLoading = useSelector((state) => state.chart.loading);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const skeletonLayouts = {};
-
   return (
     chartsData.layouts &&
     chartsData.data && (
@@ -23,7 +22,7 @@ const Body = (props) => {
           color: theme.on_background,
         }}
       >
-        {chartsData.layouts.lg.length !== 0 ? (
+        {!isLoading ? (
           <ResponsiveGridLayout
             className="layout"
             layouts={chartsData.layouts}

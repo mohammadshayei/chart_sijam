@@ -118,7 +118,13 @@ const LayoutContent = (props) => {
       }
     }
   };
-
+  const countProperties = (obj) => {
+    var count = 0;
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) ++count;
+    }
+    return count;
+  };
   useEffect(() => {
     const updateChart = setInterval(() => {
       timer();
@@ -163,16 +169,6 @@ const LayoutContent = (props) => {
         <div
           className="BodyContainer"
           style={{
-            // alignItems: detail.software
-            //   ? banksData.banks
-            //     ? "flex-start"
-            //     : "center"
-            //   : "center",
-            // justifyContent: detail.software
-            //   ? banksData.banks
-            //     ? ""
-            //     : "center"
-            //   : "center",
             backgroundImage: chartsData.editMode
               ? `radial-gradient(${
                   themeState.isDark ? theme.border_color : "#BBBBBB"
@@ -184,7 +180,7 @@ const LayoutContent = (props) => {
           {detail.software || detail.company || detail.holding ? (
             error ? (
               <Body />
-            ) : chartsData.data && chartsData.data !== {} ? (
+            ) : countProperties(chartsData.data) !== 0 ? (
               <Body />
             ) : (
               <div className="BodyContent">

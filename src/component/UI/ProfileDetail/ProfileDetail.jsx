@@ -38,7 +38,7 @@ const ProfileDetail = (props) => {
 
   useEffect(() => {
     if (userDetail && userDetail.image) {
-      setImageSrc(userDetail.image);
+      setImageSrc(`${baseUrl}images/${userDetail.image}.png`);
     }
   }, [userDetail]);
   const handleUserMenu = (id) => {
@@ -49,7 +49,9 @@ const ProfileDetail = (props) => {
     <div className={classes.ProfileDetailContainer}>
       {userDetail ? (
         <React.Fragment>
-          <img src={imageSrc} alt="profile" />
+          <div className={classes.imageContainer}>
+            <img src={imageSrc} alt="profile" />
+          </div>
           <span style={{ color: theme.text_color }}>
             {userDetail.name_family}
           </span>
