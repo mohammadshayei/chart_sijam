@@ -30,7 +30,7 @@ const Bank = React.memo(function Bank(props) {
         color: theme.on_background,
       });
     }
-  }, [detail.banks, props.data]);
+  }, [detail.banks, props.data, themeState.isDark]);
   const onMouseEnter = () => {
     if (!clicked) {
       setStyle({
@@ -61,9 +61,7 @@ const Bank = React.memo(function Bank(props) {
       style={{ ...style }}
       onClick={onBankClickHandler}
     >
-      <span style={{ color: theme.on_background, fontSize: 12 }}>
-        {props.data.groups_title}
-      </span>
+      <span style={{ fontSize: 12 }}>{props.data.groups_title}</span>
     </div>
   );
 });
