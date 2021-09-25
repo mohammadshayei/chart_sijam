@@ -14,7 +14,6 @@ const MainAuth = (props) => {
       onSubmit={props.onsubmit}
       className="mainauth-container"
       style={{
-        paddingTop: props.pageName === "login" ? "4rem" : "4rem",
       }}
     >
       <div className="mainauth-input-container">
@@ -60,7 +59,7 @@ const MainAuth = (props) => {
           ButtonStyle={{
             width: "15rem",
             backgroundColor: theme.background,
-            color: theme.text_clicked_menu_color,
+            color: theme.on_primary,
             paddingTop: ".2rem",
           }}
         >

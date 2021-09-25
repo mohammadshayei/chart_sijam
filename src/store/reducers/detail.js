@@ -6,6 +6,7 @@ const initialState = {
   software: null,
   activeBackup: null,
   banks: null,
+  items: { holdings: [] },
 };
 
 const selectHodling = (state, action) => {
@@ -74,6 +75,12 @@ const clearBanks = (state) => {
     banks: [],
   };
 };
+const setItems = (state, action) => {
+  return {
+    ...state,
+    items: action.items,
+  };
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -97,6 +104,8 @@ const reducer = (state = initialState, action) => {
       return clearActiveBackup(state);
     case actionTypes.CLEAR_MY_BANKS:
       return clearBanks(state);
+    case actionTypes.SET_ITEMS:
+      return setItems(state, action);
     default:
       return state;
   }

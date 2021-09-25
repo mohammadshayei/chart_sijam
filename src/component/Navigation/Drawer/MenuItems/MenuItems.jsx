@@ -18,7 +18,7 @@ const MenuItems = () => {
   const [clickedId, setClickedId] = useState(null);
   const [orders, setOrders] = useState([]);
   const [rightClick, setRightClick] = useState(false);
-  const [items, setItems] = useState({ holdings: [] });
+  // const [items, setItems] = useState({ holdings: [] });
   const dispatch = useDispatch();
   const [activeBackups, setActiveBackups] = useState(null);
   const [isSoftwareClicked, setIsSoftwareClicked] = useState(false);
@@ -27,12 +27,16 @@ const MenuItems = () => {
   const [error, setError] = useState(null);
 
   const detail = useSelector((state) => state.detail);
+  const items = useSelector((state) => state.detail.items);
   const chartsLoading = useSelector((state) => state.chart.loading);
 
   const setLoading = (loading) => {
     dispatch(chartActions.setChartsLoading(loading));
   };
-
+  const setItems = (items) => {
+    dispatch(actions.setItems(items));
+  };
+  console.log(items)
   const selectActiveBackup = (activeBackup) => {
     dispatch(actions.selectActiveBackup(activeBackup));
   };
