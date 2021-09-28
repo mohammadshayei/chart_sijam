@@ -55,3 +55,14 @@ export const clearBanks = () => {
     type: actionTypes.CLEAR_MY_BANKS,
   };
 };
+export const setItems = (items) => {
+  return {
+    type: actionTypes.SET_ITEMS,
+    items,
+  };
+};
+export const addHolding = () => {
+  return {
+    type: actionTypes.SET_ITEMS,
+  };
+};

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import "./DropDown.scss";
 import { useTheme } from "../../../styles/ThemeProvider.js";
-import ReactDom from "react-dom";
+import { Link } from "react-router-dom";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -51,11 +51,24 @@ const DropDown = (props) => {
         props.items.map((item, index) => (
           <div
             key={item.name}
-            onClick={() => handleClick(item.name, item.id)}
+            onClick={() => {
+              handleClick(item.name, item.id);
+            }}
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}
           >
-            {item.name}
+            {item.isLink ? (
+              <Link
+                to={{
+                  pathname: "/view/setting",
+                }}
+                style={{ textDecoration: "none", color: theme.on_background }}
+              >
+                {item.name}
+              </Link>
+            ) : (
+              item.name
+            )}
             {item.icon && <div className="dropdown-icon">{item.icon}</div>}
           </div>
         ))}

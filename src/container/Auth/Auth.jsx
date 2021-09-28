@@ -290,43 +290,44 @@ const Auth = (props) => {
   }
   return (
     <div className="auth-container">
-      {loginError ? <ErrorDialog onClose={setLoginError} >{error}</ErrorDialog> : null}
+      {loginError ? (
+        <ErrorDialog onClose={setLoginError}>{error}</ErrorDialog>
+      ) : null}
       {/* onClose={setError} */}
       <ImageSection />
-      <div className="auth-content">
-        <Logo
-          style={{
-            height: "4rem",
-            margin: "1rem 0rem",
-            backgroundColor: "transparent",
-          }}
-        />
-        <div className="auth-body">
-          {loading ? (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+
+      <div className="auth-body">
+        {loading ? (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Loading
+              imageConfig={{
+                opacity: "0.7",
+                height: "60",
+                width: "60",
+                alt: "loading",
               }}
-            >
-              <Loading
-                imageConfig={{
-                  opacity: "0.7",
-                  height: "60",
-                  width: "60",
-                  alt: "loading",
-                }}
-              />
-              <p className="text-loading">{stringFa.please_wait}</p>
-            </div>
-          ) : (
-            body
-          )}
-        </div>
+            />
+            <p className="text-loading">{stringFa.please_wait}</p>
+          </div>
+        ) : (
+          <React.Fragment>
+            <Logo
+              style={{
+                backgroundColor: "transparent",
+              }}
+            />
+            {body}
+          </React.Fragment>
+        )}
       </div>
     </div>
   );

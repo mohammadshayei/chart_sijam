@@ -57,6 +57,8 @@ export const stringFa = {
   add_holding:"اضافه کردن هولدینگ",
   add_company:"اضافه کردن سازمان",
   add_software:"اضافه کردن نرم افزار",
-
-
+  setting:"تنظیمات",
+  customization:"شخصی سازی",
+  users:"کاربران",
+  permissions:"دسترسی ها",
 };

@@ -2,12 +2,13 @@ import React from 'react';
 
 import classes from './Logo.module.scss';
 
-import LogoIcon from '../../../assets/images/simamIcon.png'
+import { baseUrl } from '../../../constants/Config';
 
 const Logo  = props => {
+  
   return (
       <div className={classes.Logo} style={{...props.style}}>
-          <img src={LogoIcon} alt="Logo"/>  
+          <img src={`${baseUrl}images/FekrTypo.png`} alt="Logo"/>  
       </div>
   );
 }

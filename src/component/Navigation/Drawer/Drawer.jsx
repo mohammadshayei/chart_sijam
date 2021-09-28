@@ -1,34 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Drawer.scss";
 import Header from "./Header/Header";
-import MenuItems from "./MenuItems/MenuItems";
 import { useTheme } from "../../../styles/ThemeProvider";
-import Button from "../../UI/Button/Button";
-import { useSelector } from "react-redux";
-import { stringFa } from "../../../assets/strings/stringFaCollection";
-import StyledButton from "../../UI/Button/StyledButton";
-import { FaPlusCircle } from "react-icons/fa";
+
+import DrawerViewCharts from "./DrawersContent/DrawerViewCharts/DrawerViewCharts";
+import { useLocation } from "react-router";
+import DrawerSetting from "./DrawersContent/DrawerSetting/DrawerSetting";
 
 const Drawer = React.memo((props) => {
+  const [content, setContent] = useState(null);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const editMode = useSelector((state) => state.chart.editMode);
-  const detail = useSelector((state) => state.detail);
-  const [value, setValue] = useState("");
-  const [focus, setFocus] = useState(false);
-  const onChange = (e) => {
-    setValue(e.targer.value);
-  };
-  const onFocusHandler = () => {
-    setFocus(true);
-  };
-  const onBlurHandler = () => {
-    setFocus(false);
-  };
-  const onKeyDown = (e) => {};
-  const onAddHandler=()=>{
-    // const distPath=
-  }
+  const [error, setError] = useState(null);
+
+  const location = useLocation();
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/view":
+        setContent(<DrawerViewCharts />);
+        break;
+      case "/view/setting":
+        setContent(<DrawerSetting />);
+        break;
+      default:
+        break;
+    }
+  }, [location.pathname]);
   return (
     <div
       className={`DrawerContainer ${
@@ -38,51 +35,9 @@ const Drawer = React.memo((props) => {
         backgroundColor: themeState.isDark ? theme.surface_12dp : theme.surface,
       }}
     >
+      {error}
       <Header onToggleMenu={props.onToggleMenu} />
-      <MenuItems />
-      {editMode && (
-        <div className="add-box-container">
-          <input
-            type="text"
-            className="input-creator"
-            style={{
-              background: themeState.isDark ? theme.surface_1dp : theme.surface,
-              color: theme.on_background,
-              borderColor: focus ? theme.primary : theme.border_color,
-            }}
-            dir="rtl"
-            placeholder={`نام ${
-              detail.company
-                ? stringFa.softwares
-                : detail.holding
-                ? stringFa.companies
-                : stringFa.holdings
-            } جدید`}
-            onKeyDown={onKeyDown}
-            onChange={onChange}
-            onFocus={onFocusHandler}
-            onBlur={onBlurHandler}
-          />
-          <StyledButton
-            // onClick={creatChartClickHandler}
-            ButtonStyle={{ width: "80%", margin: "1rem 10%" }}
-            hover={
-              themeState.isDark ? theme.surface_12dp : theme.background_color
-            }
-          >
-            <div className="button-text">
-              {detail.company
-                ? stringFa.add_software
-                : detail.holding
-                ? stringFa.add_company
-                : stringFa.add_holding}
-              <div className="button-icon" style={{ color: theme.primary }}>
-                <FaPlusCircle />
-              </div>
-            </div>
-          </StyledButton>
-        </div>
-      )}
+      {content && content}
     </div>
   );
 });
