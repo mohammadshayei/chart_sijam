@@ -4,7 +4,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4themes_dark from "@amcharts/amcharts4/themes/dark";
 import { useTheme } from "../../styles/ThemeProvider.js";
-import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
+// import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
 // import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
 // import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
 
@@ -19,9 +19,8 @@ const PieChart = React.memo((props) => {
   const { data, type, options } = props.chartProps;
   let pieChart;
   useEffect(() => {
-    themeState.isDark
-      ? am4core.useTheme(am4themes_dark)
-      : am4core.useTheme(am4themes_kelly);
+    themeState.isDark && am4core.useTheme(am4themes_dark);
+    // : am4core.useTheme(am4themes_kelly);
     pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
