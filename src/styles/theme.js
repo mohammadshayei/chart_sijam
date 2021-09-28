@@ -23,6 +23,7 @@ const lightTheme = {
   border_color: "#e6e9ef",
   borderBlur: "rgb(165, 162, 162)",
   button_disabled: "rgb(139, 199, 199)",
+  hover:"rgba(0, 0, 0, 0.1)",
   // ripple_company_menu_item_color:""
 };
 
@@ -54,6 +55,7 @@ const darkTheme = {
   hover_background: "rgb(98, 139, 139)",
   borderBlur: "rgb(165, 162, 162)",
   button_disabled: "rgb(139, 199, 199)",
+  hover:"",
   // ripple_company_menu_item_color:""
 };
 

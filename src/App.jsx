@@ -6,7 +6,6 @@ import { Route, Switch } from "react-router-dom";
 import ProtectedRoute from "./hoc/ProtectedRoute/ProtectedRoute";
 import Auth from "./container/Auth/Auth.jsx";
 import { useTheme } from "./styles/ThemeProvider.js";
-
 const App = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -19,6 +18,7 @@ const App = () => {
         <ProtectedRoute path="/"  component={LayoutContent}></ProtectedRoute>
         <Route path="/view" exact component={LayoutContent}></Route>
         <Route path="/create_chart" exact component={CreateCharts}></Route>
+        <Route path="/view/setting" exact component={LayoutContent}></Route>
         <Route path="/signup" exact component={Auth}></Route>
         <Route path="/login" exact component={Auth}></Route>
       </div>

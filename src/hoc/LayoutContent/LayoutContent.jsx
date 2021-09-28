@@ -12,9 +12,7 @@ import * as chartActions from "../../store/actions/chart.js";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
-import StyledButton from "./../../component/UI/Button/StyledButton";
 const PERIOD_INTRAVEL = 60000;
-
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);

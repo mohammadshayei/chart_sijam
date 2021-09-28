@@ -27,6 +27,7 @@ const ProfileDetail = (props) => {
       name: themeState.isDark ? stringFa.light_theme : stringFa.dark_theme,
       id: "change_theme",
     },
+    { name: stringFa.setting, id: "setting", isLink: true },
     { name: stringFa.log_out, id: "log_out" },
   ];
   const onMouseEnter = () => {
@@ -41,9 +42,21 @@ const ProfileDetail = (props) => {
       setImageSrc(`${baseUrl}images/${userDetail.image}.png`);
     }
   }, [userDetail]);
+
   const handleUserMenu = (id) => {
-    if (id === "change_theme") themeState.toggle();
-    else if (id === "log_out") logout();
+    switch (id) {
+      case "change_theme":
+        themeState.toggle();
+        break;
+      case "setting":
+        break;
+      case "log_out":
+        logout();
+        break;
+
+      default:
+        break;
+    }
   };
   return (
     <div className={classes.ProfileDetailContainer}>

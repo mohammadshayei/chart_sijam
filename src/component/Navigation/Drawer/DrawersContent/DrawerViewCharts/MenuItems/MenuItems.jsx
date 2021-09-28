@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import MenuItem from "../../../UI/MenuItem/MenuItem";
+import MenuItem from "../../../../../UI/MenuItem/MenuItem";
 import "./MenuItems.scss";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../../store/actions/detail";
-import * as chartActions from "../../../../store/actions/chart";
+import * as actions from "../../../../../../store/actions/detail";
+import * as chartActions from "../../../../../../store/actions/chart";
 
 import axios from "axios";
-import { baseUrl } from "../../../../constants/Config";
-import DropDown from "../../../UI/DropDown/DropDown";
-import SkeletonMenuItem from "../../../Skeletons/skeletonMenuItem.jsx";
-import ErrorDialog from "../../../UI/Error/ErrorDialog.jsx";
-import SkeletonElement from "../../../Skeletons/SkeletonElement.jsx";
-import SkeletTextItem from "../../../Skeletons/SkeletTextItem";
+import { baseUrl } from "../../../../../../constants/Config";
+import DropDown from "../../../../../UI/DropDown/DropDown";
+import SkeletonMenuItem from "../../../../../Skeletons/skeletonMenuItem.jsx";
+import ErrorDialog from "../../../../../UI/Error/ErrorDialog.jsx";
+import SkeletonElement from "../../../../../Skeletons/SkeletonElement.jsx";
+import SkeletTextItem from "../../../../../Skeletons/SkeletTextItem";
 
 const MenuItems = () => {
   const [unClicked, setUnClicked] = useState("");
@@ -36,7 +36,6 @@ const MenuItems = () => {
   const setItems = (items) => {
     dispatch(actions.setItems(items));
   };
-  console.log(items)
   const selectActiveBackup = (activeBackup) => {
     dispatch(actions.selectActiveBackup(activeBackup));
   };
