@@ -49,3 +49,10 @@ export const removeDataField =
       payload: { index },
     });
   };
+
+export const setIsNewChart = (isNewChart) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_IS_NEW_CHART,
+    isNewChart: isNewChart,
+  });
+};

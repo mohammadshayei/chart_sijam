@@ -1,16 +1,14 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
-import BankSection from "./BankSection/BankSection";
 import Steps from "./Steps/Steps";
-import { useLocation, Redirect } from "react-router";
+import { Redirect } from "react-router";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { VscSplitVertical } from "react-icons/vsc";
 import { useTheme } from "../../styles/ThemeProvider.js";
 import * as addChartActions from "../../store/actions/addChart";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
@@ -39,7 +37,6 @@ const CreateCharts = (props) => {
   // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
-  const [saved, setSaved] = useState(false);
   const [redirect, setRedirect] = useState(false);
   // const location = useLocation();
   const themeState = useTheme();
@@ -64,12 +61,6 @@ const CreateCharts = (props) => {
     dispatch(addChartActions.setChartData(chartData));
   };
 
-  useEffect(() => {
-    if (saved) {
-      setRedirect(<Redirect to="/view" />);
-    }
-  }, [saved]);
-
   const setTitleHandler = (e) => {
     setError(null);
     if (e.type === "keydown") {
@@ -80,7 +71,7 @@ const CreateCharts = (props) => {
     } else setChartTitle({ title: e.target.value });
   };
 
-  const cancelClickHandler = () => {
+  const closeHandler = () => {
     let clearedChartData = takenData.chartData;
     clearedChartData = {
       ...clearedChartData,
@@ -107,19 +98,36 @@ const CreateCharts = (props) => {
       );
     }
     if (takenData.chartData.title) {
-      const payload = {
-        title: takenData.chartData.title,
-        type: takenData.chartData.type,
-        data: takenData.chartData.data.data,
-        options: takenData.chartData.data.options,
-        bankId: takenData.id,
-        config: {
-          period: parseInt(takenData.chartData.config.period),
-          auto_update: takenData.chartData.config.autoUpdate,
-        },
-      };
+      let chartApi, payload;
+      if (takenData.isNewChart) {
+        chartApi = "create_chart";
+        payload = {
+          title: takenData.chartData.title,
+          type: takenData.chartData.type,
+          data: takenData.chartData.data.data,
+          options: takenData.chartData.data.options,
+          bankId: takenData.id,
+          config: {
+            period: parseInt(takenData.chartData.config.period),
+            auto_update: takenData.chartData.config.autoUpdate,
+          },
+        };
+      } else {
+        chartApi = "edit_chart";
+        payload = {
+          title: takenData.chartData.title,
+          type: takenData.chartData.type,
+          data: takenData.chartData.data.data,
+          options: takenData.chartData.data.options,
+          chartId: takenData.id,
+          config: {
+            period: parseInt(takenData.chartData.config.period),
+            auto_update: takenData.chartData.config.autoUpdate,
+          },
+        };
+      }
       try {
-        const result = await axios.post(`${baseUrl}api/create_chart`, payload);
+        const result = await axios.post(`${baseUrl}api/${chartApi}`, payload);
         if (!result.data.success) {
           setError(
             <ErrorDialog onClose={setError}>
@@ -127,22 +135,7 @@ const CreateCharts = (props) => {
             </ErrorDialog>
           );
         } else {
-          let clearedChartData = takenData.chartData;
-          clearedChartData = {
-            ...clearedChartData,
-            title: "",
-            type: "Line",
-            config: {
-              period: "",
-              autoUpdate: false,
-            },
-            data: {
-              data: [],
-              options: { ...clearedChartData.data.options, fieldNames: {} },
-            },
-          };
-          setChartData(clearedChartData);
-          setSaved(true);
+          closeHandler();
         }
       } catch (error) {
         setError(
@@ -193,7 +186,7 @@ const CreateCharts = (props) => {
               color: theme.on_primary,
               marginBottom: "1rem",
             }}
-            onClick={cancelClickHandler}
+            onClick={closeHandler}
           >
             {stringFa.cancel}
           </Button>

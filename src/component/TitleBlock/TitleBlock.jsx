@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./TitleBlock.scss";
-import { data } from "../../assets/dummy_data/TestData";
 import { useTheme } from "../../styles/ThemeProvider";
 import * as chartActions from "../../store/actions/chart.js";
+import * as addChartActions from "../../store/actions/addChart";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import DropDown from "./../UI/DropDown/DropDown";
-import { Link } from "react-router-dom";
 import { stringFa } from "./../../assets/strings/stringFaCollection";
 import { chartTypes } from "../../constants/chart-types";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +14,7 @@ import { FcSettings, FcFullTrash } from "react-icons/fc";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "./../UI/Error/ErrorDialog";
+import { Redirect } from "react-router";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -40,6 +40,7 @@ const TitleBlock = React.memo((props) => {
   const [details, setDetails] = useState([]);
   const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState(null);
+  const [redirect, setRedirect] = useState(false);
   const chartsData = useSelector((state) => state.chart);
   const detailsSelection = useSelector((state) => state.detail);
 
@@ -74,6 +75,18 @@ const TitleBlock = React.memo((props) => {
   const setChart = (chartData) => {
     dispatch(chartActions.setChartData(chartData));
   };
+  const setId = (id) => {
+    dispatch(addChartActions.setAddChartId(id));
+  };
+  const selectChartDatabase = (data) => {
+    dispatch(addChartActions.selectChartData(data));
+  };
+  const setChartData = (chartData) => {
+    dispatch(addChartActions.setChartData(chartData));
+  };
+  const setIsNewChart = (isNewChart) => {
+    dispatch(addChartActions.setIsNewChart(isNewChart));
+  };
 
   const undoDeleteChartHandler = () => {
     setChart({ chartId: props.chartId, chartData: deletedChart[0] });
@@ -81,7 +94,28 @@ const TitleBlock = React.memo((props) => {
 
   const settingMenuHandler = async (id) => {
     if (id === "setting") {
-      console.log("go to setting");
+      const result = await axios.post(`${baseUrl}api/get_data`, {
+        id: props.bankId,
+      });
+      let selectedChartData = chartsData.data[props.chartId];
+      selectedChartData = {
+        ...selectedChartData,
+        title: selectedChartData.title,
+        type: selectedChartData.type,
+        config: {
+          period: selectedChartData.config.period,
+          autoUpdate: selectedChartData.config.autoUpdate,
+        },
+        data: {
+          data: selectedChartData.data,
+          options: selectedChartData.options,
+        },
+      };
+      setId(props.chartId);
+      selectChartDatabase(result.data.result);
+      setChartData(selectedChartData);
+      setIsNewChart(false);
+      setRedirect(<Redirect to="/create_chart" />);
     } else if (id === "delete") {
       deletedChart = Object.keys(chartsData.data)
         .filter((key) => key === props.chartId)
@@ -146,6 +180,7 @@ const TitleBlock = React.memo((props) => {
 
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
+      {redirect}
       {error}
       <div className="card-source-name">
         <div className="setting-container">
@@ -169,7 +204,9 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         </div>
-        <p className="details">{props.parent ? props.parent.join(" - ") : ""}</p>
+        <p className="details">
+          {props.parent ? props.parent.join(" - ") : ""}
+        </p>
         <div className="star-container" onClick={onStarClickHandler}>
           {isFav ? (
             <StarRoundedIcon style={starStyles} />

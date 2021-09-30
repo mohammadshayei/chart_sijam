@@ -1,4 +1,4 @@
-import React, {} from "react";
+import React from "react";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 import { withSize } from "react-sizeme";
 import "./Body.scss";

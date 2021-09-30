@@ -87,6 +87,7 @@ const LayoutContent = (props) => {
             options: item.chart.options,
             config: item.chart.config,
             parent: item.parent,
+            bankId: item.bankId,
             lastBankUpdate: item.chart.data_updated_time,
           },
         };
