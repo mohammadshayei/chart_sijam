@@ -40,13 +40,13 @@ const TimerStep = () => {
     if (initial) {
       if (takenData.chartData.config) {
         if (takenData.chartData.config.autoUpdate) {
-          setChecked(true);
           setFinancialGoal(takenData.chartData.config.period);
+          setChecked(true);
           setInitial(false);
         }
       }
     }
-  }, [takenData.chartData.config]);
+  }, [takenData.chartData]);
 
   useEffect(() => {
     if (checked) {
@@ -56,7 +56,9 @@ const TimerStep = () => {
   }, [checked]);
 
   useEffect(() => {
-    setChartTimer({ period, autoUpdate: true });
+    if (!initial) {
+      setChartTimer({ period, autoUpdate: true });
+    }
   }, [period]);
 
   useEffect(() => {

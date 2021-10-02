@@ -72,12 +72,13 @@ const selectChartData = (state, action) => {
 };
 
 const setChartData = (state, action) => {
-  const { title, type, data } = action.payload;
+  const { title, type, config, data } = action.payload;
   return {
     ...state,
     chartData: {
       title,
       type,
+      config,
       data,
     },
   };

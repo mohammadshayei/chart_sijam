@@ -99,12 +99,11 @@ const TitleBlock = React.memo((props) => {
       });
       let selectedChartData = chartsData.data[props.chartId];
       selectedChartData = {
-        ...selectedChartData,
         title: selectedChartData.title,
         type: selectedChartData.type,
         config: {
           period: selectedChartData.config.period,
-          autoUpdate: selectedChartData.config.autoUpdate,
+          autoUpdate: selectedChartData.config.auto_update,
         },
         data: {
           data: selectedChartData.data,
