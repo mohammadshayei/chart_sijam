@@ -15,11 +15,11 @@ export const chartTypes = [
     id: "Column",
     icon: <FcBarChart />,
   },
-  // {
-  //   name: "حبابی",
-  //   id: "Bubble",
-  //   icon: <MdBubbleChart />,
-  // },
+  {
+    name: "حبابی",
+    id: "Bubble",
+    icon: <MdBubbleChart />,
+  },
   {
     name: "دونات",
     id: "Doughnut",
@@ -35,21 +35,21 @@ export const chartTypes = [
     id: "Pie",
     icon: <FcPieChart />,
   },
-  // {
-  //   name: "مساحت قطبی",
-  //   id: "Radar",
-  //   icon: <FcPieChart />,
-  // },
-  // {
-  //   name: "راداری",
-  //   id: "Radar",
-  //   icon: <FcRadarPlot />,
-  // },
-  // {
-  //   name: "گیج",
-  //   id: "Gauge",
-  //   icon: <IoSpeedometerOutline />,
-  // },
+  {
+    name: "مساحت قطبی",
+    id: "Radar",
+    icon: <FcPieChart />,
+  },
+  {
+    name: "راداری",
+    id: "Radar",
+    icon: <FcRadarPlot />,
+  },
+  {
+    name: "گیج",
+    id: "Gauge",
+    icon: <IoSpeedometerOutline />,
+  },
   // {
 
   //   name: "خط زمانی",

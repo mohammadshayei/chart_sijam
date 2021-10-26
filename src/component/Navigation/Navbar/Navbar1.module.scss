@@ -1,0 +1,48 @@
+@import "../../../assets/config/global";
+
+.NavbarContainer {
+  width: calc(100% - 2px);
+  height: 100%;
+  margin-left: 1px;
+  border-bottom: 1px solid;
+  // background-color: red;
+  .ProfileSectionContainer {
+    height: 4.5rem;
+    width: 100%;
+    padding: 0 1rem;
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .IconContainer {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .StarContainer {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+    }
+  }
+  .ToolsContainer {
+    height: auto;
+    width: 100%;
+    border-top: 1px solid;
+    font-size: 13px;
+  }
+  .BanksContainer {
+    width: 100%;
+    transition: max-height 1s ease-out;
+    height: auto;
+    max-height: 3rem;
+  }
+}

@@ -9,7 +9,7 @@ import { IoIosSearch, IoMdCloseCircle } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
 import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
 import * as selectDatabaseActions from "../../../store/actions/addChart";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function useOnClickOutside(ref, handler) {
@@ -32,6 +32,7 @@ function useOnClickOutside(ref, handler) {
 }
 
 const SelectBankModal = (props) => {
+  const token = useSelector(state => state.auth.token)
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const [loading, setLoading] = useState(true);
@@ -112,7 +113,7 @@ const SelectBankModal = (props) => {
     }
     if (bankAddress.holdings.active) {
       try {
-        const result = await axios.get(baseUrl + "api/get_holdings");
+        const result = await axios.get(baseUrl + "api/get_holdings", { headers: { 'auth-token': token } });
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa.holdings} وجود ندارد`;
         setData({
@@ -164,7 +165,7 @@ const SelectBankModal = (props) => {
       try {
         const result = await axios.post(
           `${baseUrl}api/get_${nextKey}`,
-          payload
+          payload, { headers: { 'auth-token': token } }
         );
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa[nextKey]} وجود ندارد`;
@@ -200,6 +201,7 @@ const SelectBankModal = (props) => {
         updatedClearAddress[itemKey].verified = false;
       }
     }
+
     setBankAddress(updatedClearAddress);
     setIsDone(false);
     if (key === "holdings") return;
@@ -209,7 +211,7 @@ const SelectBankModal = (props) => {
       else payload = { code: id };
       setLoading(true);
       try {
-        const result = await axios.post(`${baseUrl}api/get_${key}`, payload);
+        const result = await axios.post(`${baseUrl}api/get_${key}`, payload, { headers: { 'auth-token': token } });
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa[key]} وجود ندارد`;
         setData({
@@ -227,10 +229,12 @@ const SelectBankModal = (props) => {
         );
       }
     }
+    
   };
 
   const submitHandler = async (id) => {
-    const result = await axios.post(`${baseUrl}api/get_data`, { id });
+    const result = await axios.post(`${baseUrl}api/get_data`,
+      { id }, { headers: { 'auth-token': token } });
     selectChartDatabase(result.data.result);
     setId(id);
     props.isModalOpen(false);
@@ -276,8 +280,8 @@ const SelectBankModal = (props) => {
                         color: v.active
                           ? theme.on_background
                           : v.verified
-                          ? theme.primary
-                          : theme.on_background,
+                            ? theme.primary
+                            : theme.on_background,
                         opacity: v.active ? 1 : v.verified ? 1 : 0.5,
                         fontStyle: v.verified ? "italic" : "",
                       }}
@@ -328,8 +332,8 @@ const SelectBankModal = (props) => {
                         bankAddress.active_backup.active
                         ? searchResult.result[0].id
                         : bankAddress.banks.active
-                        ? searchResult.result[0].bank._id
-                        : searchResult.result[0].code
+                          ? searchResult.result[0].bank._id
+                          : searchResult.result[0].code
                     );
                   }
                 }}
@@ -362,30 +366,30 @@ const SelectBankModal = (props) => {
                 {searchResult.result &&
                   (searchResult.error === ""
                     ? Object.entries(searchResult.result).map(([k, v]) => {
-                        return (
-                          <div
-                            key={k}
-                            className="selection-item"
-                            onClick={() =>
-                              updateAddress(
-                                bankAddress.banks.active
-                                  ? v.bank.groups_title
-                                  : v.name,
-                                bankAddress.softwares.active ||
-                                  bankAddress.active_backup.active
-                                  ? v.id
-                                  : bankAddress.banks.active
+                      return (
+                        <div
+                          key={k}
+                          className="selection-item"
+                          onClick={() =>
+                            updateAddress(
+                              bankAddress.banks.active
+                                ? v.bank.groups_title
+                                : v.name,
+                              bankAddress.softwares.active ||
+                                bankAddress.active_backup.active
+                                ? v.id
+                                : bankAddress.banks.active
                                   ? v.bank._id
                                   : v.code
-                              )
-                            }
-                          >
-                            {bankAddress.banks.active
-                              ? v.bank.groups_title
-                              : v.name}
-                          </div>
-                        );
-                      })
+                            )
+                          }
+                        >
+                          {bankAddress.banks.active
+                            ? v.bank.groups_title
+                            : v.name}
+                        </div>
+                      );
+                    })
                     : searchResult.error)}
               </div>
             </div>

@@ -1,0 +1,14 @@
+.header-setting-item-container{
+    padding: .4rem .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+    transition : border 300ms ease-out;
+    p{
+        font-weight: 100;
+        font-size: 15px;
+    }
+  
+}

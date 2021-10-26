@@ -1,0 +1,14 @@
+.brand-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    span{
+        margin-right: .5rem;
+    }
+    img {
+        width: 30px;
+        height: 30px;
+        margin-left: 0.2rem;
+    }
+}

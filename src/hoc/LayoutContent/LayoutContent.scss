@@ -1,54 +1,23 @@
 @import "../../assets/config/config";
 
-.LayoutContentContainer {
+.Layout-container {
   height: 100%;
   width: 100%;
-  // box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
-  //   rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-  display: flex;
-  flex-direction: row;
+  padding: 0;
   overflow-x: hidden;
   transition: color 0.2s ease-out, background 0.2s ease-out;
-  .ModalOverlay {
-    z-index: 1000;
-    position: fixed;
-    inset: 0px;
-    background-color: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
+  
+  .NavbarContainer {
+    height: 66px;
+    width: 100%;
+    top: 0;
   }
-  .LeftSectionContainer {
-    width: 87%;
+  .layout-content {
+    width: 100%;
     margin-left: 0;
-    height: 100%;
-    display: block;
-    .NavbarContainer {
-      height: auto;
-      margin-top: 0;
-      width: 100%;
-    }
-    .BodyContainer {
-      height: calc(100% - 7.5rem);
-      margin-top: 0;
-      width: 100%;
-      // box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px inset;
-      overflow-y: auto;
-      .BodyContent {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        .CreateChartContainer {
-          display: flex;
-          flex-direction: row;
-          color: rgb(44, 175, 44);
-          padding-right: 1rem;
-        }
-        .CreateChartContainer:hover {
-          cursor: pointer;
-        }
-      }
-    }
+    height: calc( 100% - 66px );
+    display: flex;
+   
   }
 
   .Extend {

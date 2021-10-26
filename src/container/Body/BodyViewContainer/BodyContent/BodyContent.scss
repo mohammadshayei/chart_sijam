@@ -1,0 +1,50 @@
+@import "../../../../assets/config/global";
+
+.body-container {
+    .react-grid-layout {
+        position: relative;
+        transition: height 200ms ease;
+    }
+    .react-grid-item {
+        transition: all 200ms ease;
+        transition-property: left, top;
+    }
+    .react-grid-item.react-grid-placeholder {
+        background: transparent;
+        border: 4px dashed rgb(132, 124, 196);
+        opacity: 0.2;
+        border-radius: 10px;
+        transition-duration: 100ms;
+        z-index: 5;
+    }
+    .react-grid-item > .react-resizable-handle {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+    }
+    .react-grid-item > .react-resizable-handle::after {
+        content: "";
+        position: absolute;
+        right: 3px;
+        bottom: 3px;
+        width: 5px;
+        height: 5px;
+        border-right: 2px solid rgb(255, 166, 0);
+        border-bottom: 2px solid rgb(255, 166, 0);
+    }
+    .react-resizable-hide > .react-resizable-handle {
+        display: none;
+    }
+    .card-container {
+        position: relative;
+        // transform: translate3d(0px, 0px, 0px);
+        margin-bottom: 16px;
+        border-radius: 10px;
+        overflow: visible;
+        color: #bbbbbb;
+        animation: 0.3s linear 0s 1 normal none running automationCard;
+    }
+    // .card-container:hover {
+    //   transform: translate3d(0px, -4px, 0px);
+    // }
+}

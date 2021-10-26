@@ -1,0 +1,30 @@
+.tooltip-tip-container {
+    position: absolute;
+    height: 2rem;
+    border-radius: 4px;
+    top: calc(50% - 3px);
+    transform: translateY(100%);
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 14px;
+    z-index: 100;
+    white-space: nowrap;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        text-decoration: none;
+    }
+    .arrow-tooltip {
+        position: absolute;
+        top: -0.5rem;
+        transform: translateX(calc(50% -0.5rem));
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid green;
+    }
+}

@@ -39,4 +39,5 @@ export const REMOVE_FIELD_PICKER = "REMOVE_FIELD_PICKER";
 export const SET_ITEMS = "SET_ITEMS";
 export const ADD_HOLDING = "ADD_HOLDING";
 export const ADD_COMPANY = "ADD_COMPANY";
-export const SET_IS_NEW_CHART = "SET_IS_NEW_CHART";
+
+
