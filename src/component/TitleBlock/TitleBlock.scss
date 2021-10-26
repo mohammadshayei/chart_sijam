@@ -8,21 +8,9 @@
     justify-content: space-between;
     user-select: none;
     font-size: 1rem;
-    .details {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      user-select: none;
-      font-size: 0.8rem;
-      // @media screen and (max-width: $xl) and (min-width: $md) {
-      //   // font-size: 10px;
-      // }
-      // @media screen and (max-width: $md) {
-      //   // font-size: 8px;
-      // }
-    }
-
     .setting-container {
+      display: flex;
+      width: 1.4rem;
       .card-setting {
         display: flex;
         align-items: center;
@@ -40,6 +28,19 @@
           transform: rotate(180deg);
         }
       }
+    }
+    .details {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      user-select: none;
+      font-size: 0.8rem;
+      // @media screen and (max-width: $xl) and (min-width: $md) {
+      //   // font-size: 10px;
+      // }
+      // @media screen and (max-width: $md) {
+      //   // font-size: 8px;
+      // }
     }
     .star-container {
       font-size: 1.4rem;

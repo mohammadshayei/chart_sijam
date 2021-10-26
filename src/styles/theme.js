@@ -24,10 +24,10 @@ const lightTheme = {
   border_color: "#e6e9ef",
   darken_border_color: "",
   borderBlur: "rgb(165, 162, 162)",
-  hover_button:'rgb(202, 201, 201)',
+  hover_button: "rgb(202, 201, 201)",
   button_disabled: "rgb(139, 199, 199)",
   hover: "rgba(0, 0, 0, 0.1)",
-  table_background:'#fff',
+  table_background: "#fff",
   // ripple_company_menu_item_color:""
 };
 
@@ -57,13 +57,13 @@ const darkTheme = {
   ripple_star_color: "#fa9435",
   ripple_holding_menu_item_color: "rgba(46, 46, 46, 0.05)",
   background: "rgb(113, 158, 158)",
-  border_color: "#4b4e69",
+  border_color: "#4d4d4d", //#4b4e69
   hover_background: "rgb(98, 139, 139)",
   borderBlur: "rgb(165, 162, 162)",
   button_disabled: "rgb(139, 199, 199)",
-  hover_button:'rgb(102, 100, 100)',
+  hover_button: "rgb(102, 100, 100)",
   hover: "rgba(255, 255, 255, 0.1)",
-  table_background:'#000',
+  table_background: "#000",
 
   // ripple_company_menu_item_color:""
 };

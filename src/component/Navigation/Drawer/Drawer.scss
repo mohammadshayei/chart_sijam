@@ -1,9 +1,10 @@
 @import "../../../assets/config/global";
 .DrawerContainer {
-  @extend %global-shadow;
+  // @extend %global-shadow;
   height: 100%;
   width: 25rem;
   position: relative;
+  border-left: 1px solid;
   .add-box-container {
     padding-top: 2rem;
     .button-text {

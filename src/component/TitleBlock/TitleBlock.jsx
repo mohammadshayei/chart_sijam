@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./TitleBlock.scss";
-import { data } from "../../assets/dummy_data/TestData";
 import { useTheme } from "../../styles/ThemeProvider";
 import * as chartActions from "../../store/actions/chart.js";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import DropDown from "./../UI/DropDown/DropDown";
-import { Link } from "react-router-dom";
 import { stringFa } from "./../../assets/strings/stringFaCollection";
 import { chartTypes } from "../../constants/chart-types";
 import { useDispatch, useSelector } from "react-redux";
@@ -107,9 +105,13 @@ const TitleBlock = React.memo((props) => {
         // if (error) {
         let result;
         try {
-          result = await axios.post(`${baseUrl}api/delete_chart`, {
-            id: props.chartId,
-          }, { headers: { 'auth-token': token } });
+          result = await axios.post(
+            `${baseUrl}api/delete_chart`,
+            {
+              id: props.chartId,
+            },
+            { headers: { "auth-token": token } }
+          );
           setError(null);
         } catch (error) {
           setError(
@@ -171,7 +173,9 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         </div>
-        <p className="details">{props.parent ? props.parent.join(" - ") : ""}</p>
+        <p className="details">
+          {props.parent ? props.parent.join(" - ") : ""}
+        </p>
         <div className="star-container" onClick={onStarClickHandler}>
           {isFav ? (
             <StarRoundedIcon style={starStyles} />
