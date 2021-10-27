@@ -191,6 +191,7 @@ const TitleBlock = React.memo((props) => {
                 extraItems={extraItems}
                 onClick={settingMenuHandler}
                 setDropDown={setDropDown}
+                divContainerRef={ref}
               />
             )}
             {chartsData.editMode && (
