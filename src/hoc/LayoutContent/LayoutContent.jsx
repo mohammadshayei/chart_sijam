@@ -9,7 +9,7 @@ import BodySetting from "../../container/Body/BodySetting/BodySetting";
 
 const LayoutContent = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const [bodyComponent, setBodyComponent] = useState(null)
+  const [bodyComponent, setBodyComponent] = useState(null);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -18,22 +18,19 @@ const LayoutContent = (props) => {
   const location = useLocation();
 
   useEffect(() => {
-
     switch (location.pathname) {
-      case '/view':
-        setBodyComponent(<BodyViewContainer />)
+      case "/view":
+        setBodyComponent(<BodyViewContainer />);
         break;
-      case '/view/setting':
-        setBodyComponent(<BodySetting />)
+      case "/view/setting":
+        setBodyComponent(<BodySetting />);
         break;
       default:
-        setBodyComponent(<BodyViewContainer />)
+        setBodyComponent(<BodyViewContainer />);
 
         break;
     }
-  }, [location.pathname])
-
-
+  }, [location.pathname]);
 
   return (
     <div
@@ -51,13 +48,10 @@ const LayoutContent = (props) => {
             : theme.surface,
         }}
       >
-        <Navbar
-          onToggleMenu={onToggleMenu}
-          isMenuOpen={isMenuOpen}
-        />
+        <Navbar onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
       </div>
 
-      <div className='layout-content'>
+      <div className="layout-content">
         {bodyComponent}
         <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
       </div>
@@ -65,4 +59,3 @@ const LayoutContent = (props) => {
   );
 };
 export default React.memo(LayoutContent);
-
