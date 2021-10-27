@@ -8,9 +8,8 @@ import axios from "axios";
 import { baseUrl } from "../../../../../constants/Config";
 import ErrorDialog from "../../../../UI/Error/ErrorDialog";
 import { useTheme } from "../../../../../styles/ThemeProvider";
-const DrawerViewCharts = (props) => {
+const DrawerViewCharts = () => {
   const editMode = useSelector((state) => state.chart.editMode);
-  const token = useSelector((state) => state.auth.token);
   const [focus, setFocus] = useState(false);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -30,20 +29,20 @@ const DrawerViewCharts = (props) => {
   const randomInteger = (min, max) => {
     return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
   };
-  const onKeyDown = (e) => { };
+  const onKeyDown = (e) => {};
   const onAddHandler = async () => {
     const state = detail.company
       ? "software"
       : detail.holding
-        ? "company"
-        : "holding";
+      ? "company"
+      : "holding";
     if (value.length < 2) {
       const persianState =
         state === "holding"
           ? "هولدینگ"
           : state === "company"
-            ? "سازمان"
-            : "نرم افزار";
+          ? "سازمان"
+          : "نرم افزار";
       setError(
         <ErrorDialog
           onClose={setError}
@@ -61,7 +60,7 @@ const DrawerViewCharts = (props) => {
       while (true) {
         const resultSearch = await axios.post(
           `${baseUrl}api/check_exist_${state}_code`,
-          { code }, { headers: { 'auth-token': token } }
+          { code }
         );
         if (state === "company")
           payload = { ...payload, holding_code: detail.holding.code };
@@ -71,12 +70,12 @@ const DrawerViewCharts = (props) => {
     } else {
       payload = { ...payload, company_code: detail.company.code };
     }
-    const result = await axios.post(`${baseUrl}api/${distUrl}`, payload, { headers: { 'auth-token': token } });
+    const result = await axios.post(`${baseUrl}api/${distUrl}`, payload);
     console.log(result);
   };
   return (
     <div>
-      {props.isMenuOpen && <MenuItems />}
+      <MenuItems />
       {editMode && (
         <div className="add-box-container">
           <input
@@ -88,12 +87,13 @@ const DrawerViewCharts = (props) => {
               borderColor: focus ? theme.primary : theme.border_color,
             }}
             dir="rtl"
-            placeholder={`نام ${detail.company
-              ? stringFa.softwares
-              : detail.holding
+            placeholder={`نام ${
+              detail.company
+                ? stringFa.softwares
+                : detail.holding
                 ? stringFa.companies
                 : stringFa.holdings
-              } جدید`}
+            } جدید`}
             onKeyDown={onKeyDown}
             onChange={onChange}
             onFocus={onFocusHandler}
@@ -110,8 +110,8 @@ const DrawerViewCharts = (props) => {
               {detail.company
                 ? stringFa.add_software
                 : detail.holding
-                  ? stringFa.add_company
-                  : stringFa.add_holding}
+                ? stringFa.add_company
+                : stringFa.add_holding}
               <div className="button-icon" style={{ color: theme.primary }}>
                 <FaPlusCircle />
               </div>
@@ -122,4 +122,5 @@ const DrawerViewCharts = (props) => {
     </div>
   );
 };
-export default React.memo(DrawerViewCharts);
+
+export default DrawerViewCharts;

@@ -3,15 +3,10 @@ import "./DropDown.scss";
 import { useTheme } from "../../../styles/ThemeProvider.js";
 import { Link } from "react-router-dom";
 
-function useOnClickOutside(divContainerRef, ref, handler) {
+function useOnClickOutside(ref, handler) {
   useEffect(() => {
     const listener = (event) => {
-      if (
-        !divContainerRef.current ||
-        divContainerRef.current.contains(event.target) ||
-        !ref.current ||
-        ref.current.contains(event.target)
-      ) {
+      if (!ref.current || ref.current.contains(event.target)) {
         return;
       }
       handler(event);
@@ -31,7 +26,7 @@ const DropDown = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const divRef = useRef();
-  useOnClickOutside(props.divContainerRef, divRef, () => {
+  useOnClickOutside(divRef, () => {
     props.setDropDown(false);
   });
 
@@ -65,8 +60,7 @@ const DropDown = (props) => {
             {item.isLink ? (
               <Link
                 to={{
-                  pathname: `/view/setting`,
-                  search: '?menu_item=1',
+                  pathname: "/view/setting",
                 }}
                 style={{ textDecoration: "none", color: theme.on_background }}
               >

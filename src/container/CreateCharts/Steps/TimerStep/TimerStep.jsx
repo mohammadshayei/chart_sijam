@@ -3,8 +3,7 @@ import "./TimerStep.scss";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import DropDown from "./../../../../component/UI/DropDown/DropDown";
 import { BiChevronDown } from "react-icons/bi";
-import { useDispatch } from "react-redux";
-import StyledButton from "./../../../../component/UI/Button/StyledButton";
+import { useDispatch, useSelector } from "react-redux";
 import * as addChartActions from "../../../../store/actions/addChart";
 import { stringFa } from "./../../../../assets/strings/stringFaCollection";
 
@@ -15,6 +14,8 @@ const TimerStep = () => {
   const [focus, setFocus] = useState(false);
   const [checked, setChecked] = useState(false);
   const [financialGoal, setFinancialGoal] = useState("");
+  const [initial, setInitial] = useState(true);
+  const takenData = useSelector((state) => state.addChart);
   const dropDownItems = [
     { name: "دقیقه", id: "m" },
     { name: "ساعت", id: "h" },
@@ -36,6 +37,18 @@ const TimerStep = () => {
   };
 
   useEffect(() => {
+    if (initial) {
+      if (takenData.chartData.config) {
+        if (takenData.chartData.config.autoUpdate) {
+          setFinancialGoal(takenData.chartData.config.period);
+          setChecked(true);
+          setInitial(false);
+        }
+      }
+    }
+  }, [takenData.chartData]);
+
+  useEffect(() => {
     if (checked) {
       setPeriod(financialGoal);
       setChartTimer({ period, autoUpdate: true });
@@ -43,7 +56,9 @@ const TimerStep = () => {
   }, [checked]);
 
   useEffect(() => {
-    setChartTimer({ period, autoUpdate: true });
+    if (!initial) {
+      setChartTimer({ period, autoUpdate: true });
+    }
   }, [period]);
 
   useEffect(() => {

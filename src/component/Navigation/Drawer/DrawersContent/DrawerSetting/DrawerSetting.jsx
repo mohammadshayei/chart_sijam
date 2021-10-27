@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
 import { stringFa } from "../../../../../assets/strings/stringFaCollection";
+import "./DrawerSetting.scss";
 import { DrawerSettingItem } from "./DrawerSettingItem/DrawerSettingItem";
 const DrawerSetting = () => {
-  const baseAdminMenuOrders = {
+  const [order, setOrder] = useState({
     customization: {
       isSelected: true,
       icon: "customization",
       title: stringFa.customization,
-      onClick: () => { },
+      onClick: () => {},
     },
     users: {
       isSelected: false,
       icon: "users",
       title: stringFa.users,
-      onClick: () => { },
+      onClick: () => {},
     },
     permissions: {
       isSelected: false,
       icon: "permissions",
       title: stringFa.permissions,
-      onClick: () => { },
+      onClick: () => {},
     },
-  }
-  const [order, setOrder] = useState(baseAdminMenuOrders);
-  const user = useSelector(state => state.auth.user)
-
+  });
 
   const onMenuItemClick = (e, key) => {
     const updatedOrder = { ...order };
@@ -39,16 +36,9 @@ const DrawerSetting = () => {
     updatedOrder[key] = updatedItem;
     setOrder(updatedOrder);
   };
-  useEffect(() => {
-    if (user) {
-      if (user.is_fekrafzar) {
-        setOrder(baseAdminMenuOrders)
-      }
-    }
-  }, [user])
   return (
     <div className="MenuItemsContainer">
-      {Object.entries(order).map(([k, v], index) => {
+      {Object.entries(order).map(([k, v]) => {
         if (v.isSelected) {
         }
         return (
@@ -61,7 +51,6 @@ const DrawerSetting = () => {
               onMenuItemClick(e, k);
               v.onClick && v.onClick();
             }}
-            index={index}
           />
         );
       })}

@@ -14,57 +14,57 @@ const Gallery = (props) => {
       title: "خطی",
       items: {
         line: {
-          img: "images/v2-line-chart-color.svg",
+          img: "images/line-chart-default.svg",
           selected: false,
         },
         smooth: {
-          img: "images/v2-smooth-line-chart-color.svg",
+          img: "images/smooth-line-chart-default.svg",
           selected: true,
         },
-        area: {
-          img: "images/v2-area-chart-color.svg",
-          selected: false,
-        },
-        stackedArea: {
-          img: "images/v2-stacked-area-chart-color.svg",
-          selected: false,
-        },
-        fullStackedArea: {
-          img: "images/v2-100p-stacked-area-chart-color.svg",
-          selected: false,
-        },
+        // area: {
+        //   img: "images/v2-area-chart-color.svg",
+        //   selected: false,
+        // },
+        // stackedArea: {
+        //   img: "images/v2-stacked-area-chart-color.svg",
+        //   selected: false,
+        // },
+        // fullStackedArea: {
+        //   img: "images/v2-100p-stacked-area-chart-color.svg",
+        //   selected: false,
+        // },
       },
     },
     Column: {
       title: "ستونی",
       items: {
         bar: {
-          img: "images/v2-bar-chart-color.svg",
+          img: "images/bar-chart-default.svg",
           selected: false,
         },
         stackedBar: {
-          img: "images/v2-stacked-bar-chart-color.svg",
+          img: "images/stacked-bar-chart-default.svg",
           selected: false,
         },
-        horizontal: {
-          img: "images/v2-horizontal-bar-chart-color.svg",
-          selected: false,
-        },
-        horizontalStacked: {
-          img: "images/v2-horizontal-stacked-chart-color.svg",
-          selected: false,
-        },
+        // horizontal: {
+        //   img: "images/v2-horizontal-bar-chart-color.svg",
+        //   selected: false,
+        // },
+        // horizontalStacked: {
+        //   img: "images/v2-horizontal-stacked-chart-color.svg",
+        //   selected: false,
+        // },
       },
     },
     Pie: {
       title: "دایره ای",
       items: {
         pie: {
-          img: "images/v2-pie-chart-color.svg",
+          img: "images/pie-chart-default.svg",
           selected: false,
         },
         donut: {
-          img: "images/v2-donut-chart-color.svg",
+          img: "images/donut-chart-default.svg",
           selected: false,
         },
       },

@@ -8,11 +8,11 @@ export const selectChartData = (data) => (dispatch) => {
 };
 
 export const setChartData =
-  ({ title, type, data }) =>
+  ({ title, type, config, data }) =>
   (dispatch) => {
     dispatch({
       type: actionTypes.SET_DATA_ADD_CHART,
-      payload: { title, type, data },
+      payload: { title, type, config, data },
     });
   };
 
@@ -49,3 +49,10 @@ export const removeDataField =
       payload: { index },
     });
   };
+
+export const setIsNewChart = (isNewChart) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_IS_NEW_CHART,
+    isNewChart: isNewChart,
+  });
+};

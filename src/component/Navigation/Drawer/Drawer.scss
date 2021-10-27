@@ -2,10 +2,10 @@
 .DrawerContainer {
   @extend %global-shadow;
   height: 100%;
-  width: 25rem;
-  position: relative;
+  width: 13%;
   .add-box-container {
     padding-top: 2rem;
+
     .button-text {
       display: flex;
       font-size: 0.8rem;
@@ -16,37 +16,63 @@
       }
     }
     .input-creator,
-    select {
-      width: 80%;
-      display: inline-block;
-      font-size: 13px;
-      padding: 0.2rem;
-      border: 1px solid;
-      border-radius: 4px;
-      box-sizing: border-box;
-      outline: none;
-      margin-left: 10%;
-    }
+        select {
+          width: 80%;
+          display: inline-block;
+          font-size: 13px;
+          padding: 0.2rem;
+          border: 1px solid;
+          border-radius: 4px;
+          box-sizing: border-box;
+          outline: none;
+          margin-left: 10%;
+        }
+    // .input-creator {
+    //   box-sizing: border-box;
+    //   height: 2rem;
+    //   direction: rtl;
+    //   width: 80%;
+    //   margin-left: 10%;
+    //   outline: none;
+    //   border: 1px solid rgba($color: #000000, $alpha: 0.4);
+    //   box-shadow: none;
+    //   border-radius: 3px;
+    //   transition: border 0.1s;
+    //   align-items: center;
+    //   cursor: pointer;
+    //   display: flex;
+    //   flex-wrap: wrap;
+    //   justify-content: space-between;
+    //   transition: all 100ms ease 0s;
+    //   &:focus {
+    //     border: 1.3px solid rgba($color: #000000, $alpha: 0.7);
+    //   }
+    // }
   }
 }
 .HideDrawer {
   animation: ease-out 200ms forwards HideDrawer;
 }
-.ShowDrawer {
-  animation: ease-out 200ms forwards ShowDrawer;
+@media screen and (max-width: 1300px) {
+  .DrawerContainer {
+    width: 17%;
+  }
+  .ShowDrawer {
+    animation: ease-out 200ms forwards ShowDrawer1300;
+  }
 }
 @keyframes HideDrawer {
   0% {
-    width: 25rem;
+    width: 10%;
     opacity: 0.9;
   }
   50% {
-    width: 15rem;
+    width: 5%;
     opacity: 0.4;
   }
   100% {
-    width: 2rem;
-    opacity: 1;
+    width: 0%;
+    opacity: 0;
 
     // transform: translateX(110%);
   }
@@ -54,15 +80,31 @@
 
 @keyframes ShowDrawer {
   0% {
-    width: 1rem;
+    width: 0.1%;
     opacity: 0.1;
   }
   50% {
-    width: 16rem;
+    width: 5%;
     opacity: 0.6;
   }
   100% {
-    width: 25rem;
+    width: 13%;
+    opacity: 1;
+
+    // transform: translateX(110%);
+  }
+}
+@keyframes ShowDrawer1300 {
+  0% {
+    width: 0.1%;
+    opacity: 0.1;
+  }
+  50% {
+    width: 9%;
+    opacity: 0.6;
+  }
+  100% {
+    width: 17%;
     opacity: 1;
 
     // transform: translateX(110%);

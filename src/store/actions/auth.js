@@ -7,11 +7,10 @@ export const authStart = () => {
   };
 };
 
-export const getUserData = (userId,token) => {
+export const getUserData = (userId) => {
   return (dispatch) => {
     return axios
-      .post(`${baseUrl}api/get_user_data`, { id: userId },
-        { headers: { 'auth-token': token } })
+      .post(`${baseUrl}api/get_user_data`, { id: userId })
       .then((result) => {
         dispatch({
           type: actionTypes.SET_USER_DATA,
@@ -21,11 +20,10 @@ export const getUserData = (userId,token) => {
   };
 };
 
-export const authSuccess = (token, userId) => {
+export const authSuccess = (userId) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    token,
-    userId
+    userId,
   };
 };
 
@@ -54,9 +52,8 @@ export const auth = (username, password, url) => {
       .post(url, authData)
       .then((res) => {
         if (res.data.success) {
-          localStorage.setItem("token", res.data.message.token);
           localStorage.setItem("userId", res.data.message.id);
-          dispatch(authSuccess(res.data.message.token, res.data.message.id));
+          dispatch(authSuccess(res.data.message.id));
         } else {
           dispatch(authFail(`نام کاربری یا رمز عبور اشتباه می باشد`));
         }
@@ -75,13 +72,11 @@ export const setAuthRedirectPath = (path) => {
 
 export const authCheckState = () => {
   return (dispatch) => {
-    const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-
-    if (!token || !userId) {
+    if (!userId) {
       dispatch(logout());
     } else {
-      dispatch(authSuccess(token, userId));
+      dispatch(authSuccess(userId));
     }
   };
 };

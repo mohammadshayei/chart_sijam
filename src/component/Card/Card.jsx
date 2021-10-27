@@ -68,6 +68,7 @@ const Card = React.memo((props) => {
         chartType={props.item.type}
         title={props.item.title}
         parent={props.item.parent}
+        bankId={props.item.bankId}
       />
       <div className="card-body">
         <ChartBlock chartId={props.chartId} chartProps={props.item} />

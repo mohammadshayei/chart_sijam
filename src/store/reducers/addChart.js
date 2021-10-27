@@ -2,6 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   id: "",
+  isNewChart: true,
   data: {},
   chartData: {
     title: "",
@@ -71,12 +72,13 @@ const selectChartData = (state, action) => {
 };
 
 const setChartData = (state, action) => {
-  const { title, type, data } = action.payload;
+  const { title, type, config, data } = action.payload;
   return {
     ...state,
     chartData: {
       title,
       type,
+      config,
       data,
     },
   };
@@ -156,6 +158,14 @@ const removeDataField = (state, action) => {
   };
 };
 
+const setIsNewChart = (state, action) => {
+  const { isNewChart } = action;
+  return {
+    ...state,
+    isNewChart,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -170,6 +180,8 @@ const reducer = (state = initialState, action) => {
       return setChartTimer(state, action);
     case actionTypes.REMOVE_DATA_FIELD:
       return removeDataField(state, action);
+    case actionTypes.SET_IS_NEW_CHART:
+      return setIsNewChart(state, action);
     default:
       return state;
   }

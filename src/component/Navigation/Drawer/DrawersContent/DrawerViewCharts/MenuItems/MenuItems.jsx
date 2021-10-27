@@ -18,7 +18,6 @@ const MenuItems = () => {
   const [clickedId, setClickedId] = useState(null);
   const [orders, setOrders] = useState([]);
   const [rightClick, setRightClick] = useState(false);
-
   // const [items, setItems] = useState({ holdings: [] });
   const dispatch = useDispatch();
   const [activeBackups, setActiveBackups] = useState(null);
@@ -29,8 +28,6 @@ const MenuItems = () => {
 
   const detail = useSelector((state) => state.detail);
   const items = useSelector((state) => state.detail.items);
-  const token = useSelector((state) => state.auth.token);
-
   const chartsLoading = useSelector((state) => state.chart.loading);
 
   const setLoading = (loading) => {
@@ -128,12 +125,9 @@ const MenuItems = () => {
         selectHolding(updatedHoldings[updatedHoldingIndex]);
         updatedHoldings[updatedHoldingIndex].isActive = true;
         setLoading(true);
-        const result = await axios.post(`${baseUrl}api/get_companies`,
-          {
-            code: updatedHoldings[updatedHoldingIndex].code,
-          },
-          { headers: { 'auth-token': token } }
-        );
+        const result = await axios.post(`${baseUrl}api/get_companies`, {
+          code: updatedHoldings[updatedHoldingIndex].code,
+        });
         setLoading(false);
         updatedHoldings[updatedHoldingIndex].companies =
           result.data.message.result;
@@ -173,7 +167,7 @@ const MenuItems = () => {
         setLoading(true);
         const result = await axios.post(`${baseUrl}api/get_softwares`, {
           code: updatedCompanies[updatedComapnyIndex].code,
-        }, { headers: { 'auth-token': token } });
+        });
         setLoading(false);
         updatedCompanies[updatedComapnyIndex].softwares =
           result.data.message.result;
@@ -204,7 +198,7 @@ const MenuItems = () => {
       setLoading(true);
       const softwareReq = await axios.post(`${baseUrl}api/get_active_backup`, {
         id: software.id,
-      }, { headers: { 'auth-token': token } });
+      });
       setLoading(false);
       const activeBackup = softwareReq.data.message.result[0];
       selectActiveBackup(activeBackup);
@@ -220,7 +214,7 @@ const MenuItems = () => {
         setLoading(true);
         result = await axios.post(`${baseUrl}api/get_active_backup`, {
           id: detail.software.id,
-        }, { headers: { 'auth-token': token } });
+        });
         setLoading(false);
         if (result.data.success) {
           setActiveBackups(result.data.message.result);
@@ -234,9 +228,8 @@ const MenuItems = () => {
   }, [detail.software, isSoftwareClicked]);
 
   useEffect(async () => {
-    if (!token) return
     setLoading(true);
-    const result = await axios.get(`${baseUrl}api/get_holdings`, { headers: { 'auth-token': token } });
+    const result = await axios.get(`${baseUrl}api/get_holdings`);
     setLoading(false);
     const holdings = result.data.message.result.map((item) => {
       return {
@@ -250,7 +243,7 @@ const MenuItems = () => {
       url: "get_holdings",
       holdings: [...holdings],
     });
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     let updatedOrders = [];
@@ -327,7 +320,7 @@ const MenuItems = () => {
               ? activeBackups
               : [{ name: <SkeletonElement type="text" /> }]
           }
-          onClick={() => { }}
+          onClick={() => {}}
           setDropDown={setRightClick}
         />
       )}
@@ -358,4 +351,4 @@ const MenuItems = () => {
   );
 };
 
-export default React.memo(MenuItems);
+export default MenuItems;

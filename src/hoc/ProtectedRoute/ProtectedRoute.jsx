@@ -7,10 +7,9 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const checkAuth = () => dispatch(actions.authCheckState());
-  const auth = useSelector((state) => state.auth);
-  const setUserData = (userId, token) => dispatch(actions.getUserData(userId, token));
+  const setUserData = (userId) => dispatch(actions.getUserData(userId));
 
-
+  const userId = useSelector((state) => state.auth.userId);
   const [body, setBody] = useState(null);
   useEffect(() => {
     checkAuth();
@@ -23,15 +22,15 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
         <Redirect to={{ pathname: "/view" }} />
       )
     );
-    if (auth.userId && auth.token) {
-      setUserData(auth.userId, auth.token)
+    if(userId){
+      setUserData(userId)
     }
-  }, [auth.token, auth.userId]);
+  }, [userId]);
   const cmp = (
     <Route
       {...rest}
       render={(props) =>
-        auth.userId && auth.token ? body : <Redirect to={{ pathname: "/login" }} />
+        userId ? body : <Redirect to={{ pathname: "/login" }} />
       }
     />
   );

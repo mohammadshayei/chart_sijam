@@ -6,7 +6,6 @@ const lightTheme = {
   secondary: "#8D82FD",
   secondary_variant: "",
   error: "#B00020",
-  error_variant: "#9e0420",
   success: "#00ca72",
   on_background: "#000",
   on_surface: "#565656",
@@ -22,18 +21,14 @@ const lightTheme = {
   background: "rgb(113, 158, 158)",
   hover_background: "rgb(98, 139, 139)",
   border_color: "#e6e9ef",
-  darken_border_color: "",
   borderBlur: "rgb(165, 162, 162)",
-  hover_button:'rgb(202, 201, 201)',
   button_disabled: "rgb(139, 199, 199)",
-  hover: "rgba(0, 0, 0, 0.1)",
-  table_background:'#fff',
+  hover:"rgba(0, 0, 0, 0.1)",
   // ripple_company_menu_item_color:""
 };
 
 const darkTheme = {
   background_color: "#121212",
-  surface: "#000",
   surface_1dp: "rgba(255,255,255,0.05)",
   surface_2dp: "rgba(255,255,255,0.07)",
   surface_4dp: "rgba(255,255,255,0.09)",
@@ -44,7 +39,6 @@ const darkTheme = {
   secondary: "#8D82FD",
   secondary_variant: "",
   error: "#CF6679",
-  error_variant: "#ac4f60",
   success: "#00ca72",
   on_background: "#FFFFFF",
   on_surface: "#FFFFFF",
@@ -61,10 +55,7 @@ const darkTheme = {
   hover_background: "rgb(98, 139, 139)",
   borderBlur: "rgb(165, 162, 162)",
   button_disabled: "rgb(139, 199, 199)",
-  hover_button:'rgb(102, 100, 100)',
-  hover: "rgba(255, 255, 255, 0.1)",
-  table_background:'#000',
-
+  hover:"",
   // ripple_company_menu_item_color:""
 };
 
