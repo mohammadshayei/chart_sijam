@@ -139,9 +139,13 @@ const TitleBlock = React.memo((props) => {
         // if (error) {
         let result;
         try {
-          result = await axios.post(`${baseUrl}api/delete_chart`, {
-            id: props.chartId,
-          }, { headers: { 'auth-token': token } });
+          result = await axios.post(
+            `${baseUrl}api/delete_chart`,
+            {
+              id: props.chartId,
+            },
+            { headers: { "auth-token": token } }
+          );
           setError(null);
         } catch (error) {
           setError(

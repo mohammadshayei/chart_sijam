@@ -3,11 +3,9 @@
   overflow: hidden;
   margin-top: 1.5rem;
   z-index: 1000;
-  border: 1px solid;
   border-radius: 5px;
   box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.08);
-  backdrop-filter: transparent(0);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(50px);
   animation: fadeInDropDown 0.2s ease-in-out backwards;
   .dropdown-divider {
     border-top: 1px solid; //rgba(0, 0, 0, 0.1)

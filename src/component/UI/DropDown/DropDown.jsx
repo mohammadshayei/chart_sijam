@@ -48,8 +48,7 @@ const DropDown = (props) => {
       className="dropdown"
       style={{
         ...props.divStyle,
-        backgroundColor: theme.surface_12dp,
-        borderColor: theme.border_color,
+        backgroundColor: themeState.isDark ? theme.surface_24dp : theme.surface,
       }}
     >
       {props.items &&
@@ -71,7 +70,7 @@ const DropDown = (props) => {
               <Link
                 to={{
                   pathname: `/view/setting`,
-                  search: '?menu_item=1',
+                  search: "?menu_item=1",
                 }}
                 style={{ textDecoration: "none", color: theme.on_background }}
               >
