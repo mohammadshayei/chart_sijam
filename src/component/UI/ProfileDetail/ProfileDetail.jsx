@@ -8,29 +8,35 @@ import * as actions from "../../../store/actions/index";
 import { baseUrl } from "../../../constants/Config";
 import SkeletonProfile from "../../Skeletons/SkeletonProfile";
 import { IoIosArrowDropdown } from "react-icons/io";
+import { Redirect } from "react-router";
 
 const ProfileDetail = (props) => {
-  const [isHover, setIsHover] = useState(false);
   const themeState = useTheme();
-
+  const theme = themeState.computedTheme;
+  const [isHover, setIsHover] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
+  const [redirect, setRedirect] = useState(false);
   const baseMenuOrder = [
     {
-      name: themeState.isDark ? stringFa.light_theme : stringFa.dark_theme,
+      name: "-",
       id: "change_theme",
     },
     { name: stringFa.log_out, id: "log_out" },
   ];
-  const [menuOrders, setMenuOrders] = useState(baseMenuOrder)
+  const [menuOrders, setMenuOrders] = useState(baseMenuOrder);
   const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
   const divRef = useRef();
   const dispatch = useDispatch();
   const userDetail = useSelector((state) => state.auth.user);
 
+  const openSetting = () => {
+    setRedirect(<Redirect to="/view/setting" />);
+    // search: "?menu_item=1",
+  };
+
   const logout = () => {
     dispatch(actions.logout());
   };
-  const theme = themeState.computedTheme;
 
   const onMouseEnter = () => {
     setIsHover(true);
@@ -40,19 +46,35 @@ const ProfileDetail = (props) => {
   };
 
   useEffect(() => {
-    // { name: stringFa.setting, id: "setting", isLink: true },
+    let updatedMenuOrders = [...menuOrders];
+    updatedMenuOrders[0].name = themeState.isDark
+      ? stringFa.light_theme
+      : stringFa.dark_theme;
+    setMenuOrders(updatedMenuOrders);
+  }, [themeState]);
 
+  useEffect(() => {
     if (userDetail && userDetail.image) {
       setImageSrc(`${baseUrl}images/${userDetail.image}.png`);
     }
     if (userDetail) {
       if (userDetail.is_fekrafzar) {
-        let updatedMenuOrders = [...menuOrders]
-        updatedMenuOrders.splice(updatedMenuOrders.length - 1, 0,
-          { name: stringFa.setting, id: "setting", isLink: true })
-        setMenuOrders(updatedMenuOrders)
-      }else{
-        setMenuOrders(baseMenuOrder)
+        let updated = false;
+        let updatedMenuOrders = [...menuOrders];
+        updatedMenuOrders.forEach((element) => {
+          if (element.id === "setting") {
+            updated = true;
+          }
+        });
+        if (!updated) {
+          updatedMenuOrders.splice(updatedMenuOrders.length - 1, 0, {
+            name: stringFa.setting,
+            id: "setting",
+          });
+        }
+        setMenuOrders(updatedMenuOrders);
+      } else {
+        setMenuOrders(baseMenuOrder);
       }
     }
   }, [userDetail]);
@@ -63,6 +85,7 @@ const ProfileDetail = (props) => {
         themeState.toggle();
         break;
       case "setting":
+        openSetting();
         break;
       case "log_out":
         logout();
@@ -74,6 +97,7 @@ const ProfileDetail = (props) => {
   };
   return (
     <div className={classes.ProfileDetailContainer}>
+      {redirect}
       {userDetail ? (
         <React.Fragment>
           <div className={classes.imageContainer}>
@@ -109,7 +133,7 @@ const ProfileDetail = (props) => {
           divStyle={{
             top: "1.6rem",
             left: "calc(100% - 1.7rem)",
-            width: "10rem"
+            width: "10rem",
           }}
           items={menuOrders}
           setDropDown={setUserMenu}
