@@ -1,25 +1,14 @@
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-1rem);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .dropdown {
-  position: fixed;
+  position: absolute;
   overflow: hidden;
   margin-top: 1.5rem;
-  z-index: 1000 !important;
+  z-index: 1000;
   border: 1px solid;
   border-radius: 5px;
   box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.08);
   backdrop-filter: transparent(0);
   backdrop-filter: blur(10px);
-  animation: fadeIn 0.2s ease-in-out;
+  animation: fadeInDropDown 0.2s ease-in-out backwards;
   .dropdown-divider {
     border-top: 1px solid; //rgba(0, 0, 0, 0.1)
     margin: 0 0.8rem;
@@ -42,5 +31,17 @@
       opacity: 1;
       filter: grayscale(0%);
     }
+  }
+}
+@keyframes fadeInDropDown {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    transform: translateY(-7%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    transform: scale(1);
   }
 }

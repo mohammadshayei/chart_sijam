@@ -6,6 +6,7 @@ import { useTheme } from "../../../styles/ThemeProvider";
 import DrawerViewCharts from "./DrawersContent/DrawerViewCharts/DrawerViewCharts";
 import { useLocation } from "react-router";
 import DrawerSetting from "./DrawersContent/DrawerSetting/DrawerSetting";
+import ToggleMenu from "../../UI/ToggleMenu/ToggleMenu";
 
 const Drawer = React.memo((props) => {
   const [content, setContent] = useState(null);
@@ -17,15 +18,16 @@ const Drawer = React.memo((props) => {
   useEffect(() => {
     switch (location.pathname) {
       case "/view":
-        setContent(<DrawerViewCharts />);
+        setContent(<DrawerViewCharts isMenuOpen={props.isMenuOpen} />);
         break;
       case "/view/setting":
-        setContent(<DrawerSetting />);
+        setContent(<DrawerSetting isMenuOpen={props.isMenuOpen} />);
+
         break;
       default:
         break;
     }
-  }, [location.pathname]);
+  }, [location.pathname,props.isMenuOpen]);
   return (
     <div
       className={`DrawerContainer ${
@@ -36,7 +38,10 @@ const Drawer = React.memo((props) => {
       }}
     >
       {error}
-      <Header onToggleMenu={props.onToggleMenu} />
+      <ToggleMenu
+        isMenuOpen={props.isMenuOpen}
+        onToggleMenu={props.onToggleMenu}
+      />
       {content && content}
     </div>
   );

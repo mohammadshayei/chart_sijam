@@ -14,11 +14,11 @@ const StyledButton = (props) => {
   const theme = themeState.computedTheme;
   const newStyle = {
     color: theme.on_background,
-    backgroundColor: isHover ? props.hover : "transparent",
+    backgroundColor: isHover ? props.hover : props.backgroundColor,
   };
   return (
     <button
-      className="sijam-style-button"
+      className={`sijam-style-button`}
       style={{ ...newStyle, ...props.ButtonStyle }}
       onClick={(e) => {
         if (props.onClick) props.onClick();

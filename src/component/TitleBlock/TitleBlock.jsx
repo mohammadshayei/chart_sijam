@@ -42,6 +42,7 @@ const TitleBlock = React.memo((props) => {
   const [error, setError] = useState(null);
   const [redirect, setRedirect] = useState(false);
   const chartsData = useSelector((state) => state.chart);
+  const token = useSelector((state) => state.auth.token);
   const detailsSelection = useSelector((state) => state.detail);
 
   const themeState = useTheme();
@@ -140,7 +141,7 @@ const TitleBlock = React.memo((props) => {
         try {
           result = await axios.post(`${baseUrl}api/delete_chart`, {
             id: props.chartId,
-          });
+          }, { headers: { 'auth-token': token } });
           setError(null);
         } catch (error) {
           setError(

@@ -1,9 +1,5 @@
 .MenuItemsContainer {
-  width: calc(13vw);
+  width: 100%;
   padding: 2rem 1.5rem;
 }
-@media screen and (max-width: 1300px) {
-  .MenuItemsContainer {
-    width: calc(17vw);
-  }
-}
+

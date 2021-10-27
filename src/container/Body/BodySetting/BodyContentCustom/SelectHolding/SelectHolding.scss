@@ -1,0 +1,17 @@
+.select-holding-container{
+    width: 20rem;
+    direction: rtl;
+    border:1px ;
+    margin-bottom: 2rem;
+    p{
+        margin-bottom: 1rem;
+    }
+    select{
+        padding: .2rem .4rem ;
+        outline: none;
+        width: 100%;
+        border: 1px solid #c5c7d0;
+        font-size: 1rem;
+        
+    }
+}

@@ -8,13 +8,12 @@
   outline: none;
   padding: 4px 8px;
   height: 32px;
-  min-width: 32px;
   background-color: transparent;
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
   white-space: nowrap;
-  transition: transform 50ms, min-width 0.1s cubic-bezier(0, 0, 0.35, 1);
+  transition: transform 50ms;
   &:active {
     transform: scale(0.95);
   }

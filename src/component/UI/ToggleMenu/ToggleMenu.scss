@@ -1,0 +1,13 @@
+.toggle-icon-container{
+    padding: .1rem;
+    border-radius: 50%;
+    border: 1px solid red;
+    position: absolute;
+    top:.7rem;
+    transform: translateX(-50%);
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    justify-content: center;
+}

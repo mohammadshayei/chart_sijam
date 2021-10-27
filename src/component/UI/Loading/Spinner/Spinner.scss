@@ -1,0 +1,84 @@
+$offset: 187;
+$duration: 1.4s;
+$spinnerColorWhite: #d8d5d5;
+$spinnerColorBlack: #383737;
+
+.Spinner {
+    width: 20px;
+    height: 20px;
+    display: block;
+    animation: rotator $duration linear infinite;
+}
+
+@keyframes rotator {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(270deg);
+    }
+}
+
+.Path {
+    stroke-dasharray: $offset;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    // colors ($duration*4) ease-in-out infinite;
+}
+.pathDark {
+    animation: dash $duration ease-in-out infinite, darks ($duration * 4) ease-in-out infinite;
+}
+.pathWhite {
+    animation: dash $duration ease-in-out infinite, whites ($duration * 4) ease-in-out infinite;
+}
+.SpinnerWhite .path {
+    animation: dash $duration ease-in-out infinite, white-color ($duration * 4) ease-in-out infinite;
+}
+@keyframes whites {
+    0% {
+        stroke: $spinnerColorWhite;
+    }
+    
+    100% {
+        stroke: $spinnerColorWhite;
+    }
+}
+@keyframes darks {
+    0% {
+        stroke: $spinnerColorBlack;
+    }
+    
+    100% {
+        stroke: $spinnerColorBlack;
+    }
+}
+// @keyframes colors {
+// 	0% { stroke: #4285F4; }
+// 	25% { stroke: #DE3E35; }
+// 	50% { stroke: #F7C223; }
+// 	75% { stroke: #1B9A59; }
+//   100% { stroke: #4285F4; }
+// }
+
+@keyframes white-color {
+    0% {
+        stroke: #fff;
+    }
+    100% {
+        stroke: #fff;
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dashoffset: $offset;
+    }
+    50% {
+        stroke-dashoffset: $offset/4;
+        transform: rotate(135deg);
+    }
+    100% {
+        stroke-dashoffset: $offset;
+        transform: rotate(450deg);
+    }
+}

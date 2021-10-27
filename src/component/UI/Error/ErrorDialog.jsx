@@ -71,7 +71,7 @@ const ErrorDialog = (props) => {
           <IoClose style={{ color: theme.on_error }} />
         </StyledButton>
       </div>
-      {props.success && (
+      {props.undoNeeded && props.success && (
         <div className="undo-button" onClick={() => handleUndo()}>
           {stringFa.undo}
         </div>

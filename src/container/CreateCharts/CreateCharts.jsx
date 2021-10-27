@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import Steps from "./Steps/Steps";
@@ -34,9 +34,11 @@ function useOnClickOutside(ref, handler) {
 
 const CreateCharts = (props) => {
   const takenData = useSelector((state) => state.addChart);
+  const token = useSelector((state) => state.auth.token);
   // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
+  const [saved, setSaved] = useState(false);
   const [redirect, setRedirect] = useState(false);
   // const location = useLocation();
   const themeState = useTheme();
@@ -127,7 +129,8 @@ const CreateCharts = (props) => {
         };
       }
       try {
-        const result = await axios.post(`${baseUrl}api/${chartApi}`, payload);
+        const result = await axios.post(`${baseUrl}api/${chartApi}`, payload,
+        { headers: { 'auth-token': token } });
         if (!result.data.success) {
           setError(
             <ErrorDialog onClose={setError}>
