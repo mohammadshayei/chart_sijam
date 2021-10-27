@@ -59,8 +59,13 @@ const DropDown = (props) => {
               handleClick(item.name, item.id);
             }}
             className="dropdown-item"
-            style={{ ...props.contentStyle, color: theme.on_background }}
+            style={{
+              ...props.contentStyle,
+              color: theme.on_background,
+              justifyContent: item.icon ? "flex-start" : "flex-end",
+            }}
           >
+            {item.icon && <div className="dropdown-icon">{item.icon}</div>}
             {item.isLink ? (
               <Link
                 to={{
@@ -74,7 +79,6 @@ const DropDown = (props) => {
             ) : (
               item.name
             )}
-            {item.icon && <div className="dropdown-icon">{item.icon}</div>}
           </div>
         ))}
       {props.extraItems && (
@@ -91,8 +95,8 @@ const DropDown = (props) => {
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}
           >
-            {item.name}
             {item.icon && <div className="dropdown-icon">{item.icon}</div>}
+            {item.name}
           </div>
         ))}
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./XAxisStep.scss";
 import { BiChevronDown } from "react-icons/bi";
 import DropDown from "../../../../component/UI/DropDown/DropDown";
@@ -17,6 +17,7 @@ const FieldPicker = (props) => {
   const [menuItems, setMenuItems] = useState([]);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const divRef = useRef();
 
   const dispatch = useDispatch();
   const removeDataField = (index) => {
@@ -153,7 +154,7 @@ const FieldPicker = (props) => {
           </div>
         </div>
       )}
-      <div className="setting-dropdown-component picker">
+      <div className="setting-dropdown-component picker" ref={divRef}>
         {isOpen && (
           <DropDown
             divStyle={{
@@ -166,6 +167,7 @@ const FieldPicker = (props) => {
             items={menuItems}
             setSelected={setSelected}
             setDropDown={setIsOpen}
+            divContainerRef={divRef}
           />
         )}
         {props.index > 1 && (
