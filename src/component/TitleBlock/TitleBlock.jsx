@@ -95,9 +95,13 @@ const TitleBlock = React.memo((props) => {
 
   const settingMenuHandler = async (id) => {
     if (id === "setting") {
-      const result = await axios.post(`${baseUrl}api/get_data`, {
-        id: props.bankId,
-      });
+      const result = await axios.post(
+        `${baseUrl}api/get_data`,
+        {
+          id: props.bankId,
+        },
+        { headers: { "auth-token": token } }
+      );
       let selectedChartData = chartsData.data[props.chartId];
       selectedChartData = {
         title: selectedChartData.title,
