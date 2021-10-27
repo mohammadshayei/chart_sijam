@@ -27,7 +27,7 @@ const Drawer = React.memo((props) => {
       default:
         break;
     }
-  }, [location.pathname, props.isMenuOpen]);
+  }, [location.pathname,props.isMenuOpen]);
   return (
     <div
       className={`DrawerContainer ${
@@ -35,7 +35,6 @@ const Drawer = React.memo((props) => {
       }`}
       style={{
         backgroundColor: themeState.isDark ? theme.surface_12dp : theme.surface,
-        borderLeftColor: theme.border_color,
       }}
     >
       {error}

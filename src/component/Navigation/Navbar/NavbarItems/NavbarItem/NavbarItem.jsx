@@ -16,7 +16,7 @@ const NavbarItem = (props) => {
   const location = useLocation();
   const iconStyle = {
     color: "white",
-    fontSize: "25px",
+    fontSize: "30px",
   };
 
   const onMouseEnter = () => {
@@ -67,7 +67,7 @@ const NavbarItem = (props) => {
   }, [location.pathname]);
   useEffect(() => {
     if (selected) setBgColor("rgba(209, 204, 204,0.3)");
-  }, [props.detail, selected]);
+  }, [props.detail,selected]);
   return (
     <div className="navbar-item-container">
       <Link
@@ -82,24 +82,7 @@ const NavbarItem = (props) => {
       >
         {icon}
       </Link>
-      {selected && (
-        <div
-          className="arrow-container"
-          style={{
-            borderBottomColor: theme.background_color,
-          }}
-        />
-      )}
-      {selected && (
-        <div
-          className="arrow-container"
-          style={{
-            borderBottomColor: themeState.isDark
-              ? theme.surface_12dp
-              : theme.surface,
-          }}
-        />
-      )}
+      {selected && <div className="arrow-container" />}
       {hintShow && (
         <Hint
           hint={props.detail.hint}
