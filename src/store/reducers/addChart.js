@@ -15,6 +15,7 @@ const initialState = {
       data: [],
       options: {
         fieldNames: {},
+        theme: "default",
         radius: 70,
         innerRadius: 40,
         startAngle: 0,
@@ -166,6 +167,20 @@ const setIsNewChart = (state, action) => {
   };
 };
 
+const setChartOptions = (state, action) => {
+  const { chartOptions } = action.payload;
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      data: {
+        ...state.chartData.data,
+        options: chartOptions,
+      },
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -182,6 +197,8 @@ const reducer = (state = initialState, action) => {
       return removeDataField(state, action);
     case actionTypes.SET_IS_NEW_CHART:
       return setIsNewChart(state, action);
+    case actionTypes.SET_CHART_OPTIONS:
+      return setChartOptions(state, action);
     default:
       return state;
   }

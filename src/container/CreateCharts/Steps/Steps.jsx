@@ -6,6 +6,7 @@ import "./Steps.scss";
 import BenchmarkStep from "./BenchmarkStep/BenchmarkStep.jsx";
 import { useTheme } from "../../../styles/ThemeProvider";
 import TimerStep from "./TimerStep/TimerStep";
+import ChartSetting from "./SettingStep/ChartSetting.jsx";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
@@ -43,11 +44,11 @@ const Steps = (props) => {
           //   content: <BenchmarkStep />,
           //   isOpen: false,
           // },
-          // moreSetting: {
-          //   title: "تنظیمات بیشتر",
-          //   content: "test2",
-          //   isOpen: false,
-          // },
+          moreSetting: {
+            title: "تنظیمات بیشتر",
+            content: <ChartSetting />,
+            isOpen: false,
+          },
         });
         break;
       default:

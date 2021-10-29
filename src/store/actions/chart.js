@@ -18,15 +18,6 @@ export const setChartData =
     });
   };
 
-export const setChartOptions =
-  ({ chartId, chartOptions }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_CHART_OPTIONS,
-      payload: { chartId, chartOptions },
-    });
-  };
-
 export const setChartsData = (data) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_CHARTS_DATA,

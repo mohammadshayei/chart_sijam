@@ -2,13 +2,16 @@ import React, { useEffect } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import am4themes_dark from "@amcharts/amcharts4/themes/dark";
 import { useTheme } from "../../styles/ThemeProvider.js";
-// import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
+import am4themes_dataviz from "@amcharts/amcharts4/themes/dataviz";
+// import am4themes_material from "@amcharts/amcharts4/themes/material";
 // import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
+import am4themes_dark from "@amcharts/amcharts4/themes/dark";
+import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
+import am4themes_moonrisekingdom from "@amcharts/amcharts4/themes/moonrisekingdom";
+import am4themes_spiritedaway from "@amcharts/amcharts4/themes/spiritedaway";
 // import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
 
-am4core.useTheme(am4themes_animated);
 // am4core.useTheme(am4themes_microchart);
 am4core.addLicense("ch-custom-attribution");
 am4core.options.autoDispose = true;
@@ -19,8 +22,39 @@ const XYChart = React.memo((props) => {
 
   let xyChart;
   useEffect(() => {
+    switch (options.theme) {
+      case "dataviz":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_dataviz);
+        break;
+      // case "material":
+      //   am4core.useTheme(am4themes_material);
+      //   break;
+      // case "kelly":
+      //   am4core.useTheme(am4themes_kelly);
+      //   break;
+      case "dark":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_dark);
+        break;
+      case "frozen":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_frozen);
+        break;
+      case "moonrisekingdom":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_moonrisekingdom);
+        break;
+      case "spiritedaway":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_spiritedaway);
+        break;
+      default:
+        am4core.unuseAllThemes();
+        break;
+    }
+    am4core.useTheme(am4themes_animated);
     themeState.isDark && am4core.useTheme(am4themes_dark);
-    // : am4core.useTheme(am4themes_kelly);
     if (props.chartId) {
       if (type === "Radar") {
         xyChart = am4core.create(`${props.chartId}`, am4charts.RadarChart);
