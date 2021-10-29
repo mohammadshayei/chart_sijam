@@ -15,17 +15,13 @@ const initialState = {
       data: [],
       options: {
         fieldNames: {},
-        theme: "default",
+        theme: "",
         radius: 70,
         innerRadius: 40,
         startAngle: 0,
         endAngle: 360,
         insideLabel: true,
-        legend: {
-          display: true,
-          position: "bottom",
-          valueLabelsText: " : {value}",
-        },
+        legend: {},
         xyCursor: false,
         xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
         series: {

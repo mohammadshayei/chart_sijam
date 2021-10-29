@@ -207,7 +207,9 @@ const XYChart = React.memo((props) => {
 
       if (options.legend.display) {
         xyChart.legend = new am4charts.Legend();
-        xyChart.legend.position = "top";
+        xyChart.legend.position = options.legend.position;
+        xyChart.legend.valueLabels.template.text =
+          options.legend.valueLabelsText;
         xyChart.legend.valueLabels.template.align = "right";
         xyChart.legend.valueLabels.template.textAlign = "end";
         xyChart.legend.reverseOrder = true; //rtl

@@ -31,6 +31,20 @@
         }
       }
     }
+    .legend-positions-container {
+      display: flex;
+      flex-direction: row-reverse;
+      .legend-position {
+        width: 2rem;
+        height: 2rem;
+        margin: 0 0.2rem;
+        cursor: pointer;
+        .legend-position-image {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
     .setting-item {
       list-style: none;
     }
