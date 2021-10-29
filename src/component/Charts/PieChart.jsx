@@ -192,7 +192,7 @@ const PieChart = React.memo((props) => {
     });
     pieChart.responsive.rules.push({
       relevant: function (target) {
-        if (target.pixelHeight <= 300) {
+        if (target.pixelHeight <= 400) {
           return true;
         }
         return false;
@@ -200,8 +200,9 @@ const PieChart = React.memo((props) => {
       state: function (target, stateId) {
         if (target instanceof am4charts.Legend) {
           var state = target.states.create(stateId);
-          state.properties.position = "right";
-          state.properties.paddingTop = 0;
+          state.properties.disabled = "true";
+          // state.properties.position = "right";
+          // state.properties.paddingTop = 0;
           return state;
         }
         return null;
