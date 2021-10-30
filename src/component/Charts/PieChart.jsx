@@ -2,10 +2,14 @@ import React, { useEffect } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import am4themes_dark from "@amcharts/amcharts4/themes/dark";
 import { useTheme } from "../../styles/ThemeProvider.js";
+import am4themes_dataviz from "@amcharts/amcharts4/themes/dataviz";
+// import am4themes_material from "@amcharts/amcharts4/themes/material";
 // import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
-// import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
+import am4themes_dark from "@amcharts/amcharts4/themes/dark";
+import am4themes_frozen from "@amcharts/amcharts4/themes/frozen";
+import am4themes_moonrisekingdom from "@amcharts/amcharts4/themes/moonrisekingdom";
+import am4themes_spiritedaway from "@amcharts/amcharts4/themes/spiritedaway";
 // import am4themes_microchart from "@amcharts/amcharts4/themes/microchart";
 
 am4core.useTheme(am4themes_animated);
@@ -19,8 +23,39 @@ const PieChart = React.memo((props) => {
   const { data, type, options } = props.chartProps;
   let pieChart;
   useEffect(() => {
+    switch (options.theme) {
+      case "dataviz":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_dataviz);
+        break;
+      // case "material":
+      //   am4core.useTheme(am4themes_material);
+      //   break;
+      // case "kelly":
+      //   am4core.useTheme(am4themes_kelly);
+      //   break;
+      case "dark":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_dark);
+        break;
+      case "frozen":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_frozen);
+        break;
+      case "moonrisekingdom":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_moonrisekingdom);
+        break;
+      case "spiritedaway":
+        am4core.unuseAllThemes();
+        am4core.useTheme(am4themes_spiritedaway);
+        break;
+      default:
+        am4core.unuseAllThemes();
+        break;
+    }
+    am4core.useTheme(am4themes_animated);
     themeState.isDark && am4core.useTheme(am4themes_dark);
-    // : am4core.useTheme(am4themes_kelly);
     pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
@@ -157,7 +192,7 @@ const PieChart = React.memo((props) => {
     });
     pieChart.responsive.rules.push({
       relevant: function (target) {
-        if (target.pixelHeight <= 300) {
+        if (target.pixelHeight <= 400) {
           return true;
         }
         return false;
@@ -165,8 +200,9 @@ const PieChart = React.memo((props) => {
       state: function (target, stateId) {
         if (target instanceof am4charts.Legend) {
           var state = target.states.create(stateId);
-          state.properties.position = "right";
-          state.properties.paddingTop = 0;
+          state.properties.disabled = "true";
+          // state.properties.position = "right";
+          // state.properties.paddingTop = 0;
           return state;
         }
         return null;

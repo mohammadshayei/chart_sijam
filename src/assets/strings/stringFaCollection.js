@@ -63,10 +63,10 @@ export const stringFa = {
   permissions: "دسترسی ها",
   no_exist_banks: "بانکی وجود ندارد",
   share: "اشتراک گذاری",
-  create_your_brand: 'نام تجاری خود را ایجاد کنید',
+  create_your_brand: "نام تجاری خود را ایجاد کنید",
   main_menu_logo: "لوگو منو اصلی",
   change_logo: "تغییر لوگو",
-  recommended_logo_size: 'توصیه می شود: PNG 30x30px با پس زمینه شفاف',
+  recommended_logo_size: "توصیه می شود: PNG 30x30px با پس زمینه شفاف",
   holding_name: "نام هولدینگ",
   change_holding_name:'تغییر نام هولدینگ',
   select_holding:"هولدینگ خود را انتخاب کنید",
@@ -77,6 +77,7 @@ export const stringFa = {
   create_labels:"ایجاد برچسب",
   save:"ذخیره",
   enter_title:"لظفا عنوان برچسب را وارد کنید",
-  success_save:"با موفقیت ذخیره شد"
+  success_save:"با موفقیت ذخیره شد",
+  legend: "شرح نمودار",
 
 };

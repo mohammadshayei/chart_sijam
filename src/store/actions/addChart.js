@@ -56,3 +56,12 @@ export const setIsNewChart = (isNewChart) => (dispatch) => {
     isNewChart: isNewChart,
   });
 };
+
+export const setChartOptions =
+  ({ chartOptions }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_CHART_OPTIONS,
+      payload: { chartOptions },
+    });
+  };
