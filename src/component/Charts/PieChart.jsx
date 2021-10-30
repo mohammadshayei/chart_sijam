@@ -131,6 +131,18 @@ const PieChart = React.memo((props) => {
       options.slices.innerCornerRadius;
     pieSeries.slices.template.draggable = options.slices.draggable;
     pieSeries.slices.template.inert = true;
+    pieSeries.ticks.template.events.on("ready", hideSmall);
+    pieSeries.ticks.template.events.on("visibilitychanged", hideSmall);
+    pieSeries.labels.template.events.on("ready", hideSmall);
+    pieSeries.labels.template.events.on("visibilitychanged", hideSmall);
+
+    function hideSmall(ev) {
+      if (ev.target.dataItem && ev.target.dataItem.values.value.percent < 1) {
+        ev.target.hide();
+      } else {
+        ev.target.show();
+      }
+    }
     // Add a legend
     if (options.legend.display) {
       pieChart.legend = new am4charts.Legend();
