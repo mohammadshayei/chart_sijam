@@ -113,6 +113,8 @@ const PieChart = React.memo((props) => {
       options.series.labels.padding,
       options.series.labels.padding
     );
+    if (options.legend.colorize)
+      pieSeries.legendSettings.labelText = "[{color}]{name}[/]";
     pieSeries.labels.template.disabled = options.series.labels.disabled; //label ha hide mishan
     pieSeries.labels.template.text = options.series.labels.text; //also : "{value.percent.formatNumber('#.0')}%"
     pieSeries.labels.template.fill = am4core.color(options.series.labels.color);
@@ -133,14 +135,15 @@ const PieChart = React.memo((props) => {
     if (options.legend.display) {
       pieChart.legend = new am4charts.Legend();
       pieChart.legend.position = options.legend.position;
-      pieChart.legend.valueLabels.template.text =
-        options.legend.valueLabelsText;
+      pieChart.legend.valueLabels.template.text = "{value}";
+      // options.legend.valueLabelsText; // for more text in legend
       pieChart.legend.valueLabels.template.align = "right";
       pieChart.legend.valueLabels.template.textAlign = "end";
       pieChart.legend.reverseOrder = true; //rtl
       pieChart.legend.itemContainers.template.reverseOrder = true; //rtl
       pieChart.legend.maxHeight = undefined;
       pieChart.legend.maxWidth = undefined;
+      pieChart.legend.scrollable = true;
     }
     // sum labels inside doughnut
     if (options.insideLabel) {

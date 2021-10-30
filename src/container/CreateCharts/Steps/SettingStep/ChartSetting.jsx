@@ -3,10 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
 import * as addChartActions from "../../../../store/actions/addChart";
 import { useTheme } from "../../../../styles/ThemeProvider";
-import top from "../../../../assets/images/legend-top.png";
-import right from "../../../../assets/images/legend-right.png";
-import bottom from "../../../../assets/images/legend-bottom.png";
-import left from "../../../../assets/images/legend-left.png";
+import { baseUrl } from "./../../../../constants/Config";
+import CheckBox from "../../../../component/UI/CheckBox/CheckBox";
 import "./ChartSetting.scss";
 
 const ChartSetting = () => {
@@ -53,12 +51,12 @@ const ChartSetting = () => {
   const [legend, setLegend] = useState({
     display: true,
     position: {
-      top: { img: top, selected: true },
-      right: { img: right, selected: false },
-      bottom: { img: bottom, selected: false },
-      left: { img: left, selected: false },
+      top: { img: "images/legend-top.svg", selected: true },
+      right: { img: "images/legend-right.svg", selected: false },
+      bottom: { img: "images/legend-bottom.svg", selected: false },
+      left: { img: "images/legend-left.svg", selected: false },
     },
-    valueLabelsText: "{value}",
+    colorize: false,
   });
   const takenData = useSelector((state) => state.addChart);
 
@@ -79,14 +77,35 @@ const ChartSetting = () => {
     setThemePalette(updatedThemePalette);
   };
 
+  const legendsClickHandler = (key) => {
+    let updatedLegend = { ...legend };
+    for (const k1 in updatedLegend) {
+      if (k1 === "position") {
+        for (const k2 in updatedLegend[k1]) {
+          if (k2 === key) {
+            updatedLegend[k1][k2].selected = true;
+          } else updatedLegend[k1][k2].selected = false;
+        }
+      }
+    }
+    setLegend(updatedLegend);
+  };
+
   const handleCheckBoxClick = (checked) => {
     let updatedLegend = { ...legend };
     updatedLegend.display = checked;
     setLegend(updatedLegend);
   };
 
+  const handleCheckBoxColorClick = (checked) => {
+    let updatedLegend = { ...legend };
+    updatedLegend.colorize = checked;
+    setLegend(updatedLegend);
+  };
+
   useEffect(() => {
     let updatedThemePalette = { ...themePalette };
+    let updatedLegend = { ...legend };
     if (
       takenData.chartData.data.options.theme &&
       takenData.chartData.data.options.theme !== ""
@@ -98,6 +117,16 @@ const ChartSetting = () => {
       }
     }
     setThemePalette(updatedThemePalette);
+    if (takenData.chartData.data.options.legend) {
+      updatedLegend.display = takenData.chartData.data.options.legend.display;
+      updatedLegend.colorize = takenData.chartData.data.options.legend.colorize;
+      for (const key in updatedLegend.position) {
+        if (`${key}` === takenData.chartData.data.options.legend.position) {
+          updatedLegend.position[key].selected = true;
+        } else updatedLegend.position[key].selected = false;
+      }
+    }
+    setLegend(updatedLegend);
   }, []);
 
   useEffect(() => {
@@ -114,8 +143,12 @@ const ChartSetting = () => {
     let chartOptions = { ...takenData.chartData.data.options };
     if (legend) {
       chartOptions.legend.display = legend.display;
-      chartOptions.legend.position = legend.position;
-      chartOptions.legend.valueLabelsText = legend.valueLabelsText;
+      for (const pos in legend.position) {
+        if (legend.position[pos].selected) {
+          chartOptions.legend.position = `${pos}`;
+        }
+      }
+      chartOptions.legend.colorize = legend.colorize;
       setChartOptions(chartOptions);
     }
   }, [legend]);
@@ -148,35 +181,44 @@ const ChartSetting = () => {
           </ul>
         </li>
         <li className="setting-item">
-          <div className="timer-checkbox">
+          <CheckBox
+            checked={legend.display}
+            onChange={(e) => handleCheckBoxClick(e.target.checked)}
+          >
             {stringFa.legend}
-            <label className="container">
-              <input
-                type="checkbox"
-                checked={legend.display}
-                onChange={(e) => handleCheckBoxClick(e.target.checked)}
-              ></input>
-              <span className="checkmark"></span>
-            </label>
-          </div>
-          <div className="legend-positions-container">
-            {Object.entries(legend.position).map(([k, v]) => {
-              return (
-                <div
-                  key={k}
-                  style={{
-                    borderColor: v.selected
-                      ? theme.primary
-                      : theme.border_color,
-                  }}
-                  className="legend-position"
-                  // onClick={(e) => onClickHandler(e, v, key)}
-                >
-                  <img className="legend-position-image" src={v.img} alt="" />
-                </div>
-              );
-            })}
-          </div>
+          </CheckBox>
+          {legend.display && (
+            <div>
+              <div className="legend-positions-container">
+                {Object.entries(legend.position).map(([k, v]) => {
+                  return (
+                    <div
+                      key={k}
+                      style={{
+                        border: v.selected
+                          ? `2px solid ${theme.primary}`
+                          : "none",
+                      }}
+                      className="legend-position"
+                      onClick={() => legendsClickHandler(k)}
+                    >
+                      <img
+                        className="legend-position-image"
+                        src={`${baseUrl}${v.img}`}
+                        alt=""
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <CheckBox
+                checked={legend.colorize}
+                onChange={(e) => handleCheckBoxColorClick(e.target.checked)}
+              >
+                {stringFa.colorize}
+              </CheckBox>
+            </div>
+          )}
         </li>
         <li className="setting-item">برچسب محورها</li>
         <li className="setting-item">ابزار راهنما</li>

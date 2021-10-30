@@ -21,7 +21,12 @@ const initialState = {
         startAngle: 0,
         endAngle: 360,
         insideLabel: true,
-        legend: {},
+        legend: {
+          display: true,
+          position: "top",
+          colorize: false,
+          valueLabelsText: "{name}",
+        },
         xyCursor: false,
         xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
         series: {

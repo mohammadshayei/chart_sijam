@@ -34,14 +34,19 @@
     .legend-positions-container {
       display: flex;
       flex-direction: row-reverse;
+      padding: 0.5rem 1rem;
       .legend-position {
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem;
+        height: 2.5rem;
         margin: 0 0.2rem;
         cursor: pointer;
+        padding: 0.1rem;
+        border-radius: 5px;
         .legend-position-image {
           width: 100%;
           height: 100%;
+          border-radius: 5px;
+          box-shadow: 0 0px 5px -2px #000;
         }
       }
     }

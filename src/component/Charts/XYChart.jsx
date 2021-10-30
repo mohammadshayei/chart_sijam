@@ -98,7 +98,8 @@ const XYChart = React.memo((props) => {
             series.strokeWidth = options.series.strokeWidth;
             // series.smoothing = options.series.smoothing;
             series.tensionX = options.series.tensionX;
-            series.legendSettings.labelText = "[bold {color}]{name}[/]";
+            if (options.legend.colorize)
+              series.legendSettings.labelText = "[{color}]{name}[/]";
             if (options.series.bullet.display) {
               var bullet = series.bullets.push(new am4charts.CircleBullet());
               bullet.circle.stroke = am4core.color(
@@ -115,14 +116,16 @@ const XYChart = React.memo((props) => {
             series.dataFields.valueY = field;
             series.dataFields.categoryX = "category";
             series.name = name;
-            series.legendSettings.labelText = "[bold {color}]{name}[/]";
+            if (options.legend.colorize)
+              series.legendSettings.labelText = "[{color}]{name}[/]";
             series.stacked = options.series.stacked; //stack columns top of each other
           } else if (type === "Radar") {
             series = xyChart.series.push(new am4charts.RadarSeries());
             series.dataFields.valueY = field;
             series.dataFields.categoryX = "category";
             series.name = name;
-            series.legendSettings.labelText = "[bold {color}]{name}[/]";
+            if (options.legend.colorize)
+              series.legendSettings.labelText = "[{color}]{name}[/]";
             series.strokeWidth = options.series.strokeWidth;
           }
           return series;
@@ -208,12 +211,10 @@ const XYChart = React.memo((props) => {
       if (options.legend.display) {
         xyChart.legend = new am4charts.Legend();
         xyChart.legend.position = options.legend.position;
-        xyChart.legend.valueLabels.template.text =
-          options.legend.valueLabelsText;
         xyChart.legend.valueLabels.template.align = "right";
         xyChart.legend.valueLabels.template.textAlign = "end";
         xyChart.legend.reverseOrder = true; //rtl
-        xyChart.legend.itemContainers.template.reverseOrder = true; //rtl
+        // xyChart.legend.itemContainers.template.reverseOrder = true; //rtl
         xyChart.legend.paddingTop = 0;
         xyChart.legend.paddingBottom = 0;
       }
