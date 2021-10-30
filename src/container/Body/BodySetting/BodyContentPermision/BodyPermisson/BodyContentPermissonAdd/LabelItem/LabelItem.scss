@@ -1,0 +1,27 @@
+.label-item-container {
+    display: flex;
+    padding: 0.1rem 0.2rem;
+    width: calc( 50% - 1rem);
+    margin: .5rem;
+    align-items: center;
+    border-radius: .1rem;
+    p {
+        font-size: 15px;
+    }
+}
+@media only screen and (min-width: 1200px) {
+    .label-item-container {
+        width: calc( 50% - 1rem);
+    }
+}
+@media only screen and (min-width: 1600px) {
+    .label-item-container {
+        width: calc( 33% - 1rem);
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    .label-item-container {
+        width: calc( 25% - 1rem);
+    }
+}

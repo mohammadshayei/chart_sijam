@@ -74,6 +74,9 @@ export const stringFa = {
   holding_name_edited:"نام هلدینگ با موفقیت تغییر کرد",
   logo_edited:"عکس با موفقیت بارگذاری شد",
   view_labels:"مشاهده برچسب ها",
-  create_labels:"ایجاد برچسب"
+  create_labels:"ایجاد برچسب",
+  save:"ذخیره",
+  enter_title:"لظفا عنوان برچسب را وارد کنید",
+  success_save:"با موفقیت ذخیره شد"
 
 };

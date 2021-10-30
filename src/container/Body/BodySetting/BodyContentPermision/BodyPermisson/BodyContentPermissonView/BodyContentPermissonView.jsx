@@ -20,17 +20,17 @@ const BodyContentPermissonView = () => {
             id: ''
         })
     const [labels, setLabels] = useState(null)
-
+        
     const order = [{
-        title: 'صحفه شخصی سازی',
+        title: 'صفحه شخصی سازی',
         path: ['setting', 'customization'],
     },
     {
-        title: 'صحفه کاربران',
+        title: 'صفحه کاربران',
         path: ['setting', 'users'],
     },
     {
-        title: 'صحفه دسترسی ها',
+        title: 'صفحه دسترسی ها',
         path: ['setting', 'permissions'],
     },
     {
@@ -67,11 +67,8 @@ const BodyContentPermissonView = () => {
     },
     ]
 
-
     const themeState = useTheme();
     const theme = themeState.computedTheme;
-
-
     const user = useSelector(state => state.auth.user)
     const token = useSelector(state => state.auth.token)
 
@@ -108,7 +105,7 @@ const BodyContentPermissonView = () => {
     }, [multiHolding])
 
     useEffect(async () => {
-        if (holdingDetail) {
+        if (holdingDetail && holdingDetail.id) {
             setLoading(true);
             const resultFetchingLabels = await axios.post
                 (`${baseUrl}api/get_holding_labels`, { holdingId: holdingDetail.id }, { headers: { 'auth-token': token } });
@@ -163,7 +160,7 @@ const BodyContentPermissonView = () => {
                                     <th>ویژگی</th>
                                     {
                                         labels.map(item =>
-                                            <th>{item.label.name}</th>
+                                            <th key={item.label._id}>{item.label.name}</th>
                                         )
                                     }
                                 </tr>
@@ -172,11 +169,11 @@ const BodyContentPermissonView = () => {
 
                                 {
                                     order.map((v) =>
-                                        <tr style={{ ...trBodyStyle }}>
+                                        <tr key={v.title} style={{ ...trBodyStyle }}>
                                             <td>{v.title}</td>
                                             {
                                                 labels.map((item) =>
-                                                    <td>
+                                                    <td key={item._id}>
                                                         <CheckBox checked={item.label[v.path[0]][v.path[1]]} />
                                                     </td>
                                                 )
