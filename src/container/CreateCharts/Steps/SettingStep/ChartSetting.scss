@@ -34,7 +34,8 @@
     .legend-positions-container {
       display: flex;
       flex-direction: row-reverse;
-      padding: 0.5rem 1rem;
+      align-items: center;
+      padding: 0rem 1rem 0.5rem 0;
       .legend-position {
         width: 2.5rem;
         height: 2.5rem;
@@ -52,6 +53,11 @@
     }
     .setting-item {
       list-style: none;
+      width: 100%;
+      .line {
+        margin-top: 0.4rem;
+        height: 1px;
+      }
     }
   }
 }

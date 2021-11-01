@@ -15,7 +15,7 @@ const initialState = {
       data: [],
       options: {
         fieldNames: {},
-        theme: "",
+        theme: "noTheme",
         radius: 70,
         innerRadius: 40,
         startAngle: 0,
@@ -28,7 +28,14 @@ const initialState = {
           valueLabelsText: "{name}",
         },
         xyCursor: false,
-        xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
+        axes: {
+          xAxes: {
+            rotation: false,
+            minGridDistance: 30,
+            gridTemplateLocation: 0,
+          },
+          yAxes: {},
+        },
         series: {
           labels: {
             bent: false,

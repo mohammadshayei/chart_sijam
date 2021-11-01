@@ -1,8 +1,8 @@
 import React from "react";
 import "./CheckBox.scss";
-const CheckBox = ({ checked, onChange, children }) => {
+const CheckBox = ({ checked, onChange, children, style }) => {
   return (
-    <div className="timer-checkbox">
+    <div className="timer-checkbox" style={style}>
       {children}
       <label className="container">
         <input

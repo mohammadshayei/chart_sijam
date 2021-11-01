@@ -80,4 +80,5 @@ export const stringFa = {
   success_save: "با موفقیت ذخیره شد",
   legend: "شرح نمودار",
   colorize: "رنگی",
+  rotate_categories: "چرخش مقادیر محور افقی",
 };

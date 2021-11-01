@@ -58,6 +58,7 @@ const ChartSetting = () => {
     },
     colorize: false,
   });
+  const [rotateCategories, setRotateCategories] = useState(false);
   const takenData = useSelector((state) => state.addChart);
 
   const dispatch = useDispatch();
@@ -91,42 +92,44 @@ const ChartSetting = () => {
     setLegend(updatedLegend);
   };
 
-  const handleCheckBoxClick = (checked) => {
+  const displayCheckBoxClick = (checked) => {
     let updatedLegend = { ...legend };
     updatedLegend.display = checked;
     setLegend(updatedLegend);
   };
 
-  const handleCheckBoxColorClick = (checked) => {
+  const colorizeCheckBoxClick = (checked) => {
     let updatedLegend = { ...legend };
     updatedLegend.colorize = checked;
     setLegend(updatedLegend);
   };
 
+  /* INITIAL SETTING */
   useEffect(() => {
+    const chartOptions = { ...takenData.chartData.data.options };
     let updatedThemePalette = { ...themePalette };
     let updatedLegend = { ...legend };
-    if (
-      takenData.chartData.data.options.theme &&
-      takenData.chartData.data.options.theme !== ""
-    ) {
+    if (chartOptions.theme) {
       for (const theme in updatedThemePalette) {
-        if (takenData.chartData.data.options.theme === theme) {
+        if (chartOptions.theme === theme) {
           updatedThemePalette[theme].active = true;
         } else updatedThemePalette[theme].active = false;
       }
     }
     setThemePalette(updatedThemePalette);
-    if (takenData.chartData.data.options.legend) {
-      updatedLegend.display = takenData.chartData.data.options.legend.display;
-      updatedLegend.colorize = takenData.chartData.data.options.legend.colorize;
+    if (chartOptions.legend) {
+      updatedLegend.display = chartOptions.legend.display;
+      updatedLegend.colorize = chartOptions.legend.colorize;
       for (const key in updatedLegend.position) {
-        if (`${key}` === takenData.chartData.data.options.legend.position) {
+        if (`${key}` === chartOptions.legend.position) {
           updatedLegend.position[key].selected = true;
         } else updatedLegend.position[key].selected = false;
       }
     }
     setLegend(updatedLegend);
+    if (chartOptions.axes.xAxes) {
+      setRotateCategories(chartOptions.axes.xAxes.rotation);
+    }
   }, []);
 
   useEffect(() => {
@@ -152,6 +155,12 @@ const ChartSetting = () => {
       setChartOptions(chartOptions);
     }
   }, [legend]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.axes.xAxes.rotation = rotateCategories;
+    setChartOptions(chartOptions);
+  }, [rotateCategories]);
 
   return (
     <div className="chart-setting-container">
@@ -181,9 +190,14 @@ const ChartSetting = () => {
           </ul>
         </li>
         <li className="setting-item">
+          <div
+            className="line"
+            style={{ backgroundColor: theme.border_color }}
+          ></div>
           <CheckBox
             checked={legend.display}
-            onChange={(e) => handleCheckBoxClick(e.target.checked)}
+            onChange={(e) => displayCheckBoxClick(e.target.checked)}
+            style={{ padding: "1rem 1rem 0.5rem 0", fontSize: "0.85rem" }}
           >
             {stringFa.legend}
           </CheckBox>
@@ -210,18 +224,40 @@ const ChartSetting = () => {
                     </div>
                   );
                 })}
+                <CheckBox
+                  checked={legend.colorize}
+                  onChange={(e) => colorizeCheckBoxClick(e.target.checked)}
+                  style={{ fontSize: "0.8rem" }}
+                >
+                  {stringFa.colorize}
+                </CheckBox>
               </div>
-              <CheckBox
-                checked={legend.colorize}
-                onChange={(e) => handleCheckBoxColorClick(e.target.checked)}
-              >
-                {stringFa.colorize}
-              </CheckBox>
             </div>
           )}
         </li>
-        <li className="setting-item">برچسب محورها</li>
-        <li className="setting-item">ابزار راهنما</li>
+        <li className="setting-item">
+          <div
+            className="line"
+            style={{ backgroundColor: theme.border_color }}
+          ></div>
+          <CheckBox
+            checked={rotateCategories}
+            onChange={(e) => setRotateCategories(e.target.checked)}
+            style={{
+              padding: "1rem 1rem 0.5rem 0",
+              fontSize: "0.85rem",
+              fontWeight: "400",
+            }}
+          >
+            {stringFa.rotate_categories}
+          </CheckBox>
+        </li>
+        <li className="setting-item">
+          <div
+            className="line"
+            style={{ backgroundColor: theme.border_color }}
+          ></div>
+        </li>
       </ul>
     </div>
   );

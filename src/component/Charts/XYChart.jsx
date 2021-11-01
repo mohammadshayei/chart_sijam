@@ -72,21 +72,26 @@ const XYChart = React.memo((props) => {
         var categoryAxis = xyChart.xAxes.push(new am4charts.CategoryAxis());
         categoryAxis.dataFields.category = "category"; //dataField category
         categoryAxis.renderer.grid.template.location =
-          options.xAxes.gridTemplateLocation;
-        categoryAxis.renderer.minGridDistance = options.xAxes.minGridDistance;
+          options.axes.xAxes.gridTemplateLocation;
+        categoryAxis.renderer.minGridDistance =
+          options.axes.xAxes.minGridDistance;
         if (type === "Line" || type === "Column") {
-          categoryAxis.renderer.labels.template.horizontalCenter = "right";
-          categoryAxis.renderer.labels.template.verticalCenter = "middle";
+          if (options.axes.xAxes.rotation) {
+            categoryAxis.renderer.labels.template.rotation = 315; //charkheshe axes lables
+            categoryAxis.renderer.labels.template.horizontalCenter = "right";
+            categoryAxis.renderer.labels.template.verticalCenter = "right";
+          }
           // categoryAxis.renderer.minHeight = 10;
-          categoryAxis.renderer.labels.template.rotation = 315;
         }
 
         var valueAxis = xyChart.yAxes.push(new am4charts.ValueAxis());
         valueAxis.renderer.labels.fill = "#000";
         valueAxis.renderer.labels.fillOpacity = 0;
+        // valueAxis.title.fontWeight = "bold";
 
         // Create series
         function createSeries(field, name) {
+          // valueAxis.title.text = name;
           if (type === "Line") {
             series = xyChart.series.push(new am4charts.LineSeries());
             // var series = xyChart.series.push(new am4charts.OHLCSeries());          //OHLC
