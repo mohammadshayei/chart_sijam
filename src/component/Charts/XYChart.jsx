@@ -66,8 +66,23 @@ const XYChart = React.memo((props) => {
       xyChart.responsive.enabled = true;
       xyChart.responsive.useDefault = true;
       let series;
+
       xyChart.data = data;
+
       if (type === "Line" || type === "Column" || type === "Radar") {
+        xyChart.events.on("beforedatavalidated", function () {
+          for (let i = 0; i < xyChart.data.length; i++) {
+            xyChart.data[i].category = xyChart.data[i].category.replace(
+              / \(.*/,
+              ""
+            );
+          }
+          if (options.axes.xAxes.repeatingCategories) {
+            for (let i = 0; i < xyChart.data.length; i++) {
+              xyChart.data[i].category += " (" + i + ")";
+            }
+          }
+        });
         // Create axes
         var categoryAxis = xyChart.xAxes.push(new am4charts.CategoryAxis());
         categoryAxis.dataFields.category = "category"; //dataField category
@@ -83,6 +98,12 @@ const XYChart = React.memo((props) => {
           }
           // categoryAxis.renderer.minHeight = 10;
         }
+        categoryAxis.renderer.labels.template.adapter.add(
+          "textOutput",
+          function (text) {
+            return text.replace(/ \(.*/, "");
+          }
+        );
 
         var valueAxis = xyChart.yAxes.push(new am4charts.ValueAxis());
         valueAxis.renderer.labels.fill = "#000";

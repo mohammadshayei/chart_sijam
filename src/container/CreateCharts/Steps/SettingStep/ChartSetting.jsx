@@ -58,7 +58,8 @@ const ChartSetting = () => {
     },
     colorize: false,
   });
-  const [rotateCategories, setRotateCategories] = useState(false);
+  const [rotate, setRotate] = useState(false);
+  const [repeat, setRepeat] = useState(true);
   const takenData = useSelector((state) => state.addChart);
 
   const dispatch = useDispatch();
@@ -128,7 +129,8 @@ const ChartSetting = () => {
     }
     setLegend(updatedLegend);
     if (chartOptions.axes.xAxes) {
-      setRotateCategories(chartOptions.axes.xAxes.rotation);
+      setRotate(chartOptions.axes.xAxes.rotation);
+      setRepeat(chartOptions.axes.xAxes.repeatingCategories);
     }
   }, []);
 
@@ -158,9 +160,15 @@ const ChartSetting = () => {
 
   useEffect(() => {
     let chartOptions = { ...takenData.chartData.data.options };
-    chartOptions.axes.xAxes.rotation = rotateCategories;
+    chartOptions.axes.xAxes.rotation = rotate;
     setChartOptions(chartOptions);
-  }, [rotateCategories]);
+  }, [rotate]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.axes.xAxes.repeatingCategories = repeat;
+    setChartOptions(chartOptions);
+  }, [repeat]);
 
   return (
     <div className="chart-setting-container">
@@ -240,23 +248,31 @@ const ChartSetting = () => {
             className="line"
             style={{ backgroundColor: theme.border_color }}
           ></div>
-          <CheckBox
-            checked={rotateCategories}
-            onChange={(e) => setRotateCategories(e.target.checked)}
-            style={{
-              padding: "1rem 1rem 0.5rem 0",
-              fontSize: "0.85rem",
-              fontWeight: "400",
-            }}
-          >
-            {stringFa.rotate_categories}
-          </CheckBox>
-        </li>
-        <li className="setting-item">
-          <div
-            className="line"
-            style={{ backgroundColor: theme.border_color }}
-          ></div>
+          <div className="setting-part-container">
+            {stringFa.category_axis}
+            <div className="category-axis-setting">
+              <CheckBox
+                checked={rotate}
+                onChange={(e) => setRotate(e.target.checked)}
+                style={{
+                  padding: "1rem 1rem 0.5rem 0",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {stringFa.rotate_categories}
+              </CheckBox>
+              <CheckBox
+                checked={repeat}
+                onChange={(e) => setRepeat(e.target.checked)}
+                style={{
+                  padding: "1rem 1rem 0.5rem 0",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {stringFa.repeating_categories}
+              </CheckBox>
+            </div>
+          </div>
         </li>
       </ul>
     </div>

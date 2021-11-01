@@ -51,6 +51,17 @@
         }
       }
     }
+    .setting-part-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 0.4rem 0.5rem 0 0.5rem;
+      .category-axis-setting {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
     .setting-item {
       list-style: none;
       width: 100%;

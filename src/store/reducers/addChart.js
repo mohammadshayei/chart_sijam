@@ -31,6 +31,7 @@ const initialState = {
         axes: {
           xAxes: {
             rotation: false,
+            repeatingCategories: true,
             minGridDistance: 30,
             gridTemplateLocation: 0,
           },
