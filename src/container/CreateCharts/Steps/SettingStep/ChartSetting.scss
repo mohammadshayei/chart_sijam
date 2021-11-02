@@ -61,6 +61,28 @@
         flex-direction: row;
         justify-content: space-between;
       }
+      .value-axis-setting {
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: wrap;
+        align-items: center;
+        width: 100%;
+        .input-text {
+          font-size: 0.8rem;
+          width: 20%;
+          padding: 0.5rem 0;
+        }
+        .input-class {
+          width: 70%;
+          max-height: 2.5rem;
+          font-size: 0.8rem;
+          padding: 0.2rem 0.5rem;
+          margin: 0 0.5rem;
+          border: 1px solid;
+          border-radius: 4px;
+          outline: none;
+        }
+      }
     }
     .setting-item {
       list-style: none;

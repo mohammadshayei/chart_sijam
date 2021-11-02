@@ -110,6 +110,24 @@ const XYChart = React.memo((props) => {
         valueAxis.renderer.labels.fillOpacity = 0;
         // valueAxis.title.fontWeight = "bold";
 
+        if (options.axes.yAxes.break.active) {
+          let axisBreak = valueAxis.axisBreaks.create();
+          axisBreak.startValue = options.axes.yAxes.break.start;
+          axisBreak.endValue = options.axes.yAxes.break.end;
+          axisBreak.breakSize = 0.005; //options.axes.yAxes.break.size;
+          // fixed axis break
+          // let d =
+          //   (axisBreak.endValue - axisBreak.startValue) /
+          //   (valueAxis.max - valueAxis.min);
+          // axisBreak.breakSize = (0.05 * (1 - d)) / d; // 0.05 means that the break will take 5% of the total value axis height
+          // make break expand on hover
+          let hoverState = axisBreak.states.create("hover");
+          hoverState.properties.breakSize = 1;
+          hoverState.properties.opacity = 0.1;
+          hoverState.transitionDuration = 1500;
+          axisBreak.defaultState.transitionDuration = 1000;
+        }
+
         // Create series
         function createSeries(field, name) {
           // valueAxis.title.text = name;

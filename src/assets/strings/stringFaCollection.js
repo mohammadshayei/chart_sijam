@@ -83,4 +83,8 @@ export const stringFa = {
   rotate_categories: "چرخش عناوین",
   repeating_categories: "عناوین تکراری",
   category_axis: "محور افقی",
+  value_axis: "محور عمودی",
+  axis_break: "شکاف محور",
+  start: "شروع",
+  end: "پایان",
 };

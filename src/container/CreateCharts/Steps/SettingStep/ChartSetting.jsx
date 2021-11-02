@@ -5,6 +5,7 @@ import * as addChartActions from "../../../../store/actions/addChart";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import { baseUrl } from "./../../../../constants/Config";
 import CheckBox from "../../../../component/UI/CheckBox/CheckBox";
+import loading from "../../../../assets/images/dualRingLoading.gif";
 import "./ChartSetting.scss";
 
 const ChartSetting = () => {
@@ -60,6 +61,17 @@ const ChartSetting = () => {
   });
   const [rotate, setRotate] = useState(false);
   const [repeat, setRepeat] = useState(true);
+  const [axisBreak, setAxisBreak] = useState({
+    active: false,
+    start: 0,
+    end: 0,
+    size: 0,
+  });
+  const [breakInputs, setBreakInputs] = useState({
+    start: { value: 0, focus: false, loading: null },
+    end: { value: 0, focus: false, loading: null },
+  });
+
   const takenData = useSelector((state) => state.addChart);
 
   const dispatch = useDispatch();
@@ -105,6 +117,46 @@ const ChartSetting = () => {
     setLegend(updatedLegend);
   };
 
+  const axisBreakCheckBoxClick = (checked) => {
+    let updatedAxisBreak = { ...axisBreak };
+    updatedAxisBreak.active = checked;
+    if (checked) updatedAxisBreak.size = 0.01;
+    setAxisBreak(updatedAxisBreak);
+  };
+
+  const breakOnFocusHandler = (key) => {
+    let updatedInputs = { ...breakInputs };
+    updatedInputs[key].focus = true;
+    setBreakInputs(updatedInputs);
+  };
+  const breakOnBlurHandler = (key) => {
+    let updatedInputs = { ...breakInputs };
+    updatedInputs[key].focus = false;
+    setBreakInputs(updatedInputs);
+  };
+  const breakInputHandler = (evt) => {
+    let updatedBreakInputs = { ...breakInputs };
+    updatedBreakInputs[evt.target.id].value = evt.target.validity.valid
+      ? parseInt(evt.target.value, 10)
+      : updatedBreakInputs[evt.target.id].value;
+    setBreakInputs(updatedBreakInputs);
+  };
+  const breakOnChangeHandler = (e) => {
+    let updatedBreakInputs = { ...breakInputs };
+    if (e.target.value === "") updatedBreakInputs[e.target.id].value = 0;
+    updatedBreakInputs[e.target.id].loading = (
+      <img src={loading} width="18px" height="18px" />
+    );
+    setBreakInputs(updatedBreakInputs);
+    setTimeout(() => {
+      let updatedAxisBreak = { ...axisBreak };
+      updatedAxisBreak[e.target.id] = parseInt(e.target.value, 10);
+      setAxisBreak(updatedAxisBreak);
+      updatedBreakInputs[e.target.id].loading = null;
+      setBreakInputs(updatedBreakInputs);
+    }, 5000);
+  };
+
   /* INITIAL SETTING */
   useEffect(() => {
     const chartOptions = { ...takenData.chartData.data.options };
@@ -131,6 +183,13 @@ const ChartSetting = () => {
     if (chartOptions.axes.xAxes) {
       setRotate(chartOptions.axes.xAxes.rotation);
       setRepeat(chartOptions.axes.xAxes.repeatingCategories);
+    }
+    if (chartOptions.axes.yAxes) {
+      let updatedBreakInputs = { ...breakInputs };
+      updatedBreakInputs.start.value = chartOptions.axes.yAxes.break.start;
+      updatedBreakInputs.end.value = chartOptions.axes.yAxes.break.end;
+      setBreakInputs(updatedBreakInputs);
+      setAxisBreak(chartOptions.axes.yAxes.break);
     }
   }, []);
 
@@ -169,6 +228,12 @@ const ChartSetting = () => {
     chartOptions.axes.xAxes.repeatingCategories = repeat;
     setChartOptions(chartOptions);
   }, [repeat]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.axes.yAxes.break = axisBreak;
+    setChartOptions(chartOptions);
+  }, [axisBreak]);
 
   return (
     <div className="chart-setting-container">
@@ -274,6 +339,60 @@ const ChartSetting = () => {
             </div>
           </div>
         </li>
+        {takenData.chartData.type === "Column" && (
+          <li className="setting-item">
+            <div
+              className="line"
+              style={{ backgroundColor: theme.border_color }}
+            ></div>
+            <div className="setting-part-container">
+              {stringFa.value_axis}
+              <CheckBox
+                checked={axisBreak.active}
+                onChange={(e) => axisBreakCheckBoxClick(e.target.checked)}
+                style={{
+                  padding: "1rem 1rem 0.5rem 0",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {stringFa.axis_break}
+              </CheckBox>
+              {axisBreak.active && (
+                <div className="value-axis-setting">
+                  {Object.entries(breakInputs).map(([k, v]) => {
+                    return (
+                      <div className="value-axis-setting">
+                        <div className="input-text">: {stringFa[k]}</div>
+                        <input
+                          className="input-class"
+                          id={k}
+                          style={{
+                            background: themeState.isDark
+                              ? theme.surface_1dp
+                              : theme.surface,
+                            color: theme.on_background,
+                            borderColor: breakInputs[k].focus
+                              ? theme.primary
+                              : theme.border_color,
+                          }}
+                          type="text"
+                          pattern="[0-9]*"
+                          dir="rtl"
+                          value={breakInputs[k].value}
+                          onInput={(e) => breakInputHandler(e)}
+                          onChange={(e) => breakOnChangeHandler(e)}
+                          onFocus={() => breakOnFocusHandler(k)}
+                          onBlur={() => breakOnBlurHandler(k)}
+                        ></input>
+                        {breakInputs[k].loading}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </li>
+        )}
       </ul>
     </div>
   );

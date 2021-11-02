@@ -35,7 +35,9 @@ const initialState = {
             minGridDistance: 30,
             gridTemplateLocation: 0,
           },
-          yAxes: {},
+          yAxes: {
+            break: { active: false, start: 0, end: 0, size: 0 },
+          },
         },
         series: {
           labels: {
