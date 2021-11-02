@@ -78,7 +78,7 @@ export const stringFa = {
   save: "ذخیره",
   enter_title: "لظفا عنوان برچسب را وارد کنید",
   success_save: "با موفقیت ذخیره شد",
-  legend: "شرح نمودار",
+  legend: "راهنمای نمودار",
   colorize: "رنگی",
   rotate_categories: "چرخش عناوین",
   repeating_categories: "عناوین تکراری",
@@ -87,4 +87,9 @@ export const stringFa = {
   axis_break: "شکاف محور",
   start: "شروع",
   end: "پایان",
+  data_labels: "برچسب های دیتا",
+  labels_text: "متن برچسب",
+  disabled: "خاموش",
+  enabled: "روشن",
+  total_sum: "جمع کل",
 };
