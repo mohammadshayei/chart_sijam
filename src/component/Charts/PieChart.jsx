@@ -59,6 +59,14 @@ const PieChart = React.memo((props) => {
     pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
+    pieChart.events.on("beforedatavalidated", function () {
+      for (let i = 0; i < pieChart.data.length; i++) {
+        pieChart.data[i].category = pieChart.data[i].category.replace(
+          / \(.*/,
+          ""
+        );
+      }
+    });
     if (type === "Doughnut") {
       // cut a hole in Pie chart
       pieChart.innerRadius = am4core.percent(options.innerRadius);
