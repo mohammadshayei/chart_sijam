@@ -125,7 +125,7 @@ const PieChart = React.memo((props) => {
       pieSeries.legendSettings.labelText = "[{color}]{name}[/]";
     pieSeries.labels.template.disabled = options.series.labels.disabled; //label ha hide mishan
     pieSeries.labels.template.text = options.series.labels.text; //also : "{value.percent.formatNumber('#.0')}%"
-    pieSeries.labels.template.fill = am4core.color(options.series.labels.color);
+    // pieSeries.labels.template.fill = am4core.color(options.series.labels.color);
     pieSeries.ticks.template.disabled = true; //khat az slice ta label
     pieSeries.labels.template.maxWidth = options.series.labels.maxWidth;
     pieSeries.labels.template.wrap = options.series.labels.wrap;
