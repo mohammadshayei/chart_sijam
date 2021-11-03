@@ -261,6 +261,7 @@ const XYChart = React.memo((props) => {
         // xyChart.legend.itemContainers.template.reverseOrder = true; //rtl
         xyChart.legend.paddingTop = 0;
         xyChart.legend.paddingBottom = 0;
+        xyChart.legend.scrollable = true;
       }
 
       /*
@@ -407,7 +408,7 @@ const XYChart = React.memo((props) => {
       });
       xyChart.responsive.rules.push({
         relevant: function (target) {
-          if (target.pixelHeight <= 360) {
+          if (target.pixelHeight <= 355) {
             return true;
           }
           return false;
@@ -421,8 +422,9 @@ const XYChart = React.memo((props) => {
 
           if (target instanceof am4charts.Legend) {
             var state = target.states.create(stateId);
-            state.properties.position = "right";
-            state.properties.paddingTop = -25;
+            // state.properties.position = "right";
+            // state.properties.paddingTop = -25;
+            state.properties.disabled = true;
             return state;
           }
 

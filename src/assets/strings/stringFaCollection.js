@@ -92,4 +92,5 @@ export const stringFa = {
   disabled: "خاموش",
   enabled: "روشن",
   total_sum: "جمع کل",
+  full_screen: "تمام صفحه",
 };

@@ -3,18 +3,18 @@ import "./TitleBlock.scss";
 import { useTheme } from "../../styles/ThemeProvider";
 import * as chartActions from "../../store/actions/chart.js";
 import * as addChartActions from "../../store/actions/addChart";
-import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
-import StarRoundedIcon from "@material-ui/icons/StarRounded";
-import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import DropDown from "./../UI/DropDown/DropDown";
 import { stringFa } from "./../../assets/strings/stringFaCollection";
 import { chartTypes } from "../../constants/chart-types";
 import { useDispatch, useSelector } from "react-redux";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
+import { MdDragHandle, MdMoreVert } from "react-icons/md";
+import { BsArrowsFullscreen } from "react-icons/bs";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "./../UI/Error/ErrorDialog";
 import { Redirect } from "react-router";
+import StyledButton from "../UI/Button/StyledButton";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -38,7 +38,6 @@ function useOnClickOutside(ref, handler) {
 const TitleBlock = React.memo((props) => {
   const [dropDown, setDropDown] = useState(false);
   const [details, setDetails] = useState([]);
-  const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState(null);
   const [redirect, setRedirect] = useState(false);
   const chartsData = useSelector((state) => state.chart);
@@ -47,21 +46,20 @@ const TitleBlock = React.memo((props) => {
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const starStyles = {
-    color: theme.star_color,
-  };
   let deletedChart;
 
   const extraItems = [
+    {
+      name: stringFa.full_screen,
+      id: "fullScreen",
+      icon: <BsArrowsFullscreen />,
+    },
     { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
     { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },
   ];
 
   const ref = useRef();
 
-  const onStarClickHandler = (e) => {
-    setIsFav(!isFav);
-  };
   useOnClickOutside(ref, () => {
     setDropDown(false);
   });
@@ -191,12 +189,12 @@ const TitleBlock = React.memo((props) => {
       {redirect}
       {error}
       <div className="card-source-name">
-        <div className="setting-container">
+        <div className="icons-container">
           <div ref={ref}>
             {dropDown && (
               <DropDown
                 divStyle={{
-                  left: "0",
+                  top: "0.6rem",
                 }}
                 items={chartTypes}
                 extraItems={extraItems}
@@ -206,24 +204,45 @@ const TitleBlock = React.memo((props) => {
               />
             )}
             {chartsData.editMode && (
-              <SettingsOutlinedIcon
-                className="card-setting"
+              <StyledButton
                 onClick={() => {
                   setDropDown(!dropDown);
                 }}
-                style={{ color: theme.on_surface }}
-              />
+                hover={
+                  themeState.isDark ? theme.surface_1dp : theme.background_color
+                }
+                ButtonStyle={{ padding: "0 0.3rem", height: "26px" }}
+              >
+                <MdMoreVert
+                  style={{
+                    color: theme.on_surface,
+                    fontSize: "1.4rem",
+                  }}
+                />
+              </StyledButton>
+            )}
+            {!chartsData.editMode && (
+              <StyledButton
+                // onClick={() =>()}
+                hover={
+                  themeState.isDark ? theme.surface_1dp : theme.background_color
+                }
+              >
+                <BsArrowsFullscreen style={{ fontSize: "1rem" }} />
+              </StyledButton>
             )}
           </div>
         </div>
         <p className="details">
           {props.parent ? props.parent.join(" - ") : ""}
         </p>
-        <div className="star-container" onClick={onStarClickHandler}>
-          {isFav ? (
-            <StarRoundedIcon style={starStyles} />
-          ) : (
-            <StarBorderRoundedIcon style={starStyles} />
+        <div className="right-icon-container">
+          {chartsData.editMode && props.cardIsHover && (
+            <div className="draggable-handle">
+              <MdDragHandle
+                style={{ color: theme.primary, fontSize: "1.8rem" }}
+              />
+            </div>
           )}
         </div>
       </div>

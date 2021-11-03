@@ -27,6 +27,7 @@ const BodyContent = (props) => {
             className="layout"
             layouts={chartsData.layouts}
             isDraggable={chartsData.editMode ? true : false}
+            draggableHandle=".draggable-handle"
             isRearrangeable
             isResizable={chartsData.editMode ? true : false}
             autoSize

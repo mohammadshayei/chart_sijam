@@ -61,7 +61,6 @@ const DropDown = (props) => {
             style={{
               ...props.contentStyle,
               color: theme.on_background,
-              justifyContent: item.icon ? "flex-start" : "flex-end",
             }}
           >
             {item.icon && <div className="dropdown-icon">{item.icon}</div>}

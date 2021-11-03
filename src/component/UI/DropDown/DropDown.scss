@@ -7,6 +7,7 @@
   box-shadow: 0 5px 13px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(50px);
   animation: fadeInDropDown 0.2s ease-in-out backwards;
+  direction: rtl;
   .dropdown-divider {
     border-top: 1px solid; //rgba(0, 0, 0, 0.1)
     margin: 0 0.8rem;
@@ -15,6 +16,7 @@
     display: flex;
     padding: 0.5rem 0.75rem 0.5rem 2rem;
     font-size: 0.8rem;
+    justify-content: flex-start;
   }
   .dropdown-icon {
     margin: 0.2rem 0 0 0.5rem;
