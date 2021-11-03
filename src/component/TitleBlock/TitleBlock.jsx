@@ -195,6 +195,9 @@ const TitleBlock = React.memo((props) => {
           <div ref={ref}>
             {dropDown && (
               <DropDown
+                divStyle={{
+                  left: "0",
+                }}
                 items={chartTypes}
                 extraItems={extraItems}
                 onClick={settingMenuHandler}
