@@ -83,8 +83,11 @@ const TitleBlock = React.memo((props) => {
   const setChartData = (chartData) => {
     dispatch(addChartActions.setChartData(chartData));
   };
-  const setIsNewChart = (isNewChart) => {
-    dispatch(addChartActions.setIsNewChart(isNewChart));
+  const setIsEdit = (isEdit) => {
+    dispatch(addChartActions.setIsEdit(isEdit));
+  };
+  const fullscreenChart = (isFullscreen) => {
+    dispatch(addChartActions.fullscreenChart(isFullscreen));
   };
 
   const undoDeleteChartHandler = () => {
@@ -92,7 +95,7 @@ const TitleBlock = React.memo((props) => {
   };
 
   const settingMenuHandler = async (id) => {
-    if (id === "setting") {
+    if (id === "setting" || id === "fullScreen") {
       const result = await axios.post(
         `${baseUrl}api/get_data`,
         {
@@ -116,8 +119,9 @@ const TitleBlock = React.memo((props) => {
       setId(props.chartId);
       selectChartDatabase(result.data.result);
       setChartData(selectedChartData);
-      setIsNewChart(false);
-      setRedirect(<Redirect to="/create_chart" />);
+      if (id === "setting") setIsEdit(true);
+      fullscreenChart({ isFullscreen: true });
+      // setRedirect(<Redirect to="/create_chart" />);
     } else if (id === "delete") {
       deletedChart = Object.keys(chartsData.data)
         .filter((key) => key === props.chartId)
@@ -223,7 +227,7 @@ const TitleBlock = React.memo((props) => {
             )}
             {!chartsData.editMode && (
               <StyledButton
-                // onClick={() =>()}
+                onClick={() => settingMenuHandler("fullScreen")}
                 hover={
                   themeState.isDark ? theme.surface_1dp : theme.background_color
                 }

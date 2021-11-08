@@ -93,4 +93,5 @@ export const stringFa = {
   enabled: "روشن",
   total_sum: "جمع کل",
   full_screen: "تمام صفحه",
+  exit_full_screen: "خروج از تمام صفحه",
 };

@@ -22,12 +22,12 @@ const Steps = (props) => {
           type: {
             title: "نوع نمودار",
             content: <Gallery type={props.type} />,
-            isOpen: false,
+            isOpen: true,
           },
           xAxis: {
             title: "انتخاب فیلد",
             content: <XAxisStep />,
-            isOpen: true,
+            isOpen: false,
           },
           timer: {
             title: "به روزرسانی خودکار",

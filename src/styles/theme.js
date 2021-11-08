@@ -50,7 +50,7 @@ const darkTheme = {
   on_surface: "#FFFFFF",
   on_primary: "#FFFFFF",
   on_secondary: "#FFFFFF",
-  on_error: "#000",
+  on_error: "#FFFFFF",
   star_color: "#FF9F43",
   arrows_color: "#8D8D8D",
   ripple_bank_color: "#332b8b",

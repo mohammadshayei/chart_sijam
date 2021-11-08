@@ -11,17 +11,17 @@ const ChartBlock = React.memo((props) => {
   const [loading, setLoading] = useState(null);
   const location = useLocation();
 
-  const chartData = useSelector((state) => state.addChart.chartData);
+  const chartData = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    if (location.pathname === "/create_chart") {
+    if (props.chartId === "123456789") {
       setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
-      if (chartData.data.data) {
+      if (chartData.chartData.data.data) {
         setData({
-          title: chartData.title,
-          type: chartData.type,
-          data: chartData.data.data,
-          options: chartData.data.options,
+          title: chartData.chartData.title,
+          type: chartData.chartData.type,
+          data: chartData.chartData.data.data,
+          options: chartData.chartData.data.options,
         });
       }
     } else {

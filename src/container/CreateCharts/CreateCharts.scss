@@ -45,7 +45,6 @@
       flex: 1 1 auto;
       height: auto;
       margin: 0.5rem 1rem 0rem 0rem;
-      border: 1px solid;
       border-radius: 5px;
       box-shadow: none;
       // overflow: auto;
@@ -54,7 +53,6 @@
         position: absolute;
         overflow: visible;
         border-radius: 7px 7px 0 0;
-        border-bottom: 1px solid;
         padding: 0 0.5rem;
         z-index: 200;
         pointer-events: none;
@@ -130,9 +128,9 @@
                   white-space: nowrap;
                   border: 1px solid transparent;
                   padding: 0 2px;
+                  cursor: text;
                 }
                 .text-component:hover {
-                  cursor: text;
                   border: 1px dashed #c5c7d0;
                 }
               }

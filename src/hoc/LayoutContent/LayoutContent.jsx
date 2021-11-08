@@ -6,8 +6,13 @@ import { useTheme } from "../../styles/ThemeProvider";
 import Navbar from "../../component/Navigation/Navbar/Navbar";
 import { useLocation } from "react-router";
 import BodySetting from "../../container/Body/BodySetting/BodySetting";
+import { useSelector, useDispatch } from "react-redux";
+import * as addChartActions from "../../store/actions/addChart";
+import Modal from "../../component/UI/Modal/Modal";
+import CreateCharts from "../../container/CreateCharts/CreateCharts";
 
 const LayoutContent = (props) => {
+  const chartsData = useSelector((state) => state.addChart);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [bodyComponent, setBodyComponent] = useState(null);
   const onToggleMenu = () => {
@@ -32,6 +37,15 @@ const LayoutContent = (props) => {
     }
   }, [location.pathname]);
 
+  const dispatch = useDispatch();
+  const fullscreenChart = (isFullscreen) => {
+    dispatch(addChartActions.fullscreenChart(isFullscreen));
+  };
+
+  const outsideModalClick = () => {
+    fullscreenChart({ isFullscreen: false });
+  };
+
   return (
     <div
       className="Layout-container"
@@ -40,6 +54,13 @@ const LayoutContent = (props) => {
         color: theme.on_background,
       }}
     >
+      <Modal
+        show={chartsData.isFullscreen}
+        modalClosed={outsideModalClick}
+        style={{ padding: "0", width: "95%", height: "90%" }}
+      >
+        <CreateCharts />
+      </Modal>
       <div
         className="NavbarContainer"
         style={{
