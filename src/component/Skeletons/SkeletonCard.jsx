@@ -1,5 +1,6 @@
 import React from "react";
 import { useTheme } from "../../styles/ThemeProvider";
+import SkeletonChart from "./SkeletonChart";
 import SkeletonElement from "./SkeletonElement.jsx";
 
 const SkeletonCard = ({ childKey }) => {
@@ -11,16 +12,13 @@ const SkeletonCard = ({ childKey }) => {
       key={childKey}
       className="skeleton-wrapper"
       style={{
-        backgroundColor: themeState.isDark
-          ? theme.surface_1dp
-          : "rgb(240, 240, 240)",
+        backgroundColor: themeState.isDark ? theme.surface_1dp : theme.surface,
         height: "100%",
       }}
     >
       <div className="skeleton-card">
-        <SkeletonElement type="text" />
-        <SkeletonElement type="title" />
-        <SkeletonElement type="thumbnail" />
+        <SkeletonElement type="title" delay="0.5s" />
+        <SkeletonChart />
       </div>
     </div>
   );

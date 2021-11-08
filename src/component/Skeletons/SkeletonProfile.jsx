@@ -10,7 +10,7 @@ const SkeletonProfile = () => {
     <div
       className="skeleton-wrapper"
       style={{
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         width: "140px",
         margin: "0 5px",
         display: "flex",
@@ -26,7 +26,7 @@ const SkeletonProfile = () => {
         }}
         type="avatar"
       />
-      <SkeletonElement type="text" />
+      <SkeletonElement type="text" delay="0.2s" />
     </div>
   );
 };

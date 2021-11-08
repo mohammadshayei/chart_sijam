@@ -4,6 +4,7 @@ import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
+import SkeletonChart from "../component/Skeletons/SkeletonChart";
 
 const ChartBlock = React.memo((props) => {
   const [chart, setChart] = useState(null);
@@ -15,17 +16,20 @@ const ChartBlock = React.memo((props) => {
 
   useEffect(() => {
     if (props.chartId === "123456789") {
-      setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
-      if (chartData.chartData.data.data) {
-        setData({
-          title: chartData.chartData.title,
-          type: chartData.chartData.type,
-          data: chartData.chartData.data.data,
-          options: chartData.chartData.data.options,
-        });
-      }
+      setLoading(<SkeletonChart />);
+      setTimeout(() => {
+        setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
+        if (chartData.chartData.data.data) {
+          setData({
+            title: chartData.chartData.title,
+            type: chartData.chartData.type,
+            data: chartData.chartData.data.data,
+            options: chartData.chartData.data.options,
+          });
+        }
+      }, 1000);
     } else {
-      setLoading("Loading...");
+      setLoading(<SkeletonChart />);
       if (props.chartProps) {
         setData(props.chartProps);
       }
