@@ -12,7 +12,9 @@ import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
 import SelectBankModal from "../../CreateCharts/SelectBankModal/SelectBankModal";
 import BanksContainer from "./BanksContainer/BanksContainer";
 import HeaderViewContent from "./HeaderViewContent/HeaderViewContent";
+import Modal from "../../../component/UI/Modal/Modal";
 const PERIOD_INTRAVEL = 60000;
+
 const BodyViewContainer = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
@@ -194,12 +196,9 @@ const BodyViewContainer = (props) => {
           <BanksContainer />
         </div>
       )}
-
-      {isModalOpen && (
-        <div className="modal-overlay" style={{ opacity: isModalOpen ? 1 : 0 }}>
-          <SelectBankModal isModalOpen={setIsModalOpen} />
-        </div>
-      )}
+      <Modal show={isModalOpen} modalClosed={() => setIsModalOpen(false)}>
+        <SelectBankModal isModalOpen={setIsModalOpen} />
+      </Modal>
       {error}
       {detail.software || detail.company || detail.holding ? (
         error ? (

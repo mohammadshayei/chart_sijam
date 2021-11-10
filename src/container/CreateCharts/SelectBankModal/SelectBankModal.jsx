@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useMeasure } from "react-use";
 import { stringFa } from "../../../assets/strings/stringFaCollection.js";
 import { useTheme } from "../../../styles/ThemeProvider.js";
 import "./SelectBankModal.scss";
@@ -11,28 +12,10 @@ import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
 import * as selectDatabaseActions from "../../../store/actions/addChart";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
-function useOnClickOutside(ref, handler) {
-  useEffect(() => {
-    const listener = (event) => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
-      }
-      handler(event);
-    };
-
-    document.addEventListener("mousedown", listener);
-    document.addEventListener("touchstart", listener);
-
-    return () => {
-      document.removeEventListener("mousedown", listener);
-      document.removeEventListener("touchstart", listener);
-    };
-  }, [ref, handler]);
-}
+import { animated, useSpring } from "react-spring";
 
 const SelectBankModal = (props) => {
-  const token = useSelector(state => state.auth.token)
+  const token = useSelector((state) => state.auth.token);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const [loading, setLoading] = useState(true);
@@ -69,10 +52,15 @@ const SelectBankModal = (props) => {
   const [placeHolder, setPlaceHolder] = useState(null);
   const [isDone, setIsDone] = useState(false);
   const [searchResult, setSearchResult] = useState({ error: "", result: null });
-  const ref = useRef();
+  const [contentHeight, setContentHeight] = useState("305px");
+  const [ref, { height }] = useMeasure();
 
-  useOnClickOutside(ref, () => {
-    props.isModalOpen(false);
+  const loadingAnimation = useSpring({
+    opacity: loading ? 1 : 0,
+    from: { opacity: 0 },
+  });
+  const expand = useSpring({
+    height: loading ? "305px" : `${contentHeight}px`,
   });
 
   const onFocusHandler = () => {
@@ -94,7 +82,7 @@ const SelectBankModal = (props) => {
   };
   const setId = (id) => {
     dispatch(selectDatabaseActions.setAddChartId(id));
-  };  
+  };
   const setIsEdit = (isEdit) => {
     dispatch(selectDatabaseActions.setIsEdit(isEdit));
   };
@@ -108,6 +96,14 @@ const SelectBankModal = (props) => {
     setSearchResult(updatedResult);
   };
 
+  useEffect(() => {
+    setContentHeight(height);
+    //Adds resize event listener
+    window.addEventListener("resize", setContentHeight(height));
+    // Clean-up
+    return window.removeEventListener("resize", setContentHeight(height));
+  }, [height]);
+
   useEffect(async () => {
     for (const item in bankAddress) {
       if (bankAddress[item].active)
@@ -115,7 +111,9 @@ const SelectBankModal = (props) => {
     }
     if (bankAddress.holdings.active) {
       try {
-        const result = await axios.get(baseUrl + "api/get_holdings", { headers: { 'auth-token': token } });
+        const result = await axios.get(baseUrl + "api/get_holdings", {
+          headers: { "auth-token": token },
+        });
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa.holdings} وجود ندارد`;
         setData({
@@ -167,7 +165,8 @@ const SelectBankModal = (props) => {
       try {
         const result = await axios.post(
           `${baseUrl}api/get_${nextKey}`,
-          payload, { headers: { 'auth-token': token } }
+          payload,
+          { headers: { "auth-token": token } }
         );
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa[nextKey]} وجود ندارد`;
@@ -212,7 +211,9 @@ const SelectBankModal = (props) => {
       else payload = { code: id };
       setLoading(true);
       try {
-        const result = await axios.post(`${baseUrl}api/get_${key}`, payload, { headers: { 'auth-token': token } });
+        const result = await axios.post(`${baseUrl}api/get_${key}`, payload, {
+          headers: { "auth-token": token },
+        });
         if (result.data.message.result.length === 0)
           result.data.message.error = `.${stringFa[key]} وجود ندارد`;
         setData({
@@ -230,12 +231,14 @@ const SelectBankModal = (props) => {
         );
       }
     }
-    
   };
 
   const submitHandler = async (id) => {
-    const result = await axios.post(`${baseUrl}api/get_data`,
-      { id }, { headers: { 'auth-token': token } });
+    const result = await axios.post(
+      `${baseUrl}api/get_data`,
+      { id },
+      { headers: { "auth-token": token } }
+    );
     selectChartDatabase(result.data.result);
     setId(id);
     setIsEdit(true);
@@ -243,25 +246,12 @@ const SelectBankModal = (props) => {
   };
 
   return (
-    <div
-      className="select-bank-modal-container"
-      style={{
-        backgroundColor: theme.background_color,
-      }}
+    <animated.div
+      tabIndex="0"
+      onKeyDown={(e) => keyDownHandler(e)}
+      style={expand}
     >
-      <div
-        ref={ref}
-        className="select-bank-modal-wrapper"
-        style={{
-          backgroundColor: themeState.isDark
-            ? theme.surface_24dp
-            : theme.surface,
-          color: theme.on_surface,
-          borderColor: theme.border_color,
-        }}
-        tabIndex="0"
-        onKeyDown={(e) => keyDownHandler(e)}
-      >
+      <div className="select-bank-modal-wrapper" ref={ref}>
         {error}
         <div className="select-bank-modal-top">
           <div className="select-bank-title">
@@ -282,8 +272,8 @@ const SelectBankModal = (props) => {
                         color: v.active
                           ? theme.on_background
                           : v.verified
-                            ? theme.primary
-                            : theme.on_background,
+                          ? theme.primary
+                          : theme.on_background,
                         opacity: v.active ? 1 : v.verified ? 1 : 0.5,
                         fontStyle: v.verified ? "italic" : "",
                       }}
@@ -334,8 +324,8 @@ const SelectBankModal = (props) => {
                         bankAddress.active_backup.active
                         ? searchResult.result[0].id
                         : bankAddress.banks.active
-                          ? searchResult.result[0].bank._id
-                          : searchResult.result[0].code
+                        ? searchResult.result[0].bank._id
+                        : searchResult.result[0].code
                     );
                   }
                 }}
@@ -351,15 +341,12 @@ const SelectBankModal = (props) => {
             )}
           </div>
           {loading ? (
-            <div className="loading">
+            <animated.div className="loading" style={loadingAnimation}>
               <img
-                opacity="0.7"
-                height="60"
-                width="60"
                 alt="loading"
                 src={process.env.PUBLIC_URL + "/logo-loading.gif"}
               />
-            </div>
+            </animated.div>
           ) : isDone ? (
             <div className="success"></div>
           ) : (
@@ -419,7 +406,7 @@ const SelectBankModal = (props) => {
           </Link>
         </div>
       </div>
-    </div>
+    </animated.div>
   );
 };
 
