@@ -269,6 +269,7 @@ const XYChart = React.memo((props) => {
        *              Enabling responsive features
        * ========================================================
        */
+      var state;
       xyChart.responsive.rules.push({
         relevant: function (target) {
           if (target.pixelWidth <= 546) {
@@ -279,7 +280,7 @@ const XYChart = React.memo((props) => {
         state: function (target, stateId) {
           if (type === "Line" || type === "Bubble" || type === "Column") {
             if (target instanceof am4charts.Chart) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.paddingLeft = 1;
               state.properties.paddingRight = 1;
               return state;
@@ -289,13 +290,13 @@ const XYChart = React.memo((props) => {
               target instanceof am4charts.AxisLabel &&
               target.parent instanceof am4charts.AxisRendererX
             ) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.disabled = true;
               return state;
             }
           } else if (type === "Radar") {
             if (target instanceof am4charts.Chart) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.paddingTop = -20;
               state.properties.paddingRight = 1;
               state.properties.paddingBottom = -20;
@@ -304,7 +305,7 @@ const XYChart = React.memo((props) => {
             }
 
             if (target instanceof am4charts.AxisLabel) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.disabled = true;
               return state;
             }
@@ -322,14 +323,14 @@ const XYChart = React.memo((props) => {
         state: function (target, stateId) {
           if (type === "Line" || type === "Bubble" || type === "Column") {
             if (target instanceof am4charts.Chart) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.paddingLeft = 1;
               state.properties.paddingRight = 1;
               return state;
             }
 
             if (target instanceof am4charts.AxisRendererY) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.inside = true;
               state.properties.maxLabelPosition = 0.99;
               return state;
@@ -339,7 +340,7 @@ const XYChart = React.memo((props) => {
               target instanceof am4charts.AxisLabel &&
               target.parent instanceof am4charts.AxisRendererY
             ) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.dy = -15;
               state.properties.paddingTop = 3;
               state.properties.paddingRight = 5;
@@ -359,7 +360,7 @@ const XYChart = React.memo((props) => {
               target instanceof am4charts.AxisLabel &&
               target.parent instanceof am4charts.AxisRendererX
             ) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.dy = 0;
               state.properties.paddingTop = 0;
               state.properties.paddingRight = 5;
@@ -370,7 +371,7 @@ const XYChart = React.memo((props) => {
             }
           } else if (type === "Radar") {
             if (target instanceof am4charts.Chart) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.paddingTop = -20;
               state.properties.paddingRight = 1;
               state.properties.paddingBottom = -20;
@@ -379,26 +380,26 @@ const XYChart = React.memo((props) => {
             }
 
             if (target instanceof am4charts.AxisLabel) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.disabled = true;
               return state;
             }
 
             if (target instanceof am4charts.Legend) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.disabled = false;
               return state;
             }
           }
 
           if (target instanceof am4core.Scrollbar) {
-            var state = target.states.create(stateId);
+            state = target.states.create(stateId);
             state.properties.marginLeft = -10;
             return state;
           }
 
           if (target instanceof am4charts.Legend) {
-            var state = target.states.create(stateId);
+            state = target.states.create(stateId);
             state.properties.disabled = true;
             return state;
           }
@@ -415,13 +416,13 @@ const XYChart = React.memo((props) => {
         },
         state: function (target, stateId) {
           if (target instanceof am4core.Scrollbar) {
-            var state = target.states.create(stateId);
+            state = target.states.create(stateId);
             state.properties.marginBottom = -10;
             return state;
           }
 
           if (target instanceof am4charts.Legend) {
-            var state = target.states.create(stateId);
+            state = target.states.create(stateId);
             // state.properties.position = "right";
             // state.properties.paddingTop = -25;
             state.properties.disabled = true;
@@ -435,7 +436,7 @@ const XYChart = React.memo((props) => {
         relevant: am4core.ResponsiveBreakpoints.heightS,
         state: function (target, stateId) {
           if (target instanceof am4charts.Chart) {
-            var state = target.states.create(stateId);
+            state = target.states.create(stateId);
             state.properties.paddingBottom = 10;
             return state;
           }
@@ -444,13 +445,13 @@ const XYChart = React.memo((props) => {
             target instanceof am4charts.AxisLabel &&
             target.parent instanceof am4charts.AxisRendererX
           ) {
-            var state = target.states.create(stateId);
+            state = target.states.create(stateId);
             state.properties.disabled = true;
             return state;
           }
           if (type === "Radar") {
             if (target instanceof am4charts.Chart) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.paddingTop = -20;
               state.properties.paddingRight = 1;
               state.properties.paddingBottom = -20;
@@ -458,7 +459,7 @@ const XYChart = React.memo((props) => {
               return state;
             }
             if (target instanceof am4charts.AxisLabel) {
-              var state = target.states.create(stateId);
+              state = target.states.create(stateId);
               state.properties.disabled = true;
               return state;
             }
