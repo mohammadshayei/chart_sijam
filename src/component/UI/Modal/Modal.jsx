@@ -7,13 +7,22 @@ const Modal = React.memo((props) => {
   const [myClassName, setMyClassName] = useState([classes.Modal]);
 
   const transitions = useTransition(props.show, {
-    from: { opacity: 0, transform: "translate(-50%,-55%)" },
-    enter: { opacity: 1, transform: "translate(-50%,-50%)" },
+    from: {
+      opacity: 0,
+      transform: "translate(-50%,-52%)",
+      pointerEvents: "none",
+    },
+    enter: {
+      opacity: 1,
+      transform: "translate(-50%,-50%)",
+      pointerEvents: "auto",
+    },
     leave: {
       opacity: 0,
-      transform: "translate(-50%,-45%)",
+      transform: "translate(-50%,-48%)",
+      pointerEvents: "none",
     },
-    delay: 2,
+    config: { friction: 20 },
   });
 
   useEffect(() => {
@@ -37,7 +46,7 @@ const Modal = React.memo((props) => {
             style={{
               opacity: styles.opacity,
               transform: styles.transform,
-              delay: styles.delay,
+              pointerEvents: styles.pointerEvents,
               ...props.style,
             }}
           >
