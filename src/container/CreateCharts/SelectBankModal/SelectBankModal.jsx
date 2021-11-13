@@ -52,16 +52,16 @@ const SelectBankModal = (props) => {
   const [placeHolder, setPlaceHolder] = useState(null);
   const [isDone, setIsDone] = useState(false);
   const [searchResult, setSearchResult] = useState({ error: "", result: null });
-  const [contentHeight, setContentHeight] = useState("305px");
-  const [ref, { height }] = useMeasure();
+  // const [contentHeight, setContentHeight] = useState("305px");
+  // const [ref, { height }] = useMeasure();
 
   const loadingAnimation = useSpring({
     opacity: loading ? 1 : 0,
     from: { opacity: 0 },
   });
-  const expand = useSpring({
-    height: loading ? "305px" : `${contentHeight}px`,
-  });
+  // const expand = useSpring({
+  // height: loading ? "305px" : `${contentHeight}px`,
+  // });
 
   const onFocusHandler = () => {
     setFocus(true);
@@ -96,13 +96,13 @@ const SelectBankModal = (props) => {
     setSearchResult(updatedResult);
   };
 
-  useEffect(() => {
-    setContentHeight(height);
-    //Adds resize event listener
-    window.addEventListener("resize", setContentHeight(height));
-    // Clean-up
-    return window.removeEventListener("resize", setContentHeight(height));
-  }, [height]);
+  // useEffect(() => {
+  //   setContentHeight(height);
+  //   //Adds resize event listener
+  //   window.addEventListener("resize", setContentHeight(height));
+  //   // Clean-up
+  //   return window.removeEventListener("resize", setContentHeight(height));
+  // }, [height]);
 
   useEffect(async () => {
     for (const item in bankAddress) {
@@ -246,167 +246,168 @@ const SelectBankModal = (props) => {
   };
 
   return (
-    <animated.div
+    <div
+      className="select-bank-modal-wrapper"
       tabIndex="0"
       onKeyDown={(e) => keyDownHandler(e)}
-      style={expand}
+      // style={expand}
     >
-      <div className="select-bank-modal-wrapper" ref={ref}>
-        {error}
-        <div className="select-bank-modal-top">
-          <div className="select-bank-title">
-            <div className="title">{stringFa.select_database}</div>
-            <div className="title description">
-              {stringFa.select_database_description}
-            </div>
+      {/* <div ref={ref}> */}
+      {error}
+      <div className="select-bank-modal-top">
+        <div className="select-bank-title">
+          <div className="title">{stringFa.select_database}</div>
+          <div className="title description">
+            {stringFa.select_database_description}
           </div>
-          <div className="select-bank-input-wrapper">
-            <div className="select-bank-address">
-              {Object.entries(bankAddress).map(([k, v]) => {
-                return (
-                  <div className="address-part" key={k}>
-                    {k !== "banks" ? "  /  " : ""}
-                    <div
-                      className="address-item"
-                      style={{
-                        color: v.active
-                          ? theme.on_background
-                          : v.verified
-                          ? theme.primary
-                          : theme.on_background,
-                        opacity: v.active ? 1 : v.verified ? 1 : 0.5,
-                        fontStyle: v.verified ? "italic" : "",
-                      }}
-                    >
-                      {v.verified && (
-                        <div
-                          className="clear-address"
-                          onClick={() => clearAddress(k)}
-                        >
-                          <IoMdCloseCircle />
-                        </div>
-                      )}
-                      {v.name}
-                    </div>
+        </div>
+        <div className="select-bank-input-wrapper">
+          <div className="select-bank-address">
+            {Object.entries(bankAddress).map(([k, v]) => {
+              return (
+                <div className="address-part" key={k}>
+                  {k !== "banks" ? "  /  " : ""}
+                  <div
+                    className="address-item"
+                    style={{
+                      color: v.active
+                        ? theme.on_background
+                        : v.verified
+                        ? theme.primary
+                        : theme.on_background,
+                      opacity: v.active ? 1 : v.verified ? 1 : 0.5,
+                      fontStyle: v.verified ? "italic" : "",
+                    }}
+                  >
+                    {v.verified && (
+                      <div
+                        className="clear-address"
+                        onClick={() => clearAddress(k)}
+                      >
+                        <IoMdCloseCircle />
+                      </div>
+                    )}
+                    {v.name}
                   </div>
-                );
-              })}
-              {isDone && (
-                <div
-                  className="success-checkbox-icon"
-                  style={{ color: theme.primary }}
-                >
-                  <GoVerified />
                 </div>
-              )}
-            </div>
-            {!isDone && (
-              <input
-                type="text"
-                className="input-class"
-                style={{
-                  background: themeState.isDark
-                    ? theme.surface_1dp
-                    : theme.surface,
-                  color: theme.on_background,
-                  borderColor: focus ? theme.primary : theme.border_color,
-                }}
-                dir="rtl"
-                placeholder={placeHolder}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.target.value = "";
-                    updateAddress(
-                      bankAddress.banks.active
-                        ? searchResult.result[0].bank.groups_title
-                        : searchResult.result[0].name,
-                      bankAddress.softwares.active ||
-                        bankAddress.active_backup.active
-                        ? searchResult.result[0].id
-                        : bankAddress.banks.active
-                        ? searchResult.result[0].bank._id
-                        : searchResult.result[0].code
-                    );
-                  }
-                }}
-                onChange={(e) => onChangeHandler(e)}
-                onFocus={onFocusHandler}
-                onBlur={onBlurHandler}
-              ></input>
-            )}
-            {!isDone && (
-              <div className="search-icon">
-                <IoIosSearch />
+              );
+            })}
+            {isDone && (
+              <div
+                className="success-checkbox-icon"
+                style={{ color: theme.primary }}
+              >
+                <GoVerified />
               </div>
             )}
           </div>
-          {loading ? (
-            <animated.div className="loading" style={loadingAnimation}>
-              <img
-                alt="loading"
-                src={process.env.PUBLIC_URL + "/logo-loading.gif"}
-              />
-            </animated.div>
-          ) : isDone ? (
-            <div className="success"></div>
-          ) : (
-            <div className="select-bank-picker">
-              <div className="select-bank-data">
-                {searchResult.result &&
-                  (searchResult.error === ""
-                    ? Object.entries(searchResult.result).map(([k, v]) => {
-                        return (
-                          <div
-                            key={k}
-                            className="selection-item"
-                            onClick={() =>
-                              updateAddress(
-                                bankAddress.banks.active
-                                  ? v.bank.groups_title
-                                  : v.name,
-                                bankAddress.softwares.active ||
-                                  bankAddress.active_backup.active
-                                  ? v.id
-                                  : bankAddress.banks.active
-                                  ? v.bank._id
-                                  : v.code
-                              )
-                            }
-                          >
-                            {bankAddress.banks.active
-                              ? v.bank.groups_title
-                              : v.name}
-                          </div>
-                        );
-                      })
-                    : searchResult.error)}
-              </div>
+          {!isDone && (
+            <input
+              type="text"
+              className="input-class"
+              style={{
+                background: themeState.isDark
+                  ? theme.surface_1dp
+                  : theme.surface,
+                color: theme.on_background,
+                borderColor: focus ? theme.primary : theme.border_color,
+              }}
+              dir="rtl"
+              placeholder={placeHolder}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.target.value = "";
+                  updateAddress(
+                    bankAddress.banks.active
+                      ? searchResult.result[0].bank.groups_title
+                      : searchResult.result[0].name,
+                    bankAddress.softwares.active ||
+                      bankAddress.active_backup.active
+                      ? searchResult.result[0].id
+                      : bankAddress.banks.active
+                      ? searchResult.result[0].bank._id
+                      : searchResult.result[0].code
+                  );
+                }
+              }}
+              onChange={(e) => onChangeHandler(e)}
+              onFocus={onFocusHandler}
+              onBlur={onBlurHandler}
+            ></input>
+          )}
+          {!isDone && (
+            <div className="search-icon">
+              <IoIosSearch />
             </div>
           )}
         </div>
-        <div className="select-bank-modal-footer">
-          <Link
-            onClick={(e) => !isDone && e.preventDefault()}
-            style={{ textDecoration: "none" }}
-            to={{
-              pathname: `/create_chart`,
-            }}
-          >
-            <Button
-              ButtonStyle={{
-                backgroundColor: isDone ? theme.primary : "lightslategray",
-                cursor: isDone ? "pointer" : "default",
-                color: theme.on_primary,
-              }}
-              disabled={isDone ? false : true}
-              onClick={() => submitHandler(bankAddress.banks.id)}
-            >
-              {stringFa.done}
-            </Button>
-          </Link>
-        </div>
+        {loading ? (
+          <animated.div className="loading" style={loadingAnimation}>
+            <img
+              alt="loading"
+              src={process.env.PUBLIC_URL + "/logo-loading.gif"}
+            />
+          </animated.div>
+        ) : isDone ? (
+          <div className="success"></div>
+        ) : (
+          <div className="select-bank-picker">
+            <div className="select-bank-data">
+              {searchResult.result &&
+                (searchResult.error === ""
+                  ? Object.entries(searchResult.result).map(([k, v]) => {
+                      return (
+                        <div
+                          key={k}
+                          className="selection-item"
+                          onClick={() =>
+                            updateAddress(
+                              bankAddress.banks.active
+                                ? v.bank.groups_title
+                                : v.name,
+                              bankAddress.softwares.active ||
+                                bankAddress.active_backup.active
+                                ? v.id
+                                : bankAddress.banks.active
+                                ? v.bank._id
+                                : v.code
+                            )
+                          }
+                        >
+                          {bankAddress.banks.active
+                            ? v.bank.groups_title
+                            : v.name}
+                        </div>
+                      );
+                    })
+                  : searchResult.error)}
+            </div>
+          </div>
+        )}
       </div>
-    </animated.div>
+      <div className="select-bank-modal-footer">
+        <Link
+          onClick={(e) => !isDone && e.preventDefault()}
+          style={{ textDecoration: "none" }}
+          to={{
+            pathname: `/create_chart`,
+          }}
+        >
+          <Button
+            ButtonStyle={{
+              backgroundColor: isDone ? theme.primary : "lightslategray",
+              cursor: isDone ? "pointer" : "default",
+              color: theme.on_primary,
+            }}
+            disabled={isDone ? false : true}
+            onClick={() => submitHandler(bankAddress.banks.id)}
+          >
+            {stringFa.done}
+          </Button>
+        </Link>
+      </div>
+      {/* </div> */}
+    </div>
   );
 };
 

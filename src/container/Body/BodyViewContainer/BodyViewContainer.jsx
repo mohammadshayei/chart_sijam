@@ -196,7 +196,16 @@ const BodyViewContainer = (props) => {
           <BanksContainer />
         </div>
       )}
-      <Modal show={isModalOpen} modalClosed={() => setIsModalOpen(false)}>
+      <Modal
+        show={isModalOpen}
+        modalClosed={() => setIsModalOpen(false)}
+        style={{
+          height: "60%",
+          width: "35%",
+          minHeight: "290px",
+          minWidth: "550px",
+        }}
+      >
         <SelectBankModal isModalOpen={setIsModalOpen} />
       </Modal>
       {error}
