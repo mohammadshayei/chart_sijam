@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux'
 import { stringFa } from '../../../../../../assets/strings/stringFaCollection'
 import { baseUrl } from '../../../../../../constants/Config'
 import { useTheme } from '../../../../../../styles/ThemeProvider'
-import SelectHolding from '../../../BodyContentCustom/SelectHolding/SelectHolding'
 import './BodyContentPermissonAdd.scss'
 import LabelItem from './LabelItem/LabelItem'
 import ErrorDialog from '../../../../../../component/UI/Error/ErrorDialog'
 import StyledButton from '../../../../../../component/UI/Button/StyledButton'
+import CustomSelect from '../../../../../../component/UI/CustomSelect/CustomSelect'
 
 const BodyContentPermissonAdd = () => {
     const [multiHolding, setMultiHolding] = useState(false)
@@ -179,11 +179,14 @@ const BodyContentPermissonAdd = () => {
             {
                 multiHolding &&
                 <>
-                    <SelectHolding
-                        selectedHolding={selectedHolding}
-                        fethedHoldings={fethedHoldings}
+                    <CustomSelect
+                        title={stringFa.select_holding}
+                        selectedItem={selectedHolding}
+                        items={fethedHoldings}
                         onSelectChangeHandler={onSelectChangeHandler}
                         style={{ marginBottom: "1rem" }}
+                        keyField='code'
+                        valueField='name'
                     />
                     <div className='seprator'
                         style={{ backgroundColor: theme.hover_button }}

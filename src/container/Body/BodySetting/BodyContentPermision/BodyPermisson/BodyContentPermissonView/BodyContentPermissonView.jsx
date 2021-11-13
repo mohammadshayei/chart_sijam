@@ -2,12 +2,12 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { baseUrl } from '../../../../../../constants/Config'
-import SelectHolding from '../../../BodyContentCustom/SelectHolding/SelectHolding'
 import './BodyContentPermissonView.scss'
 import { useTheme } from '../../../../../../styles/ThemeProvider'
 import { stringFa } from '../../../../../../assets/strings/stringFaCollection'
 import CheckBox from '../../../../../../component/UI/CheckBox/CheckBox'
 import Loading from '../../../../../../component/UI/Loading/Loading'
+import CustomSelect from '../../../../../../component/UI/CustomSelect/CustomSelect'
 const BodyContentPermissonView = () => {
     const [multiHolding, setMultiHolding] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -124,11 +124,14 @@ const BodyContentPermissonView = () => {
             {
                 multiHolding &&
                 <>
-                    <SelectHolding
-                        selectedHolding={selectedHolding}
-                        fethedHoldings={fethedHoldings}
+                    <CustomSelect
+                        title={stringFa.select_holding}
+                        selectedItem={selectedHolding}
+                        items={fethedHoldings}
                         onSelectChangeHandler={onSelectChangeHandler}
                         style={{ marginBottom: "1rem" }}
+                        keyField='code'
+                        valueField='name'
                     />
                     <div className='seprator'
                         style={{ backgroundColor: theme.hover_button }}

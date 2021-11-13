@@ -5,13 +5,13 @@ import './BodyContentCustom.scss'
 import { MdModeEdit } from 'react-icons/md'
 import IMAGE from "../../../../assets/images/simamlogo.png";
 import { TiCancel } from 'react-icons/ti'
-import SelectHolding from './SelectHolding/SelectHolding';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { baseUrl } from '../../../../constants/Config';
 import ErrorDialog from '../../../../component/UI/Error/ErrorDialog';
 import ButtonIconAndLoading from '../../../../component/UI/Button/ButtonIconAndLoading/ButtonIconAndLoading.jsx'
 import { useTheme } from '../../../../styles/ThemeProvider'
+import CustomSelect from '../../../../component/UI/CustomSelect/CustomSelect';
 
 const BodyContentCustom = (props) => {
     const [selectedHolding, setSelectedHolding] = useState('')
@@ -180,11 +180,14 @@ const BodyContentCustom = (props) => {
             {
                 isFekrafzar &&
                 <>
-                    <SelectHolding
-                        selectedHolding={selectedHolding}
-                        fethedHoldings={fethedHoldings}
+                    <CustomSelect
+                        title={stringFa.select_holding}
+                        selectedItem={selectedHolding}
+                        items={fethedHoldings}
                         onSelectChangeHandler={onSelectChangeHandler}
                         style={{ marginBottom: "1rem" }}
+                        keyField='code'
+                        valueField='name'
                     />
                     <div className='seprator'
                         style={{ backgroundColor: theme.hover_button }}

@@ -79,5 +79,9 @@ export const stringFa = {
   enter_title:"لظفا عنوان برچسب را وارد کنید",
   success_save:"با موفقیت ذخیره شد",
   legend: "شرح نمودار",
+  users:'کاربران',
+  access_chart:'دسترسی به نمودار',
+  label:'برچسب',
+  add_user:'کاربر جدید'
 
 };

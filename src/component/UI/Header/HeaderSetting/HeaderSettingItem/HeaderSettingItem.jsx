@@ -26,32 +26,38 @@ const HeaderSettingItem = (props) => {
             })
         }
     }, [props.selected])
-    return (
-        <Link
-            to={{
-                pathname: `/view/setting`,
-                search: `?menu_item=3&s=${props.index + 1}`,
+    const body =
+        <div
+            className='header-setting-item-container'
+            style={{
+                backgroundColor: hover ? theme.hover_button : '',
+                // borderColor: !props.selected ? 'red' : theme.primary,
+                borderBottom: '2px solid',
+                color: theme.on_background,
+                ...style
             }}
-            style={{ textDecoration: "none", }}
+            onClick={(e) => props.onItemClickHandler(e, props.id)}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
         >
-            <div
-                className='header-setting-item-container'
-                style={{
-                    backgroundColor: hover ? theme.hover_button : '',
-                    // borderColor: !props.selected ? 'red' : theme.primary,
-                    borderBottom: '2px solid',
-                    color: theme.on_background,
-                    ...style
-                }}
-                onClick={(e) => props.onItemClickHandler(e, props.id)}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-            >
-                <p>
-                    {props.title}
-                </p>
-            </div>
-        </Link>
+            <p>
+                {props.title}
+            </p>
+        </div>
+    return (
+        <>
+            {props.notLink ? body
+                : <Link
+                    to={{
+                        pathname: `/view/setting`,
+                        search: `?menu_item=${props.pageIndex}&s=${props.index + 1}`,
+                    }}
+                    style={{ textDecoration: "none", }}
+                >
+                    {body}
+                </Link>}
+        </>
+
     )
 }
 
