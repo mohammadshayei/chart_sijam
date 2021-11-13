@@ -94,4 +94,6 @@ export const stringFa = {
   total_sum: "جمع کل",
   full_screen: "تمام صفحه",
   exit_full_screen: "خروج از تمام صفحه",
+  sharebox_title: "انتخاب کاربر برای دیدن نمودار",
+  choose_user: "انتخاب یک کاربر",
 };
