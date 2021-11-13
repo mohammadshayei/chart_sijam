@@ -1,11 +1,22 @@
-import React from 'react';
+import React from "react";
+import { animated, useSpring } from "react-spring";
 
-import classes from './Backdrop.module.css';
+import classes from "./Backdrop.module.css";
 
-const backdrop= (props) => (
-    props.show ? <div 
-                    className={classes.Backdrop}
-                    onClick={props.clicked}></div> : null
-)
+const Backdrop = (props) => {
+  const spring = useSpring({
+    opacity: props.show ? 1 : 0,
+    pointerEvents: props.show ? "auto" : "none",
+    from: { opacity: 0, pointerEvents: "none" },
+  });
 
-export default backdrop
+  return (
+    <animated.div
+      className={classes.Backdrop}
+      onClick={props.clicked}
+      style={spring}
+    ></animated.div>
+  );
+};
+
+export default Backdrop;

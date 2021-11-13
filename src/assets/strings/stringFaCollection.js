@@ -100,5 +100,7 @@ export const stringFa = {
   exit_full_screen: "خروج از تمام صفحه",
   user_assing:'انتساب کاربر',
   create_new_user:'ساخت کاربر جدید',
-  enter_phone:" شماره همراه را وارد کنید"
+  enter_phone:" شماره همراه را وارد کنید",
+  sharebox_title: "انتخاب کاربر برای دیدن نمودار",
+  choose_user: "انتخاب یک کاربر",
 };

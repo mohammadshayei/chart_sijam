@@ -9,12 +9,14 @@ import { chartTypes } from "../../constants/chart-types";
 import { useDispatch, useSelector } from "react-redux";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
 import { MdDragHandle, MdMoreVert } from "react-icons/md";
-import { BsArrowsFullscreen } from "react-icons/bs";
+import { BsArrowsFullscreen, BsStarFill, BsStar } from "react-icons/bs";
+import { FaUserFriends } from "react-icons/fa";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "./../UI/Error/ErrorDialog";
-import { Redirect } from "react-router";
 import StyledButton from "../UI/Button/StyledButton";
+import Modal from "./../UI/Modal/Modal";
+import ShareBox from "./../ShareBox/ShareBox";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -38,14 +40,19 @@ function useOnClickOutside(ref, handler) {
 const TitleBlock = React.memo((props) => {
   const [dropDown, setDropDown] = useState(false);
   const [details, setDetails] = useState([]);
+  const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState(null);
-  const [redirect, setRedirect] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const chartsData = useSelector((state) => state.chart);
   const token = useSelector((state) => state.auth.token);
   const detailsSelection = useSelector((state) => state.detail);
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const starStyles = {
+    color: isFav ? theme.star_color : theme.on_surface,
+    fontSize: "1rem",
+  };
   let deletedChart;
 
   const extraItems = [
@@ -59,6 +66,10 @@ const TitleBlock = React.memo((props) => {
   ];
 
   const ref = useRef();
+
+  const onStarClickHandler = (e) => {
+    setIsFav(!isFav);
+  };
 
   useOnClickOutside(ref, () => {
     setDropDown(false);
@@ -190,8 +201,19 @@ const TitleBlock = React.memo((props) => {
 
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
-      {redirect}
       {error}
+      <Modal
+        show={showModal}
+        modalClosed={() => setShowModal(false)}
+        style={{
+          height: "60%",
+          width: "30%",
+          minHeight: "230px",
+          minWidth: "340px",
+        }}
+      >
+        <ShareBox setShowModal={setShowModal} />
+      </Modal>
       <div className="card-source-name">
         <div className="icons-container">
           <div ref={ref}>
@@ -240,15 +262,40 @@ const TitleBlock = React.memo((props) => {
         <p className="details">
           {props.parent ? props.parent.join(" - ") : ""}
         </p>
-        <div className="right-icon-container">
-          {chartsData.editMode && props.cardIsHover && (
-            <div className="draggable-handle">
-              <MdDragHandle
-                style={{ color: theme.primary, fontSize: "1.8rem" }}
-              />
-            </div>
-          )}
-        </div>
+        {chartsData.editMode ? (
+          <div className="right-icon-container">
+            {props.cardIsHover && (
+              <div className="icon-container draggable-handle">
+                <MdDragHandle
+                  style={{ color: theme.primary, fontSize: "1.8rem" }}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="right-icon-container">
+            <StyledButton
+              onClick={() => setShowModal(!showModal)}
+              hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+              }
+            >
+              <FaUserFriends color={theme.primary} />
+            </StyledButton>
+            <StyledButton
+              hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+              }
+              onClick={onStarClickHandler}
+            >
+              {isFav ? (
+                <BsStarFill style={starStyles} />
+              ) : (
+                <BsStar style={starStyles} />
+              )}
+            </StyledButton>
+          </div>
+        )}
       </div>
       <div className="card-title">
         <p>{props.title}</p>

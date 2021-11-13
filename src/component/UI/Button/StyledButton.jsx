@@ -14,7 +14,13 @@ const StyledButton = (props) => {
   const theme = themeState.computedTheme;
   const newStyle = {
     color: theme.on_background,
-    backgroundColor: isHover ? props.hover : props.backgroundColor,
+    backgroundColor: isHover
+      ? props.hover
+        ? props.hover
+        : themeState.isDark
+        ? theme.surface_12dp
+        : theme.background_color
+      : props.backgroundColor,
   };
   return (
     <button

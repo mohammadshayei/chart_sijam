@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LayoutContent from "./hoc/LayoutContent/LayoutContent.jsx";
 import CreateCharts from "./container/CreateCharts/CreateCharts.jsx";
 import classes from "./App.module.scss";
@@ -15,7 +15,7 @@ const App = () => {
         className={classes.AppContainer}
         style={{ backgroundColor: theme.background_color }}
       >
-        <ProtectedRoute path="/"  component={LayoutContent}></ProtectedRoute>
+        <ProtectedRoute path="/" component={LayoutContent}></ProtectedRoute>
         <Route path="/view" exact component={LayoutContent}></Route>
         <Route path="/create_chart" exact component={CreateCharts}></Route>
         <Route path="/view/setting" exact component={LayoutContent}></Route>

@@ -100,18 +100,7 @@ const NavbarItem = (props) => {
           }}
         />
       )}
-      {hintShow && (
-        <Hint
-          hint={props.detail.hint}
-          tooltipStyle={{
-            backgroundColor: `${theme.on_background}`,
-            color: theme.background_color,
-          }}
-          arrowStyle={{
-            borderBottom: ` 8px solid ${theme.on_background}`,
-          }}
-        />
-      )}
+      {hintShow && <Hint show={hintShow} hint={props.detail.hint} />}
     </div>
   );
 };

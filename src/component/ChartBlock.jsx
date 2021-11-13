@@ -3,14 +3,12 @@ import XYChart from "./Charts/XYChart.jsx";
 import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router";
 import SkeletonChart from "../component/Skeletons/SkeletonChart";
 
 const ChartBlock = React.memo((props) => {
   const [chart, setChart] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(null);
-  const location = useLocation();
 
   const chartData = useSelector((state) => state.addChart);
 
@@ -34,29 +32,31 @@ const ChartBlock = React.memo((props) => {
         setData(props.chartProps);
       }
     }
-  }, [chartData, props.chartProps]);
+  }, [chartData, props.chartProps, props.chartId]);
 
   useEffect(() => {
     if (data) {
+      let newChart;
       switch (data.type) {
         case "Line":
         case "Column":
         case "Bubble":
         case "Radar":
-          setChart(<XYChart chartId={props.chartId} chartProps={data} />);
+          newChart = <XYChart chartId={props.chartId} chartProps={data} />;
           break;
         case "Pie":
         case "Doughnut":
-          setChart(<PieChart chartId={props.chartId} chartProps={data} />);
+          newChart = <PieChart chartId={props.chartId} chartProps={data} />;
           break;
         case "Gauge":
-          setChart(<GaugeChart chartId={props.chartId} chartProps={data} />);
+          newChart = <GaugeChart chartId={props.chartId} chartProps={data} />;
           break;
         default:
-          setChart(<div>mismatch type!</div>);
+          newChart = <div>mismatch type!</div>;
       }
+      setChart(newChart);
     }
-  }, [data]);
+  }, [data, props.chartId]);
 
   return data && data.data.length > 0 ? (
     chart
