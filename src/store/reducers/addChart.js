@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   id: "",
-  isNewChart: true,
+  isEdit: false,
+  isFullscreen: false,
   data: {},
   chartData: {
     title: "",
@@ -15,15 +16,30 @@ const initialState = {
       data: [],
       options: {
         fieldNames: {},
-        theme: "",
+        theme: "noTheme",
         radius: 70,
         innerRadius: 40,
         startAngle: 0,
         endAngle: 360,
-        insideLabel: true,
-        legend: {},
+        insideLabel: false,
+        legend: {
+          display: true,
+          position: "top",
+          colorize: false,
+          valueLabelsText: "{name}",
+        },
         xyCursor: false,
-        xAxes: { minGridDistance: 30, gridTemplateLocation: 0 },
+        axes: {
+          xAxes: {
+            rotation: false,
+            repeatingCategories: true,
+            minGridDistance: 30,
+            gridTemplateLocation: 0,
+          },
+          yAxes: {
+            break: { active: false, start: 0, end: 0, size: 0 },
+          },
+        },
         series: {
           labels: {
             bent: false,
@@ -155,11 +171,11 @@ const removeDataField = (state, action) => {
   };
 };
 
-const setIsNewChart = (state, action) => {
-  const { isNewChart } = action;
+const setIsEdit = (state, action) => {
+  const { isEdit } = action;
   return {
     ...state,
-    isNewChart,
+    isEdit,
   };
 };
 
@@ -177,6 +193,14 @@ const setChartOptions = (state, action) => {
   };
 };
 
+const fullscreenChart = (state, action) => {
+  const { isFullscreen } = action.payload;
+  return {
+    ...state,
+    isFullscreen,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -191,10 +215,12 @@ const reducer = (state = initialState, action) => {
       return setChartTimer(state, action);
     case actionTypes.REMOVE_DATA_FIELD:
       return removeDataField(state, action);
-    case actionTypes.SET_IS_NEW_CHART:
-      return setIsNewChart(state, action);
+    case actionTypes.SET_IS_EDIT:
+      return setIsEdit(state, action);
     case actionTypes.SET_CHART_OPTIONS:
       return setChartOptions(state, action);
+    case actionTypes.FULL_SCREEN_CHART:
+      return fullscreenChart(state, action);
     default:
       return state;
   }

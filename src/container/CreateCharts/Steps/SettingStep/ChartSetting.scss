@@ -34,19 +34,63 @@
     .legend-positions-container {
       display: flex;
       flex-direction: row-reverse;
+      align-items: center;
+      padding: 0rem 1rem 0.5rem 0;
       .legend-position {
-        width: 2rem;
-        height: 2rem;
+        width: 2.5rem;
+        height: 2.5rem;
         margin: 0 0.2rem;
         cursor: pointer;
+        padding: 0.1rem;
+        border-radius: 5px;
         .legend-position-image {
           width: 100%;
           height: 100%;
+          border-radius: 5px;
+          box-shadow: 0 0px 5px -2px #000;
+        }
+      }
+    }
+    .setting-part-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 0.4rem 0.5rem 0 0.5rem;
+      .category-axis-setting {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .value-axis-setting {
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: wrap;
+        align-items: center;
+        width: 100%;
+        .input-text {
+          font-size: 0.8rem;
+          width: 20%;
+          padding: 0.5rem 0;
+        }
+        .input-class {
+          width: 70%;
+          max-height: 2.5rem;
+          font-size: 0.8rem;
+          padding: 0.2rem 0.5rem;
+          margin: 0 0.5rem;
+          border: 1px solid;
+          border-radius: 4px;
+          outline: none;
         }
       }
     }
     .setting-item {
       list-style: none;
+      width: 100%;
+      .line {
+        margin-top: 0.4rem;
+        height: 1px;
+      }
     }
   }
 }

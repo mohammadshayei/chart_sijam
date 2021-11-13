@@ -59,8 +59,6 @@ const Card = React.memo((props) => {
             ? `1px solid ${theme.primary}`
             : `1px solid ${theme.border_color}`
           : `1px solid ${theme.border_color}`,
-        cursor: "mouse",
-        cursor: chartsData.editMode && "move",
       }}
     >
       <TitleBlock
@@ -69,6 +67,7 @@ const Card = React.memo((props) => {
         title={props.item.title}
         parent={props.item.parent}
         bankId={props.item.bankId}
+        cardIsHover={isHover}
       />
       <div className="card-body">
         <ChartBlock chartId={props.chartId} chartProps={props.item} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./TimerStep.scss";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import DropDown from "./../../../../component/UI/DropDown/DropDown";
@@ -23,6 +23,8 @@ const TimerStep = () => {
   ];
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+
+  const ref = useRef();
 
   const onFocusHandler = () => {
     setFocus(true);
@@ -136,7 +138,7 @@ const TimerStep = () => {
           onFocus={onFocusHandler}
           onBlur={onBlurHandler}
         ></input>
-        <div className="setting-dropdown-component">
+        <div className="setting-dropdown-component" ref={ref}>
           {dropDown && (
             <DropDown
               divStyle={{
@@ -149,6 +151,7 @@ const TimerStep = () => {
               items={dropDownItems}
               setSelected={setSelectedUnit}
               setDropDown={setDropDown}
+              divContainerRef={ref}
             />
           )}
           <div

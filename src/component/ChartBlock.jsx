@@ -4,6 +4,7 @@ import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
+import SkeletonChart from "../component/Skeletons/SkeletonChart";
 
 const ChartBlock = React.memo((props) => {
   const [chart, setChart] = useState(null);
@@ -11,21 +12,24 @@ const ChartBlock = React.memo((props) => {
   const [loading, setLoading] = useState(null);
   const location = useLocation();
 
-  const chartData = useSelector((state) => state.addChart.chartData);
+  const chartData = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    if (location.pathname === "/create_chart") {
-      setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
-      if (chartData.data.data) {
-        setData({
-          title: chartData.title,
-          type: chartData.type,
-          data: chartData.data.data,
-          options: chartData.data.options,
-        });
-      }
+    if (props.chartId === "123456789") {
+      setLoading(<SkeletonChart />);
+      setTimeout(() => {
+        setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
+        if (chartData.chartData.data.data) {
+          setData({
+            title: chartData.chartData.title,
+            type: chartData.chartData.type,
+            data: chartData.chartData.data.data,
+            options: chartData.chartData.data.options,
+          });
+        }
+      }, 1000);
     } else {
-      setLoading("Loading...");
+      setLoading(<SkeletonChart />);
       if (props.chartProps) {
         setData(props.chartProps);
       }

@@ -19,18 +19,19 @@
   }
   .react-grid-item > .react-resizable-handle {
     position: absolute;
-    width: 20px;
-    height: 20px;
   }
   .react-grid-item > .react-resizable-handle::after {
     content: "";
     position: absolute;
-    right: 3px;
-    bottom: 3px;
-    width: 5px;
-    height: 5px;
-    border-right: 2px solid rgb(255, 166, 0);
-    border-bottom: 2px solid rgb(255, 166, 0);
+    right: 0px;
+    bottom: 0px;
+    width: 15px;
+    height: 15px;
+    border: none;
+    background-color: #a7a6e3;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    // border-right: 2px solid #a7a6e3;
+    // border-bottom: 2px solid #a7a6e3;
   }
   .react-resizable-hide > .react-resizable-handle {
     display: none;

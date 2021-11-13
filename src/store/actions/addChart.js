@@ -50,10 +50,10 @@ export const removeDataField =
     });
   };
 
-export const setIsNewChart = (isNewChart) => (dispatch) => {
+export const setIsEdit = (isEdit) => (dispatch) => {
   dispatch({
-    type: actionTypes.SET_IS_NEW_CHART,
-    isNewChart: isNewChart,
+    type: actionTypes.SET_IS_EDIT,
+    isEdit: isEdit,
   });
 };
 
@@ -63,5 +63,14 @@ export const setChartOptions =
     dispatch({
       type: actionTypes.SET_CHART_OPTIONS,
       payload: { chartOptions },
+    });
+  };
+
+export const fullscreenChart =
+  ({ isFullscreen }) =>
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.FULL_SCREEN_CHART,
+      payload: { isFullscreen },
     });
   };

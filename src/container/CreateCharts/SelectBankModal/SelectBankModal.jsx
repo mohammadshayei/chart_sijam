@@ -92,9 +92,11 @@ const SelectBankModal = (props) => {
   const selectChartDatabase = (data) => {
     dispatch(selectDatabaseActions.selectChartData(data));
   };
-
   const setId = (id) => {
     dispatch(selectDatabaseActions.setAddChartId(id));
+  };  
+  const setIsEdit = (isEdit) => {
+    dispatch(selectDatabaseActions.setIsEdit(isEdit));
   };
 
   const onChangeHandler = (event) => {
@@ -236,6 +238,7 @@ const SelectBankModal = (props) => {
       { id }, { headers: { 'auth-token': token } });
     selectChartDatabase(result.data.result);
     setId(id);
+    setIsEdit(true);
     props.isModalOpen(false);
   };
 

@@ -34,6 +34,13 @@
   overflow: hidden;
 }
 
+.skeleton.bar {
+  position: relative;
+  overflow: hidden;
+  width: 40px;
+  margin: 0 20px;
+}
+
 .skeleton-wrapper {
   margin: 5px auto;
   padding: 0px 10px;
@@ -70,16 +77,29 @@
   align-items: flex-end;
   height: 100%;
   padding: 30px;
-  .thumbnail {
-    width: 60%;
-    height: 60%;
-    margin: 0 auto;
-  }
   .title {
     margin-bottom: 50px;
   }
   .text {
     margin-bottom: 50px;
+  }
+}
+
+/* skeleton chart */
+.skeleton-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 30px;
+  .legend {
+    display: flex;
+    flex-direction: row;
+  }
+  .bars {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
   }
 }
 

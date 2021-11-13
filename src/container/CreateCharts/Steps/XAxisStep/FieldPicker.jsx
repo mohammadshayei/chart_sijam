@@ -154,15 +154,17 @@ const FieldPicker = (props) => {
           </div>
         </div>
       )}
-      <div className="setting-dropdown-component picker" ref={divRef}>
+      <div
+        className="setting-dropdown-component picker"
+        ref={divRef}
+        style={{ width: "100%" }}
+      >
         {isOpen && (
           <DropDown
             divStyle={{
-              transform: "translateY(1.1rem)",
+              top: "1.1rem",
               maxHeight: "40vh",
               minWidth: "22.4rem",
-              overflow: "auto",
-              animation: "none",
             }}
             items={menuItems}
             setSelected={setSelected}

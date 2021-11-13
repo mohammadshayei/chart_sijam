@@ -66,27 +66,71 @@ const XYChart = React.memo((props) => {
       xyChart.responsive.enabled = true;
       xyChart.responsive.useDefault = true;
       let series;
+
       xyChart.data = data;
+
       if (type === "Line" || type === "Column" || type === "Radar") {
+        xyChart.events.on("beforedatavalidated", function () {
+          for (let i = 0; i < xyChart.data.length; i++) {
+            xyChart.data[i].category = xyChart.data[i].category.replace(
+              / \(.*/,
+              ""
+            );
+          }
+          if (options.axes.xAxes.repeatingCategories) {
+            for (let i = 0; i < xyChart.data.length; i++) {
+              xyChart.data[i].category += " (" + i + ")";
+            }
+          }
+        });
         // Create axes
         var categoryAxis = xyChart.xAxes.push(new am4charts.CategoryAxis());
         categoryAxis.dataFields.category = "category"; //dataField category
         categoryAxis.renderer.grid.template.location =
-          options.xAxes.gridTemplateLocation;
-        categoryAxis.renderer.minGridDistance = options.xAxes.minGridDistance;
+          options.axes.xAxes.gridTemplateLocation;
+        categoryAxis.renderer.minGridDistance =
+          options.axes.xAxes.minGridDistance;
         if (type === "Line" || type === "Column") {
-          categoryAxis.renderer.labels.template.horizontalCenter = "right";
-          categoryAxis.renderer.labels.template.verticalCenter = "middle";
+          if (options.axes.xAxes.rotation) {
+            categoryAxis.renderer.labels.template.rotation = 315; //charkheshe axes lables
+            categoryAxis.renderer.labels.template.horizontalCenter = "right";
+            categoryAxis.renderer.labels.template.verticalCenter = "right";
+          }
           // categoryAxis.renderer.minHeight = 10;
-          categoryAxis.renderer.labels.template.rotation = 315;
         }
+        categoryAxis.renderer.labels.template.adapter.add(
+          "textOutput",
+          function (text) {
+            return text.replace(/ \(.*/, "");
+          }
+        );
 
         var valueAxis = xyChart.yAxes.push(new am4charts.ValueAxis());
         valueAxis.renderer.labels.fill = "#000";
         valueAxis.renderer.labels.fillOpacity = 0;
+        // valueAxis.title.fontWeight = "bold";
+
+        if (options.axes.yAxes.break.active) {
+          let axisBreak = valueAxis.axisBreaks.create();
+          axisBreak.startValue = options.axes.yAxes.break.start;
+          axisBreak.endValue = options.axes.yAxes.break.end;
+          axisBreak.breakSize = 0.005; //options.axes.yAxes.break.size;
+          // fixed axis break
+          // let d =
+          //   (axisBreak.endValue - axisBreak.startValue) /
+          //   (valueAxis.max - valueAxis.min);
+          // axisBreak.breakSize = (0.05 * (1 - d)) / d; // 0.05 means that the break will take 5% of the total value axis height
+          // make break expand on hover
+          let hoverState = axisBreak.states.create("hover");
+          hoverState.properties.breakSize = 1;
+          hoverState.properties.opacity = 0.1;
+          hoverState.transitionDuration = 1500;
+          axisBreak.defaultState.transitionDuration = 1000;
+        }
 
         // Create series
         function createSeries(field, name) {
+          // valueAxis.title.text = name;
           if (type === "Line") {
             series = xyChart.series.push(new am4charts.LineSeries());
             // var series = xyChart.series.push(new am4charts.OHLCSeries());          //OHLC
@@ -98,7 +142,8 @@ const XYChart = React.memo((props) => {
             series.strokeWidth = options.series.strokeWidth;
             // series.smoothing = options.series.smoothing;
             series.tensionX = options.series.tensionX;
-            series.legendSettings.labelText = "[bold {color}]{name}[/]";
+            if (options.legend.colorize)
+              series.legendSettings.labelText = "[{color}]{name}[/]";
             if (options.series.bullet.display) {
               var bullet = series.bullets.push(new am4charts.CircleBullet());
               bullet.circle.stroke = am4core.color(
@@ -115,14 +160,16 @@ const XYChart = React.memo((props) => {
             series.dataFields.valueY = field;
             series.dataFields.categoryX = "category";
             series.name = name;
-            series.legendSettings.labelText = "[bold {color}]{name}[/]";
+            if (options.legend.colorize)
+              series.legendSettings.labelText = "[{color}]{name}[/]";
             series.stacked = options.series.stacked; //stack columns top of each other
           } else if (type === "Radar") {
             series = xyChart.series.push(new am4charts.RadarSeries());
             series.dataFields.valueY = field;
             series.dataFields.categoryX = "category";
             series.name = name;
-            series.legendSettings.labelText = "[bold {color}]{name}[/]";
+            if (options.legend.colorize)
+              series.legendSettings.labelText = "[{color}]{name}[/]";
             series.strokeWidth = options.series.strokeWidth;
           }
           return series;
@@ -208,14 +255,13 @@ const XYChart = React.memo((props) => {
       if (options.legend.display) {
         xyChart.legend = new am4charts.Legend();
         xyChart.legend.position = options.legend.position;
-        xyChart.legend.valueLabels.template.text =
-          options.legend.valueLabelsText;
         xyChart.legend.valueLabels.template.align = "right";
         xyChart.legend.valueLabels.template.textAlign = "end";
         xyChart.legend.reverseOrder = true; //rtl
-        xyChart.legend.itemContainers.template.reverseOrder = true; //rtl
+        // xyChart.legend.itemContainers.template.reverseOrder = true; //rtl
         xyChart.legend.paddingTop = 0;
         xyChart.legend.paddingBottom = 0;
+        xyChart.legend.scrollable = true;
       }
 
       /*
@@ -362,7 +408,7 @@ const XYChart = React.memo((props) => {
       });
       xyChart.responsive.rules.push({
         relevant: function (target) {
-          if (target.pixelHeight <= 360) {
+          if (target.pixelHeight <= 355) {
             return true;
           }
           return false;
@@ -376,8 +422,9 @@ const XYChart = React.memo((props) => {
 
           if (target instanceof am4charts.Legend) {
             var state = target.states.create(stateId);
-            state.properties.position = "right";
-            state.properties.paddingTop = -25;
+            // state.properties.position = "right";
+            // state.properties.paddingTop = -25;
+            state.properties.disabled = true;
             return state;
           }
 

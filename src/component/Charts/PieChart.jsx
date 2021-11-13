@@ -59,6 +59,14 @@ const PieChart = React.memo((props) => {
     pieChart = am4core.create(`${props.chartId}`, am4charts.PieChart);
     pieChart.rtl = true;
     pieChart.data = data;
+    pieChart.events.on("beforedatavalidated", function () {
+      for (let i = 0; i < pieChart.data.length; i++) {
+        pieChart.data[i].category = pieChart.data[i].category.replace(
+          / \(.*/,
+          ""
+        );
+      }
+    });
     if (type === "Doughnut") {
       // cut a hole in Pie chart
       pieChart.innerRadius = am4core.percent(options.innerRadius);
@@ -113,9 +121,11 @@ const PieChart = React.memo((props) => {
       options.series.labels.padding,
       options.series.labels.padding
     );
+    if (options.legend.colorize)
+      pieSeries.legendSettings.labelText = "[{color}]{name}[/]";
     pieSeries.labels.template.disabled = options.series.labels.disabled; //label ha hide mishan
     pieSeries.labels.template.text = options.series.labels.text; //also : "{value.percent.formatNumber('#.0')}%"
-    pieSeries.labels.template.fill = am4core.color(options.series.labels.color);
+    // pieSeries.labels.template.fill = am4core.color(options.series.labels.color);
     pieSeries.ticks.template.disabled = true; //khat az slice ta label
     pieSeries.labels.template.maxWidth = options.series.labels.maxWidth;
     pieSeries.labels.template.wrap = options.series.labels.wrap;
@@ -129,18 +139,31 @@ const PieChart = React.memo((props) => {
       options.slices.innerCornerRadius;
     pieSeries.slices.template.draggable = options.slices.draggable;
     pieSeries.slices.template.inert = true;
+    pieSeries.ticks.template.events.on("ready", hideSmall);
+    pieSeries.ticks.template.events.on("visibilitychanged", hideSmall);
+    pieSeries.labels.template.events.on("ready", hideSmall);
+    pieSeries.labels.template.events.on("visibilitychanged", hideSmall);
+
+    function hideSmall(ev) {
+      if (ev.target.dataItem && ev.target.dataItem.values.value.percent < 1) {
+        ev.target.hide();
+      } else {
+        ev.target.show();
+      }
+    }
     // Add a legend
     if (options.legend.display) {
       pieChart.legend = new am4charts.Legend();
       pieChart.legend.position = options.legend.position;
-      pieChart.legend.valueLabels.template.text =
-        options.legend.valueLabelsText;
+      pieChart.legend.valueLabels.template.text = "{value}";
+      // options.legend.valueLabelsText; // for more text in legend
       pieChart.legend.valueLabels.template.align = "right";
       pieChart.legend.valueLabels.template.textAlign = "end";
       pieChart.legend.reverseOrder = true; //rtl
       pieChart.legend.itemContainers.template.reverseOrder = true; //rtl
       pieChart.legend.maxHeight = undefined;
       pieChart.legend.maxWidth = undefined;
+      pieChart.legend.scrollable = true;
     }
     // sum labels inside doughnut
     if (options.insideLabel) {

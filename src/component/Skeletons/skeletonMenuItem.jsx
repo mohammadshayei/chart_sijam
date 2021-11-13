@@ -20,7 +20,7 @@ const SkeletonMenuItem = () => {
           <SkeletonElement type="text" />
         </div>
         <div>
-          <SkeletonElement type="avatar" />
+          <SkeletonElement type="avatar" delay="0.5s" />
         </div>
       </div>
     </div>

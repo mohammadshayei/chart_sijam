@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
 import * as addChartActions from "../../../../store/actions/addChart";
 import { useTheme } from "../../../../styles/ThemeProvider";
-import top from "../../../../assets/images/legend-top.png";
-import right from "../../../../assets/images/legend-right.png";
-import bottom from "../../../../assets/images/legend-bottom.png";
-import left from "../../../../assets/images/legend-left.png";
+import { baseUrl } from "./../../../../constants/Config";
+import CheckBox from "../../../../component/UI/CheckBox/CheckBox";
+import loading from "../../../../assets/images/dualRingLoading.gif";
+import { BiChevronDown } from "react-icons/bi";
+import DropDown from "./../../../../component/UI/DropDown/DropDown";
 import "./ChartSetting.scss";
 
 const ChartSetting = () => {
@@ -53,14 +54,47 @@ const ChartSetting = () => {
   const [legend, setLegend] = useState({
     display: true,
     position: {
-      top: { img: top, selected: true },
-      right: { img: right, selected: false },
-      bottom: { img: bottom, selected: false },
-      left: { img: left, selected: false },
+      top: { img: "images/legend-top.svg", selected: true },
+      right: { img: "images/legend-right.svg", selected: false },
+      bottom: { img: "images/legend-bottom.svg", selected: false },
+      left: { img: "images/legend-left.svg", selected: false },
     },
-    valueLabelsText: "{value}",
+    colorize: false,
   });
+  const [rotate, setRotate] = useState(false);
+  const [repeat, setRepeat] = useState(true);
+  const [axisBreak, setAxisBreak] = useState({
+    active: false,
+    start: 0,
+    end: 0,
+    size: 0,
+  });
+  const [breakInputs, setBreakInputs] = useState({
+    start: { value: 0, focus: false, loading: null },
+    end: { value: 0, focus: false, loading: null },
+  });
+  const [dataLabels, setDataLabels] = useState({
+    bent: false,
+    radius: 10,
+    disabled: false,
+    text: "{category}",
+  });
+  const [selectedLabelsText, setSelectedLabelsText] =
+    useState("نام فیلد عنوان");
+  const [labelsDropdown, setLabelsDropdown] = useState(false);
+  const [insideLabel, setInsideLabel] = useState(false);
+  const [initial, setInitial] = useState(true);
+
   const takenData = useSelector((state) => state.addChart);
+  const labelsDropDownItems = [
+    { name: "نام فیلد عنوان", id: "category" },
+    { name: "مقادیر", id: "value" },
+    { name: "درصد", id: "percent" },
+    { name: "نام فیلد : درصد", id: "catper" },
+    { name: "نام فیلد : مقدار", id: "catval" },
+  ];
+
+  const ref = useRef();
 
   const dispatch = useDispatch();
   const setChartOptions = (chartOptions) => {
@@ -79,25 +113,140 @@ const ChartSetting = () => {
     setThemePalette(updatedThemePalette);
   };
 
-  const handleCheckBoxClick = (checked) => {
+  const legendsClickHandler = (key) => {
+    let updatedLegend = { ...legend };
+    for (const k1 in updatedLegend) {
+      if (k1 === "position") {
+        for (const k2 in updatedLegend[k1]) {
+          if (k2 === key) {
+            updatedLegend[k1][k2].selected = true;
+          } else updatedLegend[k1][k2].selected = false;
+        }
+      }
+    }
+    setLegend(updatedLegend);
+  };
+
+  const displayCheckBoxClick = (checked) => {
     let updatedLegend = { ...legend };
     updatedLegend.display = checked;
     setLegend(updatedLegend);
   };
 
+  const colorizeCheckBoxClick = (checked) => {
+    let updatedLegend = { ...legend };
+    updatedLegend.colorize = checked;
+    setLegend(updatedLegend);
+  };
+
+  const axisBreakCheckBoxClick = (checked) => {
+    let updatedAxisBreak = { ...axisBreak };
+    updatedAxisBreak.active = checked;
+    if (checked) updatedAxisBreak.size = 0.01;
+    setAxisBreak(updatedAxisBreak);
+  };
+
+  const dataLabelsCheckBoxClick = (checked) => {
+    let updatedDataLabels = { ...dataLabels };
+    updatedDataLabels.disabled = checked;
+    setDataLabels(updatedDataLabels);
+  };
+
+  const breakOnFocusHandler = (key) => {
+    let updatedInputs = { ...breakInputs };
+    updatedInputs[key].focus = true;
+    setBreakInputs(updatedInputs);
+  };
+  const breakOnBlurHandler = (key) => {
+    let updatedInputs = { ...breakInputs };
+    updatedInputs[key].focus = false;
+    setBreakInputs(updatedInputs);
+  };
+  const breakInputHandler = (evt) => {
+    let updatedBreakInputs = { ...breakInputs };
+    updatedBreakInputs[evt.target.id].value = evt.target.validity.valid
+      ? parseInt(evt.target.value, 10)
+      : updatedBreakInputs[evt.target.id].value;
+    setBreakInputs(updatedBreakInputs);
+  };
+  const breakOnChangeHandler = (e) => {
+    let updatedBreakInputs = { ...breakInputs };
+    if (e.target.value === "") updatedBreakInputs[e.target.id].value = 0;
+    updatedBreakInputs[e.target.id].loading = (
+      <img src={loading} width="18px" height="18px" />
+    );
+    setBreakInputs(updatedBreakInputs);
+    setTimeout(() => {
+      let updatedAxisBreak = { ...axisBreak };
+      updatedAxisBreak[e.target.id] = parseInt(e.target.value, 10);
+      setAxisBreak(updatedAxisBreak);
+      updatedBreakInputs[e.target.id].loading = null;
+      setBreakInputs(updatedBreakInputs);
+    }, 5000);
+  };
+
+  /* INITIAL SETTING */
   useEffect(() => {
+    const chartOptions = { ...takenData.chartData.data.options };
     let updatedThemePalette = { ...themePalette };
-    if (
-      takenData.chartData.data.options.theme &&
-      takenData.chartData.data.options.theme !== ""
-    ) {
+    let updatedLegend = { ...legend };
+    let updatedDataLabels = { ...dataLabels };
+    if (chartOptions.theme) {
       for (const theme in updatedThemePalette) {
-        if (takenData.chartData.data.options.theme === theme) {
+        if (chartOptions.theme === theme) {
           updatedThemePalette[theme].active = true;
         } else updatedThemePalette[theme].active = false;
       }
     }
     setThemePalette(updatedThemePalette);
+    if (chartOptions.legend) {
+      updatedLegend.display = chartOptions.legend.display;
+      updatedLegend.colorize = chartOptions.legend.colorize;
+      for (const key in updatedLegend.position) {
+        if (`${key}` === chartOptions.legend.position) {
+          updatedLegend.position[key].selected = true;
+        } else updatedLegend.position[key].selected = false;
+      }
+    }
+    setLegend(updatedLegend);
+    if (chartOptions.axes.xAxes) {
+      setRotate(chartOptions.axes.xAxes.rotation);
+      setRepeat(chartOptions.axes.xAxes.repeatingCategories);
+    }
+    if (chartOptions.axes.yAxes) {
+      let updatedBreakInputs = { ...breakInputs };
+      updatedBreakInputs.start.value = chartOptions.axes.yAxes.break.start;
+      updatedBreakInputs.end.value = chartOptions.axes.yAxes.break.end;
+      setBreakInputs(updatedBreakInputs);
+      setAxisBreak(chartOptions.axes.yAxes.break);
+    }
+    if (chartOptions.series.labels) {
+      updatedDataLabels.disabled = chartOptions.series.labels.disabled;
+      updatedDataLabels.text = chartOptions.series.labels.text;
+      setDataLabels(updatedDataLabels);
+    }
+    switch (chartOptions.series.labels.text) {
+      case "{category}":
+        setSelectedLabelsText("نام فیلد عنوان");
+        break;
+      case "{value}":
+        setSelectedLabelsText("مقادیر");
+        break;
+      case "{value.percent.formatNumber('#.0')}%":
+        setSelectedLabelsText("درصد");
+        break;
+      case "{category} :{value.percent.formatNumber('#.0')}%":
+        setSelectedLabelsText("نام فیلد : درصد");
+        break;
+      case "{category} :{value}":
+        setSelectedLabelsText("نام فیلد : مقدار");
+        break;
+
+      default:
+        break;
+    }
+    if (chartOptions.insideLabel) setInsideLabel(chartOptions.insideLabel);
+    setInitial(false);
   }, []);
 
   useEffect(() => {
@@ -114,11 +263,76 @@ const ChartSetting = () => {
     let chartOptions = { ...takenData.chartData.data.options };
     if (legend) {
       chartOptions.legend.display = legend.display;
-      chartOptions.legend.position = legend.position;
-      chartOptions.legend.valueLabelsText = legend.valueLabelsText;
+      for (const pos in legend.position) {
+        if (legend.position[pos].selected) {
+          chartOptions.legend.position = `${pos}`;
+        }
+      }
+      chartOptions.legend.colorize = legend.colorize;
       setChartOptions(chartOptions);
     }
   }, [legend]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.axes.xAxes.rotation = rotate;
+    setChartOptions(chartOptions);
+  }, [rotate]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.axes.xAxes.repeatingCategories = repeat;
+    setChartOptions(chartOptions);
+  }, [repeat]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.axes.yAxes.break = axisBreak;
+    setChartOptions(chartOptions);
+  }, [axisBreak]);
+
+  useEffect(() => {
+    if (!initial) {
+      let updatedDataLabels = { ...dataLabels };
+      switch (selectedLabelsText) {
+        case "نام فیلد عنوان":
+          updatedDataLabels.text = "{category}";
+          break;
+        case "مقادیر":
+          updatedDataLabels.text = "{value}";
+          break;
+        case "درصد":
+          updatedDataLabels.text = "{value.percent.formatNumber('#.0')}%";
+          break;
+        case "نام فیلد : درصد":
+          updatedDataLabels.text =
+            "{category} :{value.percent.formatNumber('#.0')}%";
+          break;
+        case "نام فیلد : مقدار":
+          updatedDataLabels.text = "{category} :{value}";
+          break;
+
+        default:
+          break;
+      }
+      setDataLabels(updatedDataLabels);
+    }
+  }, [selectedLabelsText]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.series.labels.bent = dataLabels.bent;
+    chartOptions.series.labels.radius = dataLabels.radius;
+    chartOptions.series.labels.disabled = dataLabels.disabled;
+    chartOptions.series.labels.text = dataLabels.text;
+    setChartOptions(chartOptions);
+  }, [dataLabels]);
+
+  useEffect(() => {
+    let chartOptions = { ...takenData.chartData.data.options };
+    chartOptions.insideLabel = insideLabel;
+    setChartOptions(chartOptions);
+  }, [insideLabel]);
 
   return (
     <div className="chart-setting-container">
@@ -148,38 +362,221 @@ const ChartSetting = () => {
           </ul>
         </li>
         <li className="setting-item">
-          <div className="timer-checkbox">
+          <div
+            className="line"
+            style={{ backgroundColor: theme.border_color }}
+          ></div>
+          <div className="setting-part-container">
             {stringFa.legend}
-            <label className="container">
-              <input
-                type="checkbox"
-                checked={legend.display}
-                onChange={(e) => handleCheckBoxClick(e.target.checked)}
-              ></input>
-              <span className="checkmark"></span>
-            </label>
-          </div>
-          <div className="legend-positions-container">
-            {Object.entries(legend.position).map(([k, v]) => {
-              return (
-                <div
-                  key={k}
-                  style={{
-                    borderColor: v.selected
-                      ? theme.primary
-                      : theme.border_color,
-                  }}
-                  className="legend-position"
-                  // onClick={(e) => onClickHandler(e, v, key)}
-                >
-                  <img className="legend-position-image" src={v.img} alt="" />
+            <CheckBox
+              checked={legend.display}
+              onChange={(e) => displayCheckBoxClick(e.target.checked)}
+              style={{ padding: "1rem 1rem 0.5rem 0", fontSize: "0.85rem" }}
+            >
+              {stringFa.enabled}
+            </CheckBox>
+            {legend.display && (
+              <div>
+                <div className="legend-positions-container">
+                  {Object.entries(legend.position).map(([k, v]) => {
+                    return (
+                      <div
+                        key={k}
+                        style={{
+                          border: v.selected
+                            ? `2px solid ${theme.primary}`
+                            : "none",
+                        }}
+                        className="legend-position"
+                        onClick={() => legendsClickHandler(k)}
+                      >
+                        <img
+                          className="legend-position-image"
+                          src={`${baseUrl}${v.img}`}
+                          alt=""
+                        />
+                      </div>
+                    );
+                  })}
+                  <CheckBox
+                    checked={legend.colorize}
+                    onChange={(e) => colorizeCheckBoxClick(e.target.checked)}
+                    style={{ fontSize: "0.8rem" }}
+                  >
+                    {stringFa.colorize}
+                  </CheckBox>
                 </div>
-              );
-            })}
+              </div>
+            )}
           </div>
         </li>
-        <li className="setting-item">برچسب محورها</li>
-        <li className="setting-item">ابزار راهنما</li>
+        {(takenData.chartData.type === "Column" ||
+          takenData.chartData.type === "Line") && (
+          <li className="setting-item">
+            <div
+              className="line"
+              style={{ backgroundColor: theme.border_color }}
+            ></div>
+            <div className="setting-part-container">
+              {stringFa.category_axis}
+              <div className="category-axis-setting">
+                <CheckBox
+                  checked={rotate}
+                  onChange={(e) => setRotate(e.target.checked)}
+                  style={{
+                    padding: "1rem 1rem 0.5rem 0",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  {stringFa.rotate_categories}
+                </CheckBox>
+                <CheckBox
+                  checked={repeat}
+                  onChange={(e) => setRepeat(e.target.checked)}
+                  style={{
+                    padding: "1rem 1rem 0.5rem 0",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  {stringFa.repeating_categories}
+                </CheckBox>
+              </div>
+            </div>
+          </li>
+        )}
+        {takenData.chartData.type === "Column" && (
+          <li className="setting-item">
+            <div
+              className="line"
+              style={{ backgroundColor: theme.border_color }}
+            ></div>
+            <div className="setting-part-container">
+              {stringFa.value_axis}
+              <CheckBox
+                checked={axisBreak.active}
+                onChange={(e) => axisBreakCheckBoxClick(e.target.checked)}
+                style={{
+                  padding: "1rem 1rem 0.5rem 0",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {stringFa.axis_break}
+              </CheckBox>
+              {axisBreak.active && (
+                <div className="value-axis-setting">
+                  {Object.entries(breakInputs).map(([k, v]) => {
+                    return (
+                      <div className="value-axis-setting">
+                        <div className="input-text">: {stringFa[k]}</div>
+                        <input
+                          className="input-class"
+                          id={k}
+                          style={{
+                            background: themeState.isDark
+                              ? theme.surface_1dp
+                              : theme.surface,
+                            color: theme.on_background,
+                            borderColor: breakInputs[k].focus
+                              ? theme.primary
+                              : theme.border_color,
+                          }}
+                          type="text"
+                          pattern="[0-9]*"
+                          dir="rtl"
+                          value={breakInputs[k].value}
+                          onInput={(e) => breakInputHandler(e)}
+                          onChange={(e) => breakOnChangeHandler(e)}
+                          onFocus={() => breakOnFocusHandler(k)}
+                          onBlur={() => breakOnBlurHandler(k)}
+                        ></input>
+                        {breakInputs[k].loading}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </li>
+        )}
+        {(takenData.chartData.type === "Pie" ||
+          takenData.chartData.type === "Doughnut") && (
+          <li className="setting-item">
+            <div
+              className="line"
+              style={{ backgroundColor: theme.border_color }}
+            ></div>
+            <div className="setting-part-container">
+              {stringFa.data_labels}
+              <CheckBox
+                checked={dataLabels.disabled}
+                onChange={(e) => dataLabelsCheckBoxClick(e.target.checked)}
+                style={{
+                  padding: "1rem 1rem 0.5rem 0",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {stringFa.disabled}
+              </CheckBox>
+              {!dataLabels.disabled && (
+                <div className="value-axis-setting">
+                  : {stringFa.labels_text}
+                  <div
+                    className="setting-dropdown-component"
+                    ref={ref}
+                    style={{ padding: "0 1rem" }}
+                  >
+                    {labelsDropdown && (
+                      <DropDown
+                        divStyle={{
+                          top: "1.1rem",
+                          width: "13.2rem",
+                        }}
+                        items={labelsDropDownItems}
+                        setSelected={setSelectedLabelsText}
+                        setDropDown={setLabelsDropdown}
+                        divContainerRef={ref}
+                      />
+                    )}
+                    <div
+                      className={`dropdown-wrapper ${labelsDropdown && "open"}`}
+                      onClick={() => {
+                        setLabelsDropdown(!labelsDropdown);
+                      }}
+                      style={{ borderColor: theme.border_color }}
+                    >
+                      <div className="dropdown-indicator">
+                        <div
+                          className={`dropdown-indicator-icon ${
+                            labelsDropdown && "rotate"
+                          }`}
+                        >
+                          <BiChevronDown />
+                        </div>
+                      </div>
+                      <div className="dropdown-title">
+                        <span className="title-text">{selectedLabelsText}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {takenData.chartData.type === "Doughnut" && (
+                    <div className="value-axis-setting">
+                      <CheckBox
+                        checked={insideLabel}
+                        onChange={(e) => setInsideLabel(e.target.checked)}
+                        style={{
+                          padding: "1rem 1rem 0.5rem 0",
+                          fontSize: "0.85rem",
+                        }}
+                      >
+                        {stringFa.total_sum}
+                      </CheckBox>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </li>
+        )}
       </ul>
     </div>
   );
