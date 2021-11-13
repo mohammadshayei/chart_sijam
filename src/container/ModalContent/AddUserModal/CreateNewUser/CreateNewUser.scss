@@ -1,0 +1,29 @@
+.create-new-user-container {
+    .create-new-user-get-phone-container{
+        width: 100%;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+        direction: ltr;
+        padding: 0 1rem;
+    }
+    .button-create-new-user-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin-top: 1.5rem;
+        .button-text {
+            display: flex;
+            font-size: 0.9rem;
+            font-weight: 100;
+            border-radius: 0.2rem;
+            overflow: hidden;
+            align-items: center;
+            padding: 0.5rem 1rem;
+        }
+        
+    }
+}

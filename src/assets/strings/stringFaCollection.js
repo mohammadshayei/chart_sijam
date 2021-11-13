@@ -98,4 +98,7 @@ export const stringFa = {
   total_sum: "جمع کل",
   full_screen: "تمام صفحه",
   exit_full_screen: "خروج از تمام صفحه",
+  user_assing:'انتساب کاربر',
+  create_new_user:'ساخت کاربر جدید',
+  enter_phone:" شماره همراه را وارد کنید"
 };

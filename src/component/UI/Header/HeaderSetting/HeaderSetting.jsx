@@ -16,6 +16,7 @@ const HeaderSetting = (props) => {
                             title={v.title}
                             index={index}
                             pageIndex={props.pageIndex}
+                            notLink={props.notLink}
                         />
                     )
                 })

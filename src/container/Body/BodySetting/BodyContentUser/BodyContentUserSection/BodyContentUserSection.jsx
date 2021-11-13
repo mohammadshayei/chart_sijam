@@ -10,7 +10,8 @@ import Search from '../../../../../component/UI/Search/Search'
 import DynamicItem from './DynamicItem/DynamicItem'
 import StyledButton from '../../../../../component/UI/Button/StyledButton'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { Modal } from 'bootstrap'
+import AddUserModal from '../../../../ModalContent/AddUserModal/AddUserModal'
+import Modal from "../../../../../component/UI/Modal/Modal";
 
 const BodyContentUserSection = () => {
     const [multiHolding, setMultiHolding] = useState(false)
@@ -182,7 +183,7 @@ const BodyContentUserSection = () => {
     return (
         <div className='body-content-user-section-container'>
             <Modal show={addUserOpen} modalClosed={closeModal} >
-                <CountryCodes closeModal={closeModal} setResult={setResultCountry} />
+                <AddUserModal closeModal={closeModal} />
             </Modal>
             {
                 multiHolding &&
@@ -254,6 +255,7 @@ const BodyContentUserSection = () => {
                         }}
                         hover={theme.primary_variant}
                         backgroundColor={theme.primary}
+                        onClick={onClickAddUserHandler}
                     >
 
                         <div className="button-text" style={{ color: theme.on_primary }}>
