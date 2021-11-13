@@ -5,7 +5,8 @@ import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
 const Search = (props) => {
     return (
         <div className='search-contianer' style={props.containerStyle}>
-            <Input type='input' style={props.inputStyle}  onChange={props.onChange} value={props.value} config={props.config} />
+            <input type='input'style={props.inputStyle} onChange={props.onChange}
+                value={props.value} {...props.config} />
             <SearchRoundedIcon style={props.iconStyle} />
         </div>
     )

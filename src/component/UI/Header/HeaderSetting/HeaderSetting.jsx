@@ -15,6 +15,7 @@ const HeaderSetting = (props) => {
                             id={k}
                             title={v.title}
                             index={index}
+                            pageIndex={props.pageIndex}
                         />
                     )
                 })

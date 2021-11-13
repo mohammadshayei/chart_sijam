@@ -40,7 +40,7 @@ const Input = (props) => {
     }
   }, [props.elementType, props.value]);
 
-  return <div className="input-container">{inputElement}</div>;
+  return <div className="input-container" style={{...props.inputContainer}}>{inputElement}</div>;
 };
 
 export default Input;

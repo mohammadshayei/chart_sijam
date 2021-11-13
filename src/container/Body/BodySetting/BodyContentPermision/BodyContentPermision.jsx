@@ -51,7 +51,7 @@ const BodyContentPermision = (props) => {
     }
     return (
         <div className='body-content-permission-container'>
-            <HeaderSetting onClick={onItemClickHandler} data={headerOrder} />
+            <HeaderSetting pageIndex={3} onClick={onItemClickHandler} data={headerOrder} />
             <div className='body-content-permission-body'>
 
                 {body}
