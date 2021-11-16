@@ -1,5 +1,5 @@
 .create-new-user-container {
-    .create-new-user-get-phone-container{
+    .create-new-user-get-phone-container {
         width: 100%;
         display: flex;
         flex-direction: row-reverse;
@@ -7,6 +7,28 @@
         justify-content: space-between;
         direction: ltr;
         padding: 0 1rem;
+    }
+    .create-new-user-verify-code-container{
+        width: 100%;
+        display: flex;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        direction: ltr;
+        .create-new-user-header-verify-contianer {
+            width: 15rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            h5 {
+                font-weight: 200;
+                font-size: 17px;
+                margin-bottom: 0.4rem;
+            }
+        }
+        
     }
     .button-create-new-user-container {
         width: 100%;
@@ -24,6 +46,5 @@
             align-items: center;
             padding: 0.5rem 1rem;
         }
-        
     }
 }

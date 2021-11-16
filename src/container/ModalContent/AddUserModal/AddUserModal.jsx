@@ -30,7 +30,7 @@ const AddUserModal = (props) => {
     }
     return (
         <div>
-            <HeaderSetting notLink={true} onClick={onHeaderItemClick} data={headerOrder} />
+            <HeaderSetting style={{direction:'rtl'}} notLink={true} onClick={onHeaderItemClick} data={headerOrder} />
             {
                 headerOrder.create.selected ? <CreateNewUser /> : <AssingUser />
             }

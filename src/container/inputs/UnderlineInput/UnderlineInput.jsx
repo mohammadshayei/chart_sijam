@@ -25,6 +25,7 @@ const UnderlineInput = (props) => {
                 index * (lineWidth + props.space)
               }rem`,
               width: `${lineWidth}rem`,
+              ...props.underlineDivStyle
             }}
           />
         );

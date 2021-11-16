@@ -4,7 +4,7 @@ import HeaderSettingItem from './HeaderSettingItem/HeaderSettingItem'
 
 const HeaderSetting = (props) => {
     return (
-        <div className='header-setting-container'>
+        <div className='header-setting-container' style={{...props.style}}>
             {
                 Object.entries(props.data).map(([k, v], index) => {
                     return (
