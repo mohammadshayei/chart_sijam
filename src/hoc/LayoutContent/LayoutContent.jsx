@@ -10,11 +10,13 @@ import { useSelector, useDispatch } from "react-redux";
 import * as addChartActions from "../../store/actions/addChart";
 import Modal from "../../component/UI/Modal/Modal";
 import CreateCharts from "../../container/CreateCharts/CreateCharts";
+import BodyUserProfile from "../../container/Body/BodyUserProfile/BodyUserProfile";
 
 const LayoutContent = (props) => {
   const chartsData = useSelector((state) => state.addChart);
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [bodyComponent, setBodyComponent] = useState(null);
+  const [showDrawer, setShowDrawer] = useState(true);
   const onToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -26,12 +28,19 @@ const LayoutContent = (props) => {
     switch (location.pathname) {
       case "/view":
         setBodyComponent(<BodyViewContainer />);
+        setShowDrawer(true);
         break;
       case "/view/setting":
         setBodyComponent(<BodySetting />);
+        setShowDrawer(true);
+        break;
+      case "/view/user":
+        setBodyComponent(<BodyUserProfile />);
+        setShowDrawer(false);
         break;
       default:
         setBodyComponent(<BodyViewContainer />);
+        setShowDrawer(true);
 
         break;
     }
@@ -76,7 +85,9 @@ const LayoutContent = (props) => {
 
       <div className="layout-content">
         {bodyComponent}
-        <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
+        {showDrawer && (
+          <Drawer onToggleMenu={onToggleMenu} isMenuOpen={isMenuOpen} />
+        )}
       </div>
     </div>
   );

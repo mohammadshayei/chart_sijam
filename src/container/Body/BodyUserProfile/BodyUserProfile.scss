@@ -1,0 +1,70 @@
+.user-profile-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  .top-section-container {
+    position: relative;
+    text-align: center;
+    padding-top: 3rem;
+    min-height: 300px;
+    transition: color 0.2s ease-out, background 0.2s ease-out;
+    .user-container {
+      margin: 0 auto auto auto;
+      max-width: 550px;
+    }
+    .user-profile-top {
+      margin-bottom: 1.5rem;
+    }
+    .profile-picture-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin: 0px auto 25px auto;
+      border-radius: 50%;
+      width: 135px;
+      height: 135px;
+      .profile-picture {
+        width: 136px;
+        height: 135px;
+        border-radius: 50%;
+        transition: 0.3s ease;
+      }
+      .hover-wrapper {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: 136px;
+        height: 136px;
+        opacity: 0;
+        top: 0;
+        left: 0;
+        background-color: rgba(60, 60, 60, 0.6);
+        transition: 0.3s ease;
+        .change-picture-icon {
+          font-size: 3.2rem;
+        }
+        .change-picture-text {
+          text-align: center;
+          line-height: 1.35rem;
+          font-size: 0.8rem;
+          margin: 0px 1.2rem;
+        }
+        &:hover {
+          opacity: 1;
+          cursor: pointer;
+        }
+      }
+    }
+    .navigation {
+      position: absolute;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 100%;
+      bottom: 0;
+    }
+  }
+}

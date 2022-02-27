@@ -8,6 +8,9 @@ import * as actions from "../../../store/actions/index";
 import { baseUrl } from "../../../constants/Config";
 import SkeletonProfile from "../../Skeletons/SkeletonProfile";
 import { IoIosArrowDropdown } from "react-icons/io";
+import { IoSettingsOutline, IoSunnyOutline, IoMoon } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import { Redirect } from "react-router";
 
 const ProfileDetail = (props) => {
@@ -17,11 +20,12 @@ const ProfileDetail = (props) => {
   const [userMenu, setUserMenu] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const baseMenuOrder = [
+    { name: stringFa.my_profile, id: "my_profile", icon: <FaRegUser /> },
     {
       name: "-",
       id: "change_theme",
     },
-    { name: stringFa.log_out, id: "log_out" },
+    { name: stringFa.log_out, id: "log_out", icon: <FiLogOut /> },
   ];
   const [menuOrders, setMenuOrders] = useState(baseMenuOrder);
   const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
@@ -32,6 +36,10 @@ const ProfileDetail = (props) => {
   const openSetting = () => {
     setRedirect(<Redirect to="/view/setting" />);
     // search: "?menu_item=1",
+  };
+
+  const openProfile = () => {
+    setRedirect(<Redirect to="/view/user" />);
   };
 
   const logout = () => {
@@ -47,9 +55,14 @@ const ProfileDetail = (props) => {
 
   useEffect(() => {
     let updatedMenuOrders = [...menuOrders];
-    updatedMenuOrders[0].name = themeState.isDark
+    updatedMenuOrders[1].name = themeState.isDark
       ? stringFa.light_theme
       : stringFa.dark_theme;
+    updatedMenuOrders[1].icon = themeState.isDark ? (
+      <IoSunnyOutline />
+    ) : (
+      <IoMoon />
+    );
     setMenuOrders(updatedMenuOrders);
   }, [themeState]);
 
@@ -70,6 +83,7 @@ const ProfileDetail = (props) => {
           updatedMenuOrders.splice(updatedMenuOrders.length - 1, 0, {
             name: stringFa.setting,
             id: "setting",
+            icon: <IoSettingsOutline />,
           });
         }
         setMenuOrders(updatedMenuOrders);
@@ -81,6 +95,9 @@ const ProfileDetail = (props) => {
 
   const handleUserMenu = (id) => {
     switch (id) {
+      case "my_profile":
+        openProfile();
+        break;
       case "change_theme":
         themeState.toggle();
         break;
