@@ -1,48 +1,49 @@
 @import "./assets/config/config";
 @font-face {
-  font-family: IRANSans;
-  font-style: normal;
-  font-weight: 400;
-  src: url("./assets/fonts/iran-sans/eot/IRANSansWeb\(NoEn\)_Medium.eot");
-  src: url("./assets/fonts/iran-sans/ttf/IRANSansWeb\(NoEn\)_Medium.ttf");
-  src: url("./assets/fonts/iran-sans/woff/IRANSansWeb\(NoEn\)_Medium.woff");
+	font-family: IRANSans;
+	font-style: normal;
+	font-weight: 400;
+	src: url("./assets/fonts/iran-sans/eot/IRANSansWeb\(NoEn\)_Medium.eot");
+	src: url("./assets/fonts/iran-sans/ttf/IRANSansWeb\(NoEn\)_Medium.ttf");
+	src: url("./assets/fonts/iran-sans/woff/IRANSansWeb\(NoEn\)_Medium.woff");
 }
 * {
-  margin: 0;
-  box-sizing: border-box;
-  font-family: IRANSans;
-  user-select: none;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: IRANSans;
+	user-select: none;
 }
 .AppContainer {
-  height: 100vh;
-  width: 100vw;
-  padding: 0;
-  // background-color: lighten($color: $white_color, $amount: 0.7);
-  min-height: 600px;
-  min-width: 800px;
+	height: 100vh;
+	width: 100vw;
+	padding: 0;
+	// background-color: lighten($color: $white_color, $amount: 0.7);
+	min-height: 600px;
+	min-width: 800px;
+	overflow: hidden;
 }
 
 /* width */
 ::-webkit-scrollbar {
-  width: 8px;
-  display: flex;
+	width: 8px;
+	display: flex;
 }
 *:hover::-webkit-scrollbar {
-  display: flex;
+	display: flex;
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  // color:rgb(139, 199, 199)
+	background: #f1f1f1;
+	// color:rgb(139, 199, 199)
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #bbb9b9;
+	background: #bbb9b9;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #969595;
-  color: rgb(98, 139, 139);
+	background: #969595;
+	color: rgb(98, 139, 139);
 }

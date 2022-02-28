@@ -1,61 +1,61 @@
 .title-container {
-  .card-source-name {
-    position: relative;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    user-select: none;
-    font-size: 1rem;
-    .icons-container {
-      display: flex;
-      flex-direction: row;
-      .draggable-handle {
-        border: none;
-      }
-    }
-    .details {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      user-select: none;
-      font-size: 0.8rem;
-      // @media screen and (max-width: $xl) and (min-width: $md) {
-      //   // font-size: 10px;
-      // }
-      // @media screen and (max-width: $md) {
-      //   // font-size: 8px;
-      // }
-    }
-    .right-icon-container {
-      font-size: 1.4rem;
-      width: 1rem;
-      height: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      border-radius: 20px;
-      position: relative;
-      .icon-container {
-        cursor: pointer;
-      }
-    }
-  }
-  .card-title {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0.6rem 0 0.3rem 0;
-    user-select: none;
-    font-size: 1rem;
-    // @media screen and (max-width: $xl) and (min-width: $md) {
-    //   // font-size: 13px;
-    // }
-    // @media screen and (max-width: $md) {
-    //   // font-size: 10px;
-    // }
-  }
+	.card-source-name {
+		position: relative;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		user-select: none;
+		font-size: 1rem;
+		.icons-container {
+			display: flex;
+			flex-direction: row;
+			.draggable-handle {
+				border: none;
+			}
+		}
+		.details {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			user-select: none;
+			font-size: 0.8rem;
+			// @media screen and (max-width: $xl) and (min-width: $md) {
+			//   // font-size: 10px;
+			// }
+			// @media screen and (max-width: $md) {
+			//   // font-size: 8px;
+			// }
+		}
+		.right-icon-container {
+			font-size: 1.4rem;
+			width: 1rem;
+			height: 1rem;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			border-radius: 20px;
+			position: relative;
+			.icon-container {
+				cursor: grab;
+			}
+		}
+	}
+	.card-title {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 0.6rem 0 0.3rem 0;
+		user-select: none;
+		font-size: 1rem;
+		// @media screen and (max-width: $xl) and (min-width: $md) {
+		//   // font-size: 13px;
+		// }
+		// @media screen and (max-width: $md) {
+		//   // font-size: 10px;
+		// }
+	}
 }

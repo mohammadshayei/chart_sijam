@@ -300,7 +300,7 @@ const Auth = (props) => {
         {loading ? (
           <div
             style={{
-              width: "100%",
+              width: "20%",
               height: "100%",
               display: "flex",
               flexDirection: "column",
