@@ -1,17 +1,16 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { stringFa } from '../../../../../assets/strings/stringFaCollection'
-import CustomSelect from '../../../../../component/UI/CustomSelect/CustomSelect'
-import { baseUrl } from '../../../../../constants/Config'
-import { useTheme } from '../../../../../styles/ThemeProvider'
-import './BodyContentUserSection.scss'
-import Search from '../../../../../component/UI/Search/Search'
-import DynamicItem from './DynamicItem/DynamicItem'
-import StyledButton from '../../../../../component/UI/Button/StyledButton'
-import { AiOutlinePlus } from 'react-icons/ai'
-import AddUserModal from '../../../../ModalContent/AddUserModal/AddUserModal'
-import Modal from "../../../../../component/UI/Modal/Modal";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { stringFa } from "../../../../../assets/strings/stringFaCollection";
+import CustomSelect from "../../../../../component/UI/CustomSelect/CustomSelect";
+import { baseUrl } from "../../../../../constants/Config";
+import { useTheme } from "../../../../../styles/ThemeProvider";
+import "./BodyContentUserSection.scss";
+import Search from "../../../../../component/UI/Search/Search";
+import DynamicItem from "./DynamicItem/DynamicItem";
+import StyledButton from "../../../../../component/UI/Button/StyledButton";
+import { AiOutlinePlus } from "react-icons/ai";
+import { Modal } from "bootstrap";
 
 const BodyContentUserSection = () => {
   const [multiHolding, setMultiHolding] = useState(false);
@@ -67,7 +66,6 @@ const BodyContentUserSection = () => {
   const theme = themeState.computedTheme;
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-
   useEffect(() => {
     if (user && user.is_fekrafzar) {
       setMultiHolding(true);
@@ -98,7 +96,6 @@ const BodyContentUserSection = () => {
   const onChangeSearchInput = (e) => {
     setUserSearch(e.target.value);
   };
-
   const onChangeLabelItem = async (e, userId) => {
     let selected = e.target.value;
     let findedLabel = labels.find((item) => item.label.name === selected);
@@ -112,7 +109,6 @@ const BodyContentUserSection = () => {
       paylaod,
       { headers: { "auth-token": token } }
     );
-
     if (resultEditedLabel.data.success) {
       // const upadatedUsers = [...users]
       // let userIndex = upadatedUsers.findIndex(item => item.user_id._id === userId)
@@ -121,7 +117,6 @@ const BodyContentUserSection = () => {
       // updatedLabelUser.name = selected;
       // updatedUser.label_id = updatedLabelUser;
       // upadatedUsers[userIndex]=updatedUser;
-
       // const editedUser = { ...upadatedUser[userIndex], label_id: { ...upadatedUser[userIndex].label_id, name: selected } };
       // upadatedUser[userIndex] = editedUser;
       let updatedUsers = users.map((item) => {
@@ -160,7 +155,6 @@ const BodyContentUserSection = () => {
       setLoading(false);
     }
   }, [multiHolding]);
-
   useEffect(async () => {
     if (holdingDetail && holdingDetail.id) {
       setLoading(true);
@@ -170,22 +164,21 @@ const BodyContentUserSection = () => {
         { headers: { "auth-token": token } }
       );
       setLabels(resultFetchingLabels.data.labels);
-
-      const resultFetchingUsers = await axios.post
-        (`${baseUrl}api/get_employees`, { holdingId: holdingDetail.id }, { headers: { 'auth-token': token } });
-      setUsers(resultFetchingUsers.data.employees)
+      const resultFetchingUsers = await axios.post(
+        `${baseUrl}api/get_employees`,
+        { holdingId: holdingDetail.id },
+        { headers: { "auth-token": token } }
+      );
+      setUsers(resultFetchingUsers.data.employees);
       setLoading(false);
     }
-  }, [holdingDetail])
-
-
+  }, [holdingDetail]);
   return (
-    <div className='body-content-user-section-container'>
-      <Modal show={addUserOpen} modalClosed={closeModal} >
-        <AddUserModal closeModal={closeModal} />
-      </Modal>
-      {
-        multiHolding &&
+    <div className="body-content-user-section-container">
+      {/* <Modal show={addUserOpen} modalClosed={closeModal}> */}
+      {/* <CountryCodes closeModal={closeModal} setResult={setResultCountry} /> */}
+      {/* </Modal> */}
+      {multiHolding && (
         <>
           <CustomSelect
             title={stringFa.select_holding}
@@ -193,20 +186,18 @@ const BodyContentUserSection = () => {
             items={fethedHoldings}
             onSelectChangeHandler={onSelectHoldingChangeHandler}
             style={{ marginBottom: "1rem" }}
-            keyField='code'
-            valueField='name'
+            keyField="code"
+            valueField="name"
           />
-          <div className='seprator'
+          <div
+            className="seprator"
             style={{ backgroundColor: theme.hover_button }}
           />
         </>
-      }
-      <div className='body-content-user-filter-section'>
-
-        <div className='body-content-user-filter-section-search'>
-          <p>
-            {stringFa.username}
-          </p>
+      )}
+      <div className="body-content-user-filter-section">
+        <div className="body-content-user-filter-section-search">
+          <p>{stringFa.username}</p>
           <Search
             value={userSearch}
             onChange={onChangeSearchInput}
@@ -217,23 +208,21 @@ const BodyContentUserSection = () => {
               margin: "0",
             }}
             containerStyle={{
-              width: '20rem',
-              border: ' 1px solid #c5c7d0',
-              padding: '0',
+              width: "20rem",
+              border: " 1px solid #c5c7d0",
+              padding: "0",
               backgroundColor: theme.table_background,
-              marginTop: '1rem'
+              marginTop: "1rem",
             }}
             inputStyle={{
-              heigth: '3.4rem',
+              heigth: "3.4rem",
               border: "none",
-              margin: '0',
-              width: '18.5rem',
-              outline: 'none',
-              fontSize: '1rem',
-              padding: '.2rem .4rem '
-
+              margin: "0",
+              width: "18.5rem",
+              outline: "none",
+              fontSize: "1rem",
+              padding: ".2rem .4rem ",
             }}
-
           />
         </div>
         <CustomSelect
@@ -241,12 +230,12 @@ const BodyContentUserSection = () => {
           selectedItem={selectedLabel.name}
           items={labels && labels}
           onSelectChangeHandler={onSelectLabelChangeHandler}
-          style={{ marginBottom: "1rem", width: '10rem' }}
-          keyField='_id'
-          valueField='name'
-          path='label'
+          style={{ marginBottom: "1rem", width: "10rem" }}
+          keyField="_id"
+          valueField="name"
+          path="label"
         />
-        <div className='button-add-container'>
+        <div className="button-add-container">
           <StyledButton
             onClick={onClickAddUserHandler}
             ButtonStyle={{
@@ -254,9 +243,7 @@ const BodyContentUserSection = () => {
             }}
             hover={theme.primary_variant}
             backgroundColor={theme.primary}
-            onClick={onClickAddUserHandler}
           >
-
             <div className="button-text" style={{ color: theme.on_primary }}>
               {stringFa.add_user}
               <AiOutlinePlus style={{ marginLeft: ".4rem" }} />
@@ -267,7 +254,7 @@ const BodyContentUserSection = () => {
       <p style={{ fontSize: "14px" }}>
         تعداد نتایج : {users ? users.length : 0}
       </p>
-      <div className='table-container'>
+      <div className="table-container">
         <table
           className="tabe-permissions"
           style={
@@ -276,6 +263,39 @@ const BodyContentUserSection = () => {
             }
           }
         >
+          <thead>
+            <tr
+              className="tabe-permissions-thead-tr"
+              style={{
+                backgroundColor: "transparent",
+                color: theme.on_background,
+              }}
+            >
+              {order.map((item) => (
+                <th style={{ fontWeight: "100" }} key={item.title}>
+                  {item.title}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {users &&
+              users.length > 0 &&
+              users.map((v) => (
+                <tr key={v._id}>
+                  {order.map((item) => (
+                    <td key={item.title}>
+                      <DynamicItem
+                        config={item}
+                        data={v}
+                        labels={labels}
+                        onChange={onChangeLabelItem}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+          </tbody>
         </table>
       </div>
     </div>
