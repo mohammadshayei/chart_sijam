@@ -19,6 +19,7 @@ const App = () => {
         <Route path="/view" exact component={LayoutContent}></Route>
         <Route path="/create_chart" exact component={CreateCharts}></Route>
         <Route path="/view/setting" exact component={LayoutContent}></Route>
+        <Route path="/view/user" exact component={LayoutContent}></Route>
         <Route path="/signup" exact component={Auth}></Route>
         <Route path="/login" exact component={Auth}></Route>
       </div>
