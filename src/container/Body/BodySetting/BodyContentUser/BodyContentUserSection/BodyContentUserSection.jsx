@@ -10,7 +10,7 @@ import Search from "../../../../../component/UI/Search/Search";
 import DynamicItem from "./DynamicItem/DynamicItem";
 import StyledButton from "../../../../../component/UI/Button/StyledButton";
 import { AiOutlinePlus } from "react-icons/ai";
-import { Modal } from "bootstrap";
+import Modal from "../../../../../component/UI/Modal/Modal";
 
 const BodyContentUserSection = () => {
   const [multiHolding, setMultiHolding] = useState(false);
@@ -175,9 +175,9 @@ const BodyContentUserSection = () => {
   }, [holdingDetail]);
   return (
     <div className="body-content-user-section-container">
-      {/* <Modal show={addUserOpen} modalClosed={closeModal}> */}
-      {/* <CountryCodes closeModal={closeModal} setResult={setResultCountry} /> */}
-      {/* </Modal> */}
+      <Modal show={addUserOpen} modalClosed={closeModal}>
+        شماره را وارد کنید
+      </Modal>
       {multiHolding && (
         <>
           <CustomSelect

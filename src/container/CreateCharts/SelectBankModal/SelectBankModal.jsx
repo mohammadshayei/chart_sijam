@@ -250,7 +250,7 @@ const SelectBankModal = (props) => {
       className="select-bank-modal-wrapper"
       tabIndex="0"
       onKeyDown={(e) => keyDownHandler(e)}
-      // style={expand}
+    // style={expand}
     >
       {/* <div ref={ref}> */}
       {error}
@@ -273,8 +273,8 @@ const SelectBankModal = (props) => {
                       color: v.active
                         ? theme.on_background
                         : v.verified
-                        ? theme.primary
-                        : theme.on_background,
+                          ? theme.primary
+                          : theme.on_background,
                       opacity: v.active ? 1 : v.verified ? 1 : 0.5,
                       fontStyle: v.verified ? "italic" : "",
                     }}
@@ -310,7 +310,7 @@ const SelectBankModal = (props) => {
                   ? theme.surface_1dp
                   : theme.surface,
                 color: theme.on_background,
-                borderColor: focus ? theme.primary : theme.border_color,
+                borderColor: focus ? theme.primary : theme.darken_border_color,
               }}
               dir="rtl"
               placeholder={placeHolder}
@@ -325,8 +325,8 @@ const SelectBankModal = (props) => {
                       bankAddress.active_backup.active
                       ? searchResult.result[0].id
                       : bankAddress.banks.active
-                      ? searchResult.result[0].bank._id
-                      : searchResult.result[0].code
+                        ? searchResult.result[0].bank._id
+                        : searchResult.result[0].code
                   );
                 }
               }}
@@ -356,30 +356,30 @@ const SelectBankModal = (props) => {
               {searchResult.result &&
                 (searchResult.error === ""
                   ? Object.entries(searchResult.result).map(([k, v]) => {
-                      return (
-                        <div
-                          key={k}
-                          className="selection-item"
-                          onClick={() =>
-                            updateAddress(
-                              bankAddress.banks.active
-                                ? v.bank.groups_title
-                                : v.name,
-                              bankAddress.softwares.active ||
-                                bankAddress.active_backup.active
-                                ? v.id
-                                : bankAddress.banks.active
+                    return (
+                      <div
+                        key={k}
+                        className="selection-item"
+                        onClick={() =>
+                          updateAddress(
+                            bankAddress.banks.active
+                              ? v.bank.groups_title
+                              : v.name,
+                            bankAddress.softwares.active ||
+                              bankAddress.active_backup.active
+                              ? v.id
+                              : bankAddress.banks.active
                                 ? v.bank._id
                                 : v.code
-                            )
-                          }
-                        >
-                          {bankAddress.banks.active
-                            ? v.bank.groups_title
-                            : v.name}
-                        </div>
-                      );
-                    })
+                          )
+                        }
+                      >
+                        {bankAddress.banks.active
+                          ? v.bank.groups_title
+                          : v.name}
+                      </div>
+                    );
+                  })
                   : searchResult.error)}
             </div>
           </div>
