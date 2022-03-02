@@ -1,0 +1,22 @@
+.user-access-chart-container {
+	.users-selector-section {
+		display: flex;
+		.select-user-input-wrapper {
+			width: fit-content;
+			.input-title {
+				margin-bottom: 0.5rem;
+				font-size: 0.8rem;
+			}
+			.input-and-search-icon {
+				position: relative;
+				.search-icon {
+					position: absolute;
+					display: flex;
+					align-self: center;
+					left: 0.5rem;
+					bottom: 0.5rem;
+				}
+			}
+		}
+	}
+}
