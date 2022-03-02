@@ -22,7 +22,7 @@ const lightTheme = {
   background: "rgb(113, 158, 158)",
   hover_background: "rgb(98, 139, 139)",
   border_color: "#e6e9ef",
-  darken_border_color: "",
+  darken_border_color: "#bec1c7",
   borderBlur: "rgb(165, 162, 162)",
   hover_button: "rgb(202, 201, 201)",
   button_disabled: "rgb(139, 199, 199)",
@@ -58,6 +58,7 @@ const darkTheme = {
   ripple_holding_menu_item_color: "rgba(46, 46, 46, 0.05)",
   background: "rgb(113, 158, 158)",
   border_color: "#4d4d4d", //#4b4e69
+  darken_border_color: "#686868",
   hover_background: "rgb(98, 139, 139)",
   borderBlur: "rgb(165, 162, 162)",
   button_disabled: "rgb(139, 199, 199)",
