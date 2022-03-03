@@ -30,7 +30,10 @@ const Input = (props) => {
                 ? theme.surface_1dp
                 : theme.surface,
               color: theme.on_background,
-              borderColor: focus ? theme.primary : theme.darken_border_color,
+              borderColor: props.isOk ?
+                (focus ? theme.primary : theme.darken_border_color)
+                :
+                (theme.error),
               ...props.style,
             }}
             onChange={props.onChange}
@@ -54,7 +57,10 @@ const Input = (props) => {
                 ? theme.surface_1dp
                 : theme.surface,
               color: theme.on_background,
-              borderColor: focus ? theme.primary : theme.darken_border_color,
+              borderColor: props.isOk ?
+                (focus ? theme.primary : theme.darken_border_color)
+                :
+                (theme.error),
               ...props.style,
             }}
             onChange={props.onChange}
