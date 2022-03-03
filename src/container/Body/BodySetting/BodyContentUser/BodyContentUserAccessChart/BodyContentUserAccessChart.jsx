@@ -21,6 +21,7 @@ const BodyContentUserAccessChart = () => {
                             config={{
                                 placeholder: stringFa.search,
                             }}
+                            isOk={true}
                         ></Input>
                         <div className="search-icon">
                             <IoIosSearch size="1.5em" color={theme.darken_border_color} />
