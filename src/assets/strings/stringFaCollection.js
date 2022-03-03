@@ -105,4 +105,7 @@ export const stringFa = {
   choose_user: "انتخاب یک کاربر",
   my_profile: "پروفایل من",
   user_name: "نام کاربر",
+  user_phone: "شماره کاربر",
+  enter_phone_to_get_code: "شماره را جهت دریافت کد تایید وارد کنید.",
+  phone_number: "شماره تلفن",
 };
