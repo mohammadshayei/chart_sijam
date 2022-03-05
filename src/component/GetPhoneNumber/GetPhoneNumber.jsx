@@ -11,6 +11,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { baseUrl } from "../../constants/Config";
 import { useTheme } from "../../styles/ThemeProvider";
+import ErrorDialog from "../UI/Error/ErrorDialog";
 
 const GetPhoneNumber = (props) => {
   const [show, setShow] = useState(false);
@@ -20,6 +21,7 @@ const GetPhoneNumber = (props) => {
   );
   const [count, setCount] = useState(10);
   const [phone, setPhone] = useState("");
+  const [error, setError] = useState(null);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const token = useSelector((state) => state.auth.token);
@@ -55,22 +57,30 @@ const GetPhoneNumber = (props) => {
   };
   const continueButtonHandler = async () => {
     // props.setTokenId(generate_token(30));
-    const resultSearchUser = await axios.post(
-      `${baseUrl}api/search_user_employee`,
-      {
-        holdingId: "4869d699c2f046b19fbb2d0c248e5243",
-        phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
-      },
-      { headers: { "auth-token": token } }
-    );
-    if (resultSearchUser.data.result.goNextPage)
-      props.setPage(2)
-    else if (resultSearchUser.data.result.wantToAdd)
-      props.setPage(3)
+    setError(null)
+    try {
+      const resultSearchUser = await axios.post(
+        `${baseUrl}api/search_user_employee`,
+        {
+          holdingId: "4869d699c2f046b19fbb2d0c248e5243",
+          phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
+        },
+        { headers: { "auth-token": token } }
+      );
+      if (resultSearchUser.data.result.goNextPage)
+        props.setPage(2)
+      else if (resultSearchUser.data.result.wantToAdd)
+        props.setPage(3)
+    } catch (error) {
+      setError(
+        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+      )
+    }
   }
 
   return (
     <div className="getphonenumber-container">
+      {error}
       <Modal show={show} modalClosed={closeModal} type="countries_code">
         <CountryCodes closeModal={closeModal} setResult={setResultCountry} />
       </Modal>
