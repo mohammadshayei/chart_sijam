@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import UnderlineInput from "../../../container/inputs/UnderlineInput/UnderlineInput";
 import { useTheme } from "../../../styles/ThemeProvider";
+import OTPInput from "../OTPInput/OTPInput";
 import "./Input.scss";
 
 const Input = (props) => {
@@ -41,6 +42,23 @@ const Input = (props) => {
             {...props.config}
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
+          />
+        );
+        break;
+      case "otp":
+        setInputElement(
+          <OTPInput
+            boxes={props.boxes}
+            style={{
+              background: themeState.isDark
+                ? theme.surface_1dp
+                : theme.surface,
+              color: theme.on_background,
+              ...props.style,
+            }}
+            onChange={props.onChange}
+            config={{ ...props.config }}
+            isOk={props.isOk}
           />
         );
         break;
