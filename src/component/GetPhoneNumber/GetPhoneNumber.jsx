@@ -9,7 +9,7 @@ import "./GetPhoneNumber.scss";
 import { ImPhone } from "react-icons/im";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { baseUrl } from "../../constants/Config";
+import { baseUrl, MELI_PAYAMAK_URL } from "../../constants/Config";
 import { useTheme } from "../../styles/ThemeProvider";
 import ErrorDialog from "../UI/Error/ErrorDialog";
 
@@ -43,39 +43,41 @@ const GetPhoneNumber = (props) => {
       countryCodes.find((item) => item.dial_code === `+${e.target.value}`)
     );
   };
-  const generate_token = (length) => {
-    var a =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split(
-        ""
-      );
-    var b = [];
-    for (var i = 0; i < length; i++) {
-      var j = (Math.random() * (a.length - 1)).toFixed(0);
-      b[i] = a[j];
+  const sendSms = async (text, to) => {
+    const payload = {
+      username: '09354598847',
+      password: 'Mohammad@1378',
+      text,
+      to,
+      bodyId: '49928'
     }
-    return b.join("");
-  };
+    const result = await axios.post(MELI_PAYAMAK_URL, payload);
+  }
   const continueButtonHandler = async () => {
-    // props.setTokenId(generate_token(30));
-    setError(null)
-    try {
-      const resultSearchUser = await axios.post(
-        `${baseUrl}api/search_user_employee`,
-        {
-          holdingId: "4869d699c2f046b19fbb2d0c248e5243",
-          phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
-        },
-        { headers: { "auth-token": token } }
-      );
-      if (resultSearchUser.data.result.goNextPage)
-        props.setPage(2)
-      else if (resultSearchUser.data.result.wantToAdd)
-        props.setPage(3)
-    } catch (error) {
-      setError(
-        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
-      )
-    }
+    const code = Math.floor(Math.random() * 90001) + 10000
+    const phoneNo = `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
+    props.setOtp(code)
+    sendSms(code, phoneNo)
+    props.setPage(2)
+    //     setError(null)
+    // try {
+    //   const resultSearchUser = await axios.post(
+    //     `${baseUrl}api/search_user_employee`,
+    //     {
+    //       holdingId: "4869d699c2f046b19fbb2d0c248e5243",
+    //       phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
+    //     },
+    //     { headers: { "auth-token": token } }
+    //   );
+    //   if (resultSearchUser.data.result.goNextPage)
+    //     props.setPage(2)
+    //   else if (resultSearchUser.data.result.wantToAdd)
+    //     props.setPage(3)
+    // } catch (error) {
+    //   setError(
+    //     <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+    //   )
+    // }
   }
 
   return (
@@ -146,3 +148,25 @@ const GetPhoneNumber = (props) => {
 };
 
 export default GetPhoneNumber;
+
+// export const sendSms = async (text, to) => {
+
+//   const payload = {
+
+//       username: '09354598847',
+
+//       password: 'Mohammad@1378',
+
+//       text,
+
+//       to,
+
+//       bodyId: '49928'
+
+//   }
+
+//   const result = await axios.post(MELI_PAYAMAK_URL, payload);
+
+//   return result.data.RetStatus === 1
+
+// }

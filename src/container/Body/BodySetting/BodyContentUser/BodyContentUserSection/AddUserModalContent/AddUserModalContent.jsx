@@ -6,14 +6,15 @@ import "./AddUserModalContent.scss"
 const AddUserModalContent = (props) => {
     const [page, setPage] = useState(1)
     const [pageIndex, setPageIndex] = useState(1)
+    const [otp, setOtp] = useState(null)
 
     useEffect(() => {
         switch (pageIndex) {
             case 1:
-                setPage(<GetPhoneNumber setPage={setPageIndex} />)
+                setPage(<GetPhoneNumber setPage={setPageIndex} setOtp={setOtp} />)
                 break;
             case 2:
-                setPage(<VerifyCode setPage={setPageIndex} />)
+                setPage(<VerifyCode setPage={setPageIndex} otp={otp} />)
                 break;
             case 3:
                 setPage(<div>add?</div>)
