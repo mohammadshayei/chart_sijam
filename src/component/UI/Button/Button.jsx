@@ -1,20 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Button.scss";
 import { ripple } from "../../../assets/config/ripple";
+import loading_icon from "../../../assets/images/btn_loading.gif"
+import { useTheme } from "../../../styles/ThemeProvider";
+
 const Button = (props) => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const [hover, setHover] = useState(false);
   const onMouseEnter = () => {
     if (props.onMouseEnter) props.onMouseEnter();
-    if(!props.disabled)
+    if (!props.disabled)
       setHover(true);
   };
-  let newStyle={}
+  let newStyle = {
+    color: theme.on_primary,
+    backgroundColor: props.disabled ? "#adaebb" :
+      hover ? theme.primary_variant : theme.primary,
+    cursor: props.disabled ? "default" : "pointer"
+  };
   const onMouseLeave = () => {
     if (props.onMouseLeave) props.onMouseLeave();
     setHover(false);
   };
-  if (props.hoverBGColor && hover){
-    newStyle={ ...newStyle, backgroundColor: props.hoverBGColor };
+  if (props.hoverBGColor && hover) {
+    newStyle = { ...newStyle, backgroundColor: props.hoverBGColor };
   }
   return (
     <button
@@ -22,7 +32,7 @@ const Button = (props) => {
         ...props.ButtonStyle,
         ...newStyle,
       }}
-      disabled={props.disabled}
+      disabled={props.loading ? true : props.disabled}
       className={`Button ${props.ButtonClassname}`}
       onClick={(e) => {
         ripple(e, props.rippleColor);
@@ -32,7 +42,11 @@ const Button = (props) => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {props.children}
+      {props.loading ?
+        <div className="loading-spinner">
+          <img src={loading_icon} alt="" />
+        </div>
+        : props.children}
     </button>
   );
 };
