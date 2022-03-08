@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../../styles/ThemeProvider";
 import "./OTPInput.scss"
 
@@ -7,6 +7,9 @@ const OTPInput = (props) => {
     const theme = themeState.computedTheme;
     const [otp, setOtp] = useState(new Array(props.boxes).fill(""));
     const [focus, setFocus] = useState(new Array(props.boxes).fill(false));
+
+    const focusDiv = useRef();
+    const focusDiv2 = useRef();
 
     const onFocusHandler = (e, i) => {
         let updatedFocus = [...focus]
@@ -39,6 +42,12 @@ const OTPInput = (props) => {
         props.onChange(otp.join(""))
     }, [otp]);
 
+
+    useEffect(() => {
+        if (focusDiv.current) focusDiv.current.focus();
+    }, [focusDiv]);
+
+
     return <div className="otp-input-container">
         {otp.map((data, index) => {
             return (
@@ -48,6 +57,7 @@ const OTPInput = (props) => {
                         : ""
                         }`}
                     key={index}
+                    ref={(props.config.autoFocus && index === 0) ? focusDiv : focusDiv2}
                     maxLength={1}
                     value={data}
                     onChange={e => handleChange(e, index)}
