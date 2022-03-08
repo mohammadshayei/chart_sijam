@@ -29,8 +29,8 @@ const Button = (props) => {
   return (
     <button
       style={{
-        ...props.ButtonStyle,
         ...newStyle,
+        ...props.ButtonStyle,
       }}
       disabled={props.loading ? true : props.disabled}
       className={`Button ${props.ButtonClassname}`}
