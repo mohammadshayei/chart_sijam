@@ -15,18 +15,18 @@ const DynamicItem = ({ data, config, labels, onChange }) => {
                 setCmp(
                     <UserImage
                         alt='profile'
-                        src={`${baseUrl}images/${data.user_id.image !== '' ? data.user_id.image : 'avatar'}.png`}
+                        src={`${baseUrl}images/${data.user.image !== '' ? data.user.image : 'avatar'}.png`}
                         title={data[config.path[0]][config.path[1]]}
                     />)
                 break;
             case 3:
                 setCmp(
                     <CustomSelect
-                        selectedItem={data.label_id.name}
+                        selectedItem={data.label && data.label.name}
                         items={labels && labels}
-                        onSelectChangeHandler={(e) => onChange(e, data.user_id._id)}
+                        onSelectChangeHandler={(e) => onChange(e, data.user._id)}
                         style={{ width: 'auto', margin: "0" }}
-                        selectStyle={{fontSize:'13px'}}
+                        selectStyle={{ fontSize: '13px' }}
                         keyField='_id'
                         valueField='name'
                         path='label'
@@ -40,7 +40,7 @@ const DynamicItem = ({ data, config, labels, onChange }) => {
                 setCmp(<p style={{ whiteSpace: 'nowrap' }}> {config.path.length === 1 ? data[config.path[0]] : data[config.path[0]][config.path[1]]}</p>)
                 break;
         }
-    }, [config.componentNumber,data])
+    }, [config.componentNumber, data])
     return cmp;
 }
 
