@@ -1,7 +1,5 @@
-.getphonenumber-container {
-	width: 25rem;
-	height: 100%;
-	padding-top: 2rem;
+.get-phonenumber-container {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -47,7 +45,6 @@
 		}
 		.button-container {
 			width: 100%;
-			padding: 1rem;
 			display: flex;
 			align-items: center;
 			justify-content: center;

@@ -19,9 +19,11 @@ const InputPhoneNumber = (props) => {
             display: "flex",
             justifyContent: "center",
             backgroundColor: "transparent",
+            color: theme.on_background,
             width: "1.2rem",
             padding: "0",
             left: "0",
+            zIndex: "9"
           }}
           onClick={props.onSelectCountryClick}
           rippleColor={theme.background}
@@ -48,7 +50,8 @@ const InputPhoneNumber = (props) => {
         config={{
           placeholder: stringFa.phone_number,
           maxLength: 10,
-          onKeyPress: props.onKeyPress
+          onKeyPress: props.onKeyPress,
+          autoFocus: true,
         }}
         onChange={props.onChangePhone}
         value={props.phoneValue}

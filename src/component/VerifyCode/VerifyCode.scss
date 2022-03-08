@@ -30,6 +30,9 @@
 		// position: absolute;
 		// top: calc(70% - 1rem);
 	}
+	.invalid {
+		animation: invalidAnimation 0.15s ease-in-out normal;
+	}
 }
 @keyframes verifyAnimtaion {
 	0% {
@@ -51,6 +54,20 @@
 		margin-top: 0%;
 		opacity: 1;
 		transform: scale(1);
+	}
+}
+@keyframes invalidAnimation {
+	0% {
+		transform: translateX(0);
+	}
+	25% {
+		transform: translateX(-10px);
+	}
+	50% {
+		transform: translateX(10px);
+	}
+	100% {
+		transform: translateX(0);
 	}
 }
 

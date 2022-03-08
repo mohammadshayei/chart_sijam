@@ -10,7 +10,8 @@ import ErrorDialog from "../UI/Error/ErrorDialog";
 const VerifyCode = (props) => {
   const [value, setValue] = useState("");
   const [count, setCount] = useState(5);
-  const [error, setError] = useState(null);
+  const [invalid, setInvalid] = useState(false);
+
   const maxLength = 5;
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -18,15 +19,24 @@ const VerifyCode = (props) => {
   const onChange = (value) => {
     setValue(value);
     setCount(maxLength - value.length);
+    setInvalid(false)
   };
   const onClickButtonContinueHandler = () => {
-    if (props.otp === Number(value))
-      setError(<ErrorDialog onClose={setError}>تایید شد.</ErrorDialog>)
+    props.setError(null)
+    if (props.otp && value) {
+      if (props.otp === Number(value))
+        props.setPage(4)
+      else
+        setInvalid(true)
+    } else
+      props.setError(<ErrorDialog onClose={props.setError}>{stringFa.error_message}</ErrorDialog>)
   };
 
   return (
-    <div className="verify-code-wrapper">
-      {error}
+    <form onSubmit={(e) => {
+      onClickButtonContinueHandler()
+      e.preventDefault()
+    }} className="verify-code-wrapper">
       <div className="header-verify-contianer">
         <IoIosCheckmarkCircleOutline className="verify-check-icon"
           color={theme.primary} size="4rem" />
@@ -39,27 +49,24 @@ const VerifyCode = (props) => {
         inputContainer={{
           direction: "ltr"
         }}
-        isOk={true}
+        config={{ autoFocus: true }}
+        messageError={stringFa.invalid_code}
+        isOk={!invalid}
+        inputError={{ left: "50%", transform: "translate(-50%,0.5rem)" }}
       />
-      <div className="button-verify-container">
+      <div className={`button-verify-container ${invalid && "invalid"}`}>
         <Button
           hoverBGColor={theme.primary_variant}
           disabled={count > 0}
           ButtonStyle={{
             width: "15rem",
-            backgroundColor:
-              value.length === 5 ? theme.primary : theme.secondary,
-            opacity:
-              value.length === 5 ? 1 : 0.5,
-            color: theme.on_primary,
             paddingTop: ".2rem",
           }}
-          onClick={onClickButtonContinueHandler}
         >
           <p>{stringFa.confirm}</p>
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

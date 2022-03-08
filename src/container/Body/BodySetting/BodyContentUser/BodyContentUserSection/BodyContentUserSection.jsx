@@ -28,34 +28,29 @@ const BodyContentUserSection = () => {
   const order = [
     {
       title: "نام کاربری",
-      path: ["user_id", "username"],
+      path: ["user", "username"],
       componentNumber: 2,
     },
     {
       title: "شماره همراه",
-      path: ["user_id", "phone"],
+      path: ["user", "phone"],
       componentNumber: 4,
     },
     {
       title: "برچسب",
-      path: ["label_id", "name"],
+      path: ["label", "name"],
       componentNumber: 3,
     },
-    {
-      title: "هیئت مدیره",
-      path: ["management_committee"],
-      componentNumber: 1,
-    },
-    {
-      title: "نام شرکت",
-      path: ["company_id", "name"],
-      componentNumber: 4,
-    },
-    {
-      title: "موقعیت شغلی",
-      path: ["position_name"],
-      componentNumber: 4,
-    },
+    // {
+    //   title: "نام شرکت",
+    //   path: ["company_id", "name"],
+    //   componentNumber: 4,
+    // },
+    // {
+    //   title: "موقعیت شغلی",
+    //   path: ["position_name"],
+    //   componentNumber: 4,
+    // },
   ];
   const [selectedLabel, setSelectedLabel] = useState({
     name: "",
@@ -167,18 +162,18 @@ const BodyContentUserSection = () => {
       setLabels(resultFetchingLabels.data.labels);
       const resultFetchingUsers = await axios.post(
         `${baseUrl}api/get_employees`,
-        { holdingId: holdingDetail.id },
+        { id: holdingDetail.id },
         { headers: { "auth-token": token } }
       );
-      setUsers(resultFetchingUsers.data.employees);
+      setUsers(resultFetchingUsers.data.result.employees);
       setLoading(false);
     }
   }, [holdingDetail]);
   return (
     <div className="body-content-user-section-container">
       <Modal show={addUserOpen} modalClosed={closeModal}
-        style={{ display: "flex", justifyContent: "center" }}>
-        <AddUserModalContent />
+        style={{ width: "fit-content" }}>
+        <AddUserModalContent close={closeModal} />
       </Modal>
       {multiHolding && (
         <>

@@ -8,10 +8,10 @@ import { countryCodes } from "../../assets/DummyData/CountryCode";
 import "./GetPhoneNumber.scss";
 import { ImPhone } from "react-icons/im";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { baseUrl, MELI_PAYAMAK_URL } from "../../constants/Config";
 import { useTheme } from "../../styles/ThemeProvider";
 import ErrorDialog from "../UI/Error/ErrorDialog";
+import { useSelector } from "react-redux";
 
 const GetPhoneNumber = (props) => {
   const [show, setShow] = useState(false);
@@ -21,7 +21,8 @@ const GetPhoneNumber = (props) => {
   );
   const [count, setCount] = useState(10);
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const token = useSelector((state) => state.auth.token);
@@ -35,6 +36,7 @@ const GetPhoneNumber = (props) => {
   };
   const onChangePhoneHanlder = (e) => {
     setPhone(e.target.value);
+    props.setPhone(`${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${e.target.value}`)
     setCount(maxLength - e.target.value.length);
     setIsValidPhone(e.target.value.length === 10 && e.target.value[0] === "9");
   };
@@ -44,6 +46,7 @@ const GetPhoneNumber = (props) => {
     );
   };
   const sendSms = async (text, to) => {
+    props.setError(null)
     const payload = {
       username: '09354598847',
       password: 'Mohammad@1378',
@@ -51,38 +54,54 @@ const GetPhoneNumber = (props) => {
       to,
       bodyId: '49928'
     }
-    const result = await axios.post(MELI_PAYAMAK_URL, payload);
+    try {
+      setLoading(true)
+      const result = await axios.post(MELI_PAYAMAK_URL, payload);
+      if (result.data.RetStatus === 1) {
+        setLoading(false)
+        props.setPage(2)
+      }
+    } catch (error) {
+      props.setError(
+        <ErrorDialog onClose={props.setError}>{stringFa.error_occured_try_again}</ErrorDialog>
+      )
+    }
   }
   const continueButtonHandler = async () => {
     const code = Math.floor(Math.random() * 90001) + 10000
-    const phoneNo = `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
     props.setOtp(code)
-    sendSms(code, phoneNo)
     props.setPage(2)
-    //     setError(null)
+    // sendSms(code, props.phone)
     // try {
+    //   props.setError(null)
     //   const resultSearchUser = await axios.post(
     //     `${baseUrl}api/search_user_employee`,
     //     {
-    //       holdingId: "4869d699c2f046b19fbb2d0c248e5243",
+    //       holdingId: "28f9b37503ec4b50b603b33ed0e3f597",
     //       phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
     //     },
     //     { headers: { "auth-token": token } }
     //   );
-    //   if (resultSearchUser.data.result.goNextPage)
-    //     props.setPage(2)
+    //   if (resultSearchUser.data.result.goNextPage) {
+    //     const code = Math.floor(Math.random() * 90001) + 10000
+    //     props.setOtp(code)
+    //     sendSms(code, props.phone)
+    //   }
     //   else if (resultSearchUser.data.result.wantToAdd)
     //     props.setPage(3)
+    //   else
+    //     props.setError(
+    //       <ErrorDialog onClose={props.setError}>{resultSearchUser.data.result.message}</ErrorDialog>
+    //     )
     // } catch (error) {
-    //   setError(
-    //     <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+    //   props.setError(
+    //     <ErrorDialog onClose={props.setError}>{stringFa.error_message}</ErrorDialog>
     //   )
     // }
   }
 
   return (
-    <div className="getphonenumber-container">
-      {error}
+    <div className="get-phonenumber-container">
       <Modal show={show} modalClosed={closeModal} type="countries_code">
         <CountryCodes closeModal={closeModal} setResult={setResultCountry} />
       </Modal>
@@ -118,25 +137,15 @@ const GetPhoneNumber = (props) => {
           </div>
           <div className="button-container">
             <Button
-              hoverBGColor={theme.primary_variant}
               disabled={
-                !(isValidPhone && resultCountry && phone.length !== 0)
+                (!(isValidPhone && resultCountry && phone.length !== 0) || loading)
               }
               ButtonStyle={{
                 width: "15rem",
-                backgroundColor:
-                  isValidPhone && resultCountry && phone.length !== 0
-                    ? theme.primary
-                    : theme.secondary,
-                opacity:
-                  isValidPhone && resultCountry && phone.length !== 0
-                    ? 1
-                    : 0.5,
-                color: theme.on_primary,
                 paddingTop: ".2rem",
-                cursor: `${(isValidPhone && resultCountry && phone.length !== 0) ? "pointer" : "default"}`
               }}
               onClick={continueButtonHandler}
+              loading={loading}
             >
               <p>{stringFa.continue}</p>
             </Button>
@@ -148,25 +157,3 @@ const GetPhoneNumber = (props) => {
 };
 
 export default GetPhoneNumber;
-
-// export const sendSms = async (text, to) => {
-
-//   const payload = {
-
-//       username: '09354598847',
-
-//       password: 'Mohammad@1378',
-
-//       text,
-
-//       to,
-
-//       bodyId: '49928'
-
-//   }
-
-//   const result = await axios.post(MELI_PAYAMAK_URL, payload);
-
-//   return result.data.RetStatus === 1
-
-// }
