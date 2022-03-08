@@ -92,7 +92,18 @@ const Input = (props) => {
     }
   }, [props.elementType, props.value, focus, themeState.isDark]);
 
-  return <div className="input-container" style={{ ...props.inputContainer }}>{inputElement}</div>;
+  return <div className="input-container" style={{ ...props.inputContainer }}>
+    {props.title &&
+      <div className="input-title" style={{ ...props.inputTitle }}
+      >{props.title}
+      </div>}
+    {inputElement}
+    {!props.isOk &&
+      <div className="error-massage"
+        style={{ color: theme.error, ...props.inputError }}
+      >{props.messageError}
+      </div>}
+  </div>;
 };
 
 export default Input;
