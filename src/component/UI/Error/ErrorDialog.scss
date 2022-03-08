@@ -1,23 +1,27 @@
 .error-box {
-  position: absolute;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem;
-  font-size: 0.8rem;
-  inset: 3% auto auto 38%;
-  // transform: translateX(-50%) !important;
-  border-radius: 5px;
-  box-shadow: 0px 4px 8px rgba(9, 11, 25, 0.2);
-  z-index: 1000;
-  .undo-button {
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 5px;
-    margin-right: 1rem;
-    padding: 0.1rem 0.5rem;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-  }
+	position: absolute;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem;
+	font-size: 0.8rem;
+	top: 3%;
+	right: 0;
+	left: 0;
+	margin-right: auto;
+	margin-left: auto;
+	width: fit-content;
+	border-radius: 5px;
+	box-shadow: 0px 4px 8px rgba(9, 11, 25, 0.2);
+	z-index: 1000;
+	.undo-button {
+		border: 1px solid rgba(255, 255, 255, 0.7);
+		border-radius: 5px;
+		margin-right: 1rem;
+		padding: 0.1rem 0.5rem;
+		cursor: pointer;
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.2);
+		}
+	}
 }
