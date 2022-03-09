@@ -19,6 +19,7 @@ const CustomSelect = (props) => {
                         : theme.surface,
                     color: theme.on_background,
                     borderColor: theme.darken_border_color,
+                    cursor: "pointer",
                     ...props.selectStyle
                 }}
                 value={props.selectedItem}

@@ -6,8 +6,8 @@ const UserImage = (props) => {
     const theme = themeState.computedTheme;
     return (
         <div className='user-image-container' style={{ ...props.divStyle }}>
-            <img style={{ ...props.imageStyle }} src={props.src} alt={props.alt ? props.alt : 'alt'} />
-            <p  style={{ ...props.titleStyle, color:theme.primary,whiteSpace: 'nowrap' }}>{props.title}</p>
+            <img style={{ cursor: "pointer", ...props.imageStyle }} src={props.src} alt={props.alt ? props.alt : 'alt'} />
+            <p style={{ cursor: "pointer", ...props.titleStyle, color: theme.primary, whiteSpace: 'nowrap' }}>{props.title}</p>
         </div>
     )
 }

@@ -157,7 +157,7 @@ const CreateUserSection = (props) => {
             username: orderAuth.orderForm.username.value,
             password: orderAuth.orderForm.password.value,
             phone: props.phone,
-            holdingId: "28f9b37503ec4b50b603b33ed0e3f597",
+            holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
             labelId: selectedLabel,
         };
         try {
@@ -203,7 +203,7 @@ const CreateUserSection = (props) => {
         // setLoading(true);
         const resultFetchingLabels = await axios.post(
             `${baseUrl}api/get_holding_labels`,
-            { holdingId: "28f9b37503ec4b50b603b33ed0e3f597" },
+            { holdingId: "2e010adffd1a4ea88f8f3e7b026ce048" },
             { headers: { "auth-token": token } }
         );
 

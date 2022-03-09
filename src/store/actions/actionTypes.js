@@ -41,3 +41,6 @@ export const ADD_HOLDING = "ADD_HOLDING";
 export const ADD_COMPANY = "ADD_COMPANY";
 export const SET_IS_EDIT = "SET_IS_EDIT";
 export const FULL_SCREEN_CHART = "FULL_SCREEN_CHART";
+export const SET_EMPLOYEES = "SET_EMPLOYEES";
+export const ADD_EMPLOYEE = "ADD_EMPLOYEE";
+export const REMOVE_EMPLOYEE = "REMOVE_EMPLOYEE";

@@ -14,6 +14,7 @@ import chartReducer from "./store/reducers/chart";
 import authReducer from "./store/reducers/auth";
 import addChartReducer from "./store/reducers/addChart";
 import fieldPickerReducer from "./store/reducers/fieldPicker";
+import holdingDetailReducer from "./store/reducers/holdingDetail";
 import { ThemeProvider } from "./styles/ThemeProvider.js";
 
 import "react-grid-layout/css/styles.css";
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   addChart: addChartReducer,
   fieldPicker: fieldPickerReducer,
+  holdingDetail: holdingDetailReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
