@@ -68,36 +68,32 @@ const GetPhoneNumber = (props) => {
     }
   }
   const continueButtonHandler = async () => {
-    const code = Math.floor(Math.random() * 90001) + 10000
-    props.setOtp(code)
-    props.setPage(2)
-    // sendSms(code, props.phone)
-    // try {
-    //   props.setError(null)
-    //   const resultSearchUser = await axios.post(
-    //     `${baseUrl}api/search_user_employee`,
-    //     {
-    //       holdingId: "28f9b37503ec4b50b603b33ed0e3f597",
-    //       phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
-    //     },
-    //     { headers: { "auth-token": token } }
-    //   );
-    //   if (resultSearchUser.data.result.goNextPage) {
-    //     const code = Math.floor(Math.random() * 90001) + 10000
-    //     props.setOtp(code)
-    //     sendSms(code, props.phone)
-    //   }
-    //   else if (resultSearchUser.data.result.wantToAdd)
-    //     props.setPage(3)
-    //   else
-    //     props.setError(
-    //       <ErrorDialog onClose={props.setError}>{resultSearchUser.data.result.message}</ErrorDialog>
-    //     )
-    // } catch (error) {
-    //   props.setError(
-    //     <ErrorDialog onClose={props.setError}>{stringFa.error_message}</ErrorDialog>
-    //   )
-    // }
+    try {
+      props.setError(null)
+      const resultSearchUser = await axios.post(
+        `${baseUrl}api/search_user_employee`,
+        {
+          holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
+          phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
+        },
+        { headers: { "auth-token": token } }
+      );
+      if (resultSearchUser.data.result.goNextPage) {
+        const code = Math.floor(Math.random() * 90001) + 10000
+        props.setOtp(code)
+        sendSms(code, props.phone)
+      }
+      else if (resultSearchUser.data.result.wantToAdd)
+        props.setPage(3)
+      else
+        props.setError(
+          <ErrorDialog onClose={props.setError}>{resultSearchUser.data.result.message}</ErrorDialog>
+        )
+    } catch (error) {
+      props.setError(
+        <ErrorDialog onClose={props.setError}>{stringFa.error_message}</ErrorDialog>
+      )
+    }
   }
 
   return (

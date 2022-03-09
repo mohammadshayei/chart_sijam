@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "../../../../../assets/strings/stringFaCollection";
 import CustomSelect from "../../../../../component/UI/CustomSelect/CustomSelect";
 import { baseUrl } from "../../../../../constants/Config";
@@ -12,10 +12,17 @@ import StyledButton from "../../../../../component/UI/Button/StyledButton";
 import { AiOutlinePlus } from "react-icons/ai";
 import Modal from "../../../../../component/UI/Modal/Modal";
 import AddUserModalContent from "./AddUserModalContent/AddUserModalContent";
+import { IoMdCloseCircle } from "react-icons/io";
+import ErrorDialog from "../../../../../component/UI/Error/ErrorDialog";
+import doubleRingLoading from "../../../../../assets/images/DoubleRing.svg"
+import SkeletonUserRow from "../../../../../component/Skeletons/SkeletonUserRow";
+import * as holdingActions from "../../../../../store/actions/holdingDetail";
 
 const BodyContentUserSection = () => {
   const [multiHolding, setMultiHolding] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [removeLoading, setRemoveLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [selectedHolding, setSelectedHolding] = useState("");
   const [fethedHoldings, setFethedHoldings] = useState([]);
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -62,6 +69,16 @@ const BodyContentUserSection = () => {
   const theme = themeState.computedTheme;
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
+  const employees = useSelector((state) => state.holdingDetail.employees);
+
+  const dispatch = useDispatch();
+  const setEmployees = (employees) => {
+    dispatch(holdingActions.setEmployees(employees));
+  };
+  const addEmployee = (employee) => {
+    dispatch(holdingActions.addEmployee(employee));
+  };
+
   useEffect(() => {
     if (user && user.is_fekrafzar) {
       setMultiHolding(true);
@@ -129,6 +146,30 @@ const BodyContentUserSection = () => {
       setUsers(updatedUsers);
     }
   };
+  const removeUserHandler = async (userId) => {
+    setRemoveLoading(true)
+    const paylaod = {
+      holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
+      userId: userId,
+    };
+    setError(null)
+    try {
+      const resultRemoveUser = await axios.post(
+        `${baseUrl}api/remove_employee`,
+        paylaod,
+        { headers: { "auth-token": token } }
+      );
+      if (resultRemoveUser.data.success) {
+        setError(<ErrorDialog success={true} onClose={setError}>{resultRemoveUser.data.result.message}</ErrorDialog>)
+      }
+      else {
+        setError(<ErrorDialog onClose={setError}>{resultRemoveUser.data.result.message}</ErrorDialog>)
+      }
+    } catch (error) {
+      setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+    }
+    setRemoveLoading(false)
+  };
   const onClickAddUserHandler = (e) => {
     setAddUserOpen(true);
   };
@@ -160,17 +201,25 @@ const BodyContentUserSection = () => {
         { headers: { "auth-token": token } }
       );
       setLabels(resultFetchingLabels.data.labels);
-      const resultFetchingUsers = await axios.post(
-        `${baseUrl}api/get_employees`,
-        { id: holdingDetail.id },
-        { headers: { "auth-token": token } }
-      );
-      setUsers(resultFetchingUsers.data.result.employees);
+      try {
+        const resultFetchingUsers = await axios.post(
+          `${baseUrl}api/get_employees`,
+          { id: holdingDetail.id },
+          { headers: { "auth-token": token } }
+        );
+        if (resultFetchingUsers.data.success)
+          setEmployees({ employees: resultFetchingUsers.data.result.employees })
+        else
+          setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
+      } catch (error) {
+        setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+      }
       setLoading(false);
     }
   }, [holdingDetail]);
   return (
     <div className="body-content-user-section-container">
+      {error}
       <Modal show={addUserOpen} modalClosed={closeModal}
         style={{ width: "fit-content" }}>
         <AddUserModalContent close={closeModal} />
@@ -249,11 +298,11 @@ const BodyContentUserSection = () => {
         </div>
       </div>
       <p style={{ fontSize: "14px" }}>
-        تعداد نتایج : {users ? users.length : 0}
+        تعداد نتایج : {employees ? employees.length : 0}
       </p>
       <div className="table-container">
         <table
-          className="tabe-permissions"
+          className="table-permissions"
           style={
             {
               // boxShadow: `0 0 20px ${theme.hover}`
@@ -276,22 +325,42 @@ const BodyContentUserSection = () => {
             </tr>
           </thead>
           <tbody>
-            {users &&
-              users.length > 0 &&
-              users.map((v) => (
-                <tr key={v._id}>
-                  {order.map((item) => (
-                    <td key={item.title}>
-                      <DynamicItem
-                        config={item}
-                        data={v}
-                        labels={labels}
-                        onChange={onChangeLabelItem}
-                      />
+            {loading ?
+              [...new Array(2)].map((v, index) => (
+                <tr key={index}>
+                  {[...new Array(3)].map((item, i) => (
+                    <td key={i}>
+                      <SkeletonUserRow index={i} />
                     </td>
                   ))}
-                </tr>
-              ))}
+                </tr>))
+              :
+              (employees &&
+                employees.length > 0 &&
+                employees.map((v) => (
+                  <tr key={v._id}>
+                    {order.map((item) => (
+                      <td key={item.title}>
+                        <DynamicItem
+                          config={item}
+                          data={v}
+                          labels={labels}
+                          onChange={onChangeLabelItem}
+                        />
+                      </td>
+                    ))}
+                    <div className="remove-user-container">
+                      {removeLoading ?
+                        <img src={doubleRingLoading} alt="double-ring-loading-gif" />
+                        :
+                        <IoMdCloseCircle
+                          className="remove-icon"
+                          color={theme.error}
+                          onClick={() => removeUserHandler(v.user._id)} />
+                      }
+                    </div>
+                  </tr>
+                )))}
           </tbody>
         </table>
       </div>
