@@ -1,6 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
+    id: null,
     employees: null,
     labels: null,
 };
@@ -11,7 +12,6 @@ const setEmployees = (state, action) => {
     employees.map((employee) => {
         newEmployees = [...newEmployees,
         {
-            _id: employee._id,
             user: employee.user,
             label: employee.label,
         }]
@@ -23,26 +23,26 @@ const setEmployees = (state, action) => {
 };
 
 const addEmployee = (state, action) => {
-    const { id, username, password, image, phone, label } = action.payload;
     return {
         ...state,
-        employees: [...state.employees, { id, username, password, image, phone, label }],
+        employees: [...state.employees, action.payload],
     };
 };
 
 const removeEmployee = (state, action) => {
     const { userId } = action.payload;
-    let newData = {};
-    state.employees.map((employee) => {
-        if (employee.userId !== userId)
-            newData = {
-                ...newData,
-                employee,
-            };
-    });
+    let newData = state.employees.filter(item => item.user._id !== userId);
     return {
         ...state,
-        employee: newData
+        employees: newData
+    };
+};
+
+const setHoldingId = (state, action) => {
+    const { id } = action.payload;
+    return {
+        ...state,
+        id
     };
 };
 
@@ -54,6 +54,8 @@ const reducer = (state = initialState, action) => {
             return addEmployee(state, action);
         case actionTypes.REMOVE_EMPLOYEE:
             return removeEmployee(state, action);
+        case actionTypes.SET_HOLDING_ID:
+            return setHoldingId(state, action);
 
         default:
             return state;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "../../../../../../assets/strings/stringFaCollection";
 import Button from "../../../../../../component/UI/Button/Button";
 import CustomSelect from "../../../../../../component/UI/CustomSelect/CustomSelect";
@@ -10,6 +10,7 @@ import { useTheme } from "../../../../../../styles/ThemeProvider";
 import avatar from "../../../../../../assets/images/user_avatar.svg"
 import { AiFillCamera } from 'react-icons/ai'
 import ErrorDialog from "../../../../../../component/UI/Error/ErrorDialog";
+import * as holdingActions from "../../../../../../store/actions/holdingDetail";
 
 const CreateUserSection = (props) => {
     const themeState = useTheme();
@@ -90,8 +91,14 @@ const CreateUserSection = (props) => {
         isValid: false
     })
 
-    const token = useSelector((state) => state.auth.token);
     const imageRef = useRef(null);
+    const token = useSelector((state) => state.auth.token);
+    const holdingDetail = useSelector((state) => state.holdingDetail);
+
+    const dispatch = useDispatch();
+    const addEmployee = (employee) => {
+        dispatch(holdingActions.addEmployee(employee));
+    };
 
     const checkValidaty = (value, rules) => {
         let isValid = true;
@@ -157,7 +164,7 @@ const CreateUserSection = (props) => {
             username: orderAuth.orderForm.username.value,
             password: orderAuth.orderForm.password.value,
             phone: props.phone,
-            holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
+            holdingId: holdingDetail.id,
             labelId: selectedLabel,
         };
         try {
@@ -168,6 +175,7 @@ const CreateUserSection = (props) => {
                 { headers: { "auth-token": token } }
             );
             if (resultCreateNewUser.data.success) {
+                addEmployee(resultCreateNewUser.data.result.employee)
                 props.setError(
                     <ErrorDialog success={true} onClose={props.setError}>{resultCreateNewUser.data.result.message}</ErrorDialog>
                 )
@@ -203,7 +211,7 @@ const CreateUserSection = (props) => {
         // setLoading(true);
         const resultFetchingLabels = await axios.post(
             `${baseUrl}api/get_holding_labels`,
-            { holdingId: "2e010adffd1a4ea88f8f3e7b026ce048" },
+            { holdingId: holdingDetail.id },
             { headers: { "auth-token": token } }
         );
 
