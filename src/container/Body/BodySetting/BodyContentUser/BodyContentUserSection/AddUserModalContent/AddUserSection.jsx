@@ -14,7 +14,7 @@ const AddUserSection = (props) => {
         const resultAddUser = await axios.post(
             `${baseUrl}api/add_employee`,
             {
-                holdingId: "4869d699c2f046b19fbb2d0c248e5243",
+                holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
                 phone: `${props.phone}`,
             },
             { headers: { "auth-token": token } }
