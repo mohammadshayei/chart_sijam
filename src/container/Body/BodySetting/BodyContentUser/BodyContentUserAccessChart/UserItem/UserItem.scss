@@ -1,0 +1,13 @@
+.user-item-box {
+	display: flex;
+	align-items: center;
+	padding: 0.1rem 2rem;
+	margin-bottom: 0.5rem;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	img {
+		width: 20%;
+		margin-left: 1rem;
+	}
+}

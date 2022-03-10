@@ -17,6 +17,22 @@
 					bottom: 0.5rem;
 				}
 			}
+			.users-list-container {
+				margin-top: 3rem;
+			}
+		}
+		.chart-access {
+			width: 100%;
+			margin-right: 2rem;
+			padding: 0 1rem;
+			.selected-user-access-title {
+				display: flex;
+				font-size: 1.5rem;
+				p {
+					margin: 0 0.5rem;
+					font-weight: bolder;
+				}
+			}
 		}
 	}
 }
