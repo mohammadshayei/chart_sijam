@@ -9,13 +9,14 @@ const initialState = {
 const setEmployees = (state, action) => {
     const { employees } = action.payload;
     let newEmployees = [];
-    employees.map((employee) => {
-        newEmployees = [...newEmployees,
-        {
-            user: employee.user,
-            label: employee.label,
-        }]
-    })
+    if (employees) {
+        newEmployees = employees.map((employee) => {
+            return {
+                user: employee.user,
+                label: employee.label,
+            }
+        })
+    }
     return {
         ...state,
         employees: [...newEmployees],

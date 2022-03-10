@@ -111,33 +111,32 @@ const BodyContentUserSection = () => {
       userId: userId,
       labelId: findedLabel.label._id,
     };
-    const resultEditedLabel = await axios.post(
-      `${baseUrl}api/change_label_employee`,
-      paylaod,
-      { headers: { "auth-token": token } }
-    );
-    if (resultEditedLabel.data.success) {
-      // const upadatedUsers = [...users]
-      // let userIndex = upadatedUsers.findIndex(item => item.user_id._id === userId)
-      // let updatedUser = { ...upadatedUsers[userIndex] }
-      // let updatedLabelUser = { ...updatedUser.label_id }
-      // updatedLabelUser.name = selected;
-      // updatedUser.label_id = updatedLabelUser;
-      // upadatedUsers[userIndex]=updatedUser;
-      // const editedUser = { ...upadatedUser[userIndex], label_id: { ...upadatedUser[userIndex].label_id, name: selected } };
-      // upadatedUser[userIndex] = editedUser;
-      let updatedUsers = users.map((item) => {
-        if (item.user_id._id === userId)
-          return {
-            ...item,
-            label_id: {
-              ...item.label_id,
-              name: selected,
-            },
-          };
-        else return item;
-      });
-      setUsers(updatedUsers);
+    setError(null)
+    try {
+      const resultEditedLabel = await axios.post(
+        `${baseUrl}api/change_label_employee`,
+        paylaod,
+        { headers: { "auth-token": token } }
+      );
+      if (resultEditedLabel.data.success) {
+        let updatedEmployees = holdingDetails.employees.map((employee) => {
+          if (employee.user._id === userId)
+            return {
+              ...employee,
+              label: {
+                _id: findedLabel.label._id,
+                name: selected,
+              },
+            };
+          else return employee;
+        });
+        setEmployees({ employees: updatedEmployees });
+        setError(<ErrorDialog success={true} onClose={setError}>{resultEditedLabel.data.result.message}</ErrorDialog>)
+      } else {
+        setError(<ErrorDialog onClose={setError}>{resultEditedLabel.data.result.message}</ErrorDialog>)
+      }
+    } catch (error) {
+      setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
     }
   };
   const removeUserHandler = async (userId) => {
