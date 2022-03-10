@@ -27,11 +27,6 @@ const BodyContentUserSection = () => {
   const [fethedHoldings, setFethedHoldings] = useState([]);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [userSearch, setUserSearch] = useState("");
-  const [holdingDetail, setHoldingDetail] = useState({
-    name: "",
-    image: "",
-    id: "",
-  });
   const order = [
     {
       title: "نام کاربری",
@@ -69,14 +64,17 @@ const BodyContentUserSection = () => {
   const theme = themeState.computedTheme;
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const employees = useSelector((state) => state.holdingDetail.employees);
+  const holdingDetails = useSelector((state) => state.holdingDetail);
 
   const dispatch = useDispatch();
   const setEmployees = (employees) => {
     dispatch(holdingActions.setEmployees(employees));
   };
-  const addEmployee = (employee) => {
-    dispatch(holdingActions.addEmployee(employee));
+  const removeEmployee = (userId) => {
+    dispatch(holdingActions.removeEmployee(userId));
+  };
+  const setHoldingId = (id) => {
+    dispatch(holdingActions.setHoldingId(id));
   };
 
   useEffect(() => {
@@ -89,11 +87,7 @@ const BodyContentUserSection = () => {
   const onSelectHoldingChangeHandler = (e) => {
     setSelectedHolding(e.target.value);
     const holding = fethedHoldings.find((item) => item.name === e.target.value);
-    setHoldingDetail({
-      name: holding.name,
-      image: holding.image,
-      id: holding.id,
-    });
+    setHoldingId({ id: holding.id })
   };
   const onSelectLabelChangeHandler = (e) => {
     setSelectedHolding(e.target.value);
@@ -113,7 +107,7 @@ const BodyContentUserSection = () => {
     let selected = e.target.value;
     let findedLabel = labels.find((item) => item.label.name === selected);
     const paylaod = {
-      holdingId: holdingDetail.id,
+      holdingId: holdingDetails.id,
       userId: userId,
       labelId: findedLabel.label._id,
     };
@@ -149,7 +143,7 @@ const BodyContentUserSection = () => {
   const removeUserHandler = async (userId) => {
     setRemoveLoading(true)
     const paylaod = {
-      holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
+      holdingId: holdingDetails.id,
       userId: userId,
     };
     setError(null)
@@ -160,6 +154,7 @@ const BodyContentUserSection = () => {
         { headers: { "auth-token": token } }
       );
       if (resultRemoveUser.data.success) {
+        removeEmployee({ userId })
         setError(<ErrorDialog success={true} onClose={setError}>{resultRemoveUser.data.result.message}</ErrorDialog>)
       }
       else {
@@ -184,27 +179,23 @@ const BodyContentUserSection = () => {
         { headers: { "auth-token": token } }
       );
       setFethedHoldings(resultFetchingHoldings.data.message.result);
-      setHoldingDetail({
-        name: resultFetchingHoldings.data.message.result[0].name,
-        image: resultFetchingHoldings.data.message.result[0].image,
-        id: resultFetchingHoldings.data.message.result[0].id,
-      });
+      setHoldingId({ id: resultFetchingHoldings.data.message.result[0].id })
       setLoading(false);
     }
   }, [multiHolding]);
   useEffect(async () => {
-    if (holdingDetail && holdingDetail.id) {
+    if (holdingDetails && holdingDetails.id) {
       setLoading(true);
       const resultFetchingLabels = await axios.post(
         `${baseUrl}api/get_holding_labels`,
-        { holdingId: holdingDetail.id },
+        { holdingId: holdingDetails.id },
         { headers: { "auth-token": token } }
       );
       setLabels(resultFetchingLabels.data.labels);
       try {
         const resultFetchingUsers = await axios.post(
           `${baseUrl}api/get_employees`,
-          { id: holdingDetail.id },
+          { id: holdingDetails.id },
           { headers: { "auth-token": token } }
         );
         if (resultFetchingUsers.data.success)
@@ -216,7 +207,7 @@ const BodyContentUserSection = () => {
       }
       setLoading(false);
     }
-  }, [holdingDetail]);
+  }, [holdingDetails.id]);
   return (
     <div className="body-content-user-section-container">
       {error}
@@ -298,7 +289,7 @@ const BodyContentUserSection = () => {
         </div>
       </div>
       <p style={{ fontSize: "14px" }}>
-        تعداد نتایج : {employees ? employees.length : 0}
+        تعداد نتایج : {holdingDetails.employees ? holdingDetails.employees.length : 0}
       </p>
       <div className="table-container">
         <table
@@ -335,10 +326,10 @@ const BodyContentUserSection = () => {
                   ))}
                 </tr>))
               :
-              (employees &&
-                employees.length > 0 &&
-                employees.map((v) => (
-                  <tr key={v._id}>
+              (holdingDetails.employees &&
+                holdingDetails.employees.length > 0 &&
+                holdingDetails.employees.map((v) => (
+                  <tr key={v.user._id}>
                     {order.map((item) => (
                       <td key={item.title}>
                         <DynamicItem
