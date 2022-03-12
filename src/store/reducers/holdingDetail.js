@@ -2,6 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
     id: null,
+    name: null,
     employees: null,
     labels: null,
 };
@@ -40,10 +41,11 @@ const removeEmployee = (state, action) => {
 };
 
 const setHoldingId = (state, action) => {
-    const { id } = action.payload;
+    const { id, name } = action.payload;
     return {
         ...state,
-        id
+        id,
+        name
     };
 };
 

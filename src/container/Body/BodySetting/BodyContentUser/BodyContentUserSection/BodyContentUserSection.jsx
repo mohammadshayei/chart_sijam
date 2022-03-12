@@ -87,7 +87,7 @@ const BodyContentUserSection = () => {
   const onSelectHoldingChangeHandler = (e) => {
     setSelectedHolding(e.target.value);
     const holding = fethedHoldings.find((item) => item.name === e.target.value);
-    setHoldingId({ id: holding.id })
+    setHoldingId({ id: holding.id, name: holding.name })
   };
   const onSelectLabelChangeHandler = (e) => {
     setSelectedHolding(e.target.value);
@@ -178,7 +178,10 @@ const BodyContentUserSection = () => {
         { headers: { "auth-token": token } }
       );
       setFethedHoldings(resultFetchingHoldings.data.message.result);
-      setHoldingId({ id: resultFetchingHoldings.data.message.result[0].id })
+      setHoldingId({
+        id: resultFetchingHoldings.data.message.result[0].id,
+        name: resultFetchingHoldings.data.message.result[0].name
+      })
       setLoading(false);
     }
   }, [multiHolding]);

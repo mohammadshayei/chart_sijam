@@ -21,9 +21,9 @@ export const removeEmployee = ({ userId }) => (dispatch) => {
     });
 };
 
-export const setHoldingId = ({ id }) => (dispatch) => {
+export const setHoldingId = ({ id, name }) => (dispatch) => {
     dispatch({
         type: actionTypes.SET_HOLDING_ID,
-        payload: { id },
+        payload: { id, name },
     });
 };
