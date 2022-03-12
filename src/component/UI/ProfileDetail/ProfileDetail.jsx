@@ -39,7 +39,7 @@ const ProfileDetail = (props) => {
   };
 
   const openProfile = () => {
-    setRedirect(<Redirect to="/view/user" />);
+    setRedirect(<Redirect to="/view/user?menu_item&s=1" />);
   };
 
   const logout = () => {

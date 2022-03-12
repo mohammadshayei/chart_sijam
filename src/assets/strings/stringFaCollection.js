@@ -111,5 +111,7 @@ export const stringFa = {
   confirm_password: "تکرار رمز",
   confirm_password_error: "با رمز عبور مطابقت ندارد",
   name_and_family: "نام و نام خانوادگی",
-  name_and_family_error: "ناو و نام خانوادگی باید دارای حداقل 1 حرف باشد",
+  name_and_family_error: "نام و نام خانوادگی باید دارای حداقل 1 حرف باشد",
+  personal_information: "اطلاعات شخصی",
+  other: "سایر"
 };
