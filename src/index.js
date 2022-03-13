@@ -39,7 +39,7 @@ const store = createStore(
 
 const app = (
   <Provider store={store}>
-    <BrowserRouter basename="admin">
+    <BrowserRouter basename="">
       <ThemeProvider>
         <App />
       </ThemeProvider>

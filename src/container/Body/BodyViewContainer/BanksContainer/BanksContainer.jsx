@@ -1,32 +1,48 @@
 import React, { useState, useEffect } from "react";
 import "./BanksContainer.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Bank from "./Bank/Bank";
 import { useTheme } from "../../../../styles/ThemeProvider.js";
-import axios from "axios";
-import { baseUrl } from "../../../../constants/Config";
-import SkeletonBank from "../../../../component/Skeletons/SkeletonBank";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
+import * as detailActions from "../../../../store/actions/detail";
 
 const BanksContainer = () => {
-  const [data, setData] = useState(null);
-  const detail = useSelector((state) => state.detail);
-  const token = useSelector((state) => state.auth.token);
+  const { selectedBanks, banks } = useSelector((state) => state.detail);
+  const dispatch = useDispatch();
 
-  useEffect(async () => {
-    if (detail.activeBackup) {
-      const result = await axios.post(`${baseUrl}api/get_banks`, {
-        id: detail.activeBackup.id,
-      }, { headers: { 'auth-token': token } });
-      if (result.data.success) {
-        setData(result.data.message.result);
-      }
-    } else {
-      setData(null);
-    }
-  }, [detail.activeBackup]);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+
+  const changeBankItemStatus = (_id, status) => {
+    dispatch(detailActions.changeBankItemStatus({ _id, status }));
+  };
+
+  const changeSelectedMenuItems = (payload) => {
+    dispatch(detailActions.changeSelectedMenuItems(payload));
+  };
+
+
+  const onBankItemClickHandler = (_id, parents, selected) => {
+    changeBankItemStatus(_id, !selected)
+    let payload;
+    if (!selected) {
+      payload = { key: "selectedBanks", value: _id, parents, mode: 'add' }
+      changeSelectedMenuItems(payload)
+      payload = { key: "selectedActiveBackups", value: parents[2], mode: 'sub' }
+      changeSelectedMenuItems(payload)
+    }
+    else {
+      payload = { key: "selectedBanks", value: _id, mode: 'sub' }
+      changeSelectedMenuItems(payload)
+      let existCount = selectedBanks.filter(item => item.parents[2] === parents[2])
+      if (existCount.length <= 1) {
+        payload = { key: "selectedActiveBackups", parents: [parents[0], parents[1]], value: parents[2], mode: 'add' }
+        changeSelectedMenuItems(payload)
+      }
+    }
+  }
+
+
   return (
     <div
       className="BanksContainer"
@@ -35,14 +51,14 @@ const BanksContainer = () => {
 
       }}
     >
-      {data &&
-        data.map((slide, index) => (
-          <Bank key={slide.bank._id} data={slide.bank} />
+      {banks &&
+        banks.map((item, index) => (
+          <Bank key={item._id} {...item} onClick={onBankItemClickHandler} />
         ))}
       {
-        data && data.length === 0 && <p style={{ fontSize: '13px' }}>{stringFa.no_exist_banks}</p>
+        banks.length === 0 && <p style={{ fontSize: '13px' }}>{stringFa.no_exist_banks}</p>
       }
-      {!data && [1, 2, 3, 4].map((n) => <SkeletonBank key={n} />)}
+      {/* {!data && [1, 2, 3, 4].map((n) => <SkeletonBank key={n} />)} */}
     </div>
   );
 };

@@ -1,38 +1,33 @@
 import React, { useState, useEffect } from "react";
 import "./Bank.scss";
-import { useDispatch, useSelector } from "react-redux";
-import * as detailActions from "../../../../../store/actions/detail";
+import { } from "react-redux";
 import { ripple } from "../../../../../assets/config/ripple";
 import { useTheme } from "../../../../../styles/ThemeProvider";
 
-const Bank = React.memo(function Bank(props) {
+function Bank({ name, selected, parents, _id, onClick }) {
   const [style, setStyle] = useState(null);
-  const dispatch = useDispatch();
-  const [clicked, setClicked] = useState(false);
-  const detail = useSelector((state) => state.detail);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
-  const selectBank = (bank) => {
-    dispatch(detailActions.selectBank(bank));
-  };
+  // const selectBank = (bank) => {
+  //   dispatch(detailActions.selectBank(bank));
+  // };
   useEffect(() => {
-    if (detail.banks && detail.banks.find((bk) => bk._id === props.data._id)) {
-      setClicked(true);
+    // console.log(1, selected)
+    if (selected)
       setStyle({
         background: `linear-gradient(150deg,${theme.primary},${theme.secondary})`,
         color: theme.on_primary,
       });
-    } else {
-      setClicked(false);
+    else {
       setStyle({
         background: "",
         color: theme.on_background,
       });
     }
-  }, [detail.banks, props.data, themeState.isDark]);
+  }, [_id, selected, themeState.isDark]);
   const onMouseEnter = () => {
-    if (!clicked) {
+    if (!selected) {
       setStyle({
         background: themeState.isDark
           ? theme.surface_1dp
@@ -42,7 +37,7 @@ const Bank = React.memo(function Bank(props) {
     }
   };
   const onMouseLeave = () => {
-    if (!clicked) {
+    if (!selected) {
       setStyle({
         background: "",
         color: theme.on_background,
@@ -51,7 +46,7 @@ const Bank = React.memo(function Bank(props) {
   };
   const onBankClickHandler = (e) => {
     ripple(e);
-    selectBank(props.data);
+    onClick(_id, parents, selected)
   };
   return (
     <div
@@ -61,9 +56,9 @@ const Bank = React.memo(function Bank(props) {
       style={{ ...style }}
       onClick={onBankClickHandler}
     >
-      <span style={{ fontSize: 12 }}>{props.data.groups_title}</span>
+      <span style={{ fontSize: 12 }}>{name}</span>
     </div>
   );
-});
+};
 
 export default Bank;

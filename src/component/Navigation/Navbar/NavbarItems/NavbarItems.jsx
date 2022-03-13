@@ -15,8 +15,8 @@ const NavbarItems = (props) => {
     <div className="navbar-items-container">
       <ul>
         {Object.entries(orderMenu).map(([k, v]) => (
-          <li>
-            <NavbarItem key={k} name={k} detail={v} />
+          <li key={k}>
+            <NavbarItem  name={k} detail={v} />
           </li>
         ))}
       </ul>

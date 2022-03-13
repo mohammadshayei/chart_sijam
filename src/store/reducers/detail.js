@@ -1,111 +1,108 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  holding: null,
-  company: null,
-  software: null,
-  activeBackup: null,
-  banks: null,
-  items: { holdings: [] },
+  // holding: null,
+  // company: null,
+  // software: null,
+  // activeBackup: null,
+  // banks: null,
+  // items: { holdings: [] },
+  banks: [],
+  selectedCompanies: [],
+  selectedSoftwares: [],
+  selectedActiveBackups: [],
+  selectedBanks: [],
 };
 
-const selectHodling = (state, action) => {
+const setBanks = (state, action) => {
+  let updatedBanks = [...state.banks];
+  if (action.mode !== "add" && action.mode !== "sub") return { ...state };
+  if (action.mode === "add") {
+    console.log(action.banks);
+    action.banks.forEach((item) => {
+      if (state.banks.findIndex((bnk) => bnk._id === item._id) < 0)
+        updatedBanks.push({ ...item, selected: false });
+    });
+    // updatedBanks = [...updatedBanks, ...action.banks];
+  } else {
+    updatedBanks = updatedBanks.filter(
+      (item) => action.banks.findIndex((bnk) => bnk._id === item._id) < 0
+    );
+  }
   return {
     ...state,
-    holding: action.holding,
+    banks: updatedBanks,
   };
 };
-const selectCompany = (state, action) => {
+const changeSelectedMenuItems = (state, action) => {
+  const { key, value, parents, mode } = action.payload;
+  let updatedValues = state[key];
+  if (mode !== "add" && mode !== "sub") return { ...state };
+  if (mode === "add") {
+    updatedValues.push({ parents, value });
+  } else {
+    updatedValues = state[key].filter((item) => item.value !== value);
+  }
   return {
     ...state,
-    company: action.company,
+    [key]: updatedValues,
   };
 };
-const selectSoftware = (state, action) => {
+const removedChildSelectedMenuItems = (state, action) => {
+  const { _id, level } = action.payload;
+  if (level > 3 && level < 0) return { ...state };
+  let selectedSoftwares = [...state.selectedSoftwares],
+    selectedActiveBackups = [...state.selectedActiveBackups],
+    selectedBanks = [...state.selectedBanks],
+    banks = [...state.banks];
+  if (level === 1) {
+    selectedSoftwares = selectedSoftwares.filter(
+      (item) => item.parents[0] !== _id
+    );
+    selectedActiveBackups = selectedActiveBackups.filter(
+      (item) => item.parents[0] !== _id
+    );
+    selectedBanks = selectedBanks.filter((item) => item.parents[0] !== _id);
+    banks = banks.filter((item) => item.parents[0] !== _id);
+  } else if (level === 2) {
+    selectedActiveBackups = selectedActiveBackups.filter(
+      (item) => item.parents[1] !== _id
+    );
+    selectedBanks = selectedBanks.filter((item) => item.parents[1] !== _id);
+    banks = banks.filter((item) => item.parents[1] !== _id);
+  } else {
+    selectedBanks = selectedBanks.filter((item) => item.parents[2] !== _id);
+    banks = banks.filter((item) => item.parents[2] !== _id);
+  }
   return {
     ...state,
-    software: action.software,
+    selectedSoftwares,
+    selectedActiveBackups,
+    selectedBanks,
+    banks,
   };
 };
-const selectActiveBackup = (state, action) => {
+const chnageStatusBankItem = (state, action) => {
+  const { _id, status } = action.payload;
+  let updatedBanks = [...state.banks];
+  let findIndex = updatedBanks.findIndex((item) => item._id === _id);
+  if (findIndex < 0) return { ...state };
+  updatedBanks[findIndex].selected = status;
   return {
     ...state,
-    activeBackup: action.activeBackup,
+    banks: updatedBanks,
   };
 };
-const addBank = (state, action) => {
-  let count = state.banks ? state.banks.length : 0;
-  let newBanks = state.banks
-    ? state.banks.filter((bk) => bk._id !== action.bank._id)
-    : [];
-  if (count === newBanks.length) newBanks.push(action.bank);
-  return {
-    ...state,
-    banks: newBanks,
-  };
-};
-const clearHolding = (state) => {
-  return {
-    ...state,
-    holding: null,
-  };
-};
-const clearCompany = (state) => {
-  return {
-    ...state,
-    company: null,
-  };
-};
-const clearSoftware = (state) => {
-  return {
-    ...state,
-    software: null,
-  };
-};
-const clearActiveBackup = (state) => {
-  return {
-    ...state,
-    activeBackup: null,
-  };
-};
-
-const clearBanks = (state) => {
-  return {
-    ...state,
-    banks: [],
-  };
-};
-const setItems = (state, action) => {
-  return {
-    ...state,
-    items: action.items,
-  };
-};
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SELECT_HOLDING:
-      return selectHodling(state, action);
-    case actionTypes.SELECT_COMPANY:
-      return selectCompany(state, action);
-    case actionTypes.SELECT_SOFTWARE:
-      return selectSoftware(state, action);
-    case actionTypes.SELECT_ACTIVE_BACKUP:
-      return selectActiveBackup(state, action);
-    case actionTypes.SELECT_BANK:
-      return addBank(state, action);
-    case actionTypes.CLEAR_HOLDING:
-      return clearHolding(state);
-    case actionTypes.CLEAR_COMPANY:
-      return clearCompany(state);
-    case actionTypes.CLEAR_SOFTWARE:
-      return clearSoftware(state);
-    case actionTypes.CLEAR_ACTIVE_BACKUP:
-      return clearActiveBackup(state);
-    case actionTypes.CLEAR_MY_BANKS:
-      return clearBanks(state);
-    case actionTypes.SET_ITEMS:
-      return setItems(state, action);
+    case actionTypes.SET_BANKS:
+      return setBanks(state, action);
+    case actionTypes.CHANGE_SELECTED_MENU_ITEMS:
+      return changeSelectedMenuItems(state, action);
+    case actionTypes.REMOVED_CHILD_SELECTED_MENU_ITEMS:
+      return removedChildSelectedMenuItems(state, action);
+    case actionTypes.CHANGE_BANK_ITEM_STATUS:
+      return chnageStatusBankItem(state, action);
     default:
       return state;
   }

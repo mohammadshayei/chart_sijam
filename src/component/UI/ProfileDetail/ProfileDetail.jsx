@@ -11,14 +11,22 @@ import { IoIosArrowDropdown } from "react-icons/io";
 import { IoSettingsOutline, IoSunnyOutline, IoMoon } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
-import { Redirect } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const ProfileDetail = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const [isHover, setIsHover] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
+  let navigate = useNavigate();
+
+  const userDetail = useSelector((state) => state.auth.user);
+  const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
+
+  const divRef = useRef();
+  const dispatch = useDispatch();
+
   const baseMenuOrder = [
     { name: stringFa.my_profile, id: "my_profile", icon: <FaRegUser /> },
     {
@@ -28,18 +36,15 @@ const ProfileDetail = (props) => {
     { name: stringFa.log_out, id: "log_out", icon: <FiLogOut /> },
   ];
   const [menuOrders, setMenuOrders] = useState(baseMenuOrder);
-  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
-  const divRef = useRef();
-  const dispatch = useDispatch();
-  const userDetail = useSelector((state) => state.auth.user);
 
   const openSetting = () => {
-    setRedirect(<Redirect to="/view/setting" />);
+    navigate("/view/setting")
     // search: "?menu_item=1",
   };
 
   const openProfile = () => {
-    setRedirect(<Redirect to="/view/user" />);
+    navigate("/view/user")
+
   };
 
   const logout = () => {
@@ -70,28 +75,32 @@ const ProfileDetail = (props) => {
     if (userDetail && userDetail.image) {
       setImageSrc(`${baseUrl}images/${userDetail.image}.png`);
     }
-    if (userDetail) {
-      if (userDetail.is_fekrafzar) {
-        let updated = false;
-        let updatedMenuOrders = [...menuOrders];
-        updatedMenuOrders.forEach((element) => {
-          if (element.id === "setting") {
-            updated = true;
-          }
-        });
-        if (!updated) {
-          updatedMenuOrders.splice(updatedMenuOrders.length - 1, 0, {
-            name: stringFa.setting,
-            id: "setting",
-            icon: <IoSettingsOutline />,
-          });
-        }
-        setMenuOrders(updatedMenuOrders);
-      } else {
-        setMenuOrders(baseMenuOrder);
-      }
-    }
+
   }, [userDetail]);
+
+  useEffect(() => {
+    if (!selectedHolding) return;
+    if (selectedHolding.customization || selectedHolding.users || selectedHolding.permissions) {
+      let updated = false;
+      let updatedMenuOrders = [...menuOrders];
+      updatedMenuOrders.forEach((element) => {
+        if (element.id === "setting") {
+          updated = true;
+        }
+      });
+      if (!updated) {
+        updatedMenuOrders.splice(updatedMenuOrders.length - 1, 0, {
+          name: stringFa.admin,
+          id: "setting",
+          icon: <IoSettingsOutline />,
+        });
+      }
+      setMenuOrders(updatedMenuOrders);
+    } else {
+      setMenuOrders(baseMenuOrder);
+    }
+  }, [selectedHolding])
+
 
   const handleUserMenu = (id) => {
     switch (id) {
@@ -112,9 +121,9 @@ const ProfileDetail = (props) => {
         break;
     }
   };
+
   return (
     <div className={classes.ProfileDetailContainer}>
-      {redirect}
       {userDetail ? (
         <React.Fragment>
           <div className={classes.imageContainer}>

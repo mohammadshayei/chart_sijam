@@ -7,11 +7,14 @@ export const authStart = () => {
   };
 };
 
-export const getUserData = (userId,token) => {
+export const getUserData = (userId, token) => {
   return (dispatch) => {
     return axios
-      .post(`${baseUrl}api/get_user_data`, { id: userId },
-        { headers: { 'auth-token': token } })
+      .post(
+        `${baseUrl}api/get_user_data`,
+        { id: userId },
+        { headers: { "auth-token": token } }
+      )
       .then((result) => {
         dispatch({
           type: actionTypes.SET_USER_DATA,
@@ -20,15 +23,25 @@ export const getUserData = (userId,token) => {
       });
   };
 };
-
+export const setChecked = () => {
+  return {
+    type: actionTypes.SET_CHECKED,
+    checked: true,
+  };
+};
 export const authSuccess = (token, userId) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
     token,
-    userId
+    userId,
   };
 };
-
+export const setUserLabel = (label) => {
+  return {
+    type: actionTypes.SET_USER_LABEL,
+    label,
+  };
+};
 export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,
@@ -72,16 +85,23 @@ export const setAuthRedirectPath = (path) => {
     path: path,
   };
 };
+export const setHoldignAccess = (holdingAccess) => {
+  return {
+    type: actionTypes.SET_HOLDING_ACCESS,
+    holdingAccess,
+  };
+};
 
 export const authCheckState = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-
     if (!token || !userId) {
       dispatch(logout());
+      dispatch(setChecked());
     } else {
       dispatch(authSuccess(token, userId));
+      dispatch(setChecked());
     }
   };
 };

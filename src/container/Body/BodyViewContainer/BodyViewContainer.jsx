@@ -165,9 +165,8 @@ const BodyViewContainer = (props) => {
       className="body-container"
       style={{
         backgroundImage: chartsData.editMode
-          ? `radial-gradient(${
-              themeState.isDark ? theme.border_color : "#BBBBBB"
-            } 2px, transparent 2px)`
+          ? `radial-gradient(${themeState.isDark ? theme.border_color : "#BBBBBB"
+          } 2px, transparent 2px)`
           : theme.background_color,
         backgroundSize: chartsData.editMode ? "50px 50px" : "0",
       }}
@@ -183,7 +182,7 @@ const BodyViewContainer = (props) => {
       >
         <HeaderViewContent setIsModalOpen={setIsModalOpen} />
       </div>
-      {detail.software && (
+      {detail.banks.length > 0 && (
         <div
           className="bank-container"
           style={{

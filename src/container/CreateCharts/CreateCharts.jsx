@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import Steps from "./Steps/Steps";
-import { Redirect, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
 import { VscSplitVertical, VscClose } from "react-icons/vsc";
@@ -46,12 +46,11 @@ const CreateCharts = (props) => {
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
   const [saved, setSaved] = useState(false);
-  const [redirect, setRedirect] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const location = useLocation();
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-
+  const navigate = useNavigate()
   const menuItems = [
     {
       name: stringFa.exit_full_screen,
@@ -121,7 +120,7 @@ const CreateCharts = (props) => {
     };
     setChartData(clearedChartData);
     if (location.pathname === "/create_chart")
-      setRedirect(<Redirect to="/view" />);
+      navigate('/view')
   };
 
   const doneClickHandler = async () => {
@@ -274,7 +273,6 @@ const CreateCharts = (props) => {
         color: theme.on_background,
       }}
     >
-      {redirect}
       {error}
       {!takenData.isFullscreen && (
         <div
@@ -417,9 +415,8 @@ const CreateCharts = (props) => {
               <div className="section-settings-content-header-container">
                 <div className="base-section-settings-header-component">
                   <div
-                    className={`base-section-settings-header ${
-                      input && "renaming-section"
-                    }`}
+                    className={`base-section-settings-header ${input && "renaming-section"
+                      }`}
                   >
                     <div
                       className="editable-component"

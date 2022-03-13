@@ -13,9 +13,9 @@ const Bank = React.memo(function Bank(props) {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
-  const selectBank = (bank) => {
-    dispatch(detailActions.selectBank(bank));
-  };
+  // const selectBank = (bank) => {
+  //   dispatch(detailActions.selectBank(bank));
+  // };
   useEffect(() => {
     if (detail.banks && detail.banks.find((bk) => bk._id === props.data._id)) {
       setClicked(true);
@@ -51,7 +51,7 @@ const Bank = React.memo(function Bank(props) {
   };
   const onBankClickHandler = (e) => {
     ripple(e);
-    selectBank(props.data);
+    // selectBank(props.data);
   };
   return (
     <div

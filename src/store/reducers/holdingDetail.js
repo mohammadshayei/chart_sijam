@@ -1,65 +1,85 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-    id: null,
-    employees: null,
-    labels: null,
+  id: null,
+  employees: null,
+  labels: null,
+  selectedHolding: null,
+  holdings: [],
 };
 
 const setEmployees = (state, action) => {
-    const { employees } = action.payload;
-    let newEmployees = [];
-    employees.map((employee) => {
-        newEmployees = [...newEmployees,
-        {
-            user: employee.user,
-            label: employee.label,
-        }]
-    })
-    return {
-        ...state,
-        employees: [...newEmployees],
-    };
+  const { employees } = action.payload;
+  let newEmployees = [];
+  employees.map((employee) => {
+    newEmployees = [
+      ...newEmployees,
+      {
+        user: employee.user,
+        label: employee.label,
+      },
+    ];
+  });
+  return {
+    ...state,
+    employees: [...newEmployees],
+  };
 };
 
 const addEmployee = (state, action) => {
-    return {
-        ...state,
-        employees: [...state.employees, action.payload],
-    };
+  return {
+    ...state,
+    employees: [...state.employees, action.payload],
+  };
 };
 
 const removeEmployee = (state, action) => {
-    const { userId } = action.payload;
-    let newData = state.employees.filter(item => item.user._id !== userId);
-    return {
-        ...state,
-        employees: newData
-    };
+  const { userId } = action.payload;
+  let newData = state.employees.filter((item) => item.user._id !== userId);
+  return {
+    ...state,
+    employees: newData,
+  };
 };
 
 const setHoldingId = (state, action) => {
-    const { id } = action.payload;
-    return {
-        ...state,
-        id
-    };
+  const { id } = action.payload;
+  return {
+    ...state,
+    id,
+  };
+};
+const setHoldingInfo = (state, action) => {
+  return {
+    ...state,
+    selectedHolding: action.info,
+  };
+};
+const setHoldings = (state, action) => {
+  return {
+    ...state,
+    holdings: action.holdings,
+  };
 };
 
 const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case actionTypes.SET_EMPLOYEES:
-            return setEmployees(state, action);
-        case actionTypes.ADD_EMPLOYEE:
-            return addEmployee(state, action);
-        case actionTypes.REMOVE_EMPLOYEE:
-            return removeEmployee(state, action);
-        case actionTypes.SET_HOLDING_ID:
-            return setHoldingId(state, action);
+  switch (action.type) {
+    case actionTypes.SET_EMPLOYEES:
+      return setEmployees(state, action);
+    case actionTypes.ADD_EMPLOYEE:
+      return addEmployee(state, action);
+    case actionTypes.REMOVE_EMPLOYEE:
+      return removeEmployee(state, action);
+    case actionTypes.SET_HOLDING_ID:
+      return setHoldingId(state, action);
+    case actionTypes.SET_HOLDING_INFO:
+      return setHoldingInfo(state, action);
+    case actionTypes.SET_HOLDINGS:
+      return setHoldings(state, action);
 
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 };
 
 export default reducer;

@@ -2,7 +2,7 @@ import React from "react";
 import { useTheme } from "../../styles/ThemeProvider";
 import SkeletonElement from "./SkeletonElement.jsx";
 
-const SkeletonProfile = () => {
+const SkeletonProfile = ({ divStyle }) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -16,6 +16,7 @@ const SkeletonProfile = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        ...divStyle
       }}
     >
       <SkeletonElement

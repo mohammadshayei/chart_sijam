@@ -8,6 +8,16 @@ const initialState = {
   error: null,
   loading: false,
   authRedirectPath: null,
+  label: {
+    customization: false,
+    users: false,
+    permissions: false,
+    chart: false,
+    name: "",
+    _id: "",
+  },
+  checked: false,
+  holdingAccess: [],
 };
 
 const authStart = (state, action) => {
@@ -16,6 +26,16 @@ const authStart = (state, action) => {
 const setUserData = (state, action) => {
   return updateObject(state, {
     user: action.user,
+  });
+};
+const setUserLabel = (state, action) => {
+  return updateObject(state, {
+    label: action.label,
+  });
+};
+const setHoldingAccess = (state, action) => {
+  return updateObject(state, {
+    holdingAccess: action.holdingAccess,
   });
 };
 const authSuccess = (state, action) => {
@@ -45,6 +65,9 @@ const authLogout = (state, action) => {
 const setAuthRedirectPath = (state, action) => {
   return updateObject(state, { authRedirectPath: action.path });
 };
+const setChecked = (state, action) => {
+  return updateObject(state, { checked: action.checked });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -60,6 +83,12 @@ const reducer = (state = initialState, action) => {
       return setAuthRedirectPath(state, action);
     case actionTypes.SET_USER_DATA:
       return setUserData(state, action);
+    case actionTypes.SET_USER_LABEL:
+      return setUserLabel(state, action);
+    case actionTypes.SET_CHECKED:
+      return setChecked(state, action);
+    case actionTypes.SET_HOLDING_ACCESS:
+      return setHoldingAccess(state, action);
     default:
       return state;
   }

@@ -8,9 +8,10 @@ import { ripple } from "../../../assets/config/ripple";
 import { useTheme } from "../../../styles/ThemeProvider";
 import { useSelector } from "react-redux";
 
-const MenuItem = (props) => {
+const MenuItem = ({ _id, selected, parents, name, onClick }) => {
   const detail = useSelector((state) => state.detail);
   const [clicked, setClicked] = useState(false);
+  const [type, setType] = useState('')
   const styleIcon = {
     width: "13px",
     height: "13px",
@@ -19,66 +20,90 @@ const MenuItem = (props) => {
   };
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  useEffect(() => {
-    (detail.holding && detail.holding.id === props.id) ||
-    (detail.company && detail.company.id === props.id)
-      ? setClicked(true)
-      : setClicked(false);
-  }, [detail.holding, detail.company, props.id]);
 
-  const onContextMenuHandler = (e) => {
-    if (props.type !== "software") return;
-    e.preventDefault();
-    props.onRightClickHandler(e,props.id, props.type, props.parent);
-  };
- 
+
+  // useEffect(() => {
+  //   (detail.holding && detail.holding.id === props.id) ||
+  //   (detail.company && detail.company.id === props.id)
+  //   ? setClicked(true)
+  //   : setClicked(false);
+  // }, [detail.holding, detail.company, props.id]);
+
+  // const onContextMenuHandler = (e) => {
+  //   if (props.type !== "software") return;
+  //   e.preventDefault();
+  //   props.onRightClickHandler(e,props.id, props.type, props.parent);
+  // };
+
+  useEffect(() => {
+    if (!parents) return;
+    switch (parents.length) {
+      case 0:
+        setType('company')
+        break;
+      case 1:
+        setType('software')
+        break;
+      case 2:
+        setType('activeBackup')
+        break;
+      default:
+        setType('company')
+        break;
+    }
+
+  }, [parents])
+  // console.log(1,  type, selected, name)
   return (
     <div
       className="MenuItemContainer"
-      onContextMenu={onContextMenuHandler}
+      // onContextMenu={onContextMenuHandler}
       style={{
         background:
-          detail.holding && detail.holding.id === props.id
+          // detail.holding && detail.holding.id === props.id
+          type === 'company' && selected
             ? themeState.isDark
               ? theme.surface_24dp
               : theme.background_color
-            : detail.company && detail.company.id === props.id
-            ? `linear-gradient(150deg,${theme.primary},${theme.secondary})`
-            : "",
+            // : detail.company && detail.company.id === props.id
+            : type === 'software' && selected
+              ? `linear-gradient(150deg,${theme.primary},${theme.secondary})`
+              : "",
         boxShadow:
-          detail.company && detail.company.id === props.id
+          // detail.company && detail.company.id === props.id
+          type === 'software' && selected
             ? "rgba(0, 0, 0, 0.1) -4px 9px 25px -6px"
             : "",
       }}
       onClick={(e) => {
         ripple(
           e,
-          detail.company && detail.company.id === props.id
+          // detail.company && detail.company.id === props.id
+          type === 'software' && selected
             ? theme.on_primary
-            : detail.holding && detail.holding.id === props.id
-            ? themeState.isDark
-              ? theme.surface_42dp
-              : theme.surface
-            : themeState.isDark
-            ? theme.surface_42dp
-            : theme.surface
+            // : detail.holding && detail.holding.id === props.id
+            : type === 'company' && selected
+              ? themeState.isDark
+                ? theme.surface_42dp
+                : theme.surface
+              : themeState.isDark
+                ? theme.surface_42dp
+                : theme.surface
         );
-        props.onClick(props.id, props.type, props.parent);
+        onClick(_id, selected, parents);
       }}
     >
-     
-
       <div className="DropDownIcon">
-        {props.type === "holding" || props.type === "company" ? (
+        {type === "company" || type === "software" ? (
           <ArrowBackIosRoundedIcon
-            className={`${clicked ? "DropDownOpenRotate" : ""}
-            ${props.unClicked === props.id ? "DropDownCloseRotate" : ""}
-              `}
+            className={`${selected ? "DropDownOpenRotate" : ""}`}
+            // ${props.unClicked === props.id ? "DropDownCloseRotate" : ""}
             style={{
               width: "13px",
               height: "13px",
               color:
-                detail.company && detail.company.id === props.id
+                // detail.company && detail.company.id === props.id
+                type === 'software' && selected
                   ? theme.on_primary
                   : theme.arrows_color,
             }}
@@ -90,36 +115,38 @@ const MenuItem = (props) => {
         <span
           style={{
             color:
-              detail.software && detail.software.id === props.id
+              // detail.software && detail.software.id === props.id
+              type === 'activeBackup' && selected
                 ? theme.primary
-                : detail.company && detail.company.id === props.id
-                ? theme.on_primary
-                : theme.on_background,
-            fontWeight: detail.software
-              ? detail.software.id === props.id
+                // : detail.company && detail.company.id === props.id
+                : type === 'software' && selected
+                  ? theme.on_primary
+                  : theme.on_background,
+            fontWeight: type === 'activeBackup'
+              ? selected
                 ? "bold"
                 : ""
               : "",
             marginRight:
-              props.type === "company" || props.type === "holding"
+              type === "software" || type === "company"
                 ? ".7rem"
                 : "",
           }}
         >
-          {props.name}
+          {name}
         </span>
       </div>
 
       <div className="IconContainer">
-        {props.type === "holding" ? (
+        {type === "company" ? (
           <HomeRoundedIcon style={{ ...styleIcon, width: 17, height: 17 }} />
-        ) : props.type === "company" ? (
-          clicked ? (
+        ) : type === "software" ? (
+          selected ? (
             <FiberManualRecordRoundedIcon
               style={{
                 ...styleIcon,
                 color:
-                  detail.company && detail.company.id === props.id
+                  type === 'software' && selected
                     ? theme.on_primary
                     : theme.arrows_color,
                 width: 12,
