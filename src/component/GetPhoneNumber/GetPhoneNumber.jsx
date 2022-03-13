@@ -26,6 +26,7 @@ const GetPhoneNumber = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const token = useSelector((state) => state.auth.token);
+  const holdingDetail = useSelector((state) => state.holdingDetail);
   const maxLength = 10;
 
   const closeModal = () => {
@@ -73,7 +74,7 @@ const GetPhoneNumber = (props) => {
       const resultSearchUser = await axios.post(
         `${baseUrl}api/search_user_employee`,
         {
-          holdingId: "2e010adffd1a4ea88f8f3e7b026ce048",
+          holdingId: holdingDetail.id,
           phone: `${resultCountry.dial_code === "+98" ? "0" : resultCountry.dial_code}${phone}`
         },
         { headers: { "auth-token": token } }

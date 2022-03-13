@@ -112,5 +112,7 @@ export const stringFa = {
   confirm_password_error: "با رمز عبور مطابقت ندارد",
   name_and_family: "نام و نام خانوادگی",
   name_and_family_error: "ناو و نام خانوادگی باید دارای حداقل 1 حرف باشد",
-  admin:'مدیر'
+  admin:'مدیر',
+  personal_information: "اطلاعات شخصی",
+  other: "سایر"
 };
