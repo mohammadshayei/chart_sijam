@@ -4,13 +4,14 @@ import { useTheme } from '../../../../../styles/ThemeProvider';
 import { IoIosSearch } from "react-icons/io";
 import Input from '../../../../../component/UI/Input/Input';
 import { stringFa } from '../../../../../assets/strings/stringFaCollection';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import UserItem from './UserItem/UserItem';
 import ErrorDialog from '../../../../../component/UI/Error/ErrorDialog';
 import SkeletonTreeView from '../../../../../component/Skeletons/SkeletonTreeView';
 import { baseUrl } from '../../../../../constants/Config';
 import axios from 'axios';
 import AccessTreeView from './AccessTreeView/AccessTreeView';
+import * as holdingActions from "../../../../../store/actions/holdingDetail";
 
 const BodyContentUserAccessChart = () => {
     const themeState = useTheme();
@@ -20,40 +21,71 @@ const BodyContentUserAccessChart = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [userAccess, setUserAccess] = useState(null);
 
-
-    const holdingDetail = useSelector((state) => state.holdingDetail);
+    const { selectedHolding, employees } = useSelector((state) => state.holdingDetail);
     const token = useSelector((state) => state.auth.token);
+    const dispatch = useDispatch();
 
-    useEffect(async () => {
+    const setEmployees = (employees) => {
+        dispatch(holdingActions.setEmployees(employees));
+    };
+    useEffect(() => {
         if (!selectedUser) return;
+        let controller = new AbortController();
         const paylaod = {
-            holdingId: holdingDetail.id,
+            holdingId: selectedHolding.holdingId,
             userId: selectedUser._id,
         };
-        setLoading(true)
-        try {
-            setError(null)
-            const resultGetAccessEmployee = await axios.post(
-                `${baseUrl}api/get_access_employee`,
-                paylaod,
-                { headers: { "auth-token": token } }
-            );
-            if (resultGetAccessEmployee.data.success) {
-                setUserAccess(resultGetAccessEmployee.data.result.data);
-            }
-            else
+        (async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const resultGetAccessEmployee = await axios.post(
+                    `${baseUrl}api/get_access_employee`,
+                    paylaod,
+                    { headers: { "auth-token": token } }
+                );
+                if (resultGetAccessEmployee.data.success) {
+                    setUserAccess(resultGetAccessEmployee.data.result.data);
+                }
+                else
+                    setError(
+                        <ErrorDialog onClose={setError}>{resultGetAccessEmployee.data.result.message}</ErrorDialog>
+                    )
+                controller = null
+            } catch (e) {
                 setError(
-                    <ErrorDialog onClose={setError}>{resultGetAccessEmployee.data.result.message}</ErrorDialog>
+                    <ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>
                 )
-        } catch (error) {
-            setError(
-                <ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>
-            )
-        }
-        setLoading(false)
+            }
+            setLoading(false)
+
+        })();
+        return () => controller?.abort();
     }, [selectedUser]);
 
-
+    useEffect(() => {
+        if (!selectedHolding) return;
+        let controller = new AbortController();
+        (async () => {
+            try {
+                setLoading(true)
+                const resultFetchingUsers = await axios.post(
+                    `${baseUrl}api/get_employees`,
+                    { id: selectedHolding.holdingId },
+                    { headers: { "auth-token": token } }
+                );
+                if (resultFetchingUsers.data.success)
+                    setEmployees({ employees: resultFetchingUsers.data.result.employees })
+                else
+                    setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
+                setLoading(false)
+                controller = null
+            } catch (e) {
+                setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+            }
+        })();
+        return () => controller?.abort();
+    }, [selectedHolding]);
     return (
         <div className="user-access-chart-container">
             {error}
@@ -73,9 +105,9 @@ const BodyContentUserAccessChart = () => {
                         </div>
                     </div>
                     <div className="users-list-container">
-                        {holdingDetail.employees &&
-                            holdingDetail.employees.length > 0 &&
-                            holdingDetail.employees.map((employee) => (
+                        {employees &&
+                            employees.length > 0 &&
+                            employees.map((employee) => (
                                 <UserItem
                                     key={employee.user._id}
                                     data={employee}

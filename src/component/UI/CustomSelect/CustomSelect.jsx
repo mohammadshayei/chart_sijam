@@ -1,6 +1,7 @@
 import React from 'react'
 import './CustomSelect.scss'
 import { useTheme } from '../../../styles/ThemeProvider';
+import { stringFa } from '../../../assets/strings/stringFaCollection';
 
 const CustomSelect = (props) => {
     const themeState = useTheme();
@@ -24,6 +25,15 @@ const CustomSelect = (props) => {
                 }}
                 value={props.selectedItem}
                 onChange={props.onSelectChangeHandler}>
+                {
+                    props.needDefaultOption&&<option style={{
+                        backgroundColor: themeState.isDark
+                            ? "black"
+                            : "white",
+                        color: theme.on_background,
+                    }} value="" defaultValue={''}>
+                        {stringFa.select}</option>
+                }
                 {props.items && props.items.map((option) => (
                     props.path ?
                         <option key={option[props.path][props.keyField]}

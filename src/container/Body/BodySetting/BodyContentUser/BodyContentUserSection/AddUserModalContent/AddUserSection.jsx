@@ -14,7 +14,7 @@ const AddUserSection = (props) => {
     const themeState = useTheme();
     const theme = themeState.computedTheme;
     const token = useSelector((state) => state.auth.token);
-    const holdingDetail = useSelector((state) => state.holdingDetail);
+    const {selectedHolding}  = useSelector((state) => state.holdingDetail);
 
     const dispatch = useDispatch();
     const addEmployee = (employee) => {
@@ -27,7 +27,7 @@ const AddUserSection = (props) => {
             const resultAddUser = await axios.post(
                 `${baseUrl}api/add_employee`,
                 {
-                    holdingId: holdingDetail.id,
+                    holdingId: selectedHolding.holdingId,
                     phone: `${props.phone}`,
                 },
                 { headers: { "auth-token": token } }

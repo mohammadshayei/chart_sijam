@@ -18,7 +18,6 @@ const setBanks = (state, action) => {
   let updatedBanks = [...state.banks];
   if (action.mode !== "add" && action.mode !== "sub") return { ...state };
   if (action.mode === "add") {
-    console.log(action.banks);
     action.banks.forEach((item) => {
       if (state.banks.findIndex((bnk) => bnk._id === item._id) < 0)
         updatedBanks.push({ ...item, selected: false });

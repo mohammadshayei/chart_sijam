@@ -7,137 +7,67 @@ import { useTheme } from '../../../../../../styles/ThemeProvider'
 import { stringFa } from '../../../../../../assets/strings/stringFaCollection'
 import CheckBox from '../../../../../../component/UI/CheckBox/CheckBox'
 import Loading from '../../../../../../component/UI/Loading/Loading'
-import CustomSelect from '../../../../../../component/UI/CustomSelect/CustomSelect'
 const BodyContentPermissonView = () => {
-    const [multiHolding, setMultiHolding] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [selectedHolding, setSelectedHolding] = useState('')
-    const [fethedHoldings, setFethedHoldings] = useState([])
-    const [holdingDetail, setHoldingDetail] =
-        useState({
-            name: '',
-            image: '',
-            id: ''
-        })
     const [labels, setLabels] = useState(null)
-        
+
+    const token = useSelector(state => state.auth.token)
+    const { selectedHolding } = useSelector(state => state.holdingDetail)
+
     const order = [{
         title: 'صفحه شخصی سازی',
-        path: ['setting', 'customization'],
+        path: ['customization'],
     },
     {
         title: 'صفحه کاربران',
-        path: ['setting', 'users'],
+        path: ['users'],
     },
     {
         title: 'صفحه دسترسی ها',
-        path: ['setting', 'permissions'],
+        path: ['permissions'],
     },
     {
-        title: 'ایجاد نمودار',
-        path: ['chart', 'create'],
+        title: 'نمودار',
+        path: ['chart'],
     },
     {
-        title: 'تغییر نمودار',
-        path: ['chart', 'edit'],
-    },
-    {
-        title: 'ایجاد برچسب',
-        path: ['label', 'create'],
-    },
-    {
-        title: 'تغییر برچسب',
-        path: ['label', 'edit'],
-    },
-    {
-        title: 'ایجاد کاربر',
-        path: ['user', 'create'],
-    },
-    {
-        title: 'تغییر کاربر',
-        path: ['user', 'edit'],
-    },
-    {
-        title: 'جستوجو کاربر',
-        path: ['user', 'search'],
-    },
-    {
-        title: 'حذف کاربر',
-        path: ['user', 'delete'],
+        title: 'برچسب',
+        path: ['label'],
     },
     ]
 
+
     const themeState = useTheme();
     const theme = themeState.computedTheme;
-    const user = useSelector(state => state.auth.user)
-    const token = useSelector(state => state.auth.token)
 
     useEffect(() => {
-        if (user && user.is_fekrafzar) {
-            setMultiHolding(true)
-        } else {
-            setMultiHolding(false)
-        }
-    }, [user])
-    const onSelectChangeHandler = e => {
-        setSelectedHolding(e.target.value)
-        const holding = fethedHoldings.find(item => item.name === e.target.value)
-        setHoldingDetail({
-            name: holding.name,
-            image: holding.image,
-            id: holding.id,
-        })
+        let controller = new AbortController();
+        if (!selectedHolding || !token) return;
+        (async () => {
+            try {
+                setLoading(true);
+                const resultFetchingLabels = await axios.post(
+                    `${baseUrl}api/get_holding_labels`,
+                    { holdingId: selectedHolding.holdingId },
+                    { headers: { "auth-token": token } }
+                );
+                setLabels(resultFetchingLabels.data.labels);
+                controller = null
+                setLoading(false);
 
-    }
-    useEffect(async () => {
-        if (multiHolding) {
-            setLoading(true);
-            const resultFetchingHoldings = await axios.get(`${baseUrl}api/get_holdings`, { headers: { 'auth-token': token } });
-            setFethedHoldings(resultFetchingHoldings.data.message.result)
-            setHoldingDetail({
-                name: resultFetchingHoldings.data.message.result[0].name,
-                image: resultFetchingHoldings.data.message.result[0].image,
-                id: resultFetchingHoldings.data.message.result[0].id,
-            })
-            setLoading(false);
+            } catch (e) {
+            }
+        })();
+        return () => controller?.abort();
+    }, [selectedHolding, token]);
 
-        }
-    }, [multiHolding])
-
-    useEffect(async () => {
-        if (holdingDetail && holdingDetail.id) {
-            setLoading(true);
-            const resultFetchingLabels = await axios.post
-                (`${baseUrl}api/get_holding_labels`, { holdingId: holdingDetail.id }, { headers: { 'auth-token': token } });
-            setLabels(resultFetchingLabels.data.labels)
-
-            setLoading(false);
-        }
-    }, [holdingDetail])
     const trBodyStyle = {
         borderColor: '#dddddd',
         backgroundColor: theme.table_background,
     }
+    console.log(labels)
     return (
         <div className='body-content-permission-view-container'>
-
-            {
-                multiHolding &&
-                <>
-                    <CustomSelect
-                        title={stringFa.select_holding}
-                        selectedItem={selectedHolding}
-                        items={fethedHoldings}
-                        onSelectChangeHandler={onSelectChangeHandler}
-                        style={{ marginBottom: "1rem" }}
-                        keyField='code'
-                        valueField='name'
-                    />
-                    <div className='seprator'
-                        style={{ backgroundColor: theme.hover_button }}
-                    />
-                </>
-            }
             <h4 className='permission-title'>
                 {stringFa.permissions}
             </h4>
@@ -177,7 +107,7 @@ const BodyContentPermissonView = () => {
                                             {
                                                 labels.map((item) =>
                                                     <td key={item._id}>
-                                                        <CheckBox checked={item.label[v.path[0]][v.path[1]]} />
+                                                        <CheckBox checked={item.label[v.path[0]]} />
                                                     </td>
                                                 )
                                             }

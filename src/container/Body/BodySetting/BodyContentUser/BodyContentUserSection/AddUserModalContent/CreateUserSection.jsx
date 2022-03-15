@@ -93,7 +93,7 @@ const CreateUserSection = (props) => {
 
     const imageRef = useRef(null);
     const token = useSelector((state) => state.auth.token);
-    const holdingDetail = useSelector((state) => state.holdingDetail);
+    const { selectedHolding } = useSelector((state) => state.holdingDetail);
 
     const dispatch = useDispatch();
     const addEmployee = (employee) => {
@@ -164,7 +164,7 @@ const CreateUserSection = (props) => {
             username: orderAuth.orderForm.username.value,
             password: orderAuth.orderForm.password.value,
             phone: props.phone,
-            holdingId: holdingDetail.id,
+            holdingId: selectedHolding.holdingId,
             labelId: selectedLabel,
         };
         try {
@@ -207,18 +207,24 @@ const CreateUserSection = (props) => {
         imageRef.current.click();
     }, [])
 
-    useEffect(async () => {
-        // setLoading(true);
-        const resultFetchingLabels = await axios.post(
-            `${baseUrl}api/get_holding_labels`,
-            { holdingId: holdingDetail.id },
-            { headers: { "auth-token": token } }
-        );
+    useEffect(() => {
+        let controller = new AbortController();
+        if (!selectedHolding || !token) return;
+        (async () => {
+            try {
+                const resultFetchingLabels = await axios.post(
+                    `${baseUrl}api/get_holding_labels`,
+                    { holdingId: selectedHolding.holdingId },
+                    { headers: { "auth-token": token } }
+                );
 
-        setLabels(resultFetchingLabels.data.labels);
-        // setLoading(false);
-
-    }, []);
+                setLabels(resultFetchingLabels.data.labels);
+                controller = null
+            } catch (e) {
+            }
+        })();
+        return () => controller?.abort();
+    }, [selectedHolding, token]);
 
     return <div className="create-user-section">
         <div className="image-wrapper">

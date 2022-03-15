@@ -34,7 +34,6 @@ const BodyContentPermision = (props) => {
                 break;
 
             default:
-            case '1':
                 setBody(<BodycontentPermissonView />)
                 break;
         }
@@ -53,7 +52,6 @@ const BodyContentPermision = (props) => {
         <div className='body-content-permission-container'>
             <HeaderSetting pageIndex={3} onClick={onItemClickHandler} data={headerOrder} />
             <div className='body-content-permission-body'>
-
                 {body}
             </div>
         </div>

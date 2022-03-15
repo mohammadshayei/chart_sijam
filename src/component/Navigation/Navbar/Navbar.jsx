@@ -39,10 +39,6 @@ const Navbar = (props) => {
             setHoldings(result.data)
             if (result.data.length > 0)
               setSelectedHolding(result.data[0])
-            const res = await getAccessHolding({ userId, holdingId: result.data[0].holdingId }, token)
-            if (res.success){
-              setHoldingAccess(res.data)
-            }
             else {
               setError(null)
               setError(<ErrorDialog type="error">{result.error}</ErrorDialog>)

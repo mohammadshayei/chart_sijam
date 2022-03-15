@@ -19,14 +19,18 @@ import SkeletonUserRow from "../../../../../component/Skeletons/SkeletonUserRow"
 import * as holdingActions from "../../../../../store/actions/holdingDetail";
 
 const BodyContentUserSection = () => {
-  const [multiHolding, setMultiHolding] = useState(false);
   const [loading, setLoading] = useState(false);
   const [removeLoading, setRemoveLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedHolding, setSelectedHolding] = useState("");
-  const [fethedHoldings, setFethedHoldings] = useState([]);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [userSearch, setUserSearch] = useState("");
+  const [selectedLabel, setSelectedLabel] = useState({
+    name: "",
+    id: "",
+  });
+  const [filteredEmployees, setFilteredEmployees] = useState(null);
+  const [labels, setLabels] = useState(null);
+
   const order = [
     {
       title: "نام کاربری",
@@ -43,54 +47,30 @@ const BodyContentUserSection = () => {
       path: ["label", "name"],
       componentNumber: 3,
     },
-    // {
-    //   title: "نام شرکت",
-    //   path: ["company_id", "name"],
-    //   componentNumber: 4,
-    // },
-    // {
-    //   title: "موقعیت شغلی",
-    //   path: ["position_name"],
-    //   componentNumber: 4,
-    // },
   ];
-  const [selectedLabel, setSelectedLabel] = useState({
-    name: "",
-    id: "",
-  });
-  const [users, setUsers] = useState(null);
-  const [labels, setLabels] = useState(null);
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const holdingDetails = useSelector((state) => state.holdingDetail);
+
+  const { selectedHolding, employees } = useSelector((state) => state.holdingDetail);
 
   const dispatch = useDispatch();
+
   const setEmployees = (employees) => {
     dispatch(holdingActions.setEmployees(employees));
   };
   const removeEmployee = (userId) => {
     dispatch(holdingActions.removeEmployee(userId));
   };
-  const setHoldingId = (id) => {
-    dispatch(holdingActions.setHoldingId(id));
-  };
-
-  useEffect(() => {
-    if (user && user.is_fekrafzar) {
-      setMultiHolding(true);
-    } else {
-      setMultiHolding(false);
-    }
-  }, [user]);
-  const onSelectHoldingChangeHandler = (e) => {
-    setSelectedHolding(e.target.value);
-    const holding = fethedHoldings.find((item) => item.name === e.target.value);
-    setHoldingId({ id: holding.id, name: holding.name })
-  };
   const onSelectLabelChangeHandler = (e) => {
-    setSelectedHolding(e.target.value);
+    if (e.target.value === '') {
+      setSelectedLabel({
+        name: '',
+        id: '',
+      });
+      return;
+    }
     const labelFinded = labels.find(
       (item) => item.label.name === e.target.value
     );
@@ -107,7 +87,7 @@ const BodyContentUserSection = () => {
     let selected = e.target.value;
     let findedLabel = labels.find((item) => item.label.name === selected);
     const paylaod = {
-      holdingId: holdingDetails.id,
+      holdingId: selectedHolding.holdingId,
       userId: userId,
       labelId: findedLabel.label._id,
     };
@@ -119,7 +99,7 @@ const BodyContentUserSection = () => {
         { headers: { "auth-token": token } }
       );
       if (resultEditedLabel.data.success) {
-        let updatedEmployees = holdingDetails.employees.map((employee) => {
+        let updatedEmployees = employees.map((employee) => {
           if (employee.user._id === userId)
             return {
               ...employee,
@@ -142,7 +122,7 @@ const BodyContentUserSection = () => {
   const removeUserHandler = async (userId) => {
     setRemoveLoading(true)
     const paylaod = {
-      holdingId: holdingDetails.id,
+      holdingId: selectedHolding.holdingId,
       userId: userId,
     };
     setError(null)
@@ -170,46 +150,50 @@ const BodyContentUserSection = () => {
   const closeModal = () => {
     setAddUserOpen(false);
   };
-  useEffect(async () => {
-    if (multiHolding) {
-      setLoading(true);
-      const resultFetchingHoldings = await axios.get(
-        `${baseUrl}api/get_holdings`,
-        { headers: { "auth-token": token } }
-      );
-      setFethedHoldings(resultFetchingHoldings.data.message.result);
-      setHoldingId({
-        id: resultFetchingHoldings.data.message.result[0].id,
-        name: resultFetchingHoldings.data.message.result[0].name
-      })
-      setLoading(false);
-    }
-  }, [multiHolding]);
-  useEffect(async () => {
-    if (holdingDetails && holdingDetails.id) {
-      setLoading(true);
-      const resultFetchingLabels = await axios.post(
-        `${baseUrl}api/get_holding_labels`,
-        { holdingId: holdingDetails.id },
-        { headers: { "auth-token": token } }
-      );
-      setLabels(resultFetchingLabels.data.labels);
+
+  useEffect(() => {
+    if (!selectedHolding) return;
+    let controller = new AbortController();
+    (async () => {
       try {
+        setLoading(true)
+        const resultFetchingLabels = await axios.post(
+          `${baseUrl}api/get_holding_labels`,
+          { holdingId: selectedHolding.holdingId },
+          { headers: { "auth-token": token } }
+        );
+        setLabels([...resultFetchingLabels.data.labels]);
         const resultFetchingUsers = await axios.post(
           `${baseUrl}api/get_employees`,
-          { id: holdingDetails.id },
+          { id: selectedHolding.holdingId },
           { headers: { "auth-token": token } }
         );
         if (resultFetchingUsers.data.success)
           setEmployees({ employees: resultFetchingUsers.data.result.employees })
         else
           setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
-      } catch (error) {
+        setLoading(false)
+        controller = null
+      } catch (e) {
         setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
       }
-      setLoading(false);
+    })();
+    return () => controller?.abort();
+  }, [selectedHolding]);
+
+
+  useEffect(() => {
+    if (!employees) return;
+    let updatedEmployees = [...employees]
+    if (selectedLabel.id !== '') {
+      updatedEmployees = updatedEmployees.filter(item => item.label._id === selectedLabel.id)
     }
-  }, [holdingDetails.id]);
+    if (userSearch) {
+      updatedEmployees = updatedEmployees.filter(item => new RegExp("^" + userSearch, 'i').test(item.user.username))
+    }
+    setFilteredEmployees(updatedEmployees)
+  }, [employees, userSearch, selectedLabel])
+
   return (
     <div className="body-content-user-section-container">
       {error}
@@ -217,23 +201,6 @@ const BodyContentUserSection = () => {
         style={{ width: "fit-content" }}>
         <AddUserModalContent close={closeModal} />
       </Modal>
-      {multiHolding && (
-        <>
-          <CustomSelect
-            title={stringFa.select_holding}
-            selectedItem={selectedHolding}
-            items={fethedHoldings}
-            onSelectChangeHandler={onSelectHoldingChangeHandler}
-            style={{ marginBottom: "1rem" }}
-            keyField="code"
-            valueField="name"
-          />
-          <div
-            className="seprator"
-            style={{ backgroundColor: theme.hover_button }}
-          />
-        </>
-      )}
       <div className="body-content-user-filter-section">
         <div className="body-content-user-filter-section-search">
           <p>{stringFa.username}</p>
@@ -269,10 +236,11 @@ const BodyContentUserSection = () => {
           selectedItem={selectedLabel.name}
           items={labels && labels}
           onSelectChangeHandler={onSelectLabelChangeHandler}
-          style={{ marginBottom: "1rem", width: "10rem" }}
+          style={{ marginBottom: "1rem", width: "15rem" }}
           keyField="_id"
           valueField="name"
           path="label"
+          needDefaultOption={true}
         />
         <div className="button-add-container">
           <StyledButton
@@ -291,7 +259,7 @@ const BodyContentUserSection = () => {
         </div>
       </div>
       <p style={{ fontSize: "14px" }}>
-        تعداد نتایج : {holdingDetails.employees ? holdingDetails.employees.length : 0}
+        تعداد نتایج : {employees ? employees.length : 0}
       </p>
       <div className="table-container">
         <table
@@ -328,9 +296,9 @@ const BodyContentUserSection = () => {
                   ))}
                 </tr>))
               :
-              (holdingDetails.employees &&
-                holdingDetails.employees.length > 0 &&
-                holdingDetails.employees.map((v) => (
+              (filteredEmployees &&
+                filteredEmployees.length > 0 &&
+                filteredEmployees.map((v) => (
                   <tr key={v.user._id}>
                     {order.map((item) => (
                       <td key={item.title}>

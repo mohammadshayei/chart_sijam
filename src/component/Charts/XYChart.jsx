@@ -101,7 +101,8 @@ const XYChart = React.memo((props) => {
         categoryAxis.renderer.labels.template.adapter.add(
           "textOutput",
           function (text) {
-            return text.replace(/ \(.*/, "");
+            if (typeof text === 'string')
+              return text.replace(/ \(.*/, "");
           }
         );
 

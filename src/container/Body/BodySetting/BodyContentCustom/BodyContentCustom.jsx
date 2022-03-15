@@ -11,60 +11,32 @@ import { baseUrl } from '../../../../constants/Config';
 import ErrorDialog from '../../../../component/UI/Error/ErrorDialog';
 import ButtonIconAndLoading from '../../../../component/UI/Button/ButtonIconAndLoading/ButtonIconAndLoading.jsx'
 import { useTheme } from '../../../../styles/ThemeProvider'
-import CustomSelect from '../../../../component/UI/CustomSelect/CustomSelect';
+import * as holdingActions from "../../../../store/actions/holdingDetail";
+import { useDispatch } from 'react-redux';
 
 const BodyContentCustom = (props) => {
-    const [selectedHolding, setSelectedHolding] = useState('')
-    const [isFekrafzar, setIsFekrafzar] = useState(false)
-    const [fethedHoldings, setFethedHoldings] = useState([])
     const [logoUploaded, setLogoUploaded] = useState(null)
     const [msg, setMsg] = useState(null)
-    const [holdingDetail, setHoldingDetail] =
-        useState({
-            name: '',
-            image: '',
-            id: ''
-        })
-    //loading for fetching holdings where user is fekrafzar
-    const [isLoading, setIsLoading] = useState(false)
-    //loading for buttons 
+    const [name, setName] = useState('')
     const [loadingState, setLoadingState] =
         useState({
             loading: false,
             name: ''
         })
 
-
+    const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
+    const token = useSelector(state => state.auth.token)
+    
+    const dispatch = useDispatch();
+    const imageRef = useRef()
+    
     const themeState = useTheme();
     const theme = themeState.computedTheme;
-    const user = useSelector(state => state.auth.user)
-    const token = useSelector(state => state.auth.token)
 
-    const imageRef = useRef()
+    const editHodlingInfo = (payload) => {
+        dispatch(holdingActions.editHodlingInfo(payload));
+    };
 
-
-
-    useEffect(() => {
-        if (user && user.is_fekrafzar) {
-            setIsFekrafzar(true)
-        } else {
-            setIsFekrafzar(false)
-        }
-    }, [user])
-    useEffect(async () => {
-        if (isFekrafzar) {
-            setIsLoading(true);
-            const resultFetchingHoldings = await axios.get(`${baseUrl}api/get_holdings`, { headers: { 'auth-token': token } });
-            setFethedHoldings(resultFetchingHoldings.data.message.result)
-            setIsLoading(false);
-            setHoldingDetail({
-                name: resultFetchingHoldings.data.message.result[0].name,
-                image: resultFetchingHoldings.data.message.result[0].image,
-                id: resultFetchingHoldings.data.message.result[0].id,
-            })
-
-        }
-    }, [isFekrafzar])
     const onChangeLogoClickHandler = useCallback(() => {
         imageRef.current.click();
     }, [])
@@ -82,7 +54,7 @@ const BodyContentCustom = (props) => {
         );
         formData.append(
             "holdingId",
-            holdingDetail.id,
+            selectedHolding.holdingId,
         );
         const reaultUploadImage = await axios.post(
             `${baseUrl}api/upload_holding_image`,
@@ -105,8 +77,7 @@ const BodyContentCustom = (props) => {
         }
 
         setLogoUploaded(URL.createObjectURL(event.target.files[0]))
-        const updatedHoldingDetail = { ...holdingDetail, image: event.target.files[0] }
-        setHoldingDetail(updatedHoldingDetail)
+        editHodlingInfo({ value: event.target.files[0], mode: 'image' })
         setMsg(
             <ErrorDialog
                 onClose={setMsg}
@@ -124,7 +95,7 @@ const BodyContentCustom = (props) => {
             loading: true
         })
         const resultEditHoldingName = await axios.post
-            (`${baseUrl}api/edit_holding_name`, { holdingId: holdingDetail.id, holdingName: holdingDetail.name }
+            (`${baseUrl}api/edit_holding_name`, { holdingId: selectedHolding.holdingId, holdingName: name }
                 , { headers: { 'auth-token': token } });
         if (!resultEditHoldingName.data.success) {
             setMsg(
@@ -140,13 +111,7 @@ const BodyContentCustom = (props) => {
             })
             return
         }
-        const updatedFetchedHoldings = [...fethedHoldings];
-        let holingIndex = fethedHoldings.findIndex(item => item.name === holdingDetail.name)
-        const editedHolding = { ...holdingDetail };
-        updatedFetchedHoldings.splice(holingIndex - 1, 1)
-        updatedFetchedHoldings.splice(holingIndex, 0, editedHolding)
-        setFethedHoldings(updatedFetchedHoldings)
-        setSelectedHolding(holdingDetail.name)
+        editHodlingInfo({ value: name, mode: 'name' })
         setMsg(
             <ErrorDialog
                 onClose={setMsg}
@@ -158,60 +123,32 @@ const BodyContentCustom = (props) => {
             loading: false
         })
     }
-    const onSelectChangeHandler = e => {
-        setLogoUploaded(null)
-        setSelectedHolding(e.target.value)
-        const holding = fethedHoldings.find(item => item.name === e.target.value)
-        setHoldingDetail({
-            name: holding.name,
-            image: holding.image,
-            id: holding.id,
-        })
-    }
     const onEditHoldingNameChangeHandler = event => {
-        const updatedHoldingDetail = { ...holdingDetail, name: event.target.value }
-        setHoldingDetail(updatedHoldingDetail)
-        // setHoldingDetail
-
+        setName(event.target.value)
     }
     return (
         <div className='body-content-custom-container'>
             {msg}
-            {
-                isFekrafzar &&
-                <>
-                    <CustomSelect
-                        title={stringFa.select_holding}
-                        selectedItem={selectedHolding}
-                        items={fethedHoldings}
-                        onSelectChangeHandler={onSelectChangeHandler}
-                        style={{ marginBottom: "1rem" }}
-                        keyField='code'
-                        valueField='name'
-                    />
-                    <div className='seprator'
-                        style={{ backgroundColor: theme.hover_button }}
-                    />
-                </>
-            }
-
             <h3 className='brand-title'> {stringFa.create_your_brand}</h3>
-            <div className='body-content-custom-logo-container'>
-                <h4 className='main-menu-log'>
-                    {stringFa.main_menu_logo}
-                </h4>
-                <img src={holdingDetail.image !== '' ?
-                    logoUploaded ? logoUploaded : `${baseUrl}uploads/${holdingDetail.image}` : IMAGE} alt='logo' />
-                <p className='recommended-logo-size'> {stringFa.recommended_logo_size}</p>
-                <input type="file" style={{ display: 'none' }} ref={imageRef} onChange={onLogoImageChangHandler} />
-                <ButtonIconAndLoading
-                    title={stringFa.change_logo}
-                    onClick={onChangeLogoClickHandler}
-                    isCancel={false}
-                    icon={<MdModeEdit style={{ marginLeft: ".4rem" }} />}
-                    loading={loadingState.name === 'logo' && loadingState.loading}
-                />
-            </div>
+            {
+                selectedHolding &&
+                <div className='body-content-custom-logo-container'>
+                    <h4 className='main-menu-log'>
+                        {stringFa.main_menu_logo}
+                    </h4>
+                    <img src={selectedHolding.holdingImage !== '' ?
+                        logoUploaded ? logoUploaded : `${baseUrl}uploads/${selectedHolding.holdingImage}` : IMAGE} alt='logo' />
+                    <p className='recommended-logo-size'> {stringFa.recommended_logo_size}</p>
+                    <input type="file" style={{ display: 'none' }} ref={imageRef} onChange={onLogoImageChangHandler} />
+                    <ButtonIconAndLoading
+                        title={stringFa.change_logo}
+                        onClick={onChangeLogoClickHandler}
+                        isCancel={false}
+                        icon={<MdModeEdit style={{ marginLeft: ".4rem" }} />}
+                        loading={loadingState.name === 'logo' && loadingState.loading}
+                    />
+                </div>
+            }
 
             <div className='body-content-custom-title-container'>
                 <h4 className='main-menu-log'>
@@ -219,7 +156,7 @@ const BodyContentCustom = (props) => {
                 </h4>
                 <input
                     className="editable-input"
-                    value={holdingDetail.name}
+                    value={name}
                     onChange={onEditHoldingNameChangeHandler}
                 // onKeyDown={setTitleHandler}
                 // style={{ borderColor: error ? "red" : "" }}

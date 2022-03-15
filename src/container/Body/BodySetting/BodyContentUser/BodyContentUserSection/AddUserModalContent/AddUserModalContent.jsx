@@ -33,6 +33,9 @@ const AddUserModalContent = (props) => {
                 setPage(<GetPhoneNumber setPage={setPageIndex} setOtp={setOtp} setError={setError} setPhone={setPhoneNumber} />)
                 break;
         }
+        return () => {
+            setPage(null)
+        }
     }, [pageIndex])
 
     return (

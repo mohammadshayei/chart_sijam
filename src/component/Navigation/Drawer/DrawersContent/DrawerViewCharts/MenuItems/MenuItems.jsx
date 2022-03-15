@@ -13,7 +13,7 @@ const MenuItems = () => {
   const [error, setError] = useState(null);
 
   const holdingAccess = useSelector((state) => state.auth.holdingAccess);
-  const { selectedSoftwares, selectedActiveBackups } = useSelector((state) => state.detail);
+  const { selectedSoftwares, selectedActiveBackups, selectedBanks } = useSelector((state) => state.detail);
 
   const setBanks = (banks, mode) => {
     dispatch(detailActions.setBanks(banks, mode));
@@ -31,6 +31,7 @@ const MenuItems = () => {
   const onMenuClickHanlder = (_id, selected, parents) => {
     let updatedData = [...data]
     let payload = { key: '', value: "", parents: [] };
+    //comapny selected
     if (parents.length === 0) {
       let findedCompanyIndex = updatedData.findIndex(cmp => cmp._id === _id)
       if (findedCompanyIndex < 0) return;
@@ -54,7 +55,9 @@ const MenuItems = () => {
         removedChildSelectedMenuItems({ _id, level: 1 })
       }
       changeSelectedMenuItems(payload)
-    } else if (parents.length === 1) {
+    }
+    //software selcted
+    else if (parents.length === 1) {
       let findedCompanyIndex = updatedData.findIndex(cmp => cmp._id === parents[0])
       if (findedCompanyIndex < 0) return;
       payload = { key: "selectedCompanies", value: parents[0], mode: 'sub' }
@@ -69,13 +72,13 @@ const MenuItems = () => {
       else {
         payload = { key: "selectedSoftwares", value: _id, mode: 'sub' }
         changeSelectedMenuItems(payload)
-        let existCount = selectedSoftwares.filter(item => item.parents[0] === parents[0])
-        console.log(existCount)
-        if (existCount.length <= 1) {
+        let existCountSoftware = selectedSoftwares.filter(item => item.parents[0] === parents[0])
+        let existCountActiveBackup = selectedActiveBackups.filter(item => item.parents[0] === parents[0] && item.parents[1] !== _id)
+        let existCountBank = selectedBanks.filter(item => item.parents[0] === parents[0] && item.parents[1] !== _id)
+        if ((existCountSoftware.length === 0 || existCountSoftware.length === 1 && existCountSoftware[0].value === _id) && existCountActiveBackup.length === 0 && existCountBank.length === 0) {
           payload = { key: "selectedCompanies", value: parents[0], parents: '', mode: 'add' }
           changeSelectedMenuItems(payload)
         }
-
         updatedData[findedCompanyIndex].softwares[findedSoftwareIndex].active_backups = updatedData[findedCompanyIndex].softwares[findedSoftwareIndex].active_backups.map(acb => {
           return {
             ...acb,
@@ -86,6 +89,7 @@ const MenuItems = () => {
 
       }
     }
+    // active backup selected
     else if (parents.length === 2) {
       let findedCompanyIndex = updatedData.findIndex(cmp => cmp._id === parents[0])
       if (findedCompanyIndex < 0) return;
@@ -104,14 +108,16 @@ const MenuItems = () => {
       else {
         payload = { key: "selectedActiveBackups", value: _id, mode: 'sub' }
         changeSelectedMenuItems(payload)
-        let existCount = selectedActiveBackups.filter(item => item.parents[1] === parents[1])
-        if (existCount.length <= 1) {
+
+        let existCountActiveBackup = selectedActiveBackups.filter(item => item.parents[1] === parents[1])
+        let existCountBank = selectedBanks.filter(item => item.parents[1] === parents[1] && item.parents[2] !== _id)
+        if ((existCountActiveBackup.length === 0 || existCountActiveBackup.length === 1 && existCountActiveBackup[0].value === _id)&& existCountBank.length === 0) {
           payload = { key: "selectedSoftwares", value: parents[1], parents: [parents[0]], mode: 'add' }
           changeSelectedMenuItems(payload)
         }
         setBanks(updatedData[findedCompanyIndex].softwares[findedSoftwareIndex].active_backups[findedActiveBackupIndex].banks, 'sub')
         removedChildSelectedMenuItems({ _id, level: 3 })
-        
+
       }
       // console.log(updatedData[findedCompanyIndex].softwares[findedSoftwareIndex].active_backups[findedActiveBackupIndex].banks)
     }
@@ -119,7 +125,7 @@ const MenuItems = () => {
   }
 
   useEffect(() => {
-    if (holdingAccess && holdingAccess.length > 0) {
+    if (holdingAccess) {
       let data = holdingAccess.map(
         (cmp) => {
           let softwares = cmp.softwares
@@ -158,9 +164,9 @@ const MenuItems = () => {
       setData(data)
     }
   }, [holdingAccess])
-
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    // if (!data || data.length === 0) return;
+    if (!data) return;
     let updatedOrders = []
     data.forEach(cmp => {
       updatedOrders.push({

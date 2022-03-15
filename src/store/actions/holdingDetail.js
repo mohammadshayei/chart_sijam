@@ -25,14 +25,7 @@ export const removeEmployee =
     });
   };
 
-export const setHoldingId =
-  ({ id }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_HOLDING_ID,
-      payload: { id },
-    });
-  };
+
 
 export const setHoldingInfo = (info) => (dispatch) => {
   dispatch({
@@ -44,5 +37,11 @@ export const setHoldings = (holdings) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_HOLDINGS,
     holdings,
+  });
+};
+export const editHodlingInfo = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.EDIT_HOLDING_INFO,
+    payload,
   });
 };

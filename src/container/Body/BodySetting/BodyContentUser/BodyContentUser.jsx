@@ -24,19 +24,26 @@ const BodyContentUser = () => {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const section = searchParams.get("s");
+        const udpatedHeaderOrder = { ...headerOrder }
         switch (section) {
             case '1':
                 setBody(<BodyContentUserSection />)
+                udpatedHeaderOrder.view.selected = true
+                udpatedHeaderOrder.add.selected = false
                 break;
             case '2':
                 setBody(<BodyContentUserAccessChart />)
+                udpatedHeaderOrder.view.selected = false
+                udpatedHeaderOrder.add.selected = true
                 break;
 
             default:
-            case '1':
                 setBody(<BodyContentUserSection />)
+                udpatedHeaderOrder.view.selected = true
+                udpatedHeaderOrder.add.selected = false
                 break;
         }
+        setHeaderOrder(headerOrder)
     }, [location])
     const onItemClickHandler = (e, key) => {
         const updatedHeaderOrder = { ...headerOrder }

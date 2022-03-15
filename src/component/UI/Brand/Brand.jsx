@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import "./Brand.scss";
 import IMAGE from "../../../assets/images/simamlogo.png";
 import SkeletonProfile from "../../Skeletons/SkeletonProfile";
@@ -10,13 +9,19 @@ import DropDown from "../DropDown/DropDown";
 import { baseUrl } from "../../../constants/Config";
 import { useDispatch } from "react-redux";
 import * as holdingActions from "../../../store/actions/holdingDetail";
+import * as authActions from "../../../store/actions/auth";
+
+import { getAccessHolding } from "../../../api/home";
 
 const Brand = (props) => {
   const [hover, setHover] = useState(false)
   const [openHoldings, setOpenHoldings] = useState(false)
   const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
   const holdings = useSelector((state) => state.holdingDetail.holdings);
+  const token = useSelector(state => state.auth.token)
+  const userId = useSelector(state => state.auth.userId)
   const ref = useRef()
 
   const themeState = useTheme();
@@ -25,6 +30,9 @@ const Brand = (props) => {
 
   const setSelectedHolding = (info) => {
     dispatch(holdingActions.setHoldingInfo(info));
+  };
+  const setHoldingAccess = (info) => {
+    dispatch(authActions.setHoldignAccess(info));
   };
   useEffect(() => {
     if (!holdings) return;
@@ -42,15 +50,38 @@ const Brand = (props) => {
     setOpenHoldings(true)
   }
 
-  const onSelectHoldingClickHandler = (id) => {
+  const onSelectHoldingClickHandler = async (id) => {
     if (!id) return;
     setOpenHoldings(false)
     setSelectedHolding(holdings.find(item => item.holdingId === id))
     setHover(false)
   }
   useEffect(() => {
+    if (!selectedHolding) return;
+    let controller = new AbortController();
+    (async () => {
+      try {
+        setLoading(true)
+        const res = await getAccessHolding({ userId, holdingId: selectedHolding.holdingId }, token)
+        if (res.success) {
+          setHoldingAccess(res.data)
+        } else {
+          console.log('error')
+        }
+        setLoading(false)
+        controller = null
+      } catch (e) {
+        // Handle fetch error
+      }
+    })();
+    return () => controller?.abort();
+  }, [selectedHolding])
+
+  useEffect(() => {
     if (!openHoldings && hover) setHover(false)
   }, [openHoldings])
+
+
   return (
     <div className="brand-container"
       style={{
@@ -70,7 +101,8 @@ const Brand = (props) => {
         {
           selectedHolding ?
             <>
-              <img src={IMAGE} alt="brand image" />
+              <img src={selectedHolding.holdingImage !== '' ?
+                `${baseUrl}uploads/${selectedHolding.holdingImage}` : IMAGE} alt='logo' />
               <span style={{ color: "#A49BFF" }}>{selectedHolding && selectedHolding.holdingName}</span>
               <BsChevronDown style={{
                 color: theme.border_color,

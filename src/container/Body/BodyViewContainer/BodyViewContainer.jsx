@@ -17,17 +17,22 @@ const PERIOD_INTRAVEL = 60000;
 
 const BodyViewContainer = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const token = useSelector((state) => state.auth.token);
   const [error, setError] = useState(null);
   const [createable, setCreateable] = useState(false);
-  const themeState = useTheme();
-  const theme = themeState.computedTheme;
-  const dispatch = useDispatch();
 
   const detail = useSelector((state) => state.detail);
   const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+  const holdingAccess = useSelector((state) => state.auth.holdingAccess);
+  const { selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks } = useSelector((state) => state.detail);
 
   const chartsData = useSelector((state) => state.chart);
+
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+
+  const dispatch = useDispatch();
+
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
@@ -43,75 +48,118 @@ const BodyViewContainer = (props) => {
     return Math.floor(diffInMs / (1000 * 60));
   }
 
-  useEffect(async () => {
-    clearCharts();
-    let result;
-    try {
-      if (detail.activeBackup) {
-        result = await axios.post(
-          `${baseUrl}api/get_charts`,
-          {
-            type: "4",
-            id: detail.activeBackup.id,
-          },
-          { headers: { "auth-token": token } }
-        );
-      } else if (detail.software) {
-        result = await axios.post(
-          `${baseUrl}api/get_charts`,
-          {
-            type: "3",
-            id: detail.software.id,
-          },
-          { headers: { "auth-token": token } }
-        );
-      } else if (detail.company) {
-        result = await axios.post(
-          `${baseUrl}api/get_charts`,
-          {
-            type: "2",
-            id: detail.company.id,
-          },
-          { headers: { "auth-token": token } }
-        );
-      } else if (detail.holding) {
-        result = await axios.post(
-          `${baseUrl}api/get_charts`,
-          {
-            type: "1",
-            id: detail.holding.id,
-          },
-          { headers: { "auth-token": token } }
-        );
-      }
-      setError(null);
-    } catch (error) {
-      setError(
-        <ErrorDialog onClose={setError}>خطا در دریافت نمودارها</ErrorDialog>
-      );
-    }
-    if (result) {
-      let receivedData = result.data.message.result;
-      let newChartsData = {};
-      receivedData.forEach((item) => {
-        newChartsData = {
-          ...newChartsData,
-          [item.chart._id]: {
-            title: item.chart.title,
-            type: item.chart.type,
-            data: item.chart.data,
-            options: item.chart.options,
-            config: item.chart.config,
-            parent: item.parent,
-            bankId: item.bankId,
-            lastBankUpdate: item.chart.data_updated_time,
-          },
-        };
-      });
-      setChartsData(newChartsData);
-    }
-  }, [detail.software, detail.holding, detail.company]);
 
+  useEffect(() => {
+    if (!holdingAccess) return;
+    clearCharts();
+    let charts = [];
+    //holding selected ....
+    if (selectedCompanies.length === 0 && selectedSoftwares.length === 0 && selectedActiveBackups.length === 0 && selectedBanks.length === 0) {
+      holdingAccess.forEach(cmp => {
+        cmp.softwares.forEach(sft => {
+          sft.active_backups.forEach(acb => {
+            acb.banks.forEach(bnk => {
+              charts = [...charts, ...bnk.charts.map(item => {
+                return {
+                  chart: {
+                    ...item.chart,
+                    parent: [cmp.name, sft.name, acb.name, bnk.name]
+                  }
+                }
+              })]
+            })
+          })
+        })
+      })
+    }
+    else {
+      holdingAccess.forEach(cmp => {
+        if (selectedCompanies.findIndex(item => item.value === cmp._id) > -1) {
+          cmp.softwares.forEach(sft => {
+            sft.active_backups.forEach(acb => {
+              acb.banks.forEach(bnk => {
+                charts = [...charts, ...bnk.charts.map(item => {
+                  return {
+                    chart: {
+                      ...item.chart,
+                      parent: [sft.name, acb.name, bnk.name]
+                    }
+                  }
+                })]
+              })
+            })
+          })
+        } else {
+          cmp.softwares.forEach(sft => {
+            if (selectedSoftwares.findIndex(item => item.value === sft._id) > -1) {
+              sft.active_backups.forEach(acb => {
+                acb.banks.forEach(bnk => {
+                  charts = [...charts, ...bnk.charts.map(item => {
+                    return {
+                      chart: {
+                        ...item.chart,
+                        parent: [acb.name, bnk.name]
+                      }
+                    }
+                  })]
+                })
+              })
+            } else {
+              sft.active_backups.forEach(acb => {
+                if (selectedActiveBackups.findIndex(item => item.value === acb._id) > -1) {
+                  acb.banks.forEach(bnk => {
+                    charts = [...charts, ...bnk.charts.map(item => {
+                      return {
+                        chart: {
+                          ...item.chart,
+                          parent: [bnk.name]
+                        }
+                      }
+                    })]
+                  })
+                }
+                else {
+                  acb.banks.forEach(bnk => {
+                    if (selectedBanks.findIndex(item => item.value === bnk._id) > -1) {
+                      charts = [...charts, ...bnk.charts.map(item => {
+                        return {
+                          chart: {
+                            ...item.chart,
+                            parent: []
+                          }
+                        }
+                      })]
+                    }
+
+                  })
+                }
+              })
+            }
+
+
+          })
+        }
+      })
+    }
+    let newChartsData = {};
+    charts.forEach((item) => {
+      newChartsData = {
+        ...newChartsData,
+        [item.chart._id]: {
+          title: item.chart.title,
+          type: item.chart.type,
+          data: item.chart.data,
+          options: item.chart.options,
+          config: item.chart.config,
+          parent: item.chart.parent,
+          bankId: item.chart.bankCreator,
+          lastBankUpdate: item.chart.data_updated_time,
+        },
+      };
+    });
+    setChartsData(newChartsData);
+  }, [holdingAccess, selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks])
+  
   const timer = async () => {
     let result;
     for (const chartId in chartsData.data) {
@@ -208,7 +256,7 @@ const BodyViewContainer = (props) => {
         <SelectBankModal isModalOpen={setIsModalOpen} />
       </Modal>
       {error}
-      {detail.software || detail.company || detail.holding ? (
+      {
         error ? (
           <BodyContent />
         ) : countProperties(chartsData.data) !== 0 ? (
@@ -235,18 +283,21 @@ const BodyViewContainer = (props) => {
             {stringFa.no_exist_charts}
           </div>
         )
-      ) : (
-        <div
-          className="body-content"
-          style={{
-            height: detail.software
-              ? "calc( 100% - 120px )"
-              : "calc( 100% - 70px )",
-          }}
-        >
-          {stringFa.clicked_software_to_see_charts}
-        </div>
-      )}
+      }
+      {/* {
+        detail.software || detail.company || detail.holding ? 
+       : (
+            <div
+              className="body-content"
+              style={{
+                height: detail.software
+                  ? "calc( 100% - 120px )"
+                  : "calc( 100% - 70px )",
+              }}
+            >
+              {stringFa.clicked_software_to_see_charts}
+            </div>
+          )} */}
     </div>
   );
 };
