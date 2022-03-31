@@ -28,7 +28,7 @@ const BodyContentUserSection = () => {
     name: "",
     id: "",
   });
-  const [filteredEmployees, setFilteredEmployees] = useState(null);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [labels, setLabels] = useState(null);
 
   const order = [
@@ -51,7 +51,7 @@ const BodyContentUserSection = () => {
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const token = useSelector((state) => state.auth.token);
+  const { token, userId } = useSelector((state) => state.auth);
 
   const { selectedHolding, employees } = useSelector((state) => state.holdingDetail);
 
@@ -184,7 +184,7 @@ const BodyContentUserSection = () => {
 
   useEffect(() => {
     if (!employees) return;
-    let updatedEmployees = [...employees]
+    let updatedEmployees = [...employees.filter(item => item.user._id !== userId && !item.user.is_fekrafzar)]
     if (selectedLabel.id !== '') {
       updatedEmployees = updatedEmployees.filter(item => item.label._id === selectedLabel.id)
     }
@@ -296,32 +296,38 @@ const BodyContentUserSection = () => {
                   ))}
                 </tr>))
               :
-              (filteredEmployees &&
-                filteredEmployees.length > 0 &&
-                filteredEmployees.map((v) => (
-                  <tr key={v.user._id}>
-                    {order.map((item) => (
-                      <td key={item.title}>
-                        <DynamicItem
-                          config={item}
-                          data={v}
-                          labels={labels}
-                          onChange={onChangeLabelItem}
-                        />
-                      </td>
-                    ))}
-                    <div className="remove-user-container">
-                      {removeLoading ?
-                        <img src={doubleRingLoading} alt="double-ring-loading-gif" />
-                        :
-                        <IoMdCloseCircle
-                          className="remove-icon"
-                          color={theme.error}
-                          onClick={() => removeUserHandler(v.user._id)} />
-                      }
-                    </div>
-                  </tr>
-                )))}
+              (
+                filteredEmployees.length > 0 ?
+                  filteredEmployees.map((v) => (
+                    <tr key={v.user._id}>
+                      {order.map((item) => (
+                        <td key={item.title}>
+                          <DynamicItem
+                            config={item}
+                            data={v}
+                            labels={labels}
+                            onChange={onChangeLabelItem}
+                          />
+                        </td>
+                      ))}
+                      <div className="remove-user-container">
+                        {removeLoading ?
+                          <img src={doubleRingLoading} alt="double-ring-loading-gif" />
+                          :
+                          <IoMdCloseCircle
+                            className="remove-icon"
+                            color={theme.error}
+                            onClick={() => removeUserHandler(v.user._id)} />
+                        }
+                      </div>
+                    </tr>
+                  )) :
+                  <div style={{ color: theme.on_primary, marginTop: "1rem" }}>
+                    <p>{stringFa.no_user_exist}</p>
+                  </div>
+              )
+            }
+
           </tbody>
         </table>
       </div>

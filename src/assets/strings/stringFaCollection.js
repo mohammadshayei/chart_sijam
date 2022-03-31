@@ -114,5 +114,7 @@ export const stringFa = {
   name_and_family_error: "ناو و نام خانوادگی باید دارای حداقل 1 حرف باشد",
   admin:'مدیر',
   personal_information: "اطلاعات شخصی",
-  other: "سایر"
+  other: "سایر",
+  no_user_exist: "کاربری یافت نشد",
+
 };

@@ -19,6 +19,7 @@ const BodyContentPermissonAdd = () => {
         permissions: false,
         chart: false,
         label: false,
+        structure: false,
         holdingId: '',
     })
     const [order, setOrder] = useState(
@@ -41,6 +42,10 @@ const BodyContentPermissonAdd = () => {
             },
             label: {
                 title: 'برچسب',
+                checked: false
+            },
+            structure: {
+                title: 'ساختار هلدینگ',
                 checked: false
             },
         }
@@ -90,6 +95,7 @@ const BodyContentPermissonAdd = () => {
             permissions: order.permission.checked,
             chart: order.chart.checked,
             label: order.label.checked,
+            structure: order.structure.checked,
 
         }
         const resultReq = await axios.post(

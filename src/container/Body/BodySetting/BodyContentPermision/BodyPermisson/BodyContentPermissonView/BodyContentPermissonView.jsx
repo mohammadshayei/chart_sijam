@@ -34,6 +34,10 @@ const BodyContentPermissonView = () => {
         title: 'برچسب',
         path: ['label'],
     },
+    {
+        title: 'ساختار هلدینگ',
+        path: ['structure'],
+    },
     ]
 
 
@@ -65,7 +69,6 @@ const BodyContentPermissonView = () => {
         borderColor: '#dddddd',
         backgroundColor: theme.table_background,
     }
-    console.log(labels)
     return (
         <div className='body-content-permission-view-container'>
             <h4 className='permission-title'>

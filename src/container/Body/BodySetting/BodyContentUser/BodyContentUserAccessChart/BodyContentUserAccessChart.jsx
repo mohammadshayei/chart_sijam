@@ -20,14 +20,18 @@ const BodyContentUserAccessChart = () => {
     const [error, setError] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     const [userAccess, setUserAccess] = useState(null);
-
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
+    const [searchValue, setSearchValue] = useState('')
     const { selectedHolding, employees } = useSelector((state) => state.holdingDetail);
-    const token = useSelector((state) => state.auth.token);
+    const { token, userId } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     const setEmployees = (employees) => {
         dispatch(holdingActions.setEmployees(employees));
     };
+    const onChangeSeachValue = e => {
+        setSearchValue(e.target.value)
+    }
     useEffect(() => {
         if (!selectedUser) return;
         let controller = new AbortController();
@@ -45,7 +49,7 @@ const BodyContentUserAccessChart = () => {
                     { headers: { "auth-token": token } }
                 );
                 if (resultGetAccessEmployee.data.success) {
-                    setUserAccess(resultGetAccessEmployee.data.result.data);
+                    setUserAccess(resultGetAccessEmployee.data.result);
                 }
                 else
                     setError(
@@ -86,6 +90,14 @@ const BodyContentUserAccessChart = () => {
         })();
         return () => controller?.abort();
     }, [selectedHolding]);
+    useEffect(() => {
+        if (!employees) return;
+        let updatedEmployees = [...employees.filter(item => item.user._id !== userId && !item.user.is_fekrafzar)]
+        if (searchValue !== '') {
+            updatedEmployees = updatedEmployees.filter(item => new RegExp("^" + searchValue, 'i').test(item.user.username))
+        }
+        setFilteredEmployees(updatedEmployees)
+    }, [employees, searchValue,])
     return (
         <div className="user-access-chart-container">
             {error}
@@ -99,22 +111,27 @@ const BodyContentUserAccessChart = () => {
                                 placeholder: stringFa.search,
                             }}
                             isOk={true}
-                        ></Input>
+                            value={searchValue}
+                            onChange={onChangeSeachValue}
+                        />
                         <div className="search-icon">
                             <IoIosSearch size="1.5em" color={theme.darken_border_color} />
                         </div>
                     </div>
                     <div className="users-list-container">
-                        {employees &&
-                            employees.length > 0 &&
-                            employees.map((employee) => (
+                        {filteredEmployees.length > 0 ?
+                            filteredEmployees.map((employee) => (
                                 <UserItem
                                     key={employee.user._id}
                                     data={employee}
                                     selected={selectedUser}
                                     setSelected={setSelectedUser}
                                 />
-                            ))}
+                            )) :
+                            <div style={{ color: theme.on_primary }}>
+                                <p>{stringFa.no_user_exist}</p>
+                            </div>
+                        }
                     </div>
                 </div>
                 {selectedUser && <div className="chart-access">
@@ -128,7 +145,7 @@ const BodyContentUserAccessChart = () => {
                         {loading ?
                             <SkeletonTreeView />
                             :
-                            userAccess && <AccessTreeView items={userAccess} />
+                            userAccess && <AccessTreeView userAccess={userAccess} userId={selectedUser._id} />
                         }
                     </div>
                 </div>}

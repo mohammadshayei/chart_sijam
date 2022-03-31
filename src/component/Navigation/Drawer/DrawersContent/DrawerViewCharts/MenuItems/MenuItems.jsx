@@ -75,7 +75,7 @@ const MenuItems = () => {
         let existCountSoftware = selectedSoftwares.filter(item => item.parents[0] === parents[0])
         let existCountActiveBackup = selectedActiveBackups.filter(item => item.parents[0] === parents[0] && item.parents[1] !== _id)
         let existCountBank = selectedBanks.filter(item => item.parents[0] === parents[0] && item.parents[1] !== _id)
-        if ((existCountSoftware.length === 0 || existCountSoftware.length === 1 && existCountSoftware[0].value === _id) && existCountActiveBackup.length === 0 && existCountBank.length === 0) {
+        if ((existCountSoftware.length === 0 || (existCountSoftware.length === 1 && existCountSoftware[0].value === _id)) && existCountActiveBackup.length === 0 && existCountBank.length === 0) {
           payload = { key: "selectedCompanies", value: parents[0], parents: '', mode: 'add' }
           changeSelectedMenuItems(payload)
         }
@@ -111,7 +111,7 @@ const MenuItems = () => {
 
         let existCountActiveBackup = selectedActiveBackups.filter(item => item.parents[1] === parents[1])
         let existCountBank = selectedBanks.filter(item => item.parents[1] === parents[1] && item.parents[2] !== _id)
-        if ((existCountActiveBackup.length === 0 || existCountActiveBackup.length === 1 && existCountActiveBackup[0].value === _id)&& existCountBank.length === 0) {
+        if ((existCountActiveBackup.length === 0 || (existCountActiveBackup.length === 1 && existCountActiveBackup[0].value === _id))&& existCountBank.length === 0) {
           payload = { key: "selectedSoftwares", value: parents[1], parents: [parents[0]], mode: 'add' }
           changeSelectedMenuItems(payload)
         }

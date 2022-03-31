@@ -11,6 +11,8 @@ import { useTheme } from "../../../../../styles/ThemeProvider";
 const DrawerViewCharts = (props) => {
   const editMode = useSelector((state) => state.chart.editMode);
   const token = useSelector((state) => state.auth.token);
+  const { selectedHolding } = useSelector(state => state.holdingDetail)
+
   const [focus, setFocus] = useState(false);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -77,7 +79,7 @@ const DrawerViewCharts = (props) => {
   return (
     <div>
       {props.isMenuOpen && <MenuItems />}
-      {editMode && (
+      {selectedHolding && editMode && selectedHolding.structure && (
         <div className="add-box-container">
           <input
             type="text"
@@ -92,7 +94,7 @@ const DrawerViewCharts = (props) => {
               ? stringFa.softwares
               : detail.holding
                 ? stringFa.companies
-                : stringFa.holdings
+                : stringFa.companies
               } جدید`}
             onKeyDown={onKeyDown}
             onChange={onChange}
@@ -111,7 +113,7 @@ const DrawerViewCharts = (props) => {
                 ? stringFa.add_software
                 : detail.holding
                   ? stringFa.add_company
-                  : stringFa.add_holding}
+                  : stringFa.add_company}
               <div className="button-icon" style={{ color: theme.primary }}>
                 <FaPlusCircle />
               </div>

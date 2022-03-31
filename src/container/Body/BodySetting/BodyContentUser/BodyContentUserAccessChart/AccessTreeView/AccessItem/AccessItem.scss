@@ -1,0 +1,27 @@
+.access-item-warpper {
+  width: 100%;
+  margin: 0.4rem;
+  display: flex;
+  align-items: center;
+  .access-content {
+    width: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .DropDownOpenRotate {
+      animation: ease-out 250ms forwards DropDownOpenAnimation;
+    }
+    @keyframes DropDownOpenAnimation {
+      0% {
+        transform: rotate(-30deg);
+      }
+      50% {
+        transform: rotate(-60deg);
+      }
+      100% {
+        transform: rotate(-90deg);
+      }
+    }
+    // border-radius: 0.3rem;
+  }
+}
