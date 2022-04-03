@@ -13,6 +13,7 @@ import ButtonIconAndLoading from '../../../../component/UI/Button/ButtonIconAndL
 import { useTheme } from '../../../../styles/ThemeProvider'
 import * as holdingActions from "../../../../store/actions/holdingDetail";
 import { useDispatch } from 'react-redux';
+import Input from '../../../../component/UI/Input/Input';
 
 const BodyContentCustom = (props) => {
     const [logoUploaded, setLogoUploaded] = useState(null)
@@ -26,10 +27,10 @@ const BodyContentCustom = (props) => {
 
     const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
     const token = useSelector(state => state.auth.token)
-    
+
     const dispatch = useDispatch();
     const imageRef = useRef()
-    
+
     const themeState = useTheme();
     const theme = themeState.computedTheme;
 
@@ -154,12 +155,11 @@ const BodyContentCustom = (props) => {
                 <h4 className='main-menu-log'>
                     {stringFa.holding_name}
                 </h4>
-                <input
-                    className="editable-input"
+                <Input
+                    elementType="input"
+                    isOk={true}
                     value={name}
                     onChange={onEditHoldingNameChangeHandler}
-                // onKeyDown={setTitleHandler}
-                // style={{ borderColor: error ? "red" : "" }}
                 />
                 <ButtonIconAndLoading
                     title={stringFa.change_holding_name}
