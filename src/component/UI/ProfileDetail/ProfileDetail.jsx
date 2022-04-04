@@ -23,7 +23,6 @@ const ProfileDetail = (props) => {
 
   const userDetail = useSelector((state) => state.auth.user);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
-  console.log(selectedHolding)
   const divRef = useRef();
   const dispatch = useDispatch();
 

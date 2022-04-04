@@ -116,5 +116,5 @@ export const stringFa = {
   personal_information: "اطلاعات شخصی",
   other: "سایر",
   no_user_exist: "کاربری یافت نشد",
-
+  data_not_found: "داده ای یافت نشد",
 };

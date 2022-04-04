@@ -1,5 +1,23 @@
-.BankSectionContainer {
-  width: 100%;
-  height: 100%;
-  padding-top: 1rem;
+.bank-section-container {
+	width: 100%;
+	height: 100%;
+	.table-bank {
+		text-align: center;
+		border-collapse: collapse;
+		width: 100%;
+		overflow: auto;
+		.tabe-bank-thead-tr {
+			th {
+				padding: 0.5rem;
+				border-width: 1px;
+				border-style: solid;
+			}
+		}
+		.tabe-bank-tbody-tr {
+			td {
+				border-width: 1px;
+				border-style: solid;
+			}
+		}
+	}
 }
