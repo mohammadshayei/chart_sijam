@@ -8,11 +8,11 @@ import { useSelector } from "react-redux";
 const BankSection = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const takenData = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    setData(takenData.data.data)
+    setData(takenData.filteredData)
   }, [takenData]);
 
   return (
@@ -26,7 +26,7 @@ const BankSection = () => {
             color: theme.on_background,
           }}>
           <thead>
-            {data &&
+            {data.length > 0 &&
               <tr className="tabe-bank-thead-tr"
                 style={{
                   background: theme.secondary,
@@ -39,7 +39,7 @@ const BankSection = () => {
               </tr>}
           </thead>
           <tbody>
-            {data ?
+            {data.length > 0 ?
               data.map((v, i) => (
                 <tr className="tabe-bank-tbody-tr" key={i}
                   style={{ background: i % 2 === 0 ? theme.background : theme.border_color }}

@@ -129,13 +129,11 @@ const CreateCharts = (props) => {
   };
 
   const onMouseEnter = (type) => {
-    console.log(type);
     let updatedHover = { ...hover };
     updatedHover[type] = true;
     setHover(updatedHover);
   };
   const onMouseLeave = (type) => {
-    console.log(type);
     let updatedHover = { ...hover };
     updatedHover[type] = false;
     setHover(updatedHover);

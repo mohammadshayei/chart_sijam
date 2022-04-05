@@ -5,6 +5,7 @@ const initialState = {
   isEdit: false,
   isFullscreen: false,
   data: {},
+  filteredData: [],
   chartData: {
     title: "",
     type: "Line",
@@ -81,6 +82,7 @@ const selectChartData = (state, action) => {
   return {
     ...state,
     data,
+    filteredData: data.data
   };
 };
 
@@ -201,6 +203,14 @@ const fullscreenChart = (state, action) => {
   };
 };
 
+const setChartDataFilter = (state, action) => {
+  const { data } = action.payload;
+  return {
+    ...state,
+    filteredData: data
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -221,6 +231,8 @@ const reducer = (state = initialState, action) => {
       return setChartOptions(state, action);
     case actionTypes.FULL_SCREEN_CHART:
       return fullscreenChart(state, action);
+    case actionTypes.SET_CHART_DATA_FILTER:
+      return setChartDataFilter(state, action);
     default:
       return state;
   }
