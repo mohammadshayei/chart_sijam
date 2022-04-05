@@ -214,23 +214,16 @@ const BodyContentUserSection = () => {
             onChange={onChangeSearchInput}
             config={{ placeholder: stringFa.search, type: "text" }}
             iconStyle={{
-              fontSize: "1.5rem",
-              fontWeight: "100",
-              margin: "0",
+              fontSize: "1rem",
             }}
             containerStyle={{
               width: "20rem",
-              border: " 1px solid #c5c7d0",
               padding: "0",
-              backgroundColor: theme.table_background,
               marginTop: "1rem",
             }}
             inputStyle={{
-              heigth: "3.4rem",
-              border: "none",
+              width: "100%",
               margin: "0",
-              width: "18.5rem",
-              outline: "none",
               fontSize: "1rem",
               padding: ".2rem .4rem ",
             }}
