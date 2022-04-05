@@ -91,6 +91,12 @@ export const setHoldignAccess = (holdingAccess) => {
     holdingAccess,
   };
 };
+export const setParentsCharts = (parentsCharts) => {
+  return {
+    type: actionTypes.SET_PARENTS_CHARTS,
+    parentsCharts,
+  };
+};
 
 export const authCheckState = () => {
   return (dispatch) => {

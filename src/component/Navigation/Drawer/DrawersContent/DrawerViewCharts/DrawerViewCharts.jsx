@@ -3,11 +3,15 @@ import { stringFa } from "../../../../../assets/strings/stringFaCollection";
 import StyledButton from "../../../../UI/Button/StyledButton";
 import MenuItems from "./MenuItems/MenuItems";
 import { FaPlusCircle } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { baseUrl } from "../../../../../constants/Config";
 import ErrorDialog from "../../../../UI/Error/ErrorDialog";
 import { useTheme } from "../../../../../styles/ThemeProvider";
+import './DrawerViewCharts.scss'
+import CheckBox from "../../../../UI/CheckBox/CheckBox";
+import * as detailActions from "../../../../../store/actions/detail";
+
 const DrawerViewCharts = (props) => {
   const editMode = useSelector((state) => state.chart.editMode);
   const token = useSelector((state) => state.auth.token);
@@ -18,6 +22,10 @@ const DrawerViewCharts = (props) => {
   const theme = themeState.computedTheme;
   const detail = useSelector((state) => state.detail);
   const [value, setValue] = useState("");
+  const [checked, setChecked] = useState(false);
+
+  const dispatch = useDispatch();
+
   const [error, setError] = useState(null);
 
   const onChange = (e) => {
@@ -76,9 +84,24 @@ const DrawerViewCharts = (props) => {
     const result = await axios.post(`${baseUrl}api/${distUrl}`, payload, { headers: { 'auth-token': token } });
     console.log(result);
   };
+  const clearSelected = () => {
+    dispatch(detailActions.clearSelected());
+  };
+
   return (
     <div>
-      {props.isMenuOpen && <MenuItems />}
+      {props.isMenuOpen && <MenuItems checked={checked} />}
+      <div className="optional-show">
+        <p style={{
+          color: theme.on_primary
+        }}>
+          {stringFa.clear}
+        </p>
+        <CheckBox checked={checked} onChange={() => {
+          clearSelected()
+          setChecked(!checked)
+        }} />
+      </div>
       {selectedHolding && editMode && selectedHolding.structure && (
         <div className="add-box-container">
           <input

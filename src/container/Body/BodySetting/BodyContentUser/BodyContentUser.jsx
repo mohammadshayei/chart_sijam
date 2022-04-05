@@ -24,6 +24,7 @@ const BodyContentUser = () => {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const section = searchParams.get("s");
+        const userId = searchParams.get("id");
         const udpatedHeaderOrder = { ...headerOrder }
         switch (section) {
             case '1':
@@ -32,7 +33,7 @@ const BodyContentUser = () => {
                 udpatedHeaderOrder.add.selected = false
                 break;
             case '2':
-                setBody(<BodyContentUserAccessChart />)
+                setBody(<BodyContentUserAccessChart userIdUrl={userId} />)
                 udpatedHeaderOrder.view.selected = false
                 udpatedHeaderOrder.add.selected = true
                 break;

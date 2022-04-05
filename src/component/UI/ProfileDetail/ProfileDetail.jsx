@@ -23,7 +23,6 @@ const ProfileDetail = (props) => {
 
   const userDetail = useSelector((state) => state.auth.user);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
-  console.log(selectedHolding)
   const divRef = useRef();
   const dispatch = useDispatch();
 
@@ -44,7 +43,6 @@ const ProfileDetail = (props) => {
 
   const openProfile = () => {
     navigate("/view/user?menu_item&s=1")
-
   };
 
   const logout = () => {

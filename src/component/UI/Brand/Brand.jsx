@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import * as holdingActions from "../../../store/actions/holdingDetail";
 import * as authActions from "../../../store/actions/auth";
 
-import { getAccessHolding } from "../../../api/home";
+import { getAccessHolding, getParentsChart } from "../../../api/home";
 
 const Brand = (props) => {
   const [hover, setHover] = useState(false)
@@ -33,6 +33,9 @@ const Brand = (props) => {
   };
   const setHoldingAccess = (info) => {
     dispatch(authActions.setHoldignAccess(info));
+  };
+  const setParentsCharts = (info) => {
+    dispatch(authActions.setParentsCharts(info));
   };
   useEffect(() => {
     if (!holdings) return;
@@ -62,9 +65,15 @@ const Brand = (props) => {
     (async () => {
       try {
         setLoading(true)
-        const res = await getAccessHolding({ userId, holdingId: selectedHolding.holdingId }, token)
+        let res = await getAccessHolding({ userId, holdingId: selectedHolding.holdingId }, token)
         if (res.success) {
           setHoldingAccess(res.data)
+        } else {
+          console.log('error')
+        }
+        res = await getParentsChart({ userId, holdingId: selectedHolding.holdingId }, token)
+        if (res.success) {
+          setParentsCharts(res.data)
         } else {
           console.log('error')
         }
