@@ -118,5 +118,7 @@ export const stringFa = {
   no_user_exist: "کاربری یافت نشد",
   data_not_found: "داده ای یافت نشد",
   see: "مشاهده",
-  clear: "پاک سازی"
+  clear: "پاک سازی",
+  view: "مشاهده",
+  all: "همه",
 };

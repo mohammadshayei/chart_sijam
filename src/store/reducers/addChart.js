@@ -13,6 +13,12 @@ const initialState = {
       period: "",
       autoUpdate: false,
     },
+    shareAll: false,
+    editAll: false,
+    viewAll: false,
+    shareList: [],
+    editList: [],
+    viewList: [],
     data: {
       data: [],
       options: {

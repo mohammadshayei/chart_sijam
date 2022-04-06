@@ -1,0 +1,30 @@
+.accessibility-step {
+	text-align: right;
+	.accessibility-page-btn {
+		background-color: cadetblue;
+		display: flex;
+		flex-direction: row-reverse;
+		border-radius: 12px;
+		width: 100%;
+		overflow: hidden;
+		.page-btn-item {
+			font-size: 0.6rem;
+			flex: 1;
+			padding: 0.3rem 0;
+			text-align: center;
+		}
+	}
+	.employees-list {
+		font-size: 0.8rem;
+		padding: 1rem 2rem;
+		.all {
+			display: flex;
+			flex-direction: row-reverse;
+			margin-bottom: 0.3rem;
+		}
+		.employee-item {
+			display: flex;
+			flex-direction: row-reverse;
+		}
+	}
+}

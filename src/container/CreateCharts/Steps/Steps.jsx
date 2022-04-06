@@ -8,6 +8,7 @@ import { useTheme } from "../../../styles/ThemeProvider";
 import TimerStep from "./TimerStep/TimerStep";
 import ChartSetting from "./SettingStep/ChartSetting.jsx";
 import Filter from "./Filter/Filter.jsx";
+import AccessibilityStep from "./AccessibilityStep/AccessibilityStep.jsx";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
@@ -33,6 +34,11 @@ const Steps = (props) => {
           filter: {
             title: "فیلترها",
             content: <Filter />,
+            isOpen: false,
+          },
+          accessibility: {
+            title: "دسترسی ها",
+            content: <AccessibilityStep />,
             isOpen: false,
           },
           timer: {
