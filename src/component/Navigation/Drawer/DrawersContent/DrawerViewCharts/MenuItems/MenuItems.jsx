@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import * as detailActions from "../../../../../../store/actions/detail";
 
 
-const MenuItems = () => {
+const MenuItems = ({ checked }) => {
   const [accessOrders, setAccessOrders] = useState([]);
   const [data, setData] = useState([]);
 
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
 
-  const holdingAccess = useSelector((state) => state.auth.holdingAccess);
+  const { parentsCharts } = useSelector((state) => state.auth);
   const { selectedSoftwares, selectedActiveBackups, selectedBanks } = useSelector((state) => state.detail);
 
   const setBanks = (banks, mode) => {
@@ -111,7 +111,7 @@ const MenuItems = () => {
 
         let existCountActiveBackup = selectedActiveBackups.filter(item => item.parents[1] === parents[1])
         let existCountBank = selectedBanks.filter(item => item.parents[1] === parents[1] && item.parents[2] !== _id)
-        if ((existCountActiveBackup.length === 0 || (existCountActiveBackup.length === 1 && existCountActiveBackup[0].value === _id))&& existCountBank.length === 0) {
+        if ((existCountActiveBackup.length === 0 || (existCountActiveBackup.length === 1 && existCountActiveBackup[0].value === _id)) && existCountBank.length === 0) {
           payload = { key: "selectedSoftwares", value: parents[1], parents: [parents[0]], mode: 'add' }
           changeSelectedMenuItems(payload)
         }
@@ -125,8 +125,49 @@ const MenuItems = () => {
   }
 
   useEffect(() => {
-    if (holdingAccess) {
-      let data = holdingAccess.map(
+    if (parentsCharts) {
+      let data, updatedParentsCharts;
+      if (checked) {
+        updatedParentsCharts = parentsCharts.filter(cmp => {
+          return cmp.softwares.filter(sft => {
+            return sft.active_backups.filter(acb => {
+              return acb.banks.filter(bnk => {
+                return bnk.charts.length > 0
+              }).length > 0
+            }).length > 0
+          }).length > 0
+        }).map(cmp => {
+          return {
+            ...cmp,
+            softwares: cmp.softwares.filter(sft => {
+              return sft.active_backups.filter(acb => {
+                return acb.banks.filter(bnk => {
+                  return bnk.charts.length > 0
+                }).length > 0
+              }).length > 0
+            }).map(sft => {
+              return {
+                ...sft,
+                active_backups: sft.active_backups.filter(acb => {
+                  return acb.banks.filter(bnk => {
+                    return bnk.charts.length > 0
+                  }).length > 0
+                }).map(acb => {
+                  return {
+                    ...acb,
+                    banks: acb.banks.filter(bnk => {
+                      return bnk.charts.length > 0
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
+      } else {
+        updatedParentsCharts = parentsCharts
+      }
+      data = updatedParentsCharts.map(
         (cmp) => {
           let softwares = cmp.softwares
             .map((sft) => {
@@ -161,9 +202,10 @@ const MenuItems = () => {
           };
         }
       );
+
       setData(data)
     }
-  }, [holdingAccess])
+  }, [parentsCharts, checked])
   useEffect(() => {
     // if (!data || data.length === 0) return;
     if (!data) return;

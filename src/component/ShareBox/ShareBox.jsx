@@ -6,59 +6,72 @@ import StyledButton from "../UI/Button/StyledButton";
 import { VscClose } from "react-icons/vsc";
 import { baseUrl } from "../../constants/Config";
 import Dropdown from "../UI/DropDown/DropDown";
+import { getEmployeesChart } from "../../api/admin";
+import { changeAccessChartEmployee } from "../../api/home";
 
-const ShareBox = (props) => {
-  const themeState = useTheme();
-  const theme = themeState.computedTheme;
+import { useSelector } from "react-redux";
+import ErrorDialog from "../UI/Error/ErrorDialog";
+
+const ShareBox = ({ chartId, setShowModal }) => {
   const [focus, setFocus] = useState(false);
   const [dropDown, setDropDown] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [getUsers, setGetUsers] = useState([
-    { id: 0, avatar: `${baseUrl}images/avatar.png`, name: "فکرافزار" },
-    { id: 1, avatar: `${baseUrl}images/avatar.png`, name: "حسنعلی" },
-    { id: 2, avatar: `${baseUrl}images/avatar.png`, name: "1حسنعلی" },
-    { id: 3, avatar: `${baseUrl}images/avatar.png`, name: "2حسنعلی" },
-    { id: 4, avatar: `${baseUrl}images/avatar.png`, name: "3حسنعلی" },
-    { id: 5, avatar: `${baseUrl}images/avatar.png`, name: "4حسنعلی" },
-    { id: 6, avatar: `${baseUrl}images/avatar.png`, name: "5حسنعلی" },
-    { id: 7, avatar: `${baseUrl}images/avatar.png`, name: "6حسنعلی" },
-  ]);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [employees, setEmployees] = useState([]);
+  const { selectedHolding } = useSelector(state => state.holdingDetail)
+  const { token } = useSelector(state => state.auth)
+
+
+
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+
+
+  useEffect(() => {
+    if (!selectedHolding || !chartId) return;
+    let controller = new AbortController();
+    (async () => {
+      try {
+        setLoading(true)
+        let result = await getEmployeesChart({ chartId, holdingId: selectedHolding.holdingId }, token)
+        if (!result.success)
+          setError(<ErrorDialog onClose={setError}>{result.message}</ErrorDialog>)
+        setEmployees(result.data)
+        setLoading(false)
+        controller = null
+      } catch (e) {
+        setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+      }
+    })();
+    return () => controller?.abort();
+  }, [selectedHolding, chartId])
 
   const ref = useRef();
 
-  const addUser = (id) => {
-    getUsers.forEach((user) => {
-      if (user.id === id) {
-        setUsers([...users, { id: id, avatar: user.avatar, name: user.name }]);
-      }
-    });
+  const changeStatus = async (_id, type) => {
+    //locally added
+    let findedEmployeeIndex = employees.findIndex(item => item.user._id === _id)
+    if (findedEmployeeIndex < 0) return;
+    let updatedEmployees = [...employees]
+    updatedEmployees[findedEmployeeIndex].has = type === 'add' ? true : false;
+    setEmployees(updatedEmployees)
+    //send api 
+    setLoading(true)
+    let result = await changeAccessChartEmployee({ userId: _id, holdingId: selectedHolding.holdingId, chartId, status: type },token)
+    setError(<ErrorDialog success={result.success} onClose={setError}>{result.data}</ErrorDialog>)
+    setLoading(false)
+
   };
-
-  const onRemoveHandler = (id) => {
-    let newArray = [...users];
-    if (id !== -1) {
-      newArray.splice(id, 1);
-      setUsers(newArray);
-    }
-  };
-
-  useEffect(() => {
-    let newUsers = [...getUsers];
-    users.forEach((user) => {
-      newUsers = getUsers.filter((item) => item.id !== user.id);
-    });
-    setGetUsers(newUsers);
-  }, [users]);
-
   return (
     <div className="container">
+      {error}
       <StyledButton
         ButtonStyle={{
           fontSize: "1.3rem",
           padding: "4px",
           marginLeft: "-1rem",
         }}
-        onClick={() => props.setShowModal(false)}
+        onClick={() => setShowModal(false)}
       >
         <VscClose />
       </StyledButton>
@@ -92,29 +105,30 @@ const ShareBox = (props) => {
             right: "2rem",
             left: "2rem",
           }}
-          items={getUsers}
-          onClick={addUser}
+          items={employees.filter(item => !item.has).map(item => item.user)}
+          onClick={(id) => { changeStatus(id, 'add') }}
           setDropDown={setDropDown}
+          selector='username'
           divContainerRef={ref}
         />
       )}
       <div className="users-list-wrapper">
-        {users.map((user) => (
+        {employees && employees.filter(item => item.has).map((item) => (
           <div
-            key={user.id}
+            key={item.user._id}
             className="user"
             style={{ borderColor: theme.border_color }}
           >
             <div className="user-details">
-              <img src={user.avatar} alt="user_image" className="avatar" />
-              <div className="user-name">{user.name}</div>
+              <img src={item.user.image !== '' ? `${baseUrl}images/${item.user.image}` : `${baseUrl}images/avatar.png`} alt="user_image" className="avatar" />
+              <div className="user-name">{item.user.username}</div>
             </div>
             <StyledButton
               ButtonStyle={{
                 fontSize: "1rem",
                 color: "rgb(140, 140, 140)",
               }}
-              onClick={() => onRemoveHandler(user.id)}
+              onClick={() => changeStatus(item.user._id, 'remove')}
             >
               <VscClose />
             </StyledButton>

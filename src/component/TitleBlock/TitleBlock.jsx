@@ -46,7 +46,6 @@ const TitleBlock = React.memo((props) => {
   const chartsData = useSelector((state) => state.chart);
   const token = useSelector((state) => state.auth.token);
   const detailsSelection = useSelector((state) => state.detail);
-
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const starStyles = {
@@ -212,7 +211,7 @@ const TitleBlock = React.memo((props) => {
           minWidth: "340px",
         }}
       >
-        <ShareBox setShowModal={setShowModal} />
+        <ShareBox chartId={props.chartId} setShowModal={setShowModal} />
       </Modal>
       <div className="card-source-name">
         <div className="icons-container">

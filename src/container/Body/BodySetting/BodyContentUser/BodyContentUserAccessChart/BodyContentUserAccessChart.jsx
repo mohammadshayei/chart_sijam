@@ -13,7 +13,7 @@ import axios from 'axios';
 import AccessTreeView from './AccessTreeView/AccessTreeView';
 import * as holdingActions from "../../../../../store/actions/holdingDetail";
 
-const BodyContentUserAccessChart = () => {
+const BodyContentUserAccessChart = ({ userIdUrl }) => {
     const themeState = useTheme();
     const theme = themeState.computedTheme;
     const [loading, setLoading] = useState(false);
@@ -25,13 +25,19 @@ const BodyContentUserAccessChart = () => {
     const { selectedHolding, employees } = useSelector((state) => state.holdingDetail);
     const { token, userId } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-
     const setEmployees = (employees) => {
         dispatch(holdingActions.setEmployees(employees));
     };
     const onChangeSeachValue = e => {
         setSearchValue(e.target.value)
     }
+    useEffect(() => {
+        if (!userIdUrl || !employees) return;
+        let selectedUser = employees.find(item => item.user._id === userIdUrl).user
+        setSelectedUser(selectedUser)
+
+    }, [userIdUrl, employees])
+
     useEffect(() => {
         if (!selectedUser) return;
         let controller = new AbortController();

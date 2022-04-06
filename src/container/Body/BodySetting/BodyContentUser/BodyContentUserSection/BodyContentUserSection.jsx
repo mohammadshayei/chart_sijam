@@ -43,6 +43,11 @@ const BodyContentUserSection = () => {
       componentNumber: 4,
     },
     {
+      title: "دسترسی کاربر",
+      path: [],
+      componentNumber: 5,
+    },
+    {
       title: "برچسب",
       path: ["label", "name"],
       componentNumber: 3,
@@ -252,7 +257,7 @@ const BodyContentUserSection = () => {
         </div>
       </div>
       <p style={{ fontSize: "14px" }}>
-        تعداد نتایج : {employees ? employees.length : 0}
+        تعداد نتایج : {filteredEmployees ? filteredEmployees.length : 0}
       </p>
       <div className="table-container">
         <table

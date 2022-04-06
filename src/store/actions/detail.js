@@ -25,3 +25,8 @@ export const changeBankItemStatus = (payload) => {
     payload,
   };
 };
+export const clearSelected = () => {
+  return {
+    type: actionTypes.CLEAR_SELECTED,
+  };
+};

@@ -97,8 +97,8 @@ export const stringFa = {
   total_sum: "جمع کل",
   full_screen: "تمام صفحه",
   exit_full_screen: "خروج از تمام صفحه",
-  user_assing: 'انتساب کاربر',
-  create_new_user: 'ساخت کاربر جدید',
+  user_assing: "انتساب کاربر",
+  create_new_user: "ساخت کاربر جدید",
   enter_phone: " شماره همراه را وارد کنید",
   sharebox_title: "انتخاب کاربر برای دیدن نمودار",
   choose_user: "انتخاب یک کاربر",
@@ -112,9 +112,11 @@ export const stringFa = {
   confirm_password_error: "با رمز عبور مطابقت ندارد",
   name_and_family: "نام و نام خانوادگی",
   name_and_family_error: "ناو و نام خانوادگی باید دارای حداقل 1 حرف باشد",
-  admin: 'مدیر',
+  admin: "مدیر",
   personal_information: "اطلاعات شخصی",
   other: "سایر",
   no_user_exist: "کاربری یافت نشد",
   data_not_found: "داده ای یافت نشد",
+  see: "مشاهده",
+  clear: "پاک سازی"
 };

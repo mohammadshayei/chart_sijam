@@ -43,7 +43,6 @@ const ProfileDetail = (props) => {
 
   const openProfile = () => {
     navigate("/view/user?menu_item&s=1")
-
   };
 
   const logout = () => {

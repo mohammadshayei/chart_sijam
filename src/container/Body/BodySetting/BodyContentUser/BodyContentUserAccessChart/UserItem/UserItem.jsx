@@ -2,12 +2,12 @@ import { useState } from "react";
 import { baseUrl } from "../../../../../../constants/Config";
 import { useTheme } from "../../../../../../styles/ThemeProvider";
 import "./UserItem.scss"
-
+import { useNavigate } from 'react-router-dom'
 const UserItem = ({ data, selected, setSelected }) => {
     const themeState = useTheme();
     const theme = themeState.computedTheme;
     const [hover, setHover] = useState(false);
-
+    let navigate = useNavigate()
     return <div className="user-item-box"
         tabIndex="0"
         style={{
@@ -20,7 +20,7 @@ const UserItem = ({ data, selected, setSelected }) => {
         }}
         onMouseEnter={() => setHover(true)}
         onMouseOut={() => setHover(false)}
-        onClick={() => setSelected(data.user)}
+        onClick={() => { navigate(`/view/setting?menu_item=2&s=2&id=${data.user._id}`) }}
     >
         <img
             src={`${baseUrl}images/${data.user.image !== '' ? data.user.image : 'avatar'}.png`}

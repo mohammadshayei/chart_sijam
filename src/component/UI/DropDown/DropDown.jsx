@@ -53,9 +53,9 @@ const DropDown = (props) => {
       {props.items &&
         props.items.map((item, index) => (
           <div
-            key={item.name}
+            key={item._id ? item._id : item.name}
             onClick={() => {
-              handleClick(item.name, item.id);
+              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id);
             }}
             className="dropdown-item"
             style={{
@@ -64,7 +64,7 @@ const DropDown = (props) => {
             }}
           >
             {item.icon && <div className="dropdown-icon">{item.icon}</div>}
-            {item.name}
+            {props.selector ? item[props.selector] : item.name}
           </div>
         ))}
       {props.extraItems && (

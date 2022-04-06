@@ -92,6 +92,16 @@ const chnageStatusBankItem = (state, action) => {
     banks: updatedBanks,
   };
 };
+const clearSelected = (state) => {
+  return {
+    ...state,
+    banks: [],
+    selectedCompanies: [],
+    selectedSoftwares: [],
+    selectedActiveBackups: [],
+    selectedBanks: [],
+  };
+};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_BANKS:
@@ -102,6 +112,8 @@ const reducer = (state = initialState, action) => {
       return removedChildSelectedMenuItems(state, action);
     case actionTypes.CHANGE_BANK_ITEM_STATUS:
       return chnageStatusBankItem(state, action);
+    case actionTypes.CLEAR_SELECTED:
+      return clearSelected(state);
     default:
       return state;
   }

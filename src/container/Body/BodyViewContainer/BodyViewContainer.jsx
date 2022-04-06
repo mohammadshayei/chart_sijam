@@ -23,7 +23,7 @@ const BodyViewContainer = (props) => {
   const detail = useSelector((state) => state.detail);
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const holdingAccess = useSelector((state) => state.auth.holdingAccess);
+  const { parentsCharts } = useSelector((state) => state.auth);
   const { selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks } = useSelector((state) => state.detail);
 
   const chartsData = useSelector((state) => state.chart);
@@ -48,14 +48,13 @@ const BodyViewContainer = (props) => {
     return Math.floor(diffInMs / (1000 * 60));
   }
 
-
   useEffect(() => {
-    if (!holdingAccess) return;
+    if (!parentsCharts) return;
     clearCharts();
     let charts = [];
     //holding selected ....
     if (selectedCompanies.length === 0 && selectedSoftwares.length === 0 && selectedActiveBackups.length === 0 && selectedBanks.length === 0) {
-      holdingAccess.forEach(cmp => {
+      parentsCharts.forEach(cmp => {
         cmp.softwares.forEach(sft => {
           sft.active_backups.forEach(acb => {
             acb.banks.forEach(bnk => {
@@ -73,7 +72,7 @@ const BodyViewContainer = (props) => {
       })
     }
     else {
-      holdingAccess.forEach(cmp => {
+      parentsCharts.forEach(cmp => {
         if (selectedCompanies.findIndex(item => item.value === cmp._id) > -1) {
           cmp.softwares.forEach(sft => {
             sft.active_backups.forEach(acb => {
@@ -158,8 +157,8 @@ const BodyViewContainer = (props) => {
       };
     });
     setChartsData(newChartsData);
-  }, [holdingAccess, selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks])
-  
+  }, [parentsCharts, selectedCompanies.length, selectedSoftwares.length, selectedActiveBackups.length, selectedBanks.length])
+
   const timer = async () => {
     let result;
     for (const chartId in chartsData.data) {

@@ -18,6 +18,7 @@ const initialState = {
   },
   checked: false,
   holdingAccess: [],
+  parentsCharts: [],
 };
 
 const authStart = (state, action) => {
@@ -36,6 +37,11 @@ const setUserLabel = (state, action) => {
 const setHoldingAccess = (state, action) => {
   return updateObject(state, {
     holdingAccess: action.holdingAccess,
+  });
+};
+const setParentsCharts = (state, action) => {
+  return updateObject(state, {
+    parentsCharts: action.parentsCharts,
   });
 };
 const authSuccess = (state, action) => {
@@ -89,6 +95,8 @@ const reducer = (state = initialState, action) => {
       return setChecked(state, action);
     case actionTypes.SET_HOLDING_ACCESS:
       return setHoldingAccess(state, action);
+    case actionTypes.SET_PARENTS_CHARTS:
+      return setParentsCharts(state, action);
     default:
       return state;
   }

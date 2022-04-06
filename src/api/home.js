@@ -19,5 +19,28 @@ export const getAccessHolding = async (payload, token) => {
   );
   if (result.data.success) {
     return { success: true, data: result.data.result.comapnies, error: "" };
-  } else return { success: false, data: null, error: result.data.result.error };
+  } else
+    return { success: false, data: null, error: result.data.result.message };
+};
+export const getParentsChart = async (payload, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/get_parents_charts`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.result.comapnies, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.result.message };
+};
+export const changeAccessChartEmployee = async (payload, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/change_access_chart_employee`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.result.message, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.result.message };
 };
