@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
 import CheckBox from "../../../../component/UI/CheckBox/CheckBox";
 import ErrorDialog from "../../../../component/UI/Error/ErrorDialog";
 import { baseUrl } from "../../../../constants/Config";
 import { useTheme } from "../../../../styles/ThemeProvider";
+import * as addChartActions from "../../../../store/actions/addChart";
 import "./AccessibilityStep.scss";
 
 const AccessibilityStep = () => {
@@ -29,14 +30,23 @@ const AccessibilityStep = () => {
                 selected: false
             }
         })
-    const [accessType, setAccessType] = useState(null);
+    const [accessType, setAccessType] = useState("view");
     const [loading, setLoading] = useState(false);
-    const [employees, setEmployees] = useState(null);
+    const [employees, setEmployees] = useState(new Array(0).fill(""));
     const [error, setError] = useState(null);
 
     const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
-    const chartData = useSelector((state) => state.addChart);
+    const chartData = useSelector((state) => state.addChart.chartData);
     const { token, userId } = useSelector((state) => state.auth);
+
+    const dispatch = useDispatch();
+    const setAccessToAll = (access) => {
+        dispatch(addChartActions.setAccessToAll(access));
+    };
+    const updateAccessList = (accessList) => {
+        dispatch(addChartActions.updateAccessList(accessList));
+    };
+
     const onItemClickHandler = (key) => {
         const updatedPageBtnOrder = { ...pageBtnOrder }
         const updatedItem = updatedPageBtnOrder[key];
@@ -49,7 +59,12 @@ const AccessibilityStep = () => {
     }
 
     const allCheckBoxOnChange = () => {
+        let updatedAccess = !chartData[`${accessType}All`];
+        setAccessToAll({ accessType, access: updatedAccess })
+    }
 
+    const employeeCheckBoxOnChange = (e, emp) => {
+        updateAccessList({ accessType, employee: emp, add: e.target.checked })
     }
 
     useEffect(() => {
@@ -103,18 +118,29 @@ const AccessibilityStep = () => {
                 })
             }
         </div>
-        <div className="employees-list">
+        <div className="allowed-employees">
+            <CheckBox
+                checked={chartData[`${accessType}All`]}
+                onChange={allCheckBoxOnChange}
+                checkmarkStyle={{ width: "13px", height: "13px", }} />
+            {stringFa.all_allowed_employees}
+        </div>
+        <div className={`employees-list ${chartData[`${accessType}All`] && "disabled-div"}`} style={{ borderColor: theme.border_color }}>
             <div className="all">
                 <CheckBox
-                    checked={chartData[`${accessType}All`]}
-                    onChange={allCheckBoxOnChange}
+                    checked={chartData[`${accessType}List`].length === employees.length && true}
+                    onChange={(e) => employeeCheckBoxOnChange(e, employees)}
                     checkmarkStyle={{ width: "13px", height: "13px", }} />
                 {stringFa.all}
             </div>
             {employees &&
                 employees.map((emp) =>
-                    <div className="employee-item">
-                        <CheckBox checkmarkStyle={{ width: "13px", height: "13px", }} />
+                    <div key={emp.user._id} className="employee-item">
+                        <CheckBox
+                            checked={chartData[`${accessType}List`].find((e) => e.user._id === emp.user._id) && true}
+                            onChange={(e) => employeeCheckBoxOnChange(e, [emp])}
+                            checkmarkStyle={{ width: "13px", height: "13px", }}
+                        />
                         {emp.user.username}
                     </div>
                 )}

@@ -121,4 +121,5 @@ export const stringFa = {
   clear: "پاک سازی",
   view: "مشاهده",
   all: "همه",
+  all_allowed_employees: " تمام کاربرانی که دسترسی دارند",
 };

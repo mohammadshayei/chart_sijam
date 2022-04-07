@@ -97,6 +97,7 @@ const setChartData = (state, action) => {
   return {
     ...state,
     chartData: {
+      ...state.chartData,
       title,
       type,
       config,
@@ -217,6 +218,41 @@ const setChartDataFilter = (state, action) => {
   };
 };
 
+const setAccessToAll = (state, action) => {
+  const { accessType, access } = action.payload;
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      [`${accessType}All`]: access,
+      [`${accessType}List`]: [],
+    },
+  };
+};
+
+const updateAccessList = (state, action) => {
+  const { accessType, employee, add } = action.payload;
+  let updatedList = [...state.chartData[`${accessType}List`]]
+  if (add) {
+    if (employee.length > 1)
+      updatedList = [...employee]
+    else
+      updatedList = [...updatedList, ...employee]
+  } else {
+    if (employee.length > 1)
+      updatedList = []
+    else
+      updatedList = updatedList.filter((emp) => emp.user._id !== employee[0].user._id)
+  }
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      [`${accessType}List`]: updatedList,
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -239,6 +275,11 @@ const reducer = (state = initialState, action) => {
       return fullscreenChart(state, action);
     case actionTypes.SET_CHART_DATA_FILTER:
       return setChartDataFilter(state, action);
+    case actionTypes.SET_ACCESS_TO_ALL:
+      return setAccessToAll(state, action);
+    case actionTypes.UPDATE_ACCESS_LIST:
+      return updateAccessList(state, action);
+
     default:
       return state;
   }

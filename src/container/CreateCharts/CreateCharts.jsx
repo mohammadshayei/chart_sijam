@@ -43,7 +43,8 @@ function useOnClickOutside(ref, handler) {
 const CreateCharts = (props) => {
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
-  const token = useSelector((state) => state.auth.token);
+  const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
+  const { token, userId } = useSelector((state) => state.auth);
   // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
@@ -118,6 +119,12 @@ const CreateCharts = (props) => {
         period: "",
         autoUpdate: false,
       },
+      shareAll: false,
+      editAll: false,
+      viewAll: false,
+      shareList: [],
+      editList: [],
+      viewList: [],
       data: {
         data: [],
         options: { ...clearedChartData.data.options, fieldNames: {} },
@@ -195,6 +202,14 @@ const CreateCharts = (props) => {
             period: parseInt(takenData.chartData.config.period),
             auto_update: takenData.chartData.config.autoUpdate,
           },
+          holdingId: selectedHolding.holdingId,
+          userId,
+          shareAll: takenData.chartData.shareAll,
+          editAll: takenData.chartData.editAll,
+          viewAll: takenData.chartData.viewAll,
+          shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+          editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+          viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         };
       } else {
         chartApi = "edit_chart";
@@ -208,6 +223,14 @@ const CreateCharts = (props) => {
             period: parseInt(takenData.chartData.config.period),
             auto_update: takenData.chartData.config.autoUpdate,
           },
+          holdingId: selectedHolding.holdingId,
+          userId,
+          shareAll: takenData.chartData.shareAll,
+          editAll: takenData.chartData.editAll,
+          viewAll: takenData.chartData.viewAll,
+          shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+          editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+          viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         };
       }
       try {

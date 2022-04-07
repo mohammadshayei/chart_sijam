@@ -8,9 +8,9 @@ import FilterFieldPicker from "./FilterFieldPicker";
 const FieldFilter = (props) => {
     const themeState = useTheme();
     const theme = themeState.computedTheme;
-    const [selectedFunction, setSelectedFunction] = useState(null);
+    const [selectedFunction, setSelectedFunction] = useState("");
     const [selectedField, setSelectedField] = useState(null);
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState("");
     const functions = ["AND", "OR", "NOT", "EXACT"];
 
     const onSelectLabelChangeHandler = (e) => {

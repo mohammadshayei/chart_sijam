@@ -83,3 +83,21 @@ export const setChartDataFilter =
         payload: { data },
       });
     };
+
+export const setAccessToAll =
+  ({ accessType, access }) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_ACCESS_TO_ALL,
+        payload: { accessType, access },
+      });
+    };
+
+export const updateAccessList =
+  ({ accessType, employee, add }) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_ACCESS_LIST,
+        payload: { accessType, employee, add },
+      });
+    };
