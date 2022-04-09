@@ -234,15 +234,19 @@ const updateAccessList = (state, action) => {
   const { accessType, employee, add } = action.payload;
   let updatedList = [...state.chartData[`${accessType}List`]]
   if (add) {
-    if (employee.length > 1)
-      updatedList = [...employee]
+    if (employee.length > 1) {
+      updatedList = []
+      employee.forEach(emp => {
+        updatedList = [...updatedList, emp.user._id]
+      });
+    }
     else
       updatedList = [...updatedList, ...employee]
   } else {
     if (employee.length > 1)
       updatedList = []
     else
-      updatedList = updatedList.filter((emp) => emp.user._id !== employee[0].user._id)
+      updatedList = updatedList.filter((emp) => emp !== employee[0])
   }
   return {
     ...state,

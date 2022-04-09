@@ -137,8 +137,8 @@ const AccessibilityStep = () => {
                 employees.map((emp) =>
                     <div key={emp.user._id} className="employee-item">
                         <CheckBox
-                            checked={chartData[`${accessType}List`].find((e) => e.user._id === emp.user._id) && true}
-                            onChange={(e) => employeeCheckBoxOnChange(e, [emp])}
+                            checked={chartData[`${accessType}List`].find((e) => e === emp.user._id) && true}
+                            onChange={(e) => employeeCheckBoxOnChange(e, [emp.user._id])}
                             checkmarkStyle={{ width: "13px", height: "13px", }}
                         />
                         {emp.user.username}
