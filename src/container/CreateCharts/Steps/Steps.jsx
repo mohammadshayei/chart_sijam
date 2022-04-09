@@ -3,10 +3,12 @@ import { IoIosArrowDown } from "react-icons/io";
 import XAxisStep from "./XAxisStep/XAxisStep.jsx";
 import Gallery from "./Gallery/Gallery.jsx";
 import "./Steps.scss";
-import BenchmarkStep from "./BenchmarkStep/BenchmarkStep.jsx";
+// import BenchmarkStep from "./BenchmarkStep/BenchmarkStep.jsx";
 import { useTheme } from "../../../styles/ThemeProvider";
 import TimerStep from "./TimerStep/TimerStep";
 import ChartSetting from "./SettingStep/ChartSetting.jsx";
+import Filter from "./Filter/Filter.jsx";
+import AccessibilityStep from "./AccessibilityStep/AccessibilityStep.jsx";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
@@ -27,6 +29,16 @@ const Steps = (props) => {
           xAxis: {
             title: "انتخاب فیلد",
             content: <XAxisStep />,
+            isOpen: false,
+          },
+          filter: {
+            title: "فیلترها",
+            content: <Filter />,
+            isOpen: false,
+          },
+          accessibility: {
+            title: "دسترسی ها",
+            content: <AccessibilityStep />,
             isOpen: false,
           },
           timer: {

@@ -5,6 +5,7 @@ const initialState = {
   isEdit: false,
   isFullscreen: false,
   data: {},
+  filteredData: [],
   chartData: {
     title: "",
     type: "Line",
@@ -12,6 +13,12 @@ const initialState = {
       period: "",
       autoUpdate: false,
     },
+    shareAll: false,
+    editAll: false,
+    viewAll: false,
+    shareList: [],
+    editList: [],
+    viewList: [],
     data: {
       data: [],
       options: {
@@ -81,6 +88,7 @@ const selectChartData = (state, action) => {
   return {
     ...state,
     data,
+    filteredData: data.data
   };
 };
 
@@ -89,6 +97,7 @@ const setChartData = (state, action) => {
   return {
     ...state,
     chartData: {
+      ...state.chartData,
       title,
       type,
       config,
@@ -201,6 +210,53 @@ const fullscreenChart = (state, action) => {
   };
 };
 
+const setChartDataFilter = (state, action) => {
+  const { data } = action.payload;
+  return {
+    ...state,
+    filteredData: data
+  };
+};
+
+const setAccessToAll = (state, action) => {
+  const { accessType, access } = action.payload;
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      [`${accessType}All`]: access,
+      [`${accessType}List`]: [],
+    },
+  };
+};
+
+const updateAccessList = (state, action) => {
+  const { accessType, employee, add } = action.payload;
+  let updatedList = [...state.chartData[`${accessType}List`]]
+  if (add) {
+    if (employee.length > 1) {
+      updatedList = []
+      employee.forEach(emp => {
+        updatedList = [...updatedList, emp.user._id]
+      });
+    }
+    else
+      updatedList = [...updatedList, ...employee]
+  } else {
+    if (employee.length > 1)
+      updatedList = []
+    else
+      updatedList = updatedList.filter((emp) => emp !== employee[0])
+  }
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      [`${accessType}List`]: updatedList,
+    },
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -221,6 +277,13 @@ const reducer = (state = initialState, action) => {
       return setChartOptions(state, action);
     case actionTypes.FULL_SCREEN_CHART:
       return fullscreenChart(state, action);
+    case actionTypes.SET_CHART_DATA_FILTER:
+      return setChartDataFilter(state, action);
+    case actionTypes.SET_ACCESS_TO_ALL:
+      return setAccessToAll(state, action);
+    case actionTypes.UPDATE_ACCESS_LIST:
+      return updateAccessList(state, action);
+
     default:
       return state;
   }

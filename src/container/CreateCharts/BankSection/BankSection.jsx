@@ -1,71 +1,61 @@
-import React, { useMemo ,useEffect,useState} from "react";
+import { useEffect, useState } from "react";
 import "./BankSection.scss";
 import EditTitle from "../../../component/UI/EditTitle/EditTitle";
-import { useTable } from "react-table";
-import Table from "./Table/Table";
-import axios from 'axios'
-const BankSection = (props) => {
+import { useTheme } from "../../../styles/ThemeProvider";
+import { stringFa } from "../../../assets/strings/stringFaCollection";
+import { useSelector } from "react-redux";
+
+const BankSection = () => {
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const [data, setData] = useState([]);
+  const takenData = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    axios("http://api.tvmaze.com/search/shows?q=girls")
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    setData(takenData.filteredData)
+  }, [takenData]);
 
-  const columns = useMemo(() => [
-    {
-      Header: "TV Show",
-      columns: [
-        {
-          Header: "Name",
-          accessor: "show.name",
-        },
-        {
-          Header: "Type",
-          accessor: "show.type",
-        },
-        {
-          Header: "Language",
-          accessor: "show.language",
-        },
-        {
-          Header: "Official Site",
-          accessor: "show.officialSite",
-          Cell: ({ cell: { value } }) =>
-            value ? <a href={value}>{value}</a> : "-",
-        },
-        {
-          Header: "Rating",
-          accessor: "show.rating.average",
-          Cell: ({ cell: { value } }) => value || "-",
-        },
-        {
-          Header: "Status",
-          accessor: "show.status",
-        },
-        {
-          Header: "Premiered",
-          accessor: "show.premiered",
-          Cell: ({ cell: { value } }) => value || "-",
-        },
-        {
-          Header: "Time",
-          accessor: "show.schedule.time",
-          Cell: ({ cell: { value } }) => value || "-",
-        },
-      ],
-    },
-  ]);
   return (
-    <div className="BankSectionContainer">
+    <div className="bank-section-container">
       {/* <div className="BankHeaderContainer">
         <EditTitle />
       </div> */}
-      <div className="BankTableContainer">
-        <Table columns={columns} data={data} />
+      <div className="bank-table-container">
+        <table className="table-bank"
+          style={{
+            color: theme.on_background,
+          }}>
+          <thead>
+            {data.length > 0 &&
+              <tr className="tabe-bank-thead-tr"
+                style={{
+                  background: theme.secondary,
+                  color: theme.on_secondary,
+                }}>
+                {Object.entries(data[0]).map(([key, value]) => (
+                  <th key={key} style={{ borderColor: theme.darken_border_color }}>
+                    {key}
+                  </th>))}
+              </tr>}
+          </thead>
+          <tbody>
+            {data.length > 0 ?
+              data.map((v, i) => (
+                <tr className="tabe-bank-tbody-tr" key={i}
+                  style={{ background: i % 2 === 0 ? theme.background : theme.border_color }}
+                >
+                  {Object.entries(v).map(([kcell, vcell]) => (
+                    <td key={kcell} style={{ borderColor: theme.darken_border_color }}>
+                      {vcell}
+                    </td>))}
+                </tr>
+              )) :
+              <div style={{ color: theme.on_primary, marginTop: "1rem" }}>
+                <p>{stringFa.data_not_found}</p>
+              </div>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -116,6 +116,7 @@ export const stringFa = {
   personal_information: "اطلاعات شخصی",
   other: "سایر",
   no_user_exist: "کاربری یافت نشد",
+  data_not_found: "داده ای یافت نشد",
   see: "مشاهده",
   show_bank_has_charts: "فقط بانک های دارای نمودار",
   edit_category: "ویرایش لیست ...",
@@ -125,5 +126,9 @@ export const stringFa = {
   add_to_list: "افزودن به لیست",
   which_list_do_you_add_the_product: "کالا را به کدام لیست اضافه می‌کنید؟",
   create_list: "ایجاد لیست",
-  enter_list_name:"نام لیست خود را بنویسید"
+  enter_list_name: "نام لیست خود را بنویسید",
+  clear: "پاک سازی",
+  view: "مشاهده",
+  all: "همه",
+  all_allowed_employees: " تمام کاربرانی که دسترسی دارند",
 };

@@ -32,7 +32,7 @@ const ChartBlock = React.memo((props) => {
         setData(props.chartProps);
       }
     }
-  }, [chartData, props.chartProps, props.chartId]);
+  }, [chartData.chartData, props.chartProps, props.chartId]);
 
   useEffect(() => {
     if (data) {

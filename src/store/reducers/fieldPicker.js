@@ -16,8 +16,6 @@ const removeFieldPicker = (state, action) => {
   let updatedState = [];
   if (index !== -1) {
     state.forEach((picker) => {
-      console.log(index);
-      console.log(picker);
       if (picker.props.index !== index) {
         updatedState = [...updatedState, state[picker.props.index]];
       }

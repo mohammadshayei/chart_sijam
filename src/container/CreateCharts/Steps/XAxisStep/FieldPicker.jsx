@@ -64,9 +64,9 @@ const FieldPicker = (props) => {
         // setSelected(selected);
       }
     }
-    if (takenData.data.data) {
+    if (takenData.filteredData) {
       let fieldValues = [];
-      Object.entries(takenData.data.data).map(([key, value]) => {
+      Object.entries(takenData.filteredData).map(([key, value]) => {
         Object.entries(value).map(([k, v]) => {
           if (k === selected) {
             fieldValues = [...fieldValues, v];
@@ -87,12 +87,12 @@ const FieldPicker = (props) => {
                 options:
                   props.index > 0
                     ? {
-                        ...updatedChartsData.data.options,
-                        fieldNames: {
-                          ...updatedChartsData.data.options.fieldNames,
-                          [fieldName]: selected,
-                        },
-                      }
+                      ...updatedChartsData.data.options,
+                      fieldNames: {
+                        ...updatedChartsData.data.options.fieldNames,
+                        [fieldName]: selected,
+                      },
+                    }
                     : { ...updatedChartsData.data.options },
               },
             };
@@ -119,12 +119,12 @@ const FieldPicker = (props) => {
             chartOptionsUpdated =
               props.index > 0
                 ? {
-                    ...chartOptionsUpdated,
-                    fieldNames: {
-                      ...chartOptionsUpdated.fieldNames,
-                      [fieldName]: selected,
-                    },
-                  }
+                  ...chartOptionsUpdated,
+                  fieldNames: {
+                    ...chartOptionsUpdated.fieldNames,
+                    [fieldName]: selected,
+                  },
+                }
                 : { ...chartOptionsUpdated };
             updatedChartsData = {
               ...updatedChartsData,
@@ -138,7 +138,7 @@ const FieldPicker = (props) => {
         setChartData(updatedChartsData);
       }
     }
-  }, [takenData.data, selected]);
+  }, [takenData.data, selected, takenData.filteredData]);
 
   const removeHandler = (index) => {
     removeFieldPicker({ index });

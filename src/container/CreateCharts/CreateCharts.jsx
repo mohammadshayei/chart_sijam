@@ -18,6 +18,8 @@ import StyledButton from "../../component/UI/Button/StyledButton";
 import DropDown from "../../component/UI/DropDown/DropDown";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
 import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
+import BankSection from "./BankSection/BankSection";
+import Hint from "../../component/UI/Hint/Hint";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -41,12 +43,16 @@ function useOnClickOutside(ref, handler) {
 const CreateCharts = (props) => {
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
-  const token = useSelector((state) => state.auth.token);
+  const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
+  const { token, userId } = useSelector((state) => state.auth);
   // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
   const [saved, setSaved] = useState(false);
   const [dropDown, setDropDown] = useState(false);
+  const [splitView, setSplitView] = useState("نمودار");
+  const [hintShow, setHintShow] = useState({ split: false });
+  const [hover, setHover] = useState({ split: false });
   const location = useLocation();
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -113,6 +119,12 @@ const CreateCharts = (props) => {
         period: "",
         autoUpdate: false,
       },
+      shareAll: false,
+      editAll: false,
+      viewAll: false,
+      shareList: [],
+      editList: [],
+      viewList: [],
       data: {
         data: [],
         options: { ...clearedChartData.data.options, fieldNames: {} },
@@ -122,6 +134,51 @@ const CreateCharts = (props) => {
     if (location.pathname === "/create_chart")
       navigate('/view')
   };
+
+  const onMouseEnter = (type) => {
+    let updatedHover = { ...hover };
+    updatedHover[type] = true;
+    setHover(updatedHover);
+  };
+  const onMouseLeave = (type) => {
+    let updatedHover = { ...hover };
+    updatedHover[type] = false;
+    setHover(updatedHover);
+  };
+  useEffect(() => {
+    for (const key in hover) {
+      if (hover[key]) {
+        const timer = setTimeout(() => {
+          let updatedHintShow = { ...hintShow }
+          updatedHintShow[key] = true;
+          setHintShow(updatedHintShow);
+        }, 200);
+        return () => {
+          let updatedHintShow = { ...hintShow }
+          updatedHintShow[key] = false;
+          setHintShow(updatedHintShow);
+          return clearTimeout(timer);
+        };
+      }
+    }
+  }, [hover]);
+  const splitViewHandler = () => {
+    switch (splitView) {
+      case "نمودار":
+        setSplitView("تقسیم شده")
+        break;
+      case "تقسیم شده":
+        setSplitView("نمودار")
+        break;
+      // case "جدول":
+      //   setSplitView("نمودار")
+      //   break;
+
+      default:
+        setSplitView("نمودار")
+        break;
+    }
+  }
 
   const doneClickHandler = async () => {
     if (!takenData.chartData.title) {
@@ -145,6 +202,14 @@ const CreateCharts = (props) => {
             period: parseInt(takenData.chartData.config.period),
             auto_update: takenData.chartData.config.autoUpdate,
           },
+          holdingId: selectedHolding.holdingId,
+          userId,
+          shareAll: takenData.chartData.shareAll,
+          editAll: takenData.chartData.editAll,
+          viewAll: takenData.chartData.viewAll,
+          shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+          editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+          viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         };
       } else {
         chartApi = "edit_chart";
@@ -158,6 +223,14 @@ const CreateCharts = (props) => {
             period: parseInt(takenData.chartData.config.period),
             auto_update: takenData.chartData.config.autoUpdate,
           },
+          holdingId: selectedHolding.holdingId,
+          userId,
+          shareAll: takenData.chartData.shareAll,
+          editAll: takenData.chartData.editAll,
+          viewAll: takenData.chartData.viewAll,
+          shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+          editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+          viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         };
       }
       try {
@@ -404,12 +477,31 @@ const CreateCharts = (props) => {
               borderBottom:
                 chartsData.editMode && `1px solid ${theme.border_color}`,
             }}
-          ></div>
-          {chartsData.editMode && (
-            <div className="section-settings-display-type-switcher-wrapper">
+          >
+          </div>
+          <div
+            className="section-settings-display-type-switcher-wrapper"
+            onMouseEnter={() => onMouseEnter("split")}
+            onMouseLeave={() => onMouseLeave("split")}
+            style={{ top: chartsData.editMode ? "1.5rem" : "-4.55rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
+          >
+            {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
+              tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
+            <StyledButton
+              ButtonStyle={{
+                flex: "0 0 auto",
+                fontSize: "1rem",
+                marginBottom: "1rem",
+                padding: "4px",
+              }}
+              hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+              }
+              onClick={splitViewHandler}
+            >
               <VscSplitVertical />
-            </div>
-          )}
+            </StyledButton>
+          </div>
           <div className="section-settings-content-component">
             {chartsData.editMode && (
               <div className="section-settings-content-header-container">
@@ -449,12 +541,14 @@ const CreateCharts = (props) => {
                 </div>
               </div>
             )}
-            <div className="section-chart-content-container">
-              <ChartSection />
-            </div>
-            {/* <div className="table-component-container">
-              <BankSection />
-            </div> */}
+            {(splitView === "نمودار" || splitView === "تقسیم شده") &&
+              <div className="section-chart-content-container">
+                <ChartSection />
+              </div>}
+            {(splitView === "جدول" || splitView === "تقسیم شده") &&
+              <div className="table-component-container">
+                <BankSection />
+              </div>}
           </div>
         </div>
         {takenData.isEdit && <Steps type={"Line"} />}
