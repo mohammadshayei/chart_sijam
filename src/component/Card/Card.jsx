@@ -53,8 +53,8 @@ const Card = React.memo((props) => {
             ? theme.surface_4dp
             : theme.surface
           : themeState.isDark
-          ? theme.surface_1dp
-          : theme.surface,
+            ? theme.surface_1dp
+            : theme.surface,
         border: chartsData.editMode
           ? isHover
             ? `1px solid ${theme.primary}`
@@ -67,7 +67,7 @@ const Card = React.memo((props) => {
         chartType={props.item.type}
         title={props.item.title}
         parent={props.item.parent}
-        bankId={props.item.bankId}
+        bankId={props.item.bankId._id}
         cardIsHover={isHover}
       />
       <div className="card-body">

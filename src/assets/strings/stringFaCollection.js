@@ -131,4 +131,6 @@ export const stringFa = {
   view: "مشاهده",
   all: "همه",
   all_allowed_employees: " تمام کاربرانی که دسترسی دارند",
+  title_is_empty: "عنوان تعیین نشده است",
+  field_not_chosen: "فیلد انتخاب نشده",
 };

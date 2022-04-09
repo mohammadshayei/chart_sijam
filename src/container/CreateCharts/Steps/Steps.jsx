@@ -28,7 +28,7 @@ const Steps = (props) => {
           },
           xAxis: {
             title: "انتخاب فیلد",
-            content: <XAxisStep />,
+            content: <XAxisStep error={props.error} />,
             isOpen: false,
           },
           filter: {
@@ -38,7 +38,7 @@ const Steps = (props) => {
           },
           accessibility: {
             title: "دسترسی ها",
-            content: <AccessibilityStep />,
+            content: <AccessibilityStep error={props.error} />,
             isOpen: false,
           },
           timer: {
@@ -69,7 +69,7 @@ const Steps = (props) => {
     }
   }, [props.type]);
 
-  const onClickHandler = (e, key) => {
+  const onClickHandler = (key) => {
     let updatedOrderSteps = { ...orderSteps };
     let clickedStep = updatedOrderSteps[key];
     for (const item in updatedOrderSteps) {
@@ -79,6 +79,12 @@ const Steps = (props) => {
     setOrderSteps(updatedOrderSteps);
   };
 
+  useEffect(() => {
+    if (props.error)
+      onClickHandler(props.error)
+  }, [props.error]);
+
+
   return (
     <div className="section-settings-steps-component">
       {Object.entries(orderSteps).map(([k, v]) => {
@@ -86,17 +92,20 @@ const Steps = (props) => {
           <div
             key={k}
             className={`step-container ${v.isOpen && "open"} container-border`}
-            style={{ borderColor: theme.border_color }}
+            style={{ borderColor: props.error === k ? theme.error : theme.border_color }}
           >
             <div
               className={`step-title-container ${v.isOpen && "open"}`}
-              style={{ borderColor: theme.border_color }}
-              onClick={(e) => onClickHandler(e, k)}
+              style={{
+                borderColor: theme.border_color, backgroundColor: props.error === k ? theme.error : "transparent",
+                color: props.error === k ? theme.on_error : theme.on_background
+              }}
+              onClick={() => onClickHandler(k)}
             >
               <div className="title" style={{ color: theme.text_color }}>
                 {v.title}
               </div>
-              <div className={`arrow-icon ${v.isOpen && "open"}`}>
+              <div className={`arrow-icon ${v.isOpen && "open"}`} style={{ color: props.error === k ? theme.on_error : theme.text_color }}>
                 <IoIosArrowDown />
               </div>
             </div>

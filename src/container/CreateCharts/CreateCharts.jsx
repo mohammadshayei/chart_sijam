@@ -53,6 +53,8 @@ const CreateCharts = (props) => {
   const [splitView, setSplitView] = useState("نمودار");
   const [hintShow, setHintShow] = useState({ split: false });
   const [hover, setHover] = useState({ split: false });
+  const [stepError, setStepError] = useState(null);
+
   const location = useLocation();
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -130,6 +132,7 @@ const CreateCharts = (props) => {
         options: { ...clearedChartData.data.options, fieldNames: {} },
       },
     };
+    setIsEdit(false)
     setChartData(clearedChartData);
     if (location.pathname === "/create_chart")
       navigate('/view')
@@ -184,98 +187,104 @@ const CreateCharts = (props) => {
     if (!takenData.chartData.title) {
       setInput(true);
       setError(
-        <ErrorDialog onClose={setError}>عنوان تعیین نشده است</ErrorDialog>
+        <ErrorDialog onClose={setError}>{stringFa.title_is_empty}</ErrorDialog>
       );
+      return
     }
-    if (takenData.chartData.title) {
-      let chartApi, payload;
-      let updatedChartsData = chartsData.data;
-      if (location.pathname === "/create_chart") {
-        chartApi = "create_chart";
-        payload = {
-          title: takenData.chartData.title,
-          type: takenData.chartData.type,
-          data: takenData.chartData.data.data,
-          options: takenData.chartData.data.options,
-          bankId: takenData.id,
-          config: {
-            period: parseInt(takenData.chartData.config.period),
-            auto_update: takenData.chartData.config.autoUpdate,
-          },
-          holdingId: selectedHolding.holdingId,
-          userId,
-          shareAll: takenData.chartData.shareAll,
-          editAll: takenData.chartData.editAll,
-          viewAll: takenData.chartData.viewAll,
-          shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
-          editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
-          viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
-        };
-      } else {
-        chartApi = "edit_chart";
-        payload = {
-          title: takenData.chartData.title,
-          type: takenData.chartData.type,
-          data: takenData.chartData.data.data,
-          options: takenData.chartData.data.options,
-          chartId: takenData.id,
-          config: {
-            period: parseInt(takenData.chartData.config.period),
-            auto_update: takenData.chartData.config.autoUpdate,
-          },
-          holdingId: selectedHolding.holdingId,
-          userId,
-          shareAll: takenData.chartData.shareAll,
-          editAll: takenData.chartData.editAll,
-          viewAll: takenData.chartData.viewAll,
-          shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
-          editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
-          viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
-        };
-      }
-      try {
-        const result = await axios.post(`${baseUrl}api/${chartApi}`, payload, {
-          headers: { "auth-token": token },
-        });
-        if (!result.data.success) {
-          setError(
-            <ErrorDialog onClose={setError}>
-              {result.data.message.error}
-            </ErrorDialog>
-          );
-        } else {
-          closeHandler();
-          if (location.pathname !== "/create_chart") {
-            updatedChartsData = {
-              ...updatedChartsData,
-              [takenData.id]: {
-                title: takenData.chartData.title,
-                type: takenData.chartData.type,
-                data: takenData.chartData.data.data,
-                options: takenData.chartData.data.options,
-                config: {
-                  ...updatedChartsData[takenData.id].config,
-                  period: takenData.chartData.config.period,
-                  auto_update: takenData.chartData.config.autoUpdate,
-                },
-                parent: updatedChartsData[takenData.id].parent,
-                bankId: updatedChartsData[takenData.id].bankId,
-                lastBankUpdate: updatedChartsData[takenData.id].lastBankUpdate,
-              },
-            };
-            setChartsData(updatedChartsData);
-          }
-          setError(
-            <ErrorDialog success={true} onClose={setError}>
-              {stringFa.success_save}
-            </ErrorDialog>
-          );
-        }
-      } catch (error) {
+    if (takenData.chartData.data.data.length === 0) {
+      setStepError("xAxis")
+      setError(
+        <ErrorDialog onClose={setError}>{stringFa.field_not_chosen}</ErrorDialog>
+      );
+      return
+    }
+    let chartApi, payload;
+    let updatedChartsData = chartsData.data;
+    if (location.pathname === "/create_chart") {
+      chartApi = "create_chart";
+      payload = {
+        title: takenData.chartData.title,
+        type: takenData.chartData.type,
+        data: takenData.chartData.data.data,
+        options: takenData.chartData.data.options,
+        bankId: takenData.id,
+        config: {
+          period: parseInt(takenData.chartData.config.period),
+          auto_update: takenData.chartData.config.autoUpdate,
+        },
+        holdingId: selectedHolding.holdingId,
+        userId,
+        shareAll: takenData.chartData.shareAll,
+        editAll: takenData.chartData.editAll,
+        viewAll: takenData.chartData.viewAll,
+        shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+        editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+        viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
+      };
+    } else {
+      chartApi = "edit_chart";
+      payload = {
+        chartId: takenData.id,
+        title: takenData.chartData.title,
+        type: takenData.chartData.type,
+        data: takenData.chartData.data.data,
+        options: takenData.chartData.data.options,
+        config: {
+          period: parseInt(takenData.chartData.config.period),
+          auto_update: takenData.chartData.config.autoUpdate,
+        },
+        userId,
+        shareAll: takenData.chartData.shareAll,
+        editAll: takenData.chartData.editAll,
+        viewAll: takenData.chartData.viewAll,
+        shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+        editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+        viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
+      };
+    }
+    console.log(payload);
+    try {
+      const result = await axios.post(`${baseUrl}api/${chartApi}`, payload, {
+        headers: { "auth-token": token },
+      });
+      if (!result.data.success) {
         setError(
-          <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+          <ErrorDialog onClose={setError}>
+            {result.data.message.error}
+          </ErrorDialog>
+        );
+      } else {
+        closeHandler();
+        if (location.pathname !== "/create_chart") {
+          updatedChartsData = {
+            ...updatedChartsData,
+            [takenData.id]: {
+              title: takenData.chartData.title,
+              type: takenData.chartData.type,
+              data: takenData.chartData.data.data,
+              options: takenData.chartData.data.options,
+              config: {
+                ...updatedChartsData[takenData.id].config,
+                period: takenData.chartData.config.period,
+                auto_update: takenData.chartData.config.autoUpdate,
+              },
+              parent: updatedChartsData[takenData.id].parent,
+              bankId: updatedChartsData[takenData.id].bankId,
+              lastBankUpdate: updatedChartsData[takenData.id].lastBankUpdate,
+            },
+          };
+          setChartsData(updatedChartsData);
+        }
+        setError(
+          <ErrorDialog success={true} onClose={setError}>
+            {stringFa.success_save}
+          </ErrorDialog>
         );
       }
+    } catch (error) {
+      setError(
+        <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
+      );
     }
   };
 
@@ -551,7 +560,11 @@ const CreateCharts = (props) => {
               </div>}
           </div>
         </div>
-        {takenData.isEdit && <Steps type={"Line"} />}
+        {takenData.isFullscreen ?
+          takenData.isEdit && <Steps type={"Line"} />
+          :
+          <Steps type={"Line"} error={stepError} />
+        }
       </div>
     </div>
   );
