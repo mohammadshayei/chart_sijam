@@ -40,6 +40,7 @@ const Card = React.memo((props) => {
     const lastBankUpdate = `${weekday} - ${day} ${month} ${year_Time}`;
     setLastBankUpdate(lastBankUpdate);
   }, [props.item.lastBankUpdate]);
+  // console.log(props)
 
   return (
     <div

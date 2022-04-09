@@ -1,0 +1,34 @@
+.add-category-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-end;
+  .close-wrapper {
+    width: 100%;
+  }
+  .view-category-list {
+    width: 100%;
+    margin-bottom: 1rem;
+    .item {
+      width: 100%;
+      text-align: right;
+      padding: 0 .2rem;
+      margin: .5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  p {
+    margin-bottom: 0.2rem;
+  }
+  .action-wrapper {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+}

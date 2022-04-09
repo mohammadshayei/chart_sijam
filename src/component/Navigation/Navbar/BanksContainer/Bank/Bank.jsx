@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Bank.scss";
 import { useDispatch, useSelector } from "react-redux";
-import * as detailActions from "../../../../../store/actions/detail";
 import { ripple } from "../../../../../assets/config/ripple";
 import { useTheme } from "../../../../../styles/ThemeProvider";
 
 const Bank = React.memo(function Bank(props) {
   const [style, setStyle] = useState(null);
-  const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
   const detail = useSelector((state) => state.detail);
   const themeState = useTheme();

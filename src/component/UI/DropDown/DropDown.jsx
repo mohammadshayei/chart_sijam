@@ -39,7 +39,6 @@ const DropDown = (props) => {
     props.setSelected && props.setSelected(value);
     props.setDropDown(false); //state of dropdown activate
   };
-
   // ReactDom.createPortal
   return (
     <div
@@ -70,21 +69,32 @@ const DropDown = (props) => {
       {props.extraItems && (
         <div
           className="dropdown-divider"
-          style={{ borderColor: theme.border_color }}
+          style={{ borderColor: theme.darken_border_color }}
         ></div>
       )}
       {props.extraItems &&
         props.extraItems.map((item, index) => (
           <div
             key={item.name}
-            onClick={() => handleClick(item.name, item.id)}
+            onClick={() => {
+              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id);
+            }}
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}
           >
             {item.icon && <div className="dropdown-icon">{item.icon}</div>}
-            {item.name}
+            {props.selector ? item[props.selector] : item.name}
           </div>
         ))}
+      {props.additionalCompnoent && (
+        <div
+          className="dropdown-divider"
+          style={{ borderColor: theme.darken_border_color }}
+        ></div>
+      )}
+      {
+        props.additionalCompnoent && props.additionalCompnoent
+      }
     </div>
     // ,
     // document.getElementById("portal")

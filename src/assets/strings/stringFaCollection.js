@@ -117,5 +117,13 @@ export const stringFa = {
   other: "سایر",
   no_user_exist: "کاربری یافت نشد",
   see: "مشاهده",
-  clear:"پاک سازی"
+  show_bank_has_charts: "فقط بانک های دارای نمودار",
+  edit_category: "ویرایش لیست ...",
+  category_name: "نام لیست",
+  add: "اضافه شود",
+  list: "لیست",
+  add_to_list: "افزودن به لیست",
+  which_list_do_you_add_the_product: "کالا را به کدام لیست اضافه می‌کنید؟",
+  create_list: "ایجاد لیست",
+  enter_list_name:"نام لیست خود را بنویسید"
 };

@@ -19,7 +19,7 @@ const ShareBox = ({ chartId, setShowModal }) => {
   const [error, setError] = useState(null)
   const [employees, setEmployees] = useState([]);
   const { selectedHolding } = useSelector(state => state.holdingDetail)
-  const { token } = useSelector(state => state.auth)
+  const { token, userId } = useSelector(state => state.auth)
 
 
 
@@ -57,13 +57,13 @@ const ShareBox = ({ chartId, setShowModal }) => {
     setEmployees(updatedEmployees)
     //send api 
     setLoading(true)
-    let result = await changeAccessChartEmployee({ userId: _id, holdingId: selectedHolding.holdingId, chartId, status: type },token)
+    let result = await changeAccessChartEmployee({ senderId: userId, recieverId: _id, holdingId: selectedHolding.holdingId, chartId, status: type }, token)
     setError(<ErrorDialog success={result.success} onClose={setError}>{result.data}</ErrorDialog>)
     setLoading(false)
 
   };
   return (
-    <div className="container">
+    <div className="container" ref={ref}>
       {error}
       <StyledButton
         ButtonStyle={{
@@ -97,7 +97,7 @@ const ShareBox = ({ chartId, setShowModal }) => {
           setFocus(true);
         }}
         onBlur={() => setFocus(false)}
-      ></input>
+      />
       {dropDown && (
         <Dropdown
           divStyle={{
@@ -105,7 +105,7 @@ const ShareBox = ({ chartId, setShowModal }) => {
             right: "2rem",
             left: "2rem",
           }}
-          items={employees.filter(item => !item.has).map(item => item.user)}
+          items={employees.filter(item => !item.has && !item.user.is_fekrafzar).map(item => item.user)}
           onClick={(id) => { changeStatus(id, 'add') }}
           setDropDown={setDropDown}
           selector='username'
@@ -113,7 +113,7 @@ const ShareBox = ({ chartId, setShowModal }) => {
         />
       )}
       <div className="users-list-wrapper">
-        {employees && employees.filter(item => item.has).map((item) => (
+        {employees && employees.filter(item => item.has && !item.user.is_fekrafzar).map((item) => (
           <div
             key={item.user._id}
             className="user"
@@ -123,15 +123,18 @@ const ShareBox = ({ chartId, setShowModal }) => {
               <img src={item.user.image !== '' ? `${baseUrl}images/${item.user.image}` : `${baseUrl}images/avatar.png`} alt="user_image" className="avatar" />
               <div className="user-name">{item.user.username}</div>
             </div>
-            <StyledButton
-              ButtonStyle={{
-                fontSize: "1rem",
-                color: "rgb(140, 140, 140)",
-              }}
-              onClick={() => changeStatus(item.user._id, 'remove')}
-            >
-              <VscClose />
-            </StyledButton>
+            {
+              item.user._id !== userId &&
+              <StyledButton
+                ButtonStyle={{
+                  fontSize: "1rem",
+                  color: "rgb(140, 140, 140)",
+                }}
+                onClick={() => changeStatus(item.user._id, 'remove')}
+              >
+                <VscClose />
+              </StyledButton>
+            }
           </div>
         ))}
       </div>

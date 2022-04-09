@@ -25,8 +25,6 @@ export const removeEmployee =
     });
   };
 
-
-
 export const setHoldingInfo = (info) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_HOLDING_INFO,
@@ -42,6 +40,12 @@ export const setHoldings = (holdings) => (dispatch) => {
 export const editHodlingInfo = (payload) => (dispatch) => {
   dispatch({
     type: actionTypes.EDIT_HOLDING_INFO,
+    payload,
+  });
+};
+export const deleteCreateCategory = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.DELETE_CREATE_CATEGORY,
     payload,
   });
 };

@@ -17,7 +17,8 @@ import ErrorDialog from "./../UI/Error/ErrorDialog";
 import StyledButton from "../UI/Button/StyledButton";
 import Modal from "./../UI/Modal/Modal";
 import ShareBox from "./../ShareBox/ShareBox";
-
+import { AiOutlinePlus } from 'react-icons/ai'
+import AddChartToCategory from "./AddChartToCategory/AddChartToCategory";
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
     const listener = (event) => {
@@ -43,6 +44,7 @@ const TitleBlock = React.memo((props) => {
   const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [addChartModal, setAddChartModal] = useState(false);
   const chartsData = useSelector((state) => state.chart);
   const token = useSelector((state) => state.auth.token);
   const detailsSelection = useSelector((state) => state.detail);
@@ -213,6 +215,18 @@ const TitleBlock = React.memo((props) => {
       >
         <ShareBox chartId={props.chartId} setShowModal={setShowModal} />
       </Modal>
+      <Modal
+        show={addChartModal}
+        modalClosed={() => setAddChartModal(false)}
+        style={{
+          height: "60%",
+          width: "30%",
+          minHeight: "230px",
+          minWidth: "340px",
+        }}
+      >
+        <AddChartToCategory chartId={props.chartId} close={() => setAddChartModal(false)} />
+      </Modal>
       <div className="card-source-name">
         <div className="icons-container">
           <div ref={ref}>
@@ -259,7 +273,8 @@ const TitleBlock = React.memo((props) => {
           </div>
         </div>
         <p className="details">
-          {props.parent ? props.parent.join(" - ") : ""}
+          {/* {props.parent ? props.parent.join(" - ") : ""} */}
+          <p>{props.title}</p>
         </p>
         {chartsData.editMode ? (
           <div className="right-icon-container">
@@ -282,6 +297,15 @@ const TitleBlock = React.memo((props) => {
               <FaUserFriends color={theme.primary} />
             </StyledButton>
             <StyledButton
+              onClick={() => setAddChartModal(!showModal)}
+              hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+              }
+            >
+              <AiOutlinePlus color={theme.primary} fontSize={'1.2rem'} />
+            </StyledButton>
+
+            <StyledButton
               hover={
                 themeState.isDark ? theme.surface_1dp : theme.background_color
               }
@@ -295,9 +319,6 @@ const TitleBlock = React.memo((props) => {
             </StyledButton>
           </div>
         )}
-      </div>
-      <div className="card-title">
-        <p>{props.title}</p>
       </div>
     </div>
   );

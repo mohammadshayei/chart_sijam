@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './HeaderViewContent.scss'
 import { BsThreeDots } from 'react-icons/bs'
 import StarRoundedIcon from "@material-ui/icons/StarRounded";
@@ -11,15 +11,23 @@ import { AiOutlineUsergroupDelete } from 'react-icons/ai'
 import GroupButton from '../../../../component/UI/GroupButton/GroupButton';
 import ToolsContainer from './ToolsContainer/ToolsContainer';
 import { useSelector } from 'react-redux';
+import Dropdown from "../../../../component/UI/DropDown/DropDown";
+import Modal from '../../../../component/UI/Modal/Modal';
+import AddCategory from './AddCategory/AddCategory';
+
 const HeaderViewContent = (props) => {
     const [isFav, setIsFav] = useState(false)
     const [editable, setEditable] = useState(false)
-
+    const [dropDown, setDropDown] = useState(false);
+    const [showModal, setShowModal] = useState(false)
     const themeState = useTheme();
     const theme = themeState.computedTheme;
 
     const chartsData = useSelector((state) => state.chart);
     const user = useSelector((state) => state.auth.user);
+    const { selectedHolding } = useSelector((state) => state.holdingDetail);
+
+    const ref = useRef();
 
 
     const onStarClickHandler = (e) => {
@@ -42,12 +50,42 @@ const HeaderViewContent = (props) => {
         if (user && user.is_fekrafzar) setEditable(true)
         else setEditable(false)
     }, [user])
+    const onCategoryClickHandler = _id => {
+        if (_id === 'add_category') {
+            setShowModal(true)
+        } else {
+
+        }
+    }
+    const onToggle = () => {
+        setDropDown(!dropDown)
+    }
+    const closeModal = () => {
+        setShowModal(false);
+    };
     return (
         <div className='header-view-content-container' >
-            <div className="header-view-left-section">
-                <BsThreeDots style={{ cursor: "pointer", fontSize: "1.2rem" }} />
+            <div className="header-view-left-section" ref={ref}>
+                <BsThreeDots style={{ cursor: "pointer", fontSize: "1.2rem" }} onClick={onToggle} />
+                {selectedHolding && dropDown && (
+                    <Dropdown
+                        divStyle={{
+                            top: "5.45rem",
+                            left: "2.45rem",
+                        }}
+                        items={selectedHolding.categories.filter(item => item.category.name !== 'fave').map(item => item.category)}
+                        onClick={onCategoryClickHandler}
+                        setDropDown={setDropDown}
+                        divContainerRef={ref}
+                        extraItems={[{ name: stringFa.edit_category, _id: "add_category", }]}
+                    />
+                )}
+                {<Modal show={showModal} modalClosed={closeModal}
+                    style={{ width: "fit-content" }}>
+                    <AddCategory close={closeModal} />
+                </Modal>}
                 {
-                    countProperties(chartsData.data) !== 0 &&
+                    selectedHolding && selectedHolding.categories.findIndex(item => item.category.name === 'fave') > -1 &&
                     <div className='star-container' onClick={onStarClickHandler}>
                         {isFav ? (
                             <StarRoundedIcon style={starStyles} />
@@ -58,7 +96,7 @@ const HeaderViewContent = (props) => {
                 }
 
                 {
-                    // some condition to show button share but i dont know 
+                    // for share categories to other employee
                     false && <Button
                         ButtonStyle={{
                             backgroundColor: theme.primary,

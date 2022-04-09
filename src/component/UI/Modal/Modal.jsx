@@ -4,8 +4,8 @@ import classes from "./Modal.module.css";
 import { animated, useTransition } from "react-spring";
 import { createPortal } from "react-dom";
 import { useTheme } from "../../../styles/ThemeProvider";
-
-const Modal = React.memo((props) => {
+//change modal to none memo
+const Modal = (props) => {
   const [myClassName, setMyClassName] = useState([classes.Modal]);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -66,5 +66,5 @@ const Modal = React.memo((props) => {
     ),
     document.getElementById("portal")
   );
-});
+};
 export default Modal;

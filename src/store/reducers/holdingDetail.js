@@ -41,7 +41,6 @@ const removeEmployee = (state, action) => {
   };
 };
 
-
 const setHoldingInfo = (state, action) => {
   return {
     ...state,
@@ -81,6 +80,39 @@ const editHodlingInfo = (state, action) => {
     holdings: updatedHoldings,
   };
 };
+const createDeleteCategory = (state, action) => {
+  const { data, mode } = action.payload;
+  if (mode !== "delete" && mode !== "create") return { ...state };
+  let updatedSelectedHolding = { ...state.selectedHolding };
+  let updatedHoldings = [...state.holdings];
+  let updatedCategories = [...updatedSelectedHolding.categories];
+  if (mode === "create") {
+    updatedCategories.push({
+      category: {
+        _id: data._id,
+        name: data.name,
+        charts: [],
+      },
+    });
+  } else {
+    let findedCategroyIndex = updatedCategories.findIndex(
+      (item) => item.category._id === data._id
+    );
+    if (findedCategroyIndex < 0) return { ...state };
+    updatedCategories.splice(findedCategroyIndex, 1);
+  }
+  updatedSelectedHolding.categories = updatedCategories;
+  let updatedHoldingIndex = updatedHoldings.findIndex(
+    (item) => item.holdingId === updatedSelectedHolding.holdingId
+  );
+  if (updatedHoldingIndex < 0) return { ...state };
+  updatedHoldings[updatedHoldingIndex].categories = updatedCategories;
+  return {
+    ...state,
+    selectedHolding: updatedSelectedHolding,
+    holdings: updatedHoldings,
+  };
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -96,6 +128,8 @@ const reducer = (state = initialState, action) => {
       return setHoldings(state, action);
     case actionTypes.EDIT_HOLDING_INFO:
       return editHodlingInfo(state, action);
+    case actionTypes.DELETE_CREATE_CATEGORY:
+      return createDeleteCategory(state, action);
 
     default:
       return state;

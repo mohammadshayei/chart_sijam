@@ -89,15 +89,16 @@ const DrawerViewCharts = (props) => {
   };
 
   return (
-    <div>
+    <div >
       {props.isMenuOpen && <MenuItems checked={checked} />}
       <div className="optional-show">
         <p style={{
-          color: theme.on_primary
+          color: theme.on_background,
+          fontSize:'.8rem'
         }}>
-          {stringFa.clear}
+          {stringFa.show_bank_has_charts}
         </p>
-        <CheckBox checked={checked} onChange={() => {
+        <CheckBox style={{padding:0}} checked={checked} onChange={() => {
           clearSelected()
           setChecked(!checked)
         }} />

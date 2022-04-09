@@ -22,6 +22,7 @@ const Input = (props) => {
       case "input":
         setInputElement(
           <input
+          
             className={`InputElement ${props.invalid && props.shouldValidate && props.touched
               ? "invalid"
               : ""
@@ -90,7 +91,7 @@ const Input = (props) => {
         );
         break;
     }
-  }, [props.elementType, props.value, focus, themeState.isDark]);
+  }, [props.elementType, props.value, focus, themeState.isDark, props.isOk]);
 
   return <div className="input-container" style={{ ...props.inputContainer }}>
     {props.title &&
