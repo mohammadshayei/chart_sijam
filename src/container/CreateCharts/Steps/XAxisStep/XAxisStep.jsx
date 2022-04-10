@@ -1,21 +1,37 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./XAxisStep.scss";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import { stringFa } from "../../../../assets/strings/stringFaCollection.js";
 import StyledButton from "./../../../../component/UI/Button/StyledButton";
-import * as fieldPickerActions from "../../../../store/actions/fieldPicker";
 import FieldPicker from "./FieldPicker.jsx";
-import { useSelector, useDispatch } from "react-redux";
 
 const XAxisStep = () => {
-  const pickers = useSelector((state) => state.fieldPicker);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const [pickers, setPickers] = useState([]);
 
-  const dispatch = useDispatch();
-  const addFieldPicker = (fieldPicker) => {
-    dispatch(fieldPickerActions.addFieldPicker(fieldPicker));
+  const removeFieldPicker = (index) => {
+    let updatedPickers = [];
+    if (index !== -1) {
+      updatedPickers = pickers.filter((picker) => picker.props.index !== index)
+    }
+    console.log(updatedPickers);
+    setPickers(updatedPickers)
   };
+
+  const addFieldPicker = () => {
+    let updatedPickers = [...pickers,
+    <FieldPicker key={`${pickers.length}`} index={pickers.length} removeFieldPicker={removeFieldPicker} />]
+    setPickers(updatedPickers)
+  };
+
+  useEffect(() => {
+    setPickers([
+      <FieldPicker key="0" title={stringFa.column_type} index={0} removeFieldPicker={removeFieldPicker} />,
+      <FieldPicker key="1" title={stringFa.values} index={1} removeFieldPicker={removeFieldPicker} />,
+    ])
+  }, []);
+
 
   return (
     <div className="settings-content">
@@ -23,11 +39,7 @@ const XAxisStep = () => {
       <div className="x-axis-column">
         <div className="settings-multiple-item-footer">
           <StyledButton
-            onClick={() =>
-              addFieldPicker(
-                <FieldPicker key={`${pickers.length}`} index={pickers.length} />
-              )
-            }
+            onClick={() => addFieldPicker()}
             hover={
               themeState.isDark ? theme.surface_1dp : theme.background_color
             }
