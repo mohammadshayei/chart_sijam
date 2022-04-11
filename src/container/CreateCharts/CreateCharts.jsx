@@ -51,7 +51,7 @@ const CreateCharts = (props) => {
   const [dropDown, setDropDown] = useState(false);
   const [splitView, setSplitView] = useState("نمودار");
   const [hintShow, setHintShow] = useState({ split: false });
-  const [hover, setHover] = useState({ split: false });
+  const [hover, setHover] = useState({ split: false, title: false });
 
   const location = useLocation();
   const themeState = useTheme();
@@ -77,6 +77,7 @@ const CreateCharts = (props) => {
 
   useOnClickOutside(ref, () => {
     setInput(false);
+    onMouseLeave("title")
   });
 
   const dispatch = useDispatch();
@@ -103,11 +104,11 @@ const CreateCharts = (props) => {
   };
 
   const setTitleHandler = (e) => {
-    setError(null);
     if (e.type === "keydown") {
       if (e.key === "Enter") {
         setChartTitle({ title: e.target.value });
         setInput(false);
+        onMouseLeave("title")
       }
     } else setChartTitle({ title: e.target.value });
   };
@@ -186,9 +187,8 @@ const CreateCharts = (props) => {
 
   const checkValidation = (dialog) => {
     let errorText, updatedStepErrors = []
-    setError(null)
     if (!takenData.chartData.title) {
-      setInput(true);
+      updatedStepErrors = [...updatedStepErrors, "input"]
       errorText = stringFa.title_is_empty
     };
     if (takenData.chartData.data.data.length === 0) {
@@ -206,17 +206,27 @@ const CreateCharts = (props) => {
       if (errorText === stringFa.field_not_chosen)
         updatedStepErrors = [...updatedStepErrors, "xAxis"]
     }
-    if (!takenData.chartData.shareAll &&
-      !takenData.chartData.editAll &&
-      !takenData.chartData.viewAll &&
-      takenData.chartData.shareList.length === 0 &&
-      takenData.chartData.editList.length === 0 &&
+    if (!takenData.chartData.editAll &&
+      takenData.chartData.editList.length === 0) {
+      updatedStepErrors = [...updatedStepErrors, "edit"]
+      errorText = stringFa.permissions_not_defined
+    }
+    if (!takenData.chartData.viewAll &&
       takenData.chartData.viewList.length === 0) {
+      updatedStepErrors = [...updatedStepErrors, "view"]
+      errorText = stringFa.permissions_not_defined
+    }
+    if (!takenData.chartData.shareAll &&
+      takenData.chartData.shareList.length === 0) {
+      updatedStepErrors = [...updatedStepErrors, "share"]
+      errorText = stringFa.permissions_not_defined
+    }
+    if (errorText === stringFa.permissions_not_defined) {
       updatedStepErrors = [...updatedStepErrors, "accessibility"]
-      errorText = stringFa.field_not_chosen
     }
     if (updatedStepErrors.length > 0) {
-      if (dialog)
+      if (dialog) {
+        setError(null)
         if (updatedStepErrors.length > 1)
           setError(
             <ErrorDialog onClose={setError}>{stringFa.fill_required_items}</ErrorDialog>
@@ -225,7 +235,7 @@ const CreateCharts = (props) => {
           setError(
             <ErrorDialog onClose={setError}>{errorText}</ErrorDialog>
           )
-
+      }
       updateEmptyRequireds({ emptyRequireds: updatedStepErrors })
       return false
     }
@@ -571,15 +581,33 @@ const CreateCharts = (props) => {
                       {input ? (
                         <input
                           className="editable-input"
+                          style={{
+                            borderColor: takenData.emptyRequireds.length > 0 ?
+                              takenData.emptyRequireds.includes("input") ?
+                                theme.error :
+                                theme.darken_border_color :
+                              theme.darken_border_color
+                          }}
                           dir="rtl"
                           placeholder={stringFa.title}
                           value={takenData.chartData.title}
                           onChange={setTitleHandler}
                           onKeyDown={setTitleHandler}
-                          style={{ borderColor: error ? "red" : "" }}
+                          autoFocus
                         />
                       ) : (
-                        <div className="text-component" dir="rtl">
+                        <div className="text-component" dir="rtl"
+                          onMouseEnter={() => onMouseEnter("title")}
+                          onMouseLeave={() => onMouseLeave("title")}
+                          style={{
+                            border: takenData.emptyRequireds.length > 0 ?
+                              takenData.emptyRequireds.includes("input") ?
+                                `1px dashed ${theme.error}` :
+                                hover.title ? `1px dashed ${theme.darken_border_color}` :
+                                  "none" :
+                              hover.title ? `1px dashed ${theme.darken_border_color}` :
+                                "none"
+                          }}>
                           <span>
                             {takenData.chartData.title
                               ? takenData.chartData.title

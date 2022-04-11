@@ -1,17 +1,22 @@
 .accessibility-step {
 	text-align: right;
 	.accessibility-page-btn {
-		background-color: cadetblue;
 		display: flex;
 		flex-direction: row-reverse;
-		border-radius: 12px;
 		width: 100%;
-		overflow: hidden;
 		.page-btn-item {
 			font-size: 0.6rem;
 			flex: 1;
 			padding: 0.3rem 0;
 			text-align: center;
+			&:first-child {
+				border-top-right-radius: 12px;
+				border-bottom-right-radius: 12px;
+			}
+			&:last-child {
+				border-top-left-radius: 12px;
+				border-bottom-left-radius: 12px;
+			}
 		}
 	}
 	.allowed-employees {
