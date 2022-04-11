@@ -133,4 +133,6 @@ export const stringFa = {
   all_allowed_employees: " تمام کاربرانی که دسترسی دارند",
   title_is_empty: "عنوان تعیین نشده است",
   field_not_chosen: "فیلد انتخاب نشده",
+  permissions_not_defined: "دسترسی ها مشخص نشده",
+  fill_required_items: "قسمت های الزامی را پر نمایید"
 };

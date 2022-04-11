@@ -9,9 +9,11 @@ import TimerStep from "./TimerStep/TimerStep";
 import ChartSetting from "./SettingStep/ChartSetting.jsx";
 import Filter from "./Filter/Filter.jsx";
 import AccessibilityStep from "./AccessibilityStep/AccessibilityStep.jsx";
+import { useSelector } from "react-redux";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
+  const takenData = useSelector((state) => state.addChart);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -28,7 +30,7 @@ const Steps = (props) => {
           },
           xAxis: {
             title: "انتخاب فیلد",
-            content: <XAxisStep error={props.error} />,
+            content: <XAxisStep />,
             isOpen: false,
           },
           filter: {
@@ -38,7 +40,7 @@ const Steps = (props) => {
           },
           accessibility: {
             title: "دسترسی ها",
-            content: <AccessibilityStep error={props.error} />,
+            content: <AccessibilityStep />,
             isOpen: false,
           },
           timer: {
@@ -79,12 +81,6 @@ const Steps = (props) => {
     setOrderSteps(updatedOrderSteps);
   };
 
-  useEffect(() => {
-    if (props.error)
-      onClickHandler(props.error)
-  }, [props.error]);
-
-
   return (
     <div className="section-settings-steps-component">
       {Object.entries(orderSteps).map(([k, v]) => {
@@ -92,20 +88,40 @@ const Steps = (props) => {
           <div
             key={k}
             className={`step-container ${v.isOpen && "open"} container-border`}
-            style={{ borderColor: props.error === k ? theme.error : theme.border_color }}
+            style={{
+              borderColor: takenData.emptyRequireds.length > 0 ?
+                takenData.emptyRequireds.includes(k) ?
+                  theme.error :
+                  theme.border_color :
+                theme.border_color
+            }}
           >
             <div
               className={`step-title-container ${v.isOpen && "open"}`}
               style={{
-                borderColor: theme.border_color, backgroundColor: props.error === k ? theme.error : "transparent",
-                color: props.error === k ? theme.on_error : theme.on_background
+                borderColor: theme.border_color, backgroundColor: takenData.emptyRequireds.length > 0 ?
+                  takenData.emptyRequireds.includes(k) ?
+                    theme.error :
+                    "transparent" :
+                  "transparent",
+                color: takenData.emptyRequireds.length > 0 ?
+                  takenData.emptyRequireds.includes(k) ?
+                    theme.on_error :
+                    theme.on_background :
+                  theme.on_background
               }}
               onClick={() => onClickHandler(k)}
             >
               <div className="title" style={{ color: theme.text_color }}>
                 {v.title}
               </div>
-              <div className={`arrow-icon ${v.isOpen && "open"}`} style={{ color: props.error === k ? theme.on_error : theme.text_color }}>
+              <div className={`arrow-icon ${v.isOpen && "open"}`} style={{
+                color: takenData.emptyRequireds.length > 0 ?
+                  takenData.emptyRequireds.includes(k) ?
+                    theme.on_error :
+                    theme.text_color :
+                  theme.text_color
+              }}>
                 <IoIosArrowDown />
               </div>
             </div>

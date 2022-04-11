@@ -101,3 +101,12 @@ export const updateAccessList =
         payload: { accessType, employee, add },
       });
     };
+
+export const updateEmptyRequireds =
+  ({ emptyRequireds }) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_EMPTY_REQUIREDS,
+        payload: { emptyRequireds },
+      });
+    };

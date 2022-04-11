@@ -48,12 +48,10 @@ const CreateCharts = (props) => {
   // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
-  const [saved, setSaved] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [splitView, setSplitView] = useState("نمودار");
   const [hintShow, setHintShow] = useState({ split: false });
   const [hover, setHover] = useState({ split: false });
-  const [stepError, setStepError] = useState(null);
 
   const location = useLocation();
   const themeState = useTheme();
@@ -99,6 +97,9 @@ const CreateCharts = (props) => {
   };
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
+  };
+  const updateEmptyRequireds = (emptyRequireds) => {
+    dispatch(addChartActions.updateEmptyRequireds(emptyRequireds));
   };
 
   const setTitleHandler = (e) => {
@@ -183,21 +184,58 @@ const CreateCharts = (props) => {
     }
   }
 
-  const doneClickHandler = async () => {
+  const checkValidation = (dialog) => {
+    let errorText, updatedStepErrors = []
+    setError(null)
     if (!takenData.chartData.title) {
       setInput(true);
-      setError(
-        <ErrorDialog onClose={setError}>{stringFa.title_is_empty}</ErrorDialog>
-      );
-      return
-    }
+      errorText = stringFa.title_is_empty
+    };
     if (takenData.chartData.data.data.length === 0) {
-      setStepError("xAxis")
-      setError(
-        <ErrorDialog onClose={setError}>{stringFa.field_not_chosen}</ErrorDialog>
-      );
-      return
+      updatedStepErrors = [...updatedStepErrors, "xAxis", "category", "field1"]
+      errorText = stringFa.field_not_chosen
+    } else {
+      if (!("category" in takenData.chartData.data.data[0])) {
+        updatedStepErrors = [...updatedStepErrors, "category"]
+        errorText = stringFa.field_not_chosen
+      }
+      if (!("field1" in takenData.chartData.data.data[0])) {
+        updatedStepErrors = [...updatedStepErrors, "field1"]
+        errorText = stringFa.field_not_chosen
+      }
+      if (errorText === stringFa.field_not_chosen)
+        updatedStepErrors = [...updatedStepErrors, "xAxis"]
     }
+    if (!takenData.chartData.shareAll &&
+      !takenData.chartData.editAll &&
+      !takenData.chartData.viewAll &&
+      takenData.chartData.shareList.length === 0 &&
+      takenData.chartData.editList.length === 0 &&
+      takenData.chartData.viewList.length === 0) {
+      updatedStepErrors = [...updatedStepErrors, "accessibility"]
+      errorText = stringFa.field_not_chosen
+    }
+    if (updatedStepErrors.length > 0) {
+      if (dialog)
+        if (updatedStepErrors.length > 1)
+          setError(
+            <ErrorDialog onClose={setError}>{stringFa.fill_required_items}</ErrorDialog>
+          )
+        else
+          setError(
+            <ErrorDialog onClose={setError}>{errorText}</ErrorDialog>
+          )
+
+      updateEmptyRequireds({ emptyRequireds: updatedStepErrors })
+      return false
+    }
+    return true
+  }
+
+  const doneClickHandler = async () => {
+    const valid = checkValidation(true);
+    if (!valid)
+      return
     let chartApi, payload;
     let updatedChartsData = chartsData.data;
     if (location.pathname === "/create_chart") {
@@ -242,7 +280,6 @@ const CreateCharts = (props) => {
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
       };
     }
-    console.log(payload);
     try {
       const result = await axios.post(`${baseUrl}api/${chartApi}`, payload, {
         headers: { "auth-token": token },
@@ -343,6 +380,11 @@ const CreateCharts = (props) => {
       setIsEdit(false);
     }
   }, [takenData.isFullscreen]);
+
+  useEffect(() => {
+    if (takenData.emptyRequireds.length > 0)
+      checkValidation(false)
+  }, [takenData.chartData]);
 
   return (
     <div
@@ -563,7 +605,7 @@ const CreateCharts = (props) => {
         {takenData.isFullscreen ?
           takenData.isEdit && <Steps type={"Line"} />
           :
-          <Steps type={"Line"} error={stepError} />
+          <Steps type={"Line"} />
         }
       </div>
     </div>

@@ -183,7 +183,7 @@ const FieldPicker = (props) => {
         <div
           className={`dropdown-wrapper ${isOpen && "open"}`}
           onClick={() => setIsOpen(!isOpen)}
-          style={{ borderColor: theme.border_color }}
+          style={{ borderColor: props.error ? theme.error : theme.border_color }}
         >
           <div className="dropdown-indicator">
             <div className={`dropdown-indicator-icon ${isOpen && "rotate"}`}>

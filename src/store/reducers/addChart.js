@@ -4,6 +4,7 @@ const initialState = {
   id: "",
   isEdit: false,
   isFullscreen: false,
+  emptyRequireds: [],
   data: {},
   filteredData: [],
   chartData: {
@@ -257,6 +258,14 @@ const updateAccessList = (state, action) => {
   };
 };
 
+const updateEmptyRequireds = (state, action) => {
+  const { emptyRequireds } = action.payload;
+  return {
+    ...state,
+    emptyRequireds
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SELECT_DATA_ADD_CHART:
@@ -283,6 +292,8 @@ const reducer = (state = initialState, action) => {
       return setAccessToAll(state, action);
     case actionTypes.UPDATE_ACCESS_LIST:
       return updateAccessList(state, action);
+    case actionTypes.UPDATE_EMPTY_REQUIREDS:
+      return updateEmptyRequireds(state, action);
 
     default:
       return state;
