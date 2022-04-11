@@ -14,18 +14,19 @@ const ChartBlock = React.memo((props) => {
 
   useEffect(() => {
     if (props.chartId === "123456789") {
-      setLoading(<SkeletonChart />);
-      setTimeout(() => {
-        setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
-        if (chartData.chartData.data.data) {
+      if (chartData.chartData.data.data.length > 0) {
+        setLoading(<SkeletonChart />);
+        setTimeout(() => {
           setData({
             title: chartData.chartData.title,
             type: chartData.chartData.type,
             data: chartData.chartData.data.data,
             options: chartData.chartData.data.options,
           });
-        }
-      }, 1000);
+        }, 100);
+      }
+      else
+        setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
     } else {
       setLoading(<SkeletonChart />);
       if (props.chartProps) {
@@ -45,7 +46,6 @@ const ChartBlock = React.memo((props) => {
           newChart = <XYChart chartId={props.chartId} chartProps={data} />;
           break;
         case "Pie":
-        case "Doughnut":
           newChart = <PieChart chartId={props.chartId} chartProps={data} />;
           break;
         case "Gauge":

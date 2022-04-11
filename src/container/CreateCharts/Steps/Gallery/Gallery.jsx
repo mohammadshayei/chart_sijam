@@ -146,9 +146,11 @@ const Gallery = (props) => {
               break;
             case "pie":
               chartData.type = "Pie";
+              chartData.data.options.isDoughnut = false;
               break;
             case "donut":
-              chartData.type = "Doughnut";
+              chartData.type = "Pie";
+              chartData.data.options.isDoughnut = true;
               break;
 
             default:

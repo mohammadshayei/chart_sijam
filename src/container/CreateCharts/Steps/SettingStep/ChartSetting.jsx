@@ -498,84 +498,83 @@ const ChartSetting = () => {
             </div>
           </li>
         )}
-        {(takenData.chartData.type === "Pie" ||
-          takenData.chartData.type === "Doughnut") && (
-            <li className="setting-item">
-              <div
-                className="line"
-                style={{ backgroundColor: theme.border_color }}
-              ></div>
-              <div className="setting-part-container">
-                {stringFa.data_labels}
-                <CheckBox
-                  checked={dataLabels.disabled}
-                  onChange={(e) => dataLabelsCheckBoxClick(e.target.checked)}
-                  style={{
-                    padding: "1rem 1rem 0.5rem 0",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  {stringFa.disabled}
-                </CheckBox>
-                {!dataLabels.disabled && (
-                  <div className="value-axis-setting">
-                    : {stringFa.labels_text}
-                    <div
-                      className="setting-dropdown-component"
-                      ref={ref}
-                      style={{ padding: "0 1rem" }}
-                    >
-                      {labelsDropdown && (
-                        <DropDown
-                          divStyle={{
-                            top: "1.1rem",
-                            width: "13.2rem",
-                          }}
-                          items={labelsDropDownItems}
-                          setSelected={setSelectedLabelsText}
-                          setDropDown={setLabelsDropdown}
-                          divContainerRef={ref}
-                        />
-                      )}
-                      <div
-                        className={`dropdown-wrapper ${labelsDropdown && "open"}`}
-                        onClick={() => {
-                          setLabelsDropdown(!labelsDropdown);
+        {(takenData.chartData.type === "Pie") && (
+          <li className="setting-item">
+            <div
+              className="line"
+              style={{ backgroundColor: theme.border_color }}
+            ></div>
+            <div className="setting-part-container">
+              {stringFa.data_labels}
+              <CheckBox
+                checked={dataLabels.disabled}
+                onChange={(e) => dataLabelsCheckBoxClick(e.target.checked)}
+                style={{
+                  padding: "1rem 1rem 0.5rem 0",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {stringFa.disabled}
+              </CheckBox>
+              {!dataLabels.disabled && (
+                <div className="value-axis-setting">
+                  : {stringFa.labels_text}
+                  <div
+                    className="setting-dropdown-component"
+                    ref={ref}
+                    style={{ padding: "0 1rem" }}
+                  >
+                    {labelsDropdown && (
+                      <DropDown
+                        divStyle={{
+                          top: "1.1rem",
+                          width: "13.2rem",
                         }}
-                        style={{ borderColor: theme.border_color }}
-                      >
-                        <div className="dropdown-indicator">
-                          <div
-                            className={`dropdown-indicator-icon ${labelsDropdown && "rotate"
-                              }`}
-                          >
-                            <BiChevronDown />
-                          </div>
+                        items={labelsDropDownItems}
+                        setSelected={setSelectedLabelsText}
+                        setDropDown={setLabelsDropdown}
+                        divContainerRef={ref}
+                      />
+                    )}
+                    <div
+                      className={`dropdown-wrapper ${labelsDropdown && "open"}`}
+                      onClick={() => {
+                        setLabelsDropdown(!labelsDropdown);
+                      }}
+                      style={{ borderColor: theme.border_color }}
+                    >
+                      <div className="dropdown-indicator">
+                        <div
+                          className={`dropdown-indicator-icon ${labelsDropdown && "rotate"
+                            }`}
+                        >
+                          <BiChevronDown />
                         </div>
-                        <div className="dropdown-title">
-                          <span className="title-text">{selectedLabelsText}</span>
-                        </div>
+                      </div>
+                      <div className="dropdown-title">
+                        <span className="title-text">{selectedLabelsText}</span>
                       </div>
                     </div>
-                    {takenData.chartData.type === "Doughnut" && (
-                      <div className="value-axis-setting">
-                        <CheckBox
-                          checked={insideLabel}
-                          onChange={(e) => setInsideLabel(e.target.checked)}
-                          style={{
-                            padding: "1rem 1rem 0.5rem 0",
-                            fontSize: "0.85rem",
-                          }}
-                        >
-                          {stringFa.total_sum}
-                        </CheckBox>
-                      </div>
-                    )}
                   </div>
-                )}
-              </div>
-            </li>
-          )}
+                  {takenData.chartData.data.options.isDoughnut && (
+                    <div className="value-axis-setting">
+                      <CheckBox
+                        checked={insideLabel}
+                        onChange={(e) => setInsideLabel(e.target.checked)}
+                        style={{
+                          padding: "1rem 1rem 0.5rem 0",
+                          fontSize: "0.85rem",
+                        }}
+                      >
+                        {stringFa.total_sum}
+                      </CheckBox>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </li>
+        )}
       </ul>
     </div>
   );

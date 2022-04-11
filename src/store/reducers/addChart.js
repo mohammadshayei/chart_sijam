@@ -26,6 +26,7 @@ const initialState = {
         fieldNames: {},
         theme: "noTheme",
         radius: 70,
+        isDoughnut: false,
         innerRadius: 40,
         startAngle: 0,
         endAngle: 360,
