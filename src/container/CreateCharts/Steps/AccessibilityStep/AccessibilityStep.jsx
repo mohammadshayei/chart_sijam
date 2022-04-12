@@ -111,14 +111,16 @@ const AccessibilityStep = () => {
                                 color: v.selected ? theme.on_primary : theme.on_background,
                                 border: emptyRequireds.length > 0 ?
                                     emptyRequireds.includes(k) ? `1px solid ${theme.error}` : "" : "",
-                                borderRight: emptyRequireds.length === 0 ?
-                                    index > 0 ? `1px solid ${theme.darken_border_color}` :
-                                        emptyRequireds.length > 0 ?
-                                            emptyRequireds.includes(k) ? `1px solid ${theme.error}` :
-                                                "" : "" : "",
                             }}
                         >
-                            {v.title}
+                            <p style={{
+                                borderRight: emptyRequireds.length > 0 ?
+                                    emptyRequireds.includes(k) ? "" :
+                                        index > 0 ? `1px solid ${theme.darken_border_color}` : "" :
+                                    index > 0 ? `1px solid ${theme.darken_border_color}` : ""
+                            }}>
+                                {v.title}
+                            </p>
                         </div>
                     )
                 })
