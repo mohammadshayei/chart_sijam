@@ -95,15 +95,23 @@ const selectChartData = (state, action) => {
 };
 
 const setChartData = (state, action) => {
-  const { title, type, config, data } = action.payload;
+  const chartData = action.payload;
+  let requireds = chartData.data.data.length === 0 ? [] : state.emptyRequireds
   return {
     ...state,
+    emptyRequireds: requireds,
     chartData: {
       ...state.chartData,
-      title,
-      type,
-      config,
-      data,
+      title: chartData.title,
+      type: chartData.type,
+      config: chartData.config,
+      shareAll: chartData.shareAll,
+      editAll: chartData.editAll,
+      viewAll: chartData.viewAll,
+      shareList: chartData.shareList,
+      editList: chartData.editList,
+      viewList: chartData.viewList,
+      data: chartData.data,
     },
   };
 };

@@ -8,11 +8,11 @@ export const selectChartData = (data) => (dispatch) => {
 };
 
 export const setChartData =
-  ({ title, type, config, data }) =>
+  (chartData) =>
     (dispatch) => {
       dispatch({
         type: actionTypes.SET_DATA_ADD_CHART,
-        payload: { title, type, config, data },
+        payload: chartData,
       });
     };
 

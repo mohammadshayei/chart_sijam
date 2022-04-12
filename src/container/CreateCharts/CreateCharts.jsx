@@ -52,6 +52,7 @@ const CreateCharts = (props) => {
   const [splitView, setSplitView] = useState("نمودار");
   const [hintShow, setHintShow] = useState({ split: false });
   const [hover, setHover] = useState({ split: false, title: false });
+  const [autoValidate, setAutoValidate] = useState(false);
 
   const location = useLocation();
   const themeState = useTheme();
@@ -186,6 +187,7 @@ const CreateCharts = (props) => {
   }
 
   const checkValidation = (dialog) => {
+    setAutoValidate(true)
     let errorText, updatedStepErrors = []
     if (!takenData.chartData.title) {
       updatedStepErrors = [...updatedStepErrors, "input"]
@@ -224,6 +226,7 @@ const CreateCharts = (props) => {
     if (errorText === stringFa.permissions_not_defined) {
       updatedStepErrors = [...updatedStepErrors, "accessibility"]
     }
+    updateEmptyRequireds({ emptyRequireds: updatedStepErrors })
     if (updatedStepErrors.length > 0) {
       if (dialog) {
         setError(null)
@@ -236,9 +239,9 @@ const CreateCharts = (props) => {
             <ErrorDialog onClose={setError}>{errorText}</ErrorDialog>
           )
       }
-      updateEmptyRequireds({ emptyRequireds: updatedStepErrors })
       return false
-    }
+    } else
+      setAutoValidate(false)
     return true
   }
 
@@ -392,7 +395,7 @@ const CreateCharts = (props) => {
   }, [takenData.isFullscreen]);
 
   useEffect(() => {
-    if (takenData.emptyRequireds.length > 0)
+    if (autoValidate)
       checkValidation(false)
   }, [takenData.chartData]);
 
