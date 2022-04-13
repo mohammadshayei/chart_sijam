@@ -19,6 +19,11 @@ import Modal from "./../UI/Modal/Modal";
 import ShareBox from "./../ShareBox/ShareBox";
 import { AiOutlinePlus } from 'react-icons/ai'
 import AddChartToCategory from "./AddChartToCategory/AddChartToCategory";
+import { onDeleteChart } from "../../api/chart";
+import * as holdingActions from "../../store/actions/holdingDetail.js";
+import * as detailActions from "../../store/actions/detail.js";
+
+
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
     const listener = (event) => {
@@ -40,43 +45,51 @@ function useOnClickOutside(ref, handler) {
 
 const TitleBlock = React.memo((props) => {
   const [dropDown, setDropDown] = useState(false);
-  const [details, setDetails] = useState([]);
-  const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [addChartModal, setAddChartModal] = useState(false);
+  const [extraItems, setExtraItems] = useState([])
+  const [editableInput, setEditableInput] = useState(false)
+  const [titleValue, setTitleValue] = useState('')
+  const [faveCat, setFaveCat] = useState(false)
+
+  const { selectedHolding } = useSelector((state) => state.holdingDetail);
   const chartsData = useSelector((state) => state.chart);
-  const token = useSelector((state) => state.auth.token);
-  const detailsSelection = useSelector((state) => state.detail);
+  const { token, socket, userId } = useSelector((state) => state.auth);
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const starStyles = {
-    color: isFav ? theme.star_color : theme.on_surface,
+    color: faveCat ? theme.star_color : theme.on_surface,
     fontSize: "1rem",
   };
   let deletedChart;
 
-  const extraItems = [
-    {
-      name: stringFa.full_screen,
-      id: "fullScreen",
-      icon: <BsArrowsFullscreen />,
-    },
-    { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
-    { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },
-  ];
+
 
   const ref = useRef();
+  const titleRef = useRef();
 
-  const onStarClickHandler = (e) => {
-    setIsFav(!isFav);
-  };
+  useOnClickOutside(titleRef, () => {
+    setEditableInput(false);
+  });
+
 
   useOnClickOutside(ref, () => {
     setDropDown(false);
   });
 
   const dispatch = useDispatch();
+
+  const changeInfoINSourceCharts = (payload) => {
+    dispatch(detailActions.changeInfoINSourceCharts(payload));
+  };
+  const updateFaveCategory = (payload) => {
+    dispatch(holdingActions.updateFaveCategory(payload));
+  };
+  const setchartLabel = (payload) => {
+    dispatch(chartActions.setchartLabel(payload));
+  };
   const setChartType = (chartType) => {
     dispatch(chartActions.setChartType(chartType));
   };
@@ -106,74 +119,91 @@ const TitleBlock = React.memo((props) => {
     setChart({ chartId: props.chartId, chartData: deletedChart[0] });
   };
 
-  const settingMenuHandler = async (id) => {
-    if (id === "setting" || id === "fullScreen") {
-      const result = await axios.post(
-        `${baseUrl}api/get_data`,
-        {
-          id: props.bankId,
-        },
-        { headers: { "auth-token": token } }
-      );
-      let selectedChartData = chartsData.data[props.chartId];
-      selectedChartData = {
-        title: selectedChartData.title,
-        type: selectedChartData.type,
-        config: {
-          period: selectedChartData.config.period,
-          autoUpdate: selectedChartData.config.auto_update,
-        },
-        data: {
-          data: selectedChartData.data,
-          options: selectedChartData.options,
-        },
-      };
-      setId(props.chartId);
-      selectChartDatabase(result.data.result);
-      setChartData(selectedChartData);
-      if (id === "setting") setIsEdit(true);
-      fullscreenChart({ isFullscreen: true });
-      // setRedirect(<Redirect to="/create_chart" />);
-    } else if (id === "delete") {
-      deletedChart = Object.keys(chartsData.data)
-        .filter((key) => key === props.chartId)
-        .map((key) => {
-          return chartsData.data[key];
-        });
+  const toggleShareModal = () => {
+    setShowModal(!showModal)
+  }
+  const toggleCreateCategoruModal = () => {
+    setAddChartModal(!addChartModal)
+  }
 
-      deleteChart({ chartId: props.chartId });
+  const onSetting_FullScreenClickHandler = async id => {
+    const result = await axios.post(
+      `${baseUrl}api/get_data`,
+      {
+        id: props.bankId,
+      },
+      { headers: { "auth-token": token } }
+    );
+    let selectedChartData = chartsData.data[props.chartId];
+    selectedChartData = {
+      title: selectedChartData.title,
+      type: selectedChartData.type,
+      config: {
+        period: selectedChartData.config.period,
+        autoUpdate: selectedChartData.config.auto_update,
+      },
+      data: {
+        data: selectedChartData.data,
+        options: selectedChartData.options,
+      },
+    };
+    setId(props.chartId);
+    selectChartDatabase(result.data.result);
+    setChartData(selectedChartData);
+    if (id === "setting") setIsEdit(true);
+    fullscreenChart({ isFullscreen: true });
+  }
 
+  const onDelete = async () => {
+    // deletedChart = Object.keys(chartsData.data)
+    //   .filter((key) => key === props.chartId)
+    //   .map((key) => {
+    //     return chartsData.data[key];
+    //   });
+    deleteChart({ chartId: props.chartId });
+    try {
+      const result = await onDeleteChart({ id: props.chartId }, token)
+      if (result.success)
+        setError(
+          <ErrorDialog
+            success={true}
+            onClose={setError}
+          >
+            {stringFa.delete_chart_success}
+          </ErrorDialog>
+        );
+    } catch (error) {
       setError(
         <ErrorDialog
-          success={true}
-          undoClick={undoDeleteChartHandler}
           onClose={setError}
         >
-          {stringFa.delete_chart_success}
+          {stringFa.error_occured_try_again}
         </ErrorDialog>
       );
-      setTimeout(async () => {
-        // console.log(error);
-        // if (error) {
-        let result;
-        try {
-          result = await axios.post(
-            `${baseUrl}api/delete_chart`,
-            {
-              id: props.chartId,
-            },
-            { headers: { "auth-token": token } }
-          );
-          setError(null);
-        } catch (error) {
-          setError(
-            <ErrorDialog onClose={setError}>
-              {stringFa.error_delete_chart}
-            </ErrorDialog>
-          );
-        }
-        // }
-      }, 3000);
+    }
+  }
+  const settingMenuHandler = async (id) => {
+    switch (id) {
+      case "setting" || "fullScreen":
+        onSetting_FullScreenClickHandler(id)
+        break;
+      case "delete":
+        onDelete()
+        break;
+      case "createList":
+        toggleCreateCategoruModal()
+        break;
+      case "share":
+        toggleShareModal()
+        break;
+      default:
+        break;
+    }
+    if (id === "setting" || id === "fullScreen") {
+
+      // setRedirect(<Redirect to="/create_chart" />);
+    } else if (id === "delete") {
+
     } else {
       chartTypes.forEach((type) => {
         if (id === type.id) {
@@ -183,22 +213,65 @@ const TitleBlock = React.memo((props) => {
     }
   };
 
+  const setTitleHandler = (e) => {
+    setError(null);
+    if (e.type === "keydown") {
+      if (e.key === "Enter") {
+        setTitleValue(e.target.value);
+        setEditableInput(false);
+        saveCustomTitle()
+      }
+    } else setTitleValue(e.target.value);
+  };
+
+  const onFaveCategoryClickHandler = () => {
+    if (!selectedHolding.categories) return;
+    let faveCategory = selectedHolding.categories.find(item => item.category.name === 'fave')
+    if (!faveCategory) return;
+    socket.emit('add_chart_to_fave_category', { chartId: props.chartId, categoryId: faveCategory.category._id, checked: !faveCat })
+    updateFaveCategory({ chartId: props.chartId, checked: !faveCat })
+  }
+
+
+  const saveCustomTitle = () => {
+    console.log("here")
+    if (props.title === titleValue) return;
+    socket.emit('change_chart_label', { chartId: props.chartId, label: titleValue, userId, holdingId: selectedHolding.holdingId })
+    setchartLabel({ chartId: props.chartId, label: titleValue })
+    changeInfoINSourceCharts({ chartId: props.chartId, value: titleValue, mode: "label" })
+  }
+
+
   useEffect(() => {
-    let tempDetails = [];
-    if (detailsSelection.holding) {
-      tempDetails.push(detailsSelection.holding.name);
+    let updatedExtraItems = [{
+      name: stringFa.full_screen,
+      id: "fullScreen",
+      icon: <BsArrowsFullscreen />,
+    }, {
+      name: stringFa.add_to_list_2,
+      id: "createList",
+      icon: <AiOutlinePlus />,
+    }]
+    if (props.shareable) updatedExtraItems.push({
+      name: stringFa.share,
+      id: "share",
+      icon: <FaUserFriends />,
+    })
+    if (props.editable) {
+      updatedExtraItems = [...updatedExtraItems,
+      { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
+      { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
     }
-    if (detailsSelection.company) {
-      tempDetails.push(detailsSelection.company.name);
-    }
-    if (detailsSelection.software) {
-      tempDetails.push(detailsSelection.software.name);
-    }
-    if (detailsSelection.activeBackup) {
-      tempDetails.push(detailsSelection.activeBackup.name);
-    }
-    setDetails(tempDetails);
-  }, [detailsSelection]);
+    setExtraItems(updatedExtraItems)
+  }, [props.shareable, props.editable])
+
+  useEffect(() => {
+    if (!selectedHolding || !selectedHolding.categories) return;
+    let faveCategory = selectedHolding.categories.find(item => item.category.name === 'fave')
+    if (!faveCategory) return;
+    let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === props.chartId) > -1
+    setFaveCat(updatedFaveCat)
+  }, [selectedHolding])
 
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
@@ -272,10 +345,36 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         </div>
-        <p className="details">
-          {/* {props.parent ? props.parent.join(" - ") : ""} */}
-          <p>{props.title}</p>
-        </p>
+        <div className="details">
+          {/* <p>{props.title}</p> */}
+          <div
+            className="editable-component"
+            ref={titleRef}
+            onClick={() => {
+              setEditableInput(true);
+              setTitleValue(props.label ? props.label : props.title)
+            }}
+          >
+            {editableInput ? (
+              <input
+                className="editable-input"
+                dir="rtl"
+                placeholder={stringFa.title}
+                value={titleValue}
+                onChange={setTitleHandler}
+                autoFocus
+                onKeyDown={setTitleHandler}
+                style={{ borderColor: error ? "red" : "" }}
+              />
+            ) : (
+              <div className="text-component" dir="rtl">
+                <span>
+                  {props.label ? props.label : props.title}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
         {chartsData.editMode ? (
           <div className="right-icon-container">
             {props.cardIsHover && (
@@ -288,16 +387,18 @@ const TitleBlock = React.memo((props) => {
           </div>
         ) : (
           <div className="right-icon-container">
+            {props.shareable &&
+              <StyledButton
+                onClick={toggleShareModal}
+                hover={
+                  themeState.isDark ? theme.surface_1dp : theme.background_color
+                }
+              >
+                <FaUserFriends color={theme.primary} />
+              </StyledButton>
+            }
             <StyledButton
-              onClick={() => setShowModal(!showModal)}
-              hover={
-                themeState.isDark ? theme.surface_1dp : theme.background_color
-              }
-            >
-              <FaUserFriends color={theme.primary} />
-            </StyledButton>
-            <StyledButton
-              onClick={() => setAddChartModal(!showModal)}
+              onClick={toggleCreateCategoruModal}
               hover={
                 themeState.isDark ? theme.surface_1dp : theme.background_color
               }
@@ -309,9 +410,9 @@ const TitleBlock = React.memo((props) => {
               hover={
                 themeState.isDark ? theme.surface_1dp : theme.background_color
               }
-              onClick={onStarClickHandler}
+              onClick={onFaveCategoryClickHandler}
             >
-              {isFav ? (
+              {faveCat ? (
                 <BsStarFill style={starStyles} />
               ) : (
                 <BsStar style={starStyles} />
