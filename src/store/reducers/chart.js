@@ -51,6 +51,16 @@ const setChartsLoading = (state, action) => {
     loading: action.loading,
   };
 };
+const updateFaveList = (state, action) => {
+  const { chartId, faveList } = action.payload;
+  let updatedData = { ...state.data };
+  if (!updatedData[chartId]) return { ...state };
+  updatedData[chartId].faveList = faveList;
+  return {
+    ...state,
+    data: updatedData,
+  };
+};
 
 const setChartsData = (state, action) => {
   let newData = state.data;
@@ -171,7 +181,16 @@ const updateChartData = (state, action) => {
     },
   };
 };
-
+const setchartLabel = (state, action) => {
+  const { chartId, label } = action.payload;
+  let updatedData = { ...state.data };
+  if (!updatedData[chartId]) return { ...state };
+  updatedData[chartId].label = label;
+  return {
+    ...state,
+    data: updatedData,
+  };
+};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CHART_TYPE:
@@ -190,6 +209,10 @@ const reducer = (state = initialState, action) => {
       return updateChartData(state, action);
     case actionTypes.SET_CHARTS_LOADING:
       return setChartsLoading(state, action);
+    case actionTypes.UPDATE_FAVE_LIST:
+      return updateFaveList(state, action);
+    case actionTypes.SET_CHART_LABEL:
+      return setchartLabel(state, action);
     default:
       return state;
   }

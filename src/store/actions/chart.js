@@ -63,3 +63,15 @@ export const setChartsLoading = (loading) => (dispatch) => {
     loading,
   });
 };
+export const updateFaveList = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_FAVE_LIST,
+    payload,
+  });
+};
+export const setchartLabel = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_CHART_LABEL,
+    payload,
+  });
+};
