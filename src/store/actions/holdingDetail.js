@@ -49,3 +49,21 @@ export const deleteCreateCategory = (payload) => (dispatch) => {
     payload,
   });
 };
+export const addChartToCategories = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.ADD_CHART_TO_CATEGORIES,
+    payload,
+  });
+};
+export const updateFaveCategory = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_FAVE_CATEGORY,
+    payload,
+  });
+};
+export const setCategory = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_CATEGORY,
+    payload,
+  });
+};
