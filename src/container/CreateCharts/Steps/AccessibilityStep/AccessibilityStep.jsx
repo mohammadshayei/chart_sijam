@@ -36,7 +36,7 @@ const AccessibilityStep = () => {
     const [error, setError] = useState(null);
 
     const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
-    const chartData = useSelector((state) => state.addChart.chartData);
+    const { chartData, emptyRequireds } = useSelector((state) => state.addChart);
     const { token, userId } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
@@ -108,17 +108,25 @@ const AccessibilityStep = () => {
                 Object.entries(pageBtnOrder).map(([k, v], index) => {
                     return (
                         <div
-                            className={`page-btn-item ${v.selected ? "selected-page-btn-item" : ""}`}
+                            className="page-btn-item"
                             key={k}
                             onClick={() => onItemClickHandler(k)}
                             style={{
                                 backgroundColor: v.selected ? theme.primary : theme.border_color,
                                 cursor: v.selected ? "default" : "pointer",
                                 color: v.selected ? theme.on_primary : theme.on_background,
-                                borderRight: index > 0 ? `1px solid${theme.darken_border_color}` : "",
+                                border: emptyRequireds.length > 0 ?
+                                    emptyRequireds.includes(k) ? `1px solid ${theme.error}` : "" : "",
                             }}
                         >
-                            {v.title}
+                            <p style={{
+                                borderRight: emptyRequireds.length > 0 ?
+                                    emptyRequireds.includes(k) ? "" :
+                                        index > 0 ? `1px solid ${theme.darken_border_color}` : "" :
+                                    index > 0 ? `1px solid ${theme.darken_border_color}` : ""
+                            }}>
+                                {v.title}
+                            </p>
                         </div>
                     )
                 })

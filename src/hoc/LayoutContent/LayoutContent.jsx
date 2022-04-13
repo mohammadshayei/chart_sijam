@@ -63,15 +63,13 @@ const LayoutContent = (props) => {
         color: theme.on_background,
       }}
     >
-      {chartsData.isFullscreen && (
-        <Modal
-          show={chartsData.isFullscreen}
-          modalClosed={outsideModalClick}
-          style={{ padding: "0", width: "95%", height: "90%" }}
-        >
-          <CreateCharts />
-        </Modal>
-      )}
+      <Modal
+        show={chartsData.isFullscreen}
+        modalClosed={outsideModalClick}
+        style={{ padding: "0", width: "95%", height: "90%" }}
+      >
+        <CreateCharts />
+      </Modal>
       <div
         className="NavbarContainer"
         style={{

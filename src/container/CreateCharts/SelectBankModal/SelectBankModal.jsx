@@ -84,9 +84,6 @@ const SelectBankModal = (props) => {
   const setId = (id) => {
     dispatch(selectDatabaseActions.setAddChartId(id));
   };
-  const setIsEdit = (isEdit) => {
-    dispatch(selectDatabaseActions.setIsEdit(isEdit));
-  };
 
   const onChangeHandler = (event) => {
     let updatedResult = { ...searchResult };

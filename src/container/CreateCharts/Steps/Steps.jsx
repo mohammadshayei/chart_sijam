@@ -9,9 +9,11 @@ import TimerStep from "./TimerStep/TimerStep";
 import ChartSetting from "./SettingStep/ChartSetting.jsx";
 import Filter from "./Filter/Filter.jsx";
 import AccessibilityStep from "./AccessibilityStep/AccessibilityStep.jsx";
+import { useSelector } from "react-redux";
 
 const Steps = (props) => {
   const [orderSteps, setOrderSteps] = useState({});
+  const takenData = useSelector((state) => state.addChart);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
@@ -69,7 +71,7 @@ const Steps = (props) => {
     }
   }, [props.type]);
 
-  const onClickHandler = (e, key) => {
+  const onClickHandler = (key) => {
     let updatedOrderSteps = { ...orderSteps };
     let clickedStep = updatedOrderSteps[key];
     for (const item in updatedOrderSteps) {
@@ -86,17 +88,40 @@ const Steps = (props) => {
           <div
             key={k}
             className={`step-container ${v.isOpen && "open"} container-border`}
-            style={{ borderColor: theme.border_color }}
+            style={{
+              borderColor: takenData.emptyRequireds.length > 0 ?
+                takenData.emptyRequireds.includes(k) ?
+                  theme.error :
+                  theme.border_color :
+                theme.border_color
+            }}
           >
             <div
               className={`step-title-container ${v.isOpen && "open"}`}
-              style={{ borderColor: theme.border_color }}
-              onClick={(e) => onClickHandler(e, k)}
+              style={{
+                borderColor: theme.border_color, backgroundColor: takenData.emptyRequireds.length > 0 ?
+                  takenData.emptyRequireds.includes(k) ?
+                    theme.error :
+                    "transparent" :
+                  "transparent",
+                color: takenData.emptyRequireds.length > 0 ?
+                  takenData.emptyRequireds.includes(k) ?
+                    theme.on_error :
+                    theme.on_background :
+                  theme.on_background
+              }}
+              onClick={() => onClickHandler(k)}
             >
               <div className="title" style={{ color: theme.text_color }}>
                 {v.title}
               </div>
-              <div className={`arrow-icon ${v.isOpen && "open"}`}>
+              <div className={`arrow-icon ${v.isOpen && "open"}`} style={{
+                color: takenData.emptyRequireds.length > 0 ?
+                  takenData.emptyRequireds.includes(k) ?
+                    theme.on_error :
+                    theme.text_color :
+                  theme.text_color
+              }}>
                 <IoIosArrowDown />
               </div>
             </div>

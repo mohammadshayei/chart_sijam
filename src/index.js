@@ -13,7 +13,6 @@ import banksDataReducer from "./store/reducers/banksData";
 import chartReducer from "./store/reducers/chart";
 import authReducer from "./store/reducers/auth";
 import addChartReducer from "./store/reducers/addChart";
-import fieldPickerReducer from "./store/reducers/fieldPicker";
 import holdingDetailReducer from "./store/reducers/holdingDetail";
 import { ThemeProvider } from "./styles/ThemeProvider.js";
 
@@ -26,7 +25,6 @@ const rootReducer = combineReducers({
   chart: chartReducer,
   auth: authReducer,
   addChart: addChartReducer,
-  fieldPicker: fieldPickerReducer,
   holdingDetail: holdingDetailReducer,
 });
 

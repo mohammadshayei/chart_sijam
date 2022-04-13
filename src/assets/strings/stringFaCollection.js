@@ -132,4 +132,8 @@ export const stringFa = {
   all: "همه",
   all_allowed_employees: " تمام کاربرانی که دسترسی دارند",
   add_to_list_2: "اضافه به لیست",
+  title_is_empty: "عنوان تعیین نشده است",
+  field_not_chosen: "فیلد انتخاب نشده",
+  permissions_not_defined: "دسترسی ها مشخص نشده",
+  fill_required_items: "قسمت های الزامی را پر نمایید"
 };

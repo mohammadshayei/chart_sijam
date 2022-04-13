@@ -4,7 +4,6 @@ import { BiChevronDown } from "react-icons/bi";
 import DropDown from "../../../../component/UI/DropDown/DropDown";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import * as addChartActions from "../../../../store/actions/addChart";
-import * as fieldPickerActions from "../../../../store/actions/fieldPicker";
 import { useSelector, useDispatch } from "react-redux";
 import StyledButton from "../../../../component/UI/Button/StyledButton.jsx";
 import { MdCancel } from "react-icons/md";
@@ -26,10 +25,6 @@ const FieldPicker = (props) => {
   const setChartData = (chartData) => {
     dispatch(addChartActions.setChartData(chartData));
   };
-  const removeFieldPicker = (index) => {
-    dispatch(fieldPickerActions.removeFieldPicker(index));
-  };
-
   useEffect(() => {
     if (initial) {
       if (takenData.data.fieldsType) {
@@ -141,7 +136,7 @@ const FieldPicker = (props) => {
   }, [takenData.data, selected, takenData.filteredData]);
 
   const removeHandler = (index) => {
-    removeFieldPicker({ index });
+    props.removeFieldPicker(index);
     removeDataField({ index });
   };
 
@@ -188,7 +183,7 @@ const FieldPicker = (props) => {
         <div
           className={`dropdown-wrapper ${isOpen && "open"}`}
           onClick={() => setIsOpen(!isOpen)}
-          style={{ borderColor: theme.border_color }}
+          style={{ borderColor: props.error ? theme.error : theme.border_color }}
         >
           <div className="dropdown-indicator">
             <div className={`dropdown-indicator-icon ${isOpen && "rotate"}`}>

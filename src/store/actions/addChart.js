@@ -8,13 +8,13 @@ export const selectChartData = (data) => (dispatch) => {
 };
 
 export const setChartData =
-  ({ title, type, config, data }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_DATA_ADD_CHART,
-      payload: { title, type, config, data },
-    });
-  };
+  (chartData) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_DATA_ADD_CHART,
+        payload: chartData,
+      });
+    };
 
 export const setAddChartId = (id) => (dispatch) => {
   dispatch({
@@ -95,9 +95,18 @@ export const setAccessToAll =
 
 export const updateAccessList =
   ({ accessType, employee, add }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.UPDATE_ACCESS_LIST,
-      payload: { accessType, employee, add },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_ACCESS_LIST,
+        payload: { accessType, employee, add },
+      });
+    };
+
+export const updateEmptyRequireds =
+  ({ emptyRequireds }) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_EMPTY_REQUIREDS,
+        payload: { emptyRequireds },
+      });
+    };

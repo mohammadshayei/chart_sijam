@@ -67,7 +67,7 @@ const PieChart = React.memo((props) => {
         );
       }
     });
-    if (type === "Doughnut") {
+    if (options.isDoughnut) {
       // cut a hole in Pie chart
       pieChart.innerRadius = am4core.percent(options.innerRadius);
       // animate hole in pie when showing

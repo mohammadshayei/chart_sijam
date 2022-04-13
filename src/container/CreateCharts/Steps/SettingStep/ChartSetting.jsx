@@ -346,7 +346,7 @@ const ChartSetting = () => {
                   key={k}
                   className="list"
                   style={{ border: v.active ? "2px solid #3b96ff" : "none" }}
-                  onMouseEnter={() => {}}
+                  onMouseEnter={() => { }}
                 >
                   <a
                     className="dot"
@@ -412,38 +412,38 @@ const ChartSetting = () => {
         </li>
         {(takenData.chartData.type === "Column" ||
           takenData.chartData.type === "Line") && (
-          <li className="setting-item">
-            <div
-              className="line"
-              style={{ backgroundColor: theme.border_color }}
-            ></div>
-            <div className="setting-part-container">
-              {stringFa.category_axis}
-              <div className="category-axis-setting">
-                <CheckBox
-                  checked={rotate}
-                  onChange={(e) => setRotate(e.target.checked)}
-                  style={{
-                    padding: "1rem 1rem 0.5rem 0",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  {stringFa.rotate_categories}
-                </CheckBox>
-                <CheckBox
-                  checked={repeat}
-                  onChange={(e) => setRepeat(e.target.checked)}
-                  style={{
-                    padding: "1rem 1rem 0.5rem 0",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  {stringFa.repeating_categories}
-                </CheckBox>
+            <li className="setting-item">
+              <div
+                className="line"
+                style={{ backgroundColor: theme.border_color }}
+              ></div>
+              <div className="setting-part-container">
+                {stringFa.category_axis}
+                <div className="category-axis-setting">
+                  <CheckBox
+                    checked={rotate}
+                    onChange={(e) => setRotate(e.target.checked)}
+                    style={{
+                      padding: "1rem 1rem 0.5rem 0",
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    {stringFa.rotate_categories}
+                  </CheckBox>
+                  <CheckBox
+                    checked={repeat}
+                    onChange={(e) => setRepeat(e.target.checked)}
+                    style={{
+                      padding: "1rem 1rem 0.5rem 0",
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    {stringFa.repeating_categories}
+                  </CheckBox>
+                </div>
               </div>
-            </div>
-          </li>
-        )}
+            </li>
+          )}
         {takenData.chartData.type === "Column" && (
           <li className="setting-item">
             <div
@@ -466,7 +466,7 @@ const ChartSetting = () => {
                 <div className="value-axis-setting">
                   {Object.entries(breakInputs).map(([k, v]) => {
                     return (
-                      <div className="value-axis-setting">
+                      <div key={k} className="value-axis-setting">
                         <div className="input-text">: {stringFa[k]}</div>
                         <input
                           className="input-class"
@@ -498,8 +498,7 @@ const ChartSetting = () => {
             </div>
           </li>
         )}
-        {(takenData.chartData.type === "Pie" ||
-          takenData.chartData.type === "Doughnut") && (
+        {(takenData.chartData.type === "Pie") && (
           <li className="setting-item">
             <div
               className="line"
@@ -546,9 +545,8 @@ const ChartSetting = () => {
                     >
                       <div className="dropdown-indicator">
                         <div
-                          className={`dropdown-indicator-icon ${
-                            labelsDropdown && "rotate"
-                          }`}
+                          className={`dropdown-indicator-icon ${labelsDropdown && "rotate"
+                            }`}
                         >
                           <BiChevronDown />
                         </div>
@@ -558,7 +556,7 @@ const ChartSetting = () => {
                       </div>
                     </div>
                   </div>
-                  {takenData.chartData.type === "Doughnut" && (
+                  {takenData.chartData.data.options.isDoughnut && (
                     <div className="value-axis-setting">
                       <CheckBox
                         checked={insideLabel}

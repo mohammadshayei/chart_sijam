@@ -4,6 +4,7 @@ const initialState = {
   id: "",
   isEdit: false,
   isFullscreen: false,
+  emptyRequireds: [],
   data: {},
   filteredData: [],
   chartData: {
@@ -25,6 +26,7 @@ const initialState = {
         fieldNames: {},
         theme: "noTheme",
         radius: 70,
+        isDoughnut: false,
         innerRadius: 40,
         startAngle: 0,
         endAngle: 360,
@@ -93,15 +95,23 @@ const selectChartData = (state, action) => {
 };
 
 const setChartData = (state, action) => {
-  const { title, type, config, data } = action.payload;
+  const chartData = action.payload;
+  let requireds = chartData.data.data.length === 0 ? [] : state.emptyRequireds
   return {
     ...state,
+    emptyRequireds: requireds,
     chartData: {
       ...state.chartData,
-      title,
-      type,
-      config,
-      data,
+      title: chartData.title,
+      type: chartData.type,
+      config: chartData.config,
+      shareAll: chartData.shareAll,
+      editAll: chartData.editAll,
+      viewAll: chartData.viewAll,
+      shareList: chartData.shareList,
+      editList: chartData.editList,
+      viewList: chartData.viewList,
+      data: chartData.data,
     },
   };
 };
@@ -253,6 +263,13 @@ const updateAccessList = (state, action) => {
   };
 };
 
+const updateEmptyRequireds = (state, action) => {
+  const { emptyRequireds } = action.payload;
+  return {
+    ...state,
+    emptyRequireds
+  };
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -280,7 +297,8 @@ const reducer = (state = initialState, action) => {
       return setAccessToAll(state, action);
     case actionTypes.UPDATE_ACCESS_LIST:
       return updateAccessList(state, action);
-    
+    case actionTypes.UPDATE_EMPTY_REQUIREDS:
+      return updateEmptyRequireds(state, action);
 
     default:
       return state;
