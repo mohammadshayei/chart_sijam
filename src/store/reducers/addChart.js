@@ -88,7 +88,7 @@ const selectChartData = (state, action) => {
   return {
     ...state,
     data,
-    filteredData: data.data
+    filteredData: data.data,
   };
 };
 
@@ -214,7 +214,7 @@ const setChartDataFilter = (state, action) => {
   const { data } = action.payload;
   return {
     ...state,
-    filteredData: data
+    filteredData: data,
   };
 };
 
@@ -232,21 +232,17 @@ const setAccessToAll = (state, action) => {
 
 const updateAccessList = (state, action) => {
   const { accessType, employee, add } = action.payload;
-  let updatedList = [...state.chartData[`${accessType}List`]]
+  let updatedList = [...state.chartData[`${accessType}List`]];
   if (add) {
     if (employee.length > 1) {
-      updatedList = []
-      employee.forEach(emp => {
-        updatedList = [...updatedList, emp.user._id]
+      updatedList = [];
+      employee.forEach((emp) => {
+        updatedList = [...updatedList, emp.user._id];
       });
-    }
-    else
-      updatedList = [...updatedList, ...employee]
+    } else updatedList = [...updatedList, ...employee];
   } else {
-    if (employee.length > 1)
-      updatedList = []
-    else
-      updatedList = updatedList.filter((emp) => emp !== employee[0])
+    if (employee.length > 1) updatedList = [];
+    else updatedList = updatedList.filter((emp) => emp !== employee[0]);
   }
   return {
     ...state,
@@ -256,6 +252,7 @@ const updateAccessList = (state, action) => {
     },
   };
 };
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -283,6 +280,7 @@ const reducer = (state = initialState, action) => {
       return setAccessToAll(state, action);
     case actionTypes.UPDATE_ACCESS_LIST:
       return updateAccessList(state, action);
+    
 
     default:
       return state;
