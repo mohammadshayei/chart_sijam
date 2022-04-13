@@ -7,34 +7,91 @@ import Input from '../../UI/Input/Input';
 import { useEffect, useState } from 'react';
 import { FaPlusCircle } from "react-icons/fa";
 import Button from '../../UI/Button/Button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CheckBox from '../../UI/CheckBox/CheckBox';
+import { addRemoveChartToCategories, createCategory } from '../../../api/home';
+import ErrorDialog from '../../UI/Error/ErrorDialog';
+import * as HoldingActions from "../../../store/actions/holdingDetail";
 
 const AddChartToCategory = ({ chartId, close }) => {
     const [value, setValue] = useState('')
     const [order, setOrder] = useState([])
     const [hover, setHover] = useState('')
-
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
     const { userId, token } = useSelector((state) => state.auth);
     const { selectedHolding } = useSelector((state) => state.holdingDetail);
 
     const themeState = useTheme();
     const theme = themeState.computedTheme;
 
+    const dispatch = useDispatch();
+    const createDeleteCategory = (payload) => {
+        dispatch(HoldingActions.deleteCreateCategory(payload));
+    };
+    const addChartToCategories = (payload) => {
+        dispatch(HoldingActions.addChartToCategories(payload));
+    };
     const onChange = e => {
         setValue(e.target.value)
     }
-    const onCreateCategory = () => {
+    const onCreateCategory = async () => {
+        if (value.length === 0)
+            return;
+        setLoading(true)
+        const result = await createCategory({ name: value, holdingId: selectedHolding.holdingId, userId }, token)
+        setError(
+            <ErrorDialog success={result.success} onClose={() => setError(false)}>{result.success ? result.data.message : result.error}</ErrorDialog>
+        )
+        if (result.success) {
+            createDeleteCategory({ data: { _id: result.data.category._id, name: result.data.category.name }, mode: 'create' })
+            setValue('')
+        }
+
+        setLoading(false)
+    }
+    const onChangeItem = async (id) => {
+        // console.log(id, status)
+        //locally change
+        let updatedOrder = [...order]
+        let findedIndex = updatedOrder.findIndex(item => item._id === id)
+        updatedOrder[findedIndex].checked = !updatedOrder[findedIndex].checked;
+        setOrder(updatedOrder)
+        //send api to change in db
 
     }
-    const onChangeItem = id => {
 
+    const onAddRemoveChartsToCategories = async () => {
+        //api
+        setLoading(true)
+        const result = await addRemoveChartToCategories({
+            categoriesList: order.map(item => {
+                return {
+                    id: item._id,
+                    checked: item.checked
+                }
+            }), chartId
+        }, token)
+        setError(
+            <ErrorDialog success={result.success} onClose={() => setError(false)}>{result.success ? result.data.message : result.error}</ErrorDialog>
+        )
+        //local
+        if (result.success) {
+            addChartToCategories({
+                categoriesList: order.map(item => {
+                    return {
+                        _id: item._id,
+                        checked: item.checked
+                    }
+                }), chartId
+            })
+        }
+        setLoading(false)
     }
-
 
     useEffect(() => {
         if (selectedHolding && selectedHolding.categories.length > 0) {
-            let updatedOrder = selectedHolding.categories.map(item => {
+            let updatedOrder = selectedHolding.categories.filter(item => item.category.name !== 'fave').map(item => {
                 return {
                     _id: item.category._id,
                     name: item.category.name,
@@ -48,6 +105,7 @@ const AddChartToCategory = ({ chartId, close }) => {
 
     return (
         <div className='add-chart-to-category-wrapper'>
+            {error}
             <div className="close-wrapper">
                 <StyledButton
                     ButtonStyle={{
@@ -79,8 +137,10 @@ const AddChartToCategory = ({ chartId, close }) => {
                                 style={{
                                     backgroundColor: hover === category._id ? theme.border_color : '',
                                 }}
+                                key={category._id}
+                                onClick={() => onChangeItem(category._id)}
                             >
-                                <CheckBox checked={category.checked} onChange={onChangeItem} />
+                                <CheckBox checked={category.checked} onChange={() => onChangeItem(category._id)} />
                                 <p>{category.name}</p>
                             </div>
                         )
@@ -123,19 +183,17 @@ const AddChartToCategory = ({ chartId, close }) => {
                         padding: ".1rem 1rem",
                         marginRight: "1rem"
                     }}
-                    onClick={onCreateCategory}
-                    disabled={value.length === 0}
+                    onClick={onAddRemoveChartsToCategories}
                 >
-                    {stringFa.add}
+                    {stringFa.confirm}
                 </Button>
                 <Button
                     ButtonStyle={{
                         padding: ".1rem 1rem"
                     }}
                     onClick={onCreateCategory}
-                    disabled={value.length === 0}
                 >
-                    {stringFa.add}
+                    {stringFa.cancel}
                 </Button>
 
             </div>

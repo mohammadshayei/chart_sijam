@@ -18,9 +18,6 @@
     height: calc(100% - 10rem);
     .add-list {
       width: 100%;
-      // border-radius: 5px;
-      // border: 1px solid;
-
       .button-text {
         display: flex;
         font-size: 0.9rem;
@@ -36,7 +33,10 @@
     }
     .category-list {
       width: 100%;
+      max-height: calc(100% - 100px);
+      overflow: auto;
       margin-bottom: 1rem;
+      padding-right: .6rem;
       .item {
         width: 100%;
         text-align: right;
