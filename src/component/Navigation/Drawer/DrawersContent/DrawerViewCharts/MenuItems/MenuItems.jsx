@@ -27,7 +27,6 @@ const MenuItems = ({ checked }) => {
 
 
   //new method ******************************************\
-
   const onMenuClickHanlder = (_id, selected, parents) => {
     let updatedData = [...data]
     let payload = { key: '', value: "", parents: [] };
@@ -123,9 +122,8 @@ const MenuItems = ({ checked }) => {
     }
     setData(updatedData)
   }
-
   useEffect(() => {
-    if (parentsCharts) {
+    if (parentsCharts ) {
       let data, updatedParentsCharts;
       if (checked) {
         updatedParentsCharts = parentsCharts.filter(cmp => {
@@ -202,10 +200,9 @@ const MenuItems = ({ checked }) => {
           };
         }
       );
-
       setData(data)
     }
-  }, [parentsCharts, checked])
+  }, [parentsCharts.length, checked])
   useEffect(() => {
     // if (!data || data.length === 0) return;
     if (!data) return;
