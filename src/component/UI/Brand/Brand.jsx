@@ -52,7 +52,7 @@ const Brand = (props) => {
   const openMenuClick = () => {
     setOpenHoldings(true)
   }
-
+  const holdingId = selectedHolding?.holdingId
   const onSelectHoldingClickHandler = async (id) => {
     if (!id) return;
     setOpenHoldings(false)
@@ -60,18 +60,18 @@ const Brand = (props) => {
     setHover(false)
   }
   useEffect(() => {
-    if (!selectedHolding) return;
+    if (!holdingId) return;
     let controller = new AbortController();
     (async () => {
       try {
         setLoading(true)
-        let res = await getAccessHolding({ userId, holdingId: selectedHolding.holdingId }, token)
+        let res = await getAccessHolding({ userId, holdingId }, token)
         if (res.success) {
           setHoldingAccess(res.data)
         } else {
           console.log('error')
         }
-        res = await getParentsChart({ userId, holdingId: selectedHolding.holdingId }, token)
+        res = await getParentsChart({ userId, holdingId }, token)
         if (res.success) {
           setParentsCharts(res.data)
         } else {
@@ -84,7 +84,7 @@ const Brand = (props) => {
       }
     })();
     return () => controller?.abort();
-  }, [selectedHolding])
+  }, [holdingId])
 
   useEffect(() => {
     if (!openHoldings && hover) setHover(false)
