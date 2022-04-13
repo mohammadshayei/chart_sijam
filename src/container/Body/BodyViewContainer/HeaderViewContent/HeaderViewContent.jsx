@@ -10,10 +10,11 @@ import { stringFa } from '../../../../assets/strings/stringFaCollection';
 import { AiOutlineUsergroupDelete } from 'react-icons/ai'
 import GroupButton from '../../../../component/UI/GroupButton/GroupButton';
 import ToolsContainer from './ToolsContainer/ToolsContainer';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Dropdown from "../../../../component/UI/DropDown/DropDown";
 import Modal from '../../../../component/UI/Modal/Modal';
 import AddCategory from './AddCategory/AddCategory';
+import * as holdingActions from "../../../../store/actions/holdingDetail.js";
 
 const HeaderViewContent = (props) => {
     const [isFav, setIsFav] = useState(false)
@@ -24,21 +25,33 @@ const HeaderViewContent = (props) => {
     const theme = themeState.computedTheme;
 
     const chartsData = useSelector((state) => state.chart);
-    const user = useSelector((state) => state.auth.user);
-    const { selectedHolding } = useSelector((state) => state.holdingDetail);
+    // const { } = useSelector((state) => state.auth);
+    const { selectedHolding, selectedCategory } = useSelector((state) => state.holdingDetail);
 
     const ref = useRef();
 
+    const dispatch = useDispatch();
+
+    const setCategory = (payload) => {
+        dispatch(holdingActions.setCategory(payload));
+    };
 
     const onStarClickHandler = (e) => {
         ripple(e, theme.ripple_star_color);
-        setIsFav(!isFav);
+        if (!isFav) {
+            let faveCategory = selectedHolding.categories.find(item => item.category.name === 'fave').category
+            if (!faveCategory) return;
+            setCategory({ category: faveCategory })
+        } else {
+            setCategory({ category: null })
+        }
     };
     const starStyles = {
         color: theme.star_color,
         cursor: "pointer",
         fontSize: "30px",
     };
+
     const countProperties = (obj) => {
         var count = 0;
         for (var prop in obj) {
@@ -46,15 +59,25 @@ const HeaderViewContent = (props) => {
         }
         return count;
     };
+
     useEffect(() => {
-        if (user && user.is_fekrafzar) setEditable(true)
+        if (selectedHolding && selectedHolding.chart) setEditable(true)
         else setEditable(false)
-    }, [user])
+    }, [selectedHolding])
+
     const onCategoryClickHandler = _id => {
         if (_id === 'add_category') {
             setShowModal(true)
         } else {
 
+            let cat = selectedHolding.categories.find(item => item.category._id === _id).category
+
+            if (selectedCategory && selectedCategory._id === _id)
+                setCategory({ category: null })
+            else
+                setCategory({ category: cat })
+
+            setDropDown(false)
         }
     }
     const onToggle = () => {
@@ -63,10 +86,25 @@ const HeaderViewContent = (props) => {
     const closeModal = () => {
         setShowModal(false);
     };
+    useEffect(() => {
+        if (!selectedCategory) {
+            setIsFav(false)
+            return;
+        }
+        let faveCategory = selectedHolding.categories.find(item => item.category.name === 'fave')
+        if (faveCategory.category._id === selectedCategory._id)
+            setIsFav(true)
+        else {
+            setIsFav(false)
+        }
+    }, [selectedCategory])
+
     return (
         <div className='header-view-content-container' >
             <div className="header-view-left-section" ref={ref}>
-                <BsThreeDots style={{ cursor: "pointer", fontSize: "1.2rem" }} onClick={onToggle} />
+                <div className='three-dot'>
+                    <BsThreeDots style={{ cursor: "pointer", fontSize: "1.2rem" }} onClick={onToggle} />
+                </div>
                 {selectedHolding && dropDown && (
                     <Dropdown
                         divStyle={{
@@ -94,7 +132,7 @@ const HeaderViewContent = (props) => {
                         )}
                     </div>
                 }
-
+                {selectedCategory && selectedCategory.name !== 'fave' && <p className='selected'>{selectedCategory.name}</p>}
                 {
                     // for share categories to other employee
                     false && <Button
