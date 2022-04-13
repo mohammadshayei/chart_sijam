@@ -97,6 +97,12 @@ export const setParentsCharts = (parentsCharts) => {
     parentsCharts,
   };
 };
+export const setSocket = (socket) => {
+  return {
+    type: actionTypes.SET_SOCKET,
+    socket,
+  };
+};
 
 export const authCheckState = () => {
   return (dispatch) => {

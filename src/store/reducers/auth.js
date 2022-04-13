@@ -6,6 +6,7 @@ const initialState = {
   userId: null,
   user: null,
   error: null,
+  socket: null,
   loading: false,
   authRedirectPath: null,
   label: {
@@ -28,6 +29,9 @@ const setUserData = (state, action) => {
   return updateObject(state, {
     user: action.user,
   });
+};
+const setSocket = (state, action) => {
+  return updateObject(state, { socket: action.socket });
 };
 const setUserLabel = (state, action) => {
   return updateObject(state, {
@@ -75,6 +79,8 @@ const setChecked = (state, action) => {
   return updateObject(state, { checked: action.checked });
 };
 
+
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_START:
@@ -97,6 +103,8 @@ const reducer = (state = initialState, action) => {
       return setHoldingAccess(state, action);
     case actionTypes.SET_PARENTS_CHARTS:
       return setParentsCharts(state, action);
+    case actionTypes.SET_SOCKET:
+      return setSocket(state, action);
     default:
       return state;
   }
