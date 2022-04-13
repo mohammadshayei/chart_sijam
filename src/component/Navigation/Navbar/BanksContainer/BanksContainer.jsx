@@ -10,17 +10,19 @@ import SkeletonBank from "./../../../Skeletons/SkeletonBank";
 const BanksContainer = () => {
   const [data, setData] = useState(null);
   const detail = useSelector((state) => state.detail);
-  useEffect(async () => {
-    if (detail.activeBackup) {
-      const result = await axios.post(`${baseUrl}api/get_banks`, {
-        id: detail.activeBackup.id,
-      });
-      if (result.data.success) {
-        setData(result.data.message.result);
+  useEffect(() => {
+    (async () => {
+      if (detail.activeBackup) {
+        const result = await axios.post(`${baseUrl}api/get_banks`, {
+          id: detail.activeBackup.id,
+        });
+        if (result.data.success) {
+          setData(result.data.message.result);
+        }
+      } else {
+        setData(null);
       }
-    } else {
-      setData(null);
-    }
+    })()
   }, [detail.activeBackup]);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
