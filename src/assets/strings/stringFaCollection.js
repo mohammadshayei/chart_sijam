@@ -131,4 +131,5 @@ export const stringFa = {
   view: "مشاهده",
   all: "همه",
   all_allowed_employees: " تمام کاربرانی که دسترسی دارند",
+  add_to_list_2: "اضافه به لیست",
 };
