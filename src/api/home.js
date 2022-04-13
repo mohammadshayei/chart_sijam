@@ -66,3 +66,14 @@ export const deleteCategory = async (payload, token) => {
   } else
     return { success: false, data: null, error: result.data.result.message };
 };
+export const addRemoveChartToCategories = async (payload, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/add_chart_to_categories`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.result, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.result.message };
+};

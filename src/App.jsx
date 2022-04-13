@@ -9,6 +9,10 @@ import Auth from "./container/Auth/Auth.jsx";
 import { useTheme } from "./styles/ThemeProvider.js";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { baseUrl } from "./constants/Config.js";
+import * as authActions from "./store/actions/auth";
+import socketIOClient from "socket.io-client";
+
 const App = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -20,11 +24,24 @@ const App = () => {
   let navigate = useNavigate();
   const location = useLocation();
 
+  const setSocket = (socket) => {
+    dispatch(authActions.setSocket(socket));
+  };
   const setUserData = (userId, token) => dispatch(actions.getUserData(userId, token));
   const checkAuth = () => dispatch(actions.authCheckState());
 
-  useEffect(async () => {
-    checkAuth();
+  useEffect(() => {
+    let controller = new AbortController();
+    (async () => {
+      try {
+        checkAuth();
+        setSocket(socketIOClient(baseUrl))
+
+        controller = null
+      } catch (error) {
+      }
+    })()
+    return () => controller?.abort()
   }, []);
   useEffect(() => {
     if (!token && checked) {
