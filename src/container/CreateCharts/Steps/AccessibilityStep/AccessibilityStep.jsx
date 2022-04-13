@@ -74,24 +74,30 @@ const AccessibilityStep = () => {
         }
     }, [pageBtnOrder])
 
-    useEffect(async () => {
-        try {
-            setLoading(true)
-            const resultFetchingUsers = await axios.post(
-                `${baseUrl}api/get_employees`,
-                { id: selectedHolding.holdingId },
-                { headers: { "auth-token": token } }
-            );
-            if (resultFetchingUsers.data.success) {
-                const res = resultFetchingUsers.data.result.employees.filter((employee) => !employee.user.is_fekrafzar && userId !== employee.user._id)
-                setEmployees(res)
+    useEffect(() => {
+        let controller = new AbortController();
+        (async () => {
+            try {
+                setLoading(true)
+                const resultFetchingUsers = await axios.post(
+                    `${baseUrl}api/get_employees`,
+                    { id: selectedHolding.holdingId },
+                    { headers: { "auth-token": token } }
+                );
+                if (resultFetchingUsers.data.success) {
+                    const res = resultFetchingUsers.data.result.employees.filter((employee) => !employee.user.is_fekrafzar && userId !== employee.user._id)
+                    setEmployees(res)
+                }
+                else
+                    setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
+                setLoading(false)
+                controller = null;
+
+            } catch (e) {
+                setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
             }
-            else
-                setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
-            setLoading(false)
-        } catch (e) {
-            setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
-        }
+            return () => controller?.abort()
+        })()
     }, []);
 
 
