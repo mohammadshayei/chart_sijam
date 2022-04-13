@@ -30,3 +30,15 @@ export const clearSelected = () => {
     type: actionTypes.CLEAR_SELECTED,
   };
 };
+export const setSourceCharts = (payload) => {
+  return {
+    type: actionTypes.SET_SOURCE_CHARTS,
+    payload,
+  };
+};
+export const changeInfoINSourceCharts = (payload) => {
+  return {
+    type: actionTypes.CHANGE_INFO_IN_SOURCE_CHARTS,
+    payload,
+  };
+};

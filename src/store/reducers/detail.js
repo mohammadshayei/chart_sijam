@@ -12,6 +12,7 @@ const initialState = {
   selectedSoftwares: [],
   selectedActiveBackups: [],
   selectedBanks: [],
+  sourceCharts: [],
 };
 
 const setBanks = (state, action) => {
@@ -102,6 +103,28 @@ const clearSelected = (state) => {
     selectedBanks: [],
   };
 };
+const setSourceCharts = (state, action) => {
+  const { charts } = action.payload;
+  return {
+    ...state,
+    sourceCharts: charts,
+  };
+};
+const changeInfoINSourceCharts = (state, action) => {
+  const { chartId, value, mode } = action.payload;
+  if (mode !== "label" || mode !== "fave") return { ...state };
+  let updatedCharts = [...state.sourceCharts];
+  let updatedChartIndex = updatedCharts.findIndex(
+    (item) => item.chart._id === chartId
+  );
+  if (updatedChartIndex < 0) return { ...state };
+  if (mode === "label") updatedCharts[updatedChartIndex].label = value;
+  else updatedCharts[updatedChartIndex].chart.fave_list = value;
+  return {
+    ...state,
+    sourceCharts: updatedCharts,
+  };
+};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_BANKS:
@@ -114,6 +137,10 @@ const reducer = (state = initialState, action) => {
       return chnageStatusBankItem(state, action);
     case actionTypes.CLEAR_SELECTED:
       return clearSelected(state);
+    case actionTypes.SET_SOURCE_CHARTS:
+      return setSourceCharts(state, action);
+    case actionTypes.CHANGE_INFO_IN_SOURCE_CHARTS:
+      return changeInfoINSourceCharts(state, action);
     default:
       return state;
   }
