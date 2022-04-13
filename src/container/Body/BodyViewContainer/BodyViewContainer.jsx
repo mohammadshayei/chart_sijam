@@ -6,6 +6,7 @@ import "./BodyViewConainer.scss";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
 import BodyContent from "./BodyContent/BodyContent";
 import * as chartActions from "../../../store/actions/chart.js";
+import * as detailActions from "../../../store/actions/detail.js";
 import axios from "axios";
 import { baseUrl } from "./../../../constants/Config";
 import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
@@ -19,20 +20,22 @@ const BodyViewContainer = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const [createable, setCreateable] = useState(false);
+  const [filteredCharts, setFilteredCharts] = useState([])
 
   const detail = useSelector((state) => state.detail);
-  const user = useSelector((state) => state.auth.user);
-  const token = useSelector((state) => state.auth.token);
-  const { parentsCharts } = useSelector((state) => state.auth);
-  const { selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks } = useSelector((state) => state.detail);
-
+  const { user, token, parentsCharts } = useSelector((state) => state.auth);
+  const { selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks, sourceCharts } = useSelector((state) => state.detail);
   const chartsData = useSelector((state) => state.chart);
+  const { selectedHolding, selectedCategory } = useSelector((state) => state.holdingDetail);
+
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
   const dispatch = useDispatch();
-
+  const setSourceChart = (payload) => {
+    dispatch(detailActions.setSourceCharts(payload));
+  };
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
@@ -47,9 +50,37 @@ const BodyViewContainer = (props) => {
     const diffInMs = Math.abs(date2 - date1);
     return Math.floor(diffInMs / (1000 * 60));
   }
+  let depend = selectedCategory?.charts.length
+
 
   useEffect(() => {
     if (!parentsCharts) return;
+    let charts = [];
+    parentsCharts.forEach(cmp => {
+      cmp.softwares.forEach(sft => {
+        sft.active_backups.forEach(acb => {
+          acb.banks.forEach(bnk => {
+            charts = [...charts, ...bnk.charts.map(item => {
+              return {
+                ...item,
+                chart: {
+                  ...item.chart,
+                  path: [cmp._id, sft._id, acb._id, bnk._id],
+                  parent: [cmp.name, sft.name, acb.name, bnk.name]
+                }
+              }
+            })]
+          })
+        })
+      })
+    })
+    setSourceChart({ charts })
+
+  }, [parentsCharts])
+
+
+  useEffect(() => {
+    if (!parentsCharts || sourceCharts.length === 0) return;
     clearCharts();
     let charts = [];
     //holding selected ....
@@ -60,8 +91,10 @@ const BodyViewContainer = (props) => {
             acb.banks.forEach(bnk => {
               charts = [...charts, ...bnk.charts.map(item => {
                 return {
+                  ...item,
                   chart: {
                     ...item.chart,
+                    path: [cmp._id, sft._id, acb._id, bnk._id],
                     parent: [cmp.name, sft.name, acb.name, bnk.name]
                   }
                 }
@@ -79,8 +112,10 @@ const BodyViewContainer = (props) => {
               acb.banks.forEach(bnk => {
                 charts = [...charts, ...bnk.charts.map(item => {
                   return {
+                    ...item,
                     chart: {
                       ...item.chart,
+                      path: [cmp._id, sft._id, acb._id, bnk._id],
                       parent: [sft.name, acb.name, bnk.name]
                     }
                   }
@@ -95,9 +130,11 @@ const BodyViewContainer = (props) => {
                 acb.banks.forEach(bnk => {
                   charts = [...charts, ...bnk.charts.map(item => {
                     return {
+                      ...item,
                       chart: {
                         ...item.chart,
-                        parent: [acb.name, bnk.name]
+                        parent: [acb.name, bnk.name],
+                        path: [cmp._id, sft._id, acb._id, bnk._id],
                       }
                     }
                   })]
@@ -109,9 +146,11 @@ const BodyViewContainer = (props) => {
                   acb.banks.forEach(bnk => {
                     charts = [...charts, ...bnk.charts.map(item => {
                       return {
+                        ...item,
                         chart: {
                           ...item.chart,
-                          parent: [bnk.name]
+                          parent: [bnk.name],
+                          path: [cmp._id, sft._id, acb._id, bnk._id],
                         }
                       }
                     })]
@@ -122,9 +161,11 @@ const BodyViewContainer = (props) => {
                     if (selectedBanks.findIndex(item => item.value === bnk._id) > -1) {
                       charts = [...charts, ...bnk.charts.map(item => {
                         return {
+                          ...item,
                           chart: {
                             ...item.chart,
-                            parent: []
+                            parent: [],
+                            path: [cmp._id, sft._id, acb._id, bnk._id],
                           }
                         }
                       })]
@@ -140,8 +181,15 @@ const BodyViewContainer = (props) => {
         }
       })
     }
+    if (selectedCategory)
+      charts = charts.filter(item => selectedCategory.charts.findIndex(chrt => chrt.chart === item.chart._id) > -1)
+    setFilteredCharts(sourceCharts.filter(item => charts.findIndex(chrt => chrt.chart._id === item.chart._id) > -1))
+  }, [parentsCharts, selectedCompanies.length, selectedSoftwares.length, selectedActiveBackups.length, selectedBanks.length, selectedCategory, depend, sourceCharts.length])
+
+  useEffect(() => {
+    if (filteredCharts.length === 0) return;
     let newChartsData = {};
-    charts.forEach((item) => {
+    filteredCharts.forEach((item) => {
       newChartsData = {
         ...newChartsData,
         [item.chart._id]: {
@@ -151,13 +199,26 @@ const BodyViewContainer = (props) => {
           options: item.chart.options,
           config: item.chart.config,
           parent: item.chart.parent,
-          bankId: item.chart.bankCreator,
+          path: item.chart.path,
+          bankId: item.chart.bankCreator._id,
           lastBankUpdate: item.chart.data_updated_time,
+          comments: item.chart.comments,
+          editList: item.chart.edit,
+          shareList: item.chart.share,
+          editedBy: item.chart.edited_by,
+          faveList: item.chart.fave_list,
+          creator: item.chart.userCreator,
+          seeDuration: item.see_duration,
+          receivedType: item.type,
+          sharedFrom: item.shared_from,
+          label: item.label,
         },
       };
     });
     setChartsData(newChartsData);
-  }, [parentsCharts, selectedCompanies.length, selectedSoftwares.length, selectedActiveBackups.length, selectedBanks.length])
+  }, [filteredCharts])
+
+
 
   const timer = async () => {
     let result;

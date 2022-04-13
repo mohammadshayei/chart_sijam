@@ -123,6 +123,7 @@ const BodyContentPermissonAdd = () => {
                         <input
                             className="editable-input"
                             dir="rtl"
+                            autoFocus
                             placeholder={stringFa.title}
                             value={label.name}
                             onChange={setTitleHandler}
