@@ -54,7 +54,12 @@ export const setIsEdit = (isEdit) => (dispatch) => {
     isEdit,
   });
 };
-
+export const updatedDataField = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_DATA_FIELD,
+    payload,
+  });
+};
 export const setChartOptions =
   ({ chartOptions }) =>
   (dispatch) => {
@@ -63,6 +68,15 @@ export const setChartOptions =
       payload: { chartOptions },
     });
   };
+
+export const setChartOptionsAndType =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_CHART_OPTIONS_AND_TYPE,
+        payload,
+      });
+    };
 
 export const fullscreenChart =
   ({ isFullscreen }) =>

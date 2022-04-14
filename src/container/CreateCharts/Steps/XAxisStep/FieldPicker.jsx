@@ -78,7 +78,7 @@ const FieldPicker = (props) => {
               ...updatedChartsData,
               data: {
                 ...updatedChartsData.data,
-                data: [...updatedChartsData.data.data, { [fieldName]: field }],
+                data: [...updatedChartsData.data.data, { [fieldName]: props.index > 0 ? parseInt(field) : field }],
                 options:
                   props.index > 0
                     ? {
@@ -101,14 +101,14 @@ const FieldPicker = (props) => {
             let found = false;
             for (const key in chartDataUpdated[index]) {
               if (key === fieldName) {
-                chartDataUpdated[index][key] = fieldValues[index];
+                chartDataUpdated[index][key] = props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index];
                 found = true;
               }
             }
             if (!found) {
               chartDataUpdated[index] = {
                 ...chartDataUpdated[index],
-                [fieldName]: fieldValues[index],
+                [fieldName]: props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index],
               };
             }
             chartOptionsUpdated =

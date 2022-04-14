@@ -27,7 +27,7 @@ const initialState = {
         theme: "noTheme",
         radius: 70,
         isDoughnut: false,
-        innerRadius: 40,
+        innerRadius: 50,
         startAngle: 0,
         endAngle: 360,
         insideLabel: false,
@@ -64,7 +64,8 @@ const initialState = {
           stacked: false,
           strokeWidth: 2,
           // smoothing: "monotoneX",
-          tensionX: 0.77,
+          // tensionX: 0.77,
+          smooth: true,
           bullet: {
             display: true,
             strokeColor: "#fff",
@@ -112,6 +113,50 @@ const setChartData = (state, action) => {
       editList: chartData.editList,
       viewList: chartData.viewList,
       data: chartData.data,
+    },
+  };
+};
+const updatedDataField = (state, action) => {
+  const { selected, inputIndex, fieldValues } = action.payload;
+  let updatedChartData = { ...state.chartData }
+  let updatedData = [...updatedChartData.data.data], updatedOptions = { ...updatedChartData.data.options };
+  for (let index = 0; index < fieldValues.length; index++) {
+    const fieldName =
+      inputIndex === 0 ? "category" : `field${inputIndex}`;
+    let found = false;
+    for (const key in updatedData[index]) {
+      if (key === fieldName) {
+        updatedData[index][key] = fieldValues[index];
+        found = true;
+      }
+    }
+    if (!found) {
+      updatedData[index] = {
+        ...updatedData[index],
+        [fieldName]: fieldValues[index],
+      };
+    }
+  }
+  if (inputIndex !== 0) {
+    let valueExst = false, count = 1;
+    for (const key in updatedOptions.fieldNames) {
+      count++;
+      if (updatedOptions.fieldNames[key] === selected) {
+        valueExst = true;
+      }
+    }
+    if (!valueExst)
+      updatedOptions.fieldNames = { ...updatedOptions.fieldNames, [`field${count}`]: selected }
+  }
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      data: {
+        ...state.chartData.data,
+        data: updatedData,
+        options: updatedOptions
+      },
     },
   };
 };
@@ -211,6 +256,52 @@ const setChartOptions = (state, action) => {
     },
   };
 };
+const setChartOptionsAndType = (state, action) => {
+  const { item } = action.payload;
+  let updatedType, updatedOptions = { ...state.chartData.data.options };
+  switch (item) {
+    case "smooth":
+      updatedType = "Line";
+      updatedOptions.series.smooth = true;
+      break;
+    case "line":
+      updatedType = "Line";
+      updatedOptions.series.smooth = false;
+      break;
+    case "stackedBar":
+      updatedType = "Column";
+      updatedOptions.series.stacked = true;
+      break;
+    case "bar":
+      updatedType = "Column";
+      updatedOptions.series.stacked = false;
+      break;
+    case "pie":
+      updatedType = "Pie";
+      updatedOptions.isDoughnut = false;
+      updatedOptions.innerRadius = 0.0001;
+      break;
+    case "donut":
+      updatedType = "Pie";
+      updatedOptions.isDoughnut = true;
+      updatedOptions.innerRadius = 50;
+      break;
+
+    default:
+      break;
+  }
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      type: updatedType,
+      data: {
+        ...state.chartData.data,
+        options: updatedOptions,
+      },
+    },
+  };
+};
 
 const fullscreenChart = (state, action) => {
   const { isFullscreen } = action.payload;
@@ -289,6 +380,8 @@ const reducer = (state = initialState, action) => {
       return setIsEdit(state, action);
     case actionTypes.SET_CHART_OPTIONS:
       return setChartOptions(state, action);
+    case actionTypes.SET_CHART_OPTIONS_AND_TYPE:
+      return setChartOptionsAndType(state, action);
     case actionTypes.FULL_SCREEN_CHART:
       return fullscreenChart(state, action);
     case actionTypes.SET_CHART_DATA_FILTER:
@@ -299,6 +392,8 @@ const reducer = (state = initialState, action) => {
       return updateAccessList(state, action);
     case actionTypes.UPDATE_EMPTY_REQUIREDS:
       return updateEmptyRequireds(state, action);
+    case actionTypes.UPDATE_DATA_FIELD:
+      return updatedDataField(state, action);
 
     default:
       return state;

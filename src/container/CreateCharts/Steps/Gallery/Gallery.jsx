@@ -81,10 +81,9 @@ const Gallery = (props) => {
   });
 
   const dispatch = useDispatch();
-  const setChartData = (chartData) => {
-    dispatch(addChartActions.setChartData(chartData));
+  const setChartOptionsAndType = (payload) => {
+    dispatch(addChartActions.setChartOptionsAndType(payload));
   };
-
   useEffect(() => {
     const updatedGroups = { ...groups };
     if (takenData.chartData.type) {
@@ -95,7 +94,7 @@ const Gallery = (props) => {
         if (type === takenData.chartData.type) {
           switch (type) {
             case "Line": {
-              if (takenData.chartData.data.options.series.tensionX < 1)
+              if (takenData.chartData.data.options.series.smooth)
                 updatedGroups[type].items["smooth"].selected = true;
               else updatedGroups[type].items["line"].selected = true;
               break;
@@ -127,39 +126,42 @@ const Gallery = (props) => {
     for (const group in groups) {
       for (const item in groups[group].items) {
         if (groups[group].items[item].selected) {
-          switch (item) {
-            case "smooth":
-              chartData.type = "Line";
-              chartData.data.options.series.tensionX = 0.77;
-              break;
-            case "line":
-              chartData.type = "Line";
-              chartData.data.options.series.tensionX = 1;
-              break;
-            case "stackedBar":
-              chartData.type = "Column";
-              chartData.data.options.series.stacked = true;
-              break;
-            case "bar":
-              chartData.type = "Column";
-              chartData.data.options.series.stacked = false;
-              break;
-            case "pie":
-              chartData.type = "Pie";
-              chartData.data.options.isDoughnut = false;
-              break;
-            case "donut":
-              chartData.type = "Pie";
-              chartData.data.options.isDoughnut = true;
-              break;
+          setChartOptionsAndType({ item });
 
-            default:
-              break;
-          }
+
+          // switch (item) {
+          //   case "smooth":
+          //     chartData.type = "Line";
+          //     chartData.data.options.series.tensionX = 0.77;
+          //     break;
+          //   case "line":
+          //     chartData.type = "Line";
+          //     chartData.data.options.series.tensionX = 1;
+          //     break;
+          //   case "stackedBar":
+          //     chartData.type = "Column";
+          //     chartData.data.options.series.stacked = true;
+          //     break;
+          //   case "bar":
+          //     chartData.type = "Column";
+          //     chartData.data.options.series.stacked = false;
+          //     break;
+          //   case "pie":
+          //     chartData.type = "Pie";
+          //     chartData.data.options.isDoughnut = false;
+          //     break;
+          //   case "donut":
+          //     chartData.type = "Pie";
+          //     chartData.data.options.isDoughnut = true;
+          //     break;
+
+          //   default:
+          //     break;
+          // }
         }
       }
     }
-    setChartData(chartData);
+    // setChartOptionsAndType({ chartOptions: chartData.data.options, type: chartData.type });
   }, [groups]);
 
   const onClickHandler = (e, grp, item) => {

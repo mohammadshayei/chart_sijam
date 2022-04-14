@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.24",
+    "@amcharts/amcharts5": "^5.1.12",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@material-ui/core": "^4.11.4",

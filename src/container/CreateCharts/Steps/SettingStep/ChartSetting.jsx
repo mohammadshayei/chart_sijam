@@ -89,9 +89,9 @@ const ChartSetting = () => {
   const labelsDropDownItems = [
     { name: "نام فیلد عنوان", id: "category" },
     { name: "مقادیر", id: "value" },
-    { name: "درصد", id: "percent" },
     { name: "نام فیلد : درصد", id: "catper" },
     { name: "نام فیلد : مقدار", id: "catval" },
+    { name: "نام فیلد : درصد و مقدار", id: "total" },
   ];
 
   const ref = useRef();
@@ -232,13 +232,13 @@ const ChartSetting = () => {
       case "{value}":
         setSelectedLabelsText("مقادیر");
         break;
-      case "{value.percent.formatNumber('#.0')}%":
-        setSelectedLabelsText("درصد");
+      case "({value}) [bold]{valuePercentTotal.formatNumber('0.00')}%[/] : {category}":
+        setSelectedLabelsText("نام فیلد : درصد و مقدار");
         break;
-      case "{category} :{value.percent.formatNumber('#.0')}%":
+      case "[bold]{valuePercentTotal.formatNumber('0.00')}%[/] : {category}":
         setSelectedLabelsText("نام فیلد : درصد");
         break;
-      case "{category} :{value}":
+      case "[bold]{value} : {category}":
         setSelectedLabelsText("نام فیلد : مقدار");
         break;
 
@@ -301,15 +301,15 @@ const ChartSetting = () => {
         case "مقادیر":
           updatedDataLabels.text = "{value}";
           break;
-        case "درصد":
-          updatedDataLabels.text = "{value.percent.formatNumber('#.0')}%";
+        case "نام فیلد : درصد و مقدار":
+          updatedDataLabels.text = "({value}) [bold]{valuePercentTotal.formatNumber('0.00')}%[/] : {category}";
           break;
         case "نام فیلد : درصد":
           updatedDataLabels.text =
-            "{category} :{value.percent.formatNumber('#.0')}%";
+            "[bold]{valuePercentTotal.formatNumber('0.00')}%[/] : {category}";
           break;
         case "نام فیلد : مقدار":
-          updatedDataLabels.text = "{category} :{value}";
+          updatedDataLabels.text = "[bold]{value}[/] : {category}";
           break;
 
         default:
@@ -401,7 +401,7 @@ const ChartSetting = () => {
                   <CheckBox
                     checked={legend.colorize}
                     onChange={(e) => colorizeCheckBoxClick(e.target.checked)}
-                    style={{ fontSize: "0.8rem" }}
+                    style={{ fontSize: "0.8rem", marginRight: "2rem" }}
                   >
                     {stringFa.colorize}
                   </CheckBox>
@@ -430,7 +430,7 @@ const ChartSetting = () => {
                   >
                     {stringFa.rotate_categories}
                   </CheckBox>
-                  <CheckBox
+                  {/* <CheckBox
                     checked={repeat}
                     onChange={(e) => setRepeat(e.target.checked)}
                     style={{
@@ -439,7 +439,7 @@ const ChartSetting = () => {
                     }}
                   >
                     {stringFa.repeating_categories}
-                  </CheckBox>
+                  </CheckBox> */}
                 </div>
               </div>
             </li>
@@ -462,7 +462,7 @@ const ChartSetting = () => {
               >
                 {stringFa.axis_break}
               </CheckBox>
-              {axisBreak.active && (
+              {/* {axisBreak.active && (
                 <div className="value-axis-setting">
                   {Object.entries(breakInputs).map(([k, v]) => {
                     return (
@@ -494,7 +494,7 @@ const ChartSetting = () => {
                     );
                   })}
                 </div>
-              )}
+              )} */}
             </div>
           </li>
         )}
