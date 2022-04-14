@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   breakpoint: "lg",
   editMode: false,
+  createdList: [],
 };
 
 // chartId: {
@@ -36,6 +37,26 @@ const setChartData = (state, action) => {
       ...state.data,
       [chartId]: chartData,
     },
+  };
+};
+const changeIdInCreatedList = (state, action) => {
+  const { value, mode } = action.payload;
+  if (!value) return { ...state }
+  let updatedCreatedList = [...state.createdList]
+  if (mode === 'add_one') {
+    let exist = updatedCreatedList.findIndex(item => item === value) > -1
+    if (!exist)
+      updatedCreatedList.push(value)
+  } else if (mode === 'add_list') {
+    value.forEach(item => {
+      let exist = updatedCreatedList.findIndex(itm => itm === item) > -1
+      if (!exist)
+        updatedCreatedList.push(item)
+    });
+  }
+  return {
+    ...state,
+    createdList: updatedCreatedList
   };
 };
 
@@ -190,6 +211,8 @@ const reducer = (state = initialState, action) => {
       return updateChartData(state, action);
     case actionTypes.SET_CHARTS_LOADING:
       return setChartsLoading(state, action);
+    case actionTypes.CHANGE_CREATED_CHART_LIST:
+      return changeIdInCreatedList(state, action);
     default:
       return state;
   }

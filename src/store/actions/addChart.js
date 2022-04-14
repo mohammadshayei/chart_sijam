@@ -56,13 +56,27 @@ export const setIsEdit = (isEdit) => (dispatch) => {
     isEdit: isEdit,
   });
 };
-
+export const updatedDataField = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_DATA_FIELD,
+    payload,
+  });
+};
 export const setChartOptions =
   ({ chartOptions }) =>
     (dispatch) => {
       dispatch({
         type: actionTypes.SET_CHART_OPTIONS,
         payload: { chartOptions },
+      });
+    };
+
+export const setChartOptionsAndType =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_CHART_OPTIONS_AND_TYPE,
+        payload,
       });
     };
 

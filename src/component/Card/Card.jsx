@@ -71,7 +71,12 @@ const Card = React.memo((props) => {
         cardIsHover={isHover}
       />
       <div className="card-body">
-        <ChartBlock chartId={props.chartId} chartProps={props.item} />
+        <ChartBlock
+          chartId={props.chartId}
+          type={props.item.type}
+          options={props.item.options}
+          data={props.item.data}
+        />
       </div>
       <div className="card-footer">{lastBankUpdate}</div>
     </div>

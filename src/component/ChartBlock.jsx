@@ -4,21 +4,26 @@ import PieChart from "./Charts/PieChart";
 import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
 import SkeletonChart from "../component/Skeletons/SkeletonChart";
+import NewChart from "./Charts/NewChart.jsx";
 
-const ChartBlock = React.memo((props) => {
+const ChartBlock = React.memo(({ chartId, type, options, data }) => {
   const [chart, setChart] = useState(null);
-  const [data, setData] = useState(null);
+  const [sentData, setSentData] = useState(null);
   const [loading, setLoading] = useState(null);
 
   const chartData = useSelector((state) => state.addChart);
 
+  let dependType = chartData?.chartData?.type,
+    dependData = chartData?.chartData?.data?.data,
+    dependOptions = chartData?.chartData?.data?.options;
+
+
   useEffect(() => {
-    if (props.chartId === "123456789") {
+    if (chartId === "123456789") {
       if (chartData.chartData.data.data.length > 0) {
         setLoading(<SkeletonChart />);
         setTimeout(() => {
-          setData({
-            title: chartData.chartData.title,
+          setSentData({
             type: chartData.chartData.type,
             data: chartData.chartData.data.data,
             options: chartData.chartData.data.options,
@@ -29,36 +34,42 @@ const ChartBlock = React.memo((props) => {
         setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
     } else {
       setLoading(<SkeletonChart />);
-      if (props.chartProps) {
-        setData(props.chartProps);
+      if (chartId) {
+        setSentData({
+          type,
+          data,
+          options,
+        });
       }
     }
-  }, [chartData.chartData, props.chartProps, props.chartId]);
+  }, [dependType, dependData, dependOptions, chartId]);
 
   useEffect(() => {
-    if (data) {
+    if (sentData) {
       let newChart;
-      switch (data.type) {
+      switch (sentData.type) {
         case "Line":
         case "Column":
         case "Bubble":
-        case "Radar":
-          newChart = <XYChart chartId={props.chartId} chartProps={data} />;
-          break;
         case "Pie":
-          newChart = <PieChart chartId={props.chartId} chartProps={data} />;
+        case "Radar":
+          newChart = <NewChart chartId={chartId} chartProps={sentData} />;
+          // newChart = <XYChart chartId={chartId} chartProps={sentData} />;
           break;
+        // case "Pie":
+        //   newChart = <PieChart chartId={chartId} chartProps={sentData} />;
+        //   break;
         case "Gauge":
-          newChart = <GaugeChart chartId={props.chartId} chartProps={data} />;
+          newChart = <GaugeChart chartId={chartId} chartProps={sentData} />;
           break;
         default:
           newChart = <div>mismatch type!</div>;
       }
       setChart(newChart);
     }
-  }, [data, props.chartId]);
+  }, [sentData]);
 
-  return data && data.data.length > 0 ? (
+  return sentData && sentData.data.length > 0 ? (
     chart
   ) : (
     <div

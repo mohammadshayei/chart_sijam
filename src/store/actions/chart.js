@@ -2,21 +2,21 @@ import * as actionTypes from "./actionTypes";
 
 export const setChartType =
   ({ key, value, item }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_CHART_TYPE,
-      payload: { key, value, item },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_CHART_TYPE,
+        payload: { key, value, item },
+      });
+    };
 
 export const setChartData =
   ({ chartId, chartData }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_CHART_DATA,
-      payload: { chartId, chartData },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_CHART_DATA,
+        payload: { chartId, chartData },
+      });
+    };
 
 export const setChartsData = (data) => (dispatch) => {
   dispatch({
@@ -27,21 +27,21 @@ export const setChartsData = (data) => (dispatch) => {
 
 export const setEditMode =
   ({ isEdit }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_EDIT_MODE,
-      payload: { isEdit },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_EDIT_MODE,
+        payload: { isEdit },
+      });
+    };
 
 export const deleteChart =
   ({ chartId }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.DELETE_CHART,
-      payload: { chartId },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.DELETE_CHART,
+        payload: { chartId },
+      });
+    };
 
 export const clearCharts = () => (dispatch) => {
   dispatch({
@@ -50,16 +50,22 @@ export const clearCharts = () => (dispatch) => {
 };
 
 export const updateChartData =
-  ({ chartId, chartData }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.UPDATE_CHART_DATA,
-      payload: { chartId, chartData },
-    });
-  };
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_CHART_DATA,
+        payload,
+      });
+    };
 export const setChartsLoading = (loading) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_CHARTS_LOADING,
     loading,
+  });
+};
+export const changeCreatedChartList = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.CHANGE_CREATED_CHART_LIST,
+    payload,
   });
 };
