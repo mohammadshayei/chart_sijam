@@ -19,15 +19,13 @@ const PERIOD_INTRAVEL = 60000;
 const BodyViewContainer = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
-  const [createable, setCreateable] = useState(false);
   const [filteredCharts, setFilteredCharts] = useState([])
 
   const detail = useSelector((state) => state.detail);
-  const { user, token, parentsCharts } = useSelector((state) => state.auth);
+  const { token, parentsCharts } = useSelector((state) => state.auth);
   const { selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks, sourceCharts } = useSelector((state) => state.detail);
   const chartsData = useSelector((state) => state.chart);
-  const { selectedHolding, selectedCategory } = useSelector((state) => state.holdingDetail);
-
+  const { selectedCategory } = useSelector((state) => state.holdingDetail);
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -63,10 +61,11 @@ const BodyViewContainer = (props) => {
             charts = [...charts, ...bnk.charts.map(item => {
               return {
                 ...item,
+                time: { start: '', isSee: false, duration: 0 },
                 chart: {
                   ...item.chart,
                   path: [cmp._id, sft._id, acb._id, bnk._id],
-                  parent: [cmp.name, sft.name, acb.name, bnk.name]
+                  parent: [cmp.name, sft.name, acb.name, bnk.name],
                 }
               }
             })]
@@ -212,6 +211,7 @@ const BodyViewContainer = (props) => {
           receivedType: item.type,
           sharedFrom: item.shared_from,
           label: item.label,
+          time: item.time,
         },
       };
     });
@@ -246,12 +246,6 @@ const BodyViewContainer = (props) => {
       }
     }
   };
-  useEffect(() => {
-    if (user) {
-      if (user.is_fekrafzar) setCreateable(true);
-      else setCreateable(false);
-    }
-  }, [user]);
 
   useEffect(() => {
     const updateChart = setInterval(() => {
@@ -330,16 +324,6 @@ const BodyViewContainer = (props) => {
                 : "calc( 100% - 70px )",
             }}
           >
-            {createable && (
-              <div
-                className="create-chart-container"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <AddRoundedIcon />
-                <p>{stringFa.create_chart}</p>
-              </div>
-            )}
-
             {stringFa.no_exist_charts}
           </div>
         )

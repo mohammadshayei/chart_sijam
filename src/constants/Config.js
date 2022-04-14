@@ -2,8 +2,8 @@
 export const MELI_PAYAMAK_URL =
   "https://rest.payamak-panel.com/api/SendSMS/BaseServiceNumber";
 
-export const baseUrl = "https://setoos.ir/";
-// export const baseUrl = "http://localhost:8080/";
+// export const baseUrl = "https://setoos.ir/";
+export const baseUrl = "http://localhost:8080/";
 
 
 // export const baseUrl = "http://2.179.166.195/";

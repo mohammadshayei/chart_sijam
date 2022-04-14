@@ -151,7 +151,7 @@ const BodyContentUserAccessChart = ({ userIdUrl }) => {
                         {loading ?
                             <SkeletonTreeView />
                             :
-                            userAccess && <AccessTreeView userAccess={userAccess} userId={selectedUser._id} />
+                            userAccess && <AccessTreeView userAccess={userAccess.data} userState={userAccess.state} userId={selectedUser._id} />
                         }
                     </div>
                 </div>}

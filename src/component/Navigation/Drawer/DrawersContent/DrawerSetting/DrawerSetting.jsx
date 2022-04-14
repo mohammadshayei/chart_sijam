@@ -74,26 +74,22 @@ const DrawerSetting = () => {
     let updatedOrder = { ...order }
     switch (menu_item) {
       case '1':
-        console.log('1')
         updatedOrder.customization.isSelected = true;
         updatedOrder.users.isSelected = false;
         updatedOrder.permissions.isSelected = false;
         break;
       case '2':
-        console.log('2')
         updatedOrder.customization.isSelected = false;
         updatedOrder.users.isSelected = true;
         updatedOrder.permissions.isSelected = false;
 
         break;
       case '3':
-        console.log('3')
         updatedOrder.customization.isSelected = false;
         updatedOrder.users.isSelected = false;
         updatedOrder.permissions.isSelected = true;
         break;
       default:
-        console.log('4')
         updatedOrder.customization.isSelected = true;
         updatedOrder.users.isSelected = false;
         updatedOrder.permissions.isSelected = false;

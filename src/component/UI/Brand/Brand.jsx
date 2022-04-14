@@ -67,7 +67,8 @@ const Brand = (props) => {
         setLoading(true)
         let res = await getAccessHolding({ userId, holdingId }, token)
         if (res.success) {
-          setHoldingAccess(res.data)
+          const payload = { holdingAccess: res.data.data, editedState: res.data.state }
+          setHoldingAccess(payload)
         } else {
           console.log('error')
         }

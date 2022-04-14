@@ -5,7 +5,7 @@ import Brand from "../../UI/Brand/Brand";
 import NavbarItems from "./NavbarItems/NavbarItems";
 import { useSelector } from "react-redux";
 import ErrorDialog from "../../UI/Error/ErrorDialog";
-import { getUserHoldings, getAccessHolding } from "../../../api/home";
+import { getUserHoldings } from "../../../api/home";
 import { useDispatch } from "react-redux";
 import * as holdingActions from "../../../store/actions/holdingDetail";
 import * as authActions from "../../../store/actions/auth";

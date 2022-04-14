@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Card.scss";
 import TitleBlock from "../TitleBlock/TitleBlock";
 import ChartBlock from "../ChartBlock";
@@ -10,28 +10,43 @@ import { BsReplyFill } from 'react-icons/bs'
 import { MdModeEditOutline } from 'react-icons/md'
 import * as chartActions from "../../store/actions/chart.js";
 import * as detailActions from "../../store/actions/detail.js";
+import { useIntersection } from "../../useIntersection";
+// import { useIntersection } from "../../useIntersection";
+
 
 const Card = React.memo((props) => {
-  const chartsData = useSelector((state) => state.chart);
   const [isHover, setIsHover] = useState(false);
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const [fave, setFave] = useState(false)
 
 
 
+  const chartsData = useSelector((state) => state.chart);
   const { userId, socket } = useSelector((state) => state.auth);
+  const { selectedHolding } = useSelector((state) => state.holdingDetail);
 
+
+  const cardRef = useRef()
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
-
+  const rootMargin = '-250px'
+  let isVisible = useIntersection(cardRef, rootMargin)
   const dispatch = useDispatch();
+
 
   const updateFaveList = (payload) => {
     dispatch(chartActions.updateFaveList(payload));
   };
   const changeInfoINSourceCharts = (payload) => {
     dispatch(detailActions.changeInfoINSourceCharts(payload));
+  };
+  const resetTimeSee = (payload) => {
+    dispatch(detailActions.resetTimeSee(payload));
+  };
+  const changeSeeTimeChart = (payload) => {
+    //chartId, isSee
+    dispatch(detailActions.changeSeeTimeChart(payload));
   };
   const onMouseEnter = () => {
     setIsHover(true);
@@ -43,6 +58,25 @@ const Card = React.memo((props) => {
   const onFaveClick = () => {
     socket.emit('change_fave_chart', { chartId: props.chartId, isFave: !fave, userId })
   }
+
+
+  useEffect(() => {
+    changeSeeTimeChart({ chartId: props.chartId, isSee: isVisible })
+  }, [isVisible])
+
+  useEffect(() => {
+    if (props.item.time && props.item.time.duration > 0) {
+      socket.emit('set_see_time', { chartId: props.chartId, duration: props.item.time.duration, userId, holdingId: selectedHolding.holdingId })
+      resetTimeSee({ chartId: props.chartId })
+    }
+  }, [props.item.time.duration])
+  useEffect(() => {
+    return () => {
+      if (props.item.time.isSee && socket)
+        // console.log(props.item.time.duration)
+        socket.emit('set_see_time', { chartId: props.chartId, duration: props.item.time.duration, userId, holdingId: selectedHolding.holdingId })
+    }
+  }, [])
 
 
   useEffect(() => {
@@ -90,6 +124,7 @@ const Card = React.memo((props) => {
       className="card card-container"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      ref={cardRef}
       style={{
         backgroundColor: isHover
           ? themeState.isDark
@@ -117,7 +152,7 @@ const Card = React.memo((props) => {
         cardIsHover={isHover}
       />
       <div className="card-body">
-        <ChartBlock chartId={props.chartId} chartProps={props.item} />
+        {/* <ChartBlock chartId={props.chartId} chartProps={props.item} /> */}
       </div>
       <div className="card-footer">
         <div className="left-side">

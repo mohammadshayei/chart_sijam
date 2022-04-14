@@ -20,6 +20,7 @@ import { FcSettings, FcFullTrash } from "react-icons/fc";
 import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
 import BankSection from "./BankSection/BankSection";
 import Hint from "../../component/UI/Hint/Hint";
+import { fetchData } from "../../api/chart";
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -69,6 +70,9 @@ const CreateCharts = (props) => {
   ];
   let deletedChart;
 
+
+  const searchParams = new URLSearchParams(location.search);
+  const bankId = searchParams.get("bankId");
   const ref = useRef();
 
   // useEffect(() => {
@@ -80,8 +84,16 @@ const CreateCharts = (props) => {
     setInput(false);
     onMouseLeave("title")
   });
-
   const dispatch = useDispatch();
+
+  const selectChartDatabase = (data) => {
+    dispatch(addChartActions.selectChartData(data));
+  };
+  const setId = (id) => {
+    dispatch(addChartActions.setAddChartId(id));
+  };
+
+
   const setChartTitle = (chartTitle) => {
     dispatch(addChartActions.setChartTitle(chartTitle));
   };
@@ -151,23 +163,7 @@ const CreateCharts = (props) => {
     updatedHover[type] = false;
     setHover(updatedHover);
   };
-  useEffect(() => {
-    for (const key in hover) {
-      if (hover[key]) {
-        const timer = setTimeout(() => {
-          let updatedHintShow = { ...hintShow }
-          updatedHintShow[key] = true;
-          setHintShow(updatedHintShow);
-        }, 200);
-        return () => {
-          let updatedHintShow = { ...hintShow }
-          updatedHintShow[key] = false;
-          setHintShow(updatedHintShow);
-          return clearTimeout(timer);
-        };
-      }
-    }
-  }, [hover]);
+
   const splitViewHandler = () => {
     switch (splitView) {
       case "نمودار":
@@ -386,6 +382,24 @@ const CreateCharts = (props) => {
   };
 
   useEffect(() => {
+    for (const key in hover) {
+      if (hover[key]) {
+        const timer = setTimeout(() => {
+          let updatedHintShow = { ...hintShow }
+          updatedHintShow[key] = true;
+          setHintShow(updatedHintShow);
+        }, 200);
+        return () => {
+          let updatedHintShow = { ...hintShow }
+          updatedHintShow[key] = false;
+          setHintShow(updatedHintShow);
+          return clearTimeout(timer);
+        };
+      }
+    }
+  }, [hover]);
+
+  useEffect(() => {
     if (!takenData.isFullscreen) {
       if (takenData.isEdit) {
         doneClickHandler();
@@ -398,6 +412,18 @@ const CreateCharts = (props) => {
     if (autoValidate)
       checkValidation(false)
   }, [takenData.chartData]);
+
+  useEffect(() => {
+    if (!bankId || !token) return;
+    let controller = new AbortController();
+    (async () => {
+      let result = await fetchData({ id: bankId }, token)
+      selectChartDatabase(result.data);
+      setId(bankId);
+      setIsEdit(true);
+    })()
+    return controller?.abort()
+  }, [location, token])
 
   return (
     <div

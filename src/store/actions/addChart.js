@@ -7,14 +7,12 @@ export const selectChartData = (data) => (dispatch) => {
   });
 };
 
-export const setChartData =
-  (chartData) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.SET_DATA_ADD_CHART,
-        payload: chartData,
-      });
-    };
+export const setChartData = (chartData) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_DATA_ADD_CHART,
+    payload: chartData,
+  });
+};
 
 export const setAddChartId = (id) => (dispatch) => {
   dispatch({
@@ -53,7 +51,7 @@ export const removeDataField =
 export const setIsEdit = (isEdit) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_IS_EDIT,
-    isEdit: isEdit,
+    isEdit,
   });
 };
 
@@ -95,18 +93,18 @@ export const setAccessToAll =
 
 export const updateAccessList =
   ({ accessType, employee, add }) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.UPDATE_ACCESS_LIST,
-        payload: { accessType, employee, add },
-      });
-    };
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.UPDATE_ACCESS_LIST,
+      payload: { accessType, employee, add },
+    });
+  };
 
 export const updateEmptyRequireds =
   ({ emptyRequireds }) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.UPDATE_EMPTY_REQUIREDS,
-        payload: { emptyRequireds },
-      });
-    };
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.UPDATE_EMPTY_REQUIREDS,
+      payload: { emptyRequireds },
+    });
+  };

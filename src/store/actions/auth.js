@@ -85,10 +85,10 @@ export const setAuthRedirectPath = (path) => {
     path: path,
   };
 };
-export const setHoldignAccess = (holdingAccess) => {
+export const setHoldignAccess = (payload) => {
   return {
     type: actionTypes.SET_HOLDING_ACCESS,
-    holdingAccess,
+    payload,
   };
 };
 export const setParentsCharts = (parentsCharts) => {

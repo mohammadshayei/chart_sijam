@@ -19,6 +19,7 @@ const initialState = {
   },
   checked: false,
   holdingAccess: [],
+  state: 0,
   parentsCharts: [],
 };
 
@@ -39,8 +40,10 @@ const setUserLabel = (state, action) => {
   });
 };
 const setHoldingAccess = (state, action) => {
+  const { holdingAccess, editedState } = action.payload;
   return updateObject(state, {
-    holdingAccess: action.holdingAccess,
+    holdingAccess,
+    state: editedState,
   });
 };
 const setParentsCharts = (state, action) => {
@@ -78,8 +81,6 @@ const setAuthRedirectPath = (state, action) => {
 const setChecked = (state, action) => {
   return updateObject(state, { checked: action.checked });
 };
-
-
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

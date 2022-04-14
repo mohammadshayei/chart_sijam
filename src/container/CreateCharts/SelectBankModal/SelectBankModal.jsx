@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useMeasure } from "react-use";
 import { stringFa } from "../../../assets/strings/stringFaCollection.js";
 import { useTheme } from "../../../styles/ThemeProvider.js";
 import "./SelectBankModal.scss";
 import Button from "./../../../component/UI/Button/Button";
-import axios from "axios";
-import { baseUrl } from "./../../../constants/Config";
 import { IoIosSearch, IoMdCloseCircle } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
-import ErrorDialog from "../../../component/UI/Error/ErrorDialog.jsx";
 import * as selectDatabaseActions from "../../../store/actions/addChart";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { animated, useSpring } from "react-spring";
 import { fetchData } from "../../../api/chart.js";
 
 const SelectBankModal = (props) => {
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [focus, setFocus] = useState(false);
   const [data, setData] = useState({ error: "", result: null });
@@ -41,10 +35,10 @@ const SelectBankModal = (props) => {
     },
     banks: { _id: 0, name: `${stringFa.banks}`, active: false, verified: false },
   });
-  const [placeHolder, setPlaceHolder] = useState(null);
+  const [dynamicName, setDynamicName] = useState('');
   const [state, setState] = useState('companies')
   const [isDone, setIsDone] = useState(false);
-  const [searchResult, setSearchResult] = useState({ error: "", result: null });
+  const [searchResult, setSearchResult] = useState({ error: "", result: [] });
   // const [contentHeight, setContentHeight] = useState("305px");
   // const [ref, { height }] = useMeasure();
 
@@ -56,10 +50,6 @@ const SelectBankModal = (props) => {
 
   let navigate = useNavigate()
 
-  const loadingAnimation = useSpring({
-    opacity: loading ? 1 : 0,
-    from: { opacity: 0 },
-  });
   // const expand = useSpring({
   // height: loading ? "305px" : `${contentHeight}px`,
   // });
@@ -78,12 +68,11 @@ const SelectBankModal = (props) => {
   };
 
   const dispatch = useDispatch();
-  const selectChartDatabase = (data) => {
-    dispatch(selectDatabaseActions.selectChartData(data));
+  
+  const setIsEdit = (isEdit) => {
+    dispatch(selectDatabaseActions.setIsEdit(isEdit));
   };
-  const setId = (id) => {
-    dispatch(selectDatabaseActions.setAddChartId(id));
-  };
+
 
   const onChangeHandler = (event) => {
     let updatedResult = { ...searchResult };
@@ -153,7 +142,7 @@ const SelectBankModal = (props) => {
     if (!holdingAccess) return;
     for (const item in bankAddress) {
       if (bankAddress[item].active)
-        setPlaceHolder(`جستجوی ${bankAddress[item].name}`);
+        setDynamicName(bankAddress[item].name)
     }
     if (bankAddress.companies.active) {
       let result = fetchDataFromHoldingAccess([])
@@ -165,7 +154,6 @@ const SelectBankModal = (props) => {
         error: null,
         result: result,
       });
-      setLoading(false);
     }
   }, [bankAddress, holdingAccess]);
 
@@ -247,14 +235,9 @@ const SelectBankModal = (props) => {
   };
 
   const submitHandler = async (_id) => {
-    navigate('/create_chart')
-    let result = await fetchData({ id: _id }, token)
-    selectChartDatabase(result.data);
-    setId(_id);
-    setIsEdit(true);
+    navigate(`/create_chart?bankId=${_id}`)
     props.isModalOpen(false);
   };
-
   return (
     <div
       className="select-bank-modal-wrapper"
@@ -323,7 +306,7 @@ const SelectBankModal = (props) => {
                 borderColor: focus ? theme.primary : theme.darken_border_color,
               }}
               dir="rtl"
-              placeholder={placeHolder}
+              placeholder={`جستجوی ${dynamicName}`}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.target.value = "";
@@ -346,22 +329,25 @@ const SelectBankModal = (props) => {
         ) : (
           <div className="select-bank-picker">
             <div className="select-bank-data">
-              {searchResult.result &&
-                (!searchResult.error
-                  ? Object.entries(searchResult.result).map(([k, v]) => {
-                    return (
-                      <div
-                        key={k}
-                        className="selection-item"
-                        onClick={() =>
-                          updateAddress(v)
-                        }
-                      >
-                        {v.name}
-                      </div>
-                    );
-                  })
-                  : searchResult.error)}
+              {searchResult.result.length > 0 ?
+                Object.entries(searchResult.result).map(([k, v]) => {
+                  return (
+                    <div
+                      key={k}
+                      className="selection-item"
+                      onClick={() =>
+                        updateAddress(v)
+                      }
+                    >
+                      {v.name}
+                    </div>
+                  );
+                })
+                :
+                <div className="message">
+                  <p>{`${dynamicName} یافت نشد`}</p>
+                </div>
+              }
             </div>
           </div>
         )}

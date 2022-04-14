@@ -42,3 +42,15 @@ export const changeInfoINSourceCharts = (payload) => {
     payload,
   };
 };
+export const changeSeeTimeChart = (payload) => {
+  return {
+    type: actionTypes.CHANGE_SEE_TIME_CHART,
+    payload,
+  };
+};
+export const resetTimeSee = (payload) => {
+  return {
+    type: actionTypes.RESET_TIME_SEE,
+    payload,
+  };
+};

@@ -15,6 +15,7 @@ import Dropdown from "../../../../component/UI/DropDown/DropDown";
 import Modal from '../../../../component/UI/Modal/Modal';
 import AddCategory from './AddCategory/AddCategory';
 import * as holdingActions from "../../../../store/actions/holdingDetail.js";
+import { useIntersection } from '../../../../useIntersection';
 
 const HeaderViewContent = (props) => {
     const [isFav, setIsFav] = useState(false)
@@ -98,7 +99,6 @@ const HeaderViewContent = (props) => {
             setIsFav(false)
         }
     }, [selectedCategory])
-
     return (
         <div className='header-view-content-container' >
             <div className="header-view-left-section" ref={ref}>
