@@ -265,13 +265,6 @@ const BodyViewContainer = (props) => {
   return (
     <div
       className="body-container"
-      style={{
-        backgroundImage: chartsData.editMode
-          ? `radial-gradient(${themeState.isDark ? theme.border_color : "#BBBBBB"
-          } 2px, transparent 2px)`
-          : theme.background_color,
-        backgroundSize: chartsData.editMode ? "50px 50px" : "0",
-      }}
     >
       <div
         className="header-body-view-container"

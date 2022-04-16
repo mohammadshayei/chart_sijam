@@ -10,8 +10,10 @@ import am5themes_Frozen from "@amcharts/amcharts5/themes/Frozen";
 import am5themes_Moonrise from "@amcharts/amcharts5/themes/Moonrise";
 import am5themes_Spirited from "@amcharts/amcharts5/themes/Spirited";
 import * as am5plugins_exporting from "@amcharts/amcharts5/plugins/exporting";
+import { useTheme } from '../../styles/ThemeProvider';
 
 function NewChart({ chartId, chartProps }) {
+    const themeState = useTheme();
     const [createdChart, setCreatedChart] = useState({ chart: null, applyedTheme: null, legendMethod: null, });
 
     const { data, options, type } = chartProps;
@@ -45,6 +47,8 @@ function NewChart({ chartId, chartProps }) {
 
                 break;
         }
+        if (themeState.isDark)
+            updatedCreatedChart.applyedTheme = am5themes_Dark.new(root);
 
         switch (options.legend.position) {
             case "top":
@@ -88,7 +92,7 @@ function NewChart({ chartId, chartProps }) {
                     })
                 );
                 seriesType = `${type}Series`
-                if (options.series.smooth)
+                if (type === "Line" && options.series.smooth)
                     seriesType = "SmoothedXLineSeries"
                 break;
             case "Pie":
@@ -238,7 +242,7 @@ function NewChart({ chartId, chartProps }) {
         return () => {
             root.dispose();
         };
-    }, [chartId, options, type]);
+    }, [chartId, options, type, themeState.isDark]);
 
     return (
         <div id={`${chartId}`} style={{ width: "100%", height: "100%" }}></div>

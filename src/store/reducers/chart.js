@@ -95,9 +95,10 @@ const setChartsData = (state, action) => {
           minH: 4,
           w: 6,
           h: 6,
-          x: ((index + 1) * 6) % 12,
+          x: ((index + 2) * 6) % 12,
           y: 0,
           i: k,
+          // resizeHandles: ["se", "sw"]
         },
       ],
       md: [
@@ -107,9 +108,10 @@ const setChartsData = (state, action) => {
           minH: 4,
           w: 5,
           h: 4,
-          x: ((index + 1) * 5) % 10,
+          x: ((index + 2) * 5) % 10,
           y: 0,
           i: k,
+          // resizeHandles: ["se", "sw"]
         },
       ],
       sm: [
@@ -119,9 +121,10 @@ const setChartsData = (state, action) => {
           minH: 4,
           w: 6,
           h: 4,
-          x: ((index + 1) * 6) % 6,
+          x: ((index + 2) * 6) % 6,
           y: 0,
           i: k,
+          // resizeHandles: ["se", "sw"]
         },
       ],
       xs: [
@@ -131,9 +134,10 @@ const setChartsData = (state, action) => {
           minH: 3,
           w: 4,
           h: 4,
-          x: ((index + 1) * 4) % 4,
+          x: ((index + 2) * 4) % 4,
           y: 0,
           i: k,
+          // resizeHandles: ["se", "sw"]
         },
       ],
       xxs: [
@@ -143,9 +147,10 @@ const setChartsData = (state, action) => {
           minH: 3,
           w: 3,
           h: 3,
-          x: ((index + 1) * 3) % 4,
+          x: ((index + 2) * 3) % 4,
           y: 0,
           i: k,
+          // resizeHandles: ["se", "sw"]
         },
       ],
     };
