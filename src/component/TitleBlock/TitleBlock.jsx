@@ -184,7 +184,8 @@ const TitleBlock = React.memo((props) => {
   }
   const settingMenuHandler = async (id) => {
     switch (id) {
-      case "setting" || "fullScreen":
+      case "fullScreen":
+      case "setting":
         onSetting_FullScreenClickHandler(id)
         break;
       case "delete":
