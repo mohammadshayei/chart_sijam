@@ -115,6 +115,9 @@ const CreateCharts = (props) => {
   const updateEmptyRequireds = (emptyRequireds) => {
     dispatch(addChartActions.updateEmptyRequireds(emptyRequireds));
   };
+  const setEditMode = (isEdit) => {
+    dispatch(chartActions.setEditMode(isEdit));
+  };
 
   const setTitleHandler = (e) => {
     if (e.type === "keydown") {
@@ -421,6 +424,7 @@ const CreateCharts = (props) => {
       selectChartDatabase(result.data);
       setId(bankId);
       setIsEdit(true);
+      setEditMode({ isEdit: true });
     })()
     return controller?.abort()
   }, [location, token])

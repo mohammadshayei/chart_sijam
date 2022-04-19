@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LayoutContent from "./hoc/LayoutContent/LayoutContent.jsx";
 import CreateCharts from "./container/CreateCharts/CreateCharts.jsx";
 import classes from "./App.module.scss";
@@ -11,18 +11,29 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { baseUrl } from "./constants/Config.js";
 import * as authActions from "./store/actions/auth";
+import * as holdingActions from "./store/actions/holdingDetail";
+
 import socketIOClient from "socket.io-client";
+import { getUserHoldings } from "./api/home.js";
+import ErrorDialog from "./component/UI/Error/ErrorDialog.jsx";
 
 const App = () => {
-  const themeState = useTheme();
-  const theme = themeState.computedTheme;
-  const token = useSelector((state) => state.auth.token);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+
+
   const checked = useSelector((state) => state.auth.checked);
   const userId = useSelector((state) => state.auth.userId);
+  const token = useSelector((state) => state.auth.token);
 
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const location = useLocation();
+
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
+
 
   const setSocket = (socket) => {
     dispatch(authActions.setSocket(socket));
@@ -68,6 +79,46 @@ const App = () => {
       }
     }
   }, [location.pathname, token, checked])
+
+
+  const setHoldings = (holdings) => {
+    dispatch(holdingActions.setHoldings(holdings));
+  };
+  const setHoldingAccess = (info) => {
+    dispatch(authActions.setHoldignAccess(info));
+  };
+  const setSelectedHolding = (info) => {
+    dispatch(holdingActions.setHoldingInfo(info));
+  };
+  useEffect(() => {
+    let controller = new AbortController();
+    if (token && userId) {
+      (async () => {
+        try {
+          setLoading(true)
+          const result = await getUserHoldings(userId, token)
+          if (result.success) {
+            setHoldings(result.data)
+            if (result.data.length > 0)
+              setSelectedHolding(result.data[0])
+            else {
+              setError(null)
+              setError(<ErrorDialog type="error">{result.error}</ErrorDialog>)
+            }
+          } else {
+            setError(null)
+            setError(<ErrorDialog type="error">{result.error}</ErrorDialog>)
+          }
+          setLoading(false)
+          controller = null
+        } catch (e) {
+          // Handle fetch error
+        }
+      })();
+    }
+    return () => controller?.abort();
+  }, [token, userId])
+
   return (
     <div
       className={classes.AppContainer}
