@@ -13,20 +13,20 @@ const Modal = (props) => {
   const transitions = useTransition(props.show, {
     from: {
       opacity: 0,
-      transform: "translate(-50%,-52%)",
+      // transform: "translate(-50%,-52%)",
       pointerEvents: "none",
     },
     enter: {
       opacity: 1,
-      transform: "translate(-50%,-50%)",
+      // transform: "translate(-50%,-50%)",
       pointerEvents: "auto",
     },
     leave: {
       opacity: 0,
-      transform: "translate(-50%,-48%)",
+      // transform: "translate(-50%,-50%)",
       pointerEvents: "none",
     },
-    config: { friction: 20 },
+    config: { friction: 20, duration: 10 },
   });
 
   useEffect(() => {
