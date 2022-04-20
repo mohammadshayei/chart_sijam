@@ -314,7 +314,17 @@ function NewChart({ chartId, chartProps }) {
 
                 if (legend)
                     legend.data.setAll(updatedCreatedChart.series.dataItems);
+
+                if (options.insideLabel)
+                    updatedCreatedChart.series.children.push(am5.Label.new(root, {
+                        text: "{valueSum}",
+                        fontSize: 40,
+                        centerX: am5.percent(50),
+                        centerY: am5.percent(50),
+                        populateText: true
+                    }));
             }
+
 
         }
         setCreatedChart(updatedCreatedChart)

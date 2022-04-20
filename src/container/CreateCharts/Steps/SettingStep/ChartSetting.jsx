@@ -444,25 +444,26 @@ const ChartSetting = () => {
               </div>
             </li>
           )}
-        {takenData.chartData.type === "Column" && (
-          <li className="setting-item">
-            <div
-              className="line"
-              style={{ backgroundColor: theme.border_color }}
-            ></div>
-            <div className="setting-part-container">
-              {stringFa.value_axis}
-              <CheckBox
-                checked={axisBreak.active}
-                onChange={(e) => axisBreakCheckBoxClick(e.target.checked)}
-                style={{
-                  padding: "1rem 1rem 0.5rem 0",
-                  fontSize: "0.85rem",
-                }}
-              >
-                {stringFa.axis_break}
-              </CheckBox>
-              {/* {axisBreak.active && (
+        {(takenData.chartData.type === "Column" ||
+          takenData.chartData.type === "Line") && (
+            <li className="setting-item">
+              <div
+                className="line"
+                style={{ backgroundColor: theme.border_color }}
+              ></div>
+              <div className="setting-part-container">
+                {stringFa.value_axis}
+                <CheckBox
+                  checked={axisBreak.active}
+                  onChange={(e) => axisBreakCheckBoxClick(e.target.checked)}
+                  style={{
+                    padding: "1rem 1rem 0.5rem 0",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  {stringFa.axis_break}
+                </CheckBox>
+                {/* {axisBreak.active && (
                 <div className="value-axis-setting">
                   {Object.entries(breakInputs).map(([k, v]) => {
                     return (
@@ -495,9 +496,9 @@ const ChartSetting = () => {
                   })}
                 </div>
               )} */}
-            </div>
-          </li>
-        )}
+              </div>
+            </li>
+          )}
         {(takenData.chartData.type === "Pie") && (
           <li className="setting-item">
             <div
