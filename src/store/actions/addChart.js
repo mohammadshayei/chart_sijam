@@ -23,30 +23,30 @@ export const setAddChartId = (id) => (dispatch) => {
 
 export const setChartTitle =
   ({ title }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_TITLE_ADD_CHART,
-      payload: { title },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_TITLE_ADD_CHART,
+        payload: { title },
+      });
+    };
 
 export const setChartTimer =
   ({ period, autoUpdate }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_TIMER_ADD_CHART,
-      payload: { period, autoUpdate },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_TIMER_ADD_CHART,
+        payload: { period, autoUpdate },
+      });
+    };
 
 export const removeDataField =
   ({ index }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.REMOVE_DATA_FIELD,
-      payload: { index },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.REMOVE_DATA_FIELD,
+        payload: { index },
+      });
+    };
 
 export const setIsEdit = (isEdit) => (dispatch) => {
   dispatch({
@@ -62,12 +62,12 @@ export const updatedDataField = (payload) => (dispatch) => {
 };
 export const setChartOptions =
   ({ chartOptions }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_CHART_OPTIONS,
-      payload: { chartOptions },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_CHART_OPTIONS,
+        payload: { chartOptions },
+      });
+    };
 
 export const setChartOptionsAndType =
   (payload) =>
@@ -77,48 +77,55 @@ export const setChartOptionsAndType =
         payload,
       });
     };
-
+export const changeFieldsMEtaData =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.CHANGE_FIELDS_IN_META_DATA,
+        payload,
+      });
+    };
 export const fullscreenChart =
   ({ isFullscreen }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.FULL_SCREEN_CHART,
-      payload: { isFullscreen },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.FULL_SCREEN_CHART,
+        payload: { isFullscreen },
+      });
+    };
 
 export const setChartDataFilter =
   ({ data }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_CHART_DATA_FILTER,
-      payload: { data },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_CHART_DATA_FILTER,
+        payload: { data },
+      });
+    };
 
 export const setAccessToAll =
   ({ accessType, access }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.SET_ACCESS_TO_ALL,
-      payload: { accessType, access },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_ACCESS_TO_ALL,
+        payload: { accessType, access },
+      });
+    };
 
 export const updateAccessList =
   ({ accessType, employee, add }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.UPDATE_ACCESS_LIST,
-      payload: { accessType, employee, add },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_ACCESS_LIST,
+        payload: { accessType, employee, add },
+      });
+    };
 
 export const updateEmptyRequireds =
   ({ emptyRequireds }) =>
-  (dispatch) => {
-    dispatch({
-      type: actionTypes.UPDATE_EMPTY_REQUIREDS,
-      payload: { emptyRequireds },
-    });
-  };
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.UPDATE_EMPTY_REQUIREDS,
+        payload: { emptyRequireds },
+      });
+    };

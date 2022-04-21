@@ -142,6 +142,12 @@ const TitleBlock = React.memo((props) => {
         period: selectedChartData.config.period,
         autoUpdate: selectedChartData.config.auto_update,
       },
+      shareAll: selectedChartData.shareAll ? selectedChartData.shareAll : false,
+      editAll: selectedChartData.editAll ? selectedChartData.editAll : false,
+      viewAll: selectedChartData.viewAll ? selectedChartData.viewAll : false,
+      shareList: selectedChartData.shareList ? selectedChartData.shareList.map(item => item.user._id) : [],
+      editList: selectedChartData.editList ? selectedChartData.editList.map(item => item.user._id) : [],
+      viewList: selectedChartData.viewList ? selectedChartData.viewList : [],
       data: {
         data: selectedChartData.data,
         options: selectedChartData.options,
@@ -235,7 +241,6 @@ const TitleBlock = React.memo((props) => {
 
 
   const saveCustomTitle = () => {
-    console.log("here")
     if (props.title === titleValue) return;
     socket.emit('change_chart_label', { chartId: props.chartId, label: titleValue, userId, holdingId: selectedHolding.holdingId })
     setchartLabel({ chartId: props.chartId, label: titleValue })

@@ -25,6 +25,9 @@ const FieldPicker = (props) => {
   const setChartData = (chartData) => {
     dispatch(addChartActions.setChartData(chartData));
   };
+  const changeFieldsMEtaData = (payload) => {
+    dispatch(addChartActions.changeFieldsMEtaData(payload));
+  };
   useEffect(() => {
     if (initial) {
       if (takenData.data.fieldsType) {
@@ -55,20 +58,24 @@ const FieldPicker = (props) => {
           }
         }
         setInitial(false);
+        setSelected(selected);
         setMenuItems(menuItems);
         // setSelected(selected);
       }
     }
     if (takenData.filteredData) {
+      let fieldId;
       let fieldValues = [];
       Object.entries(takenData.filteredData).map(([key, value]) => {
         Object.entries(value).map(([k, v]) => {
           if (k === selected) {
-            fieldValues = [...fieldValues, v];
+            fieldId = v.fieldName;
+            fieldValues = [...fieldValues, v.data];
           }
         });
       });
       if (selected !== "") {
+        changeFieldsMEtaData({ index: props.index, value: fieldId })
         let updatedChartsData = takenData.chartData;
         if (takenData.chartData.data.data.length === 0) {
           fieldValues.forEach((field) => {

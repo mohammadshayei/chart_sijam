@@ -65,7 +65,7 @@ const LayoutContent = (props) => {
     >
       <Modal
         show={chartsData.isFullscreen}
-        modalClosed={outsideModalClick}
+        // modalClosed={outsideModalClick}
         style={{ padding: "0", width: "95%", height: "90%" }}
       >
         <CreateCharts />
