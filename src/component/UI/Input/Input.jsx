@@ -23,7 +23,7 @@ const Input = (props) => {
         setInputElement(
           <input
           
-            className={`InputElement ${props.invalid && props.shouldValidate && props.touched
+            className={`InputElement ${props.inputClass} ${props.invalid && props.shouldValidate && props.touched
               ? "invalid"
               : ""
               }`}
@@ -67,7 +67,7 @@ const Input = (props) => {
       default:
         setInputElement(
           <input
-            className={`InputElement ${props.invalid && props.shouldValidate && props.touched
+            className={`InputElement ${props.inputClass} ${props.invalid && props.shouldValidate && props.touched
               ? "invalid"
               : ""
               }`}

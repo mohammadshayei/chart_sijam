@@ -23,3 +23,25 @@ export const getEmployeesChart = async (payload, token) => {
   } else
     return { success: false, data: null, error: result.data.result.message };
 };
+export const createNewItem = async (payload, url, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/${url}`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.result, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.result.message };
+};
+export const deleteItem = async (payload, url, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/${url}`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.result, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.result.message };
+};

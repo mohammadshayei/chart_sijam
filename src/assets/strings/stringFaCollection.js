@@ -33,7 +33,7 @@ export const stringFa = {
   benchmark_line_label: "برچسب خط معیار",
   number_value: "مقدار",
   holdings: "هلدینگ",
-  companies: "سازمان",
+  companies: "سازمان ها",
   softwares: "برنامه",
   active_backup: "پشتیبان فعال",
   banks: "بانک اطلاعاتی",
@@ -55,6 +55,7 @@ export const stringFa = {
   refresh_charts: "به روزرسانی نمودارها",
   add_value: "مقادیر بیشتر +",
   add_holding: "اضافه کردن هولدینگ",
+  add_active_backup: "اضافه کردن پشتیبان فعال",
   add_company: "اضافه کردن سازمان",
   add_software: "اضافه کردن نرم افزار",
   setting: "تنظیمات",
@@ -135,5 +136,10 @@ export const stringFa = {
   title_is_empty: "عنوان تعیین نشده است",
   field_not_chosen: "فیلد انتخاب نشده",
   permissions_not_defined: "دسترسی ها مشخص نشده",
-  fill_required_items: "قسمت های الزامی را پر نمایید"
+  fill_required_items: "قسمت های الزامی را پر نمایید",
+  specifications: "مشخصات",
+  structure: "ساختار",
+  company: "سازمان",
+  software: "نرم افزار",
+  add_1:"افزودن"
 };

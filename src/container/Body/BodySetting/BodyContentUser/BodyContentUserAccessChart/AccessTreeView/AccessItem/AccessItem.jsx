@@ -31,7 +31,7 @@ const AccessItem = ({ name, selected, opened, parents, onChange, onClick, hasChi
                 <p>{name}</p>
                 {isNested &&
                     <ArrowBackIosRoundedIcon
-                        className={`${opened ? "DropDownOpenRotate" : ""}`}
+                        className={`${opened ? "DropDownOpenRotate" : "DropDownCloseRotate"}`}
                         style={{
                             width: "13px",
                             height: "13px",

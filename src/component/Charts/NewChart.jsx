@@ -88,7 +88,7 @@ function NewChart({ chartId, chartProps }) {
                     })
                 );
                 seriesType = `${type}Series`
-                if (options.series.smooth)
+                if (type === "Line" && options.series.smooth)
                     seriesType = "SmoothedXLineSeries"
                 break;
             case "Pie":

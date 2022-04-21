@@ -18,12 +18,13 @@ const DrawerViewCharts = (props) => {
   const { selectedHolding } = useSelector(state => state.holdingDetail)
 
   const [focus, setFocus] = useState(false);
-  const themeState = useTheme();
-  const theme = themeState.computedTheme;
-  const detail = useSelector((state) => state.detail);
   const [value, setValue] = useState("");
   const [checked, setChecked] = useState(false);
 
+  const detail = useSelector((state) => state.detail);
+
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const dispatch = useDispatch();
 
   const [error, setError] = useState(null);
@@ -90,20 +91,24 @@ const DrawerViewCharts = (props) => {
 
   return (
     <div >
-      {props.isMenuOpen && <MenuItems checked={checked} />}
-      <div className="optional-show">
-        <p style={{
-          color: theme.on_background,
-          fontSize:'.8rem'
-        }}>
-          {stringFa.show_bank_has_charts}
-        </p>
-        <CheckBox style={{padding:0}} checked={checked} onChange={() => {
-          clearSelected()
-          setChecked(!checked)
-        }} />
-      </div>
-      {selectedHolding && editMode && selectedHolding.structure && (
+      {props.isMenuOpen &&
+        <>
+          <MenuItems checked={checked} />
+          <div className="optional-show">
+            <p style={{
+              color: theme.on_background,
+              fontSize: '.8rem'
+            }}>
+              {stringFa.show_bank_has_charts}
+            </p>
+            <CheckBox style={{ padding: 0 }} checked={checked} onChange={() => {
+              clearSelected()
+              setChecked(!checked)
+            }} />
+          </div>
+        </>
+      }
+      {/* {selectedHolding && editMode && selectedHolding.structure && (
         <div className="add-box-container">
           <input
             type="text"
@@ -144,7 +149,7 @@ const DrawerViewCharts = (props) => {
             </div>
           </StyledButton>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

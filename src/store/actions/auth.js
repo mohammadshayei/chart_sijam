@@ -91,6 +91,18 @@ export const setHoldignAccess = (payload) => {
     payload,
   };
 };
+export const changeStructure = (payload) => {
+  return {
+    type: actionTypes.CHANGE_STRUCTURE,
+    payload,
+  };
+};
+export const changeItemTitle = (payload) => {
+  return {
+    type: actionTypes.CHANGE_ITEM_TITLE,
+    payload,
+  };
+};
 export const setParentsCharts = (parentsCharts) => {
   return {
     type: actionTypes.SET_PARENTS_CHARTS,
