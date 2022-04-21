@@ -32,7 +32,7 @@ const FieldPicker = (props) => {
     if (initial) {
       if (takenData.data.fieldsType) {
         let firstField = true;
-        let selected,
+        let selectedField,
           menuItems = [];
         for (const title in takenData.data.fieldsType) {
           for (const key in takenData.data.fieldsType[title]) {
@@ -41,7 +41,7 @@ const FieldPicker = (props) => {
                 firstField &&
                 takenData.data.fieldsType[title][key] === "عبارت‌"
               ) {
-                selected = key;
+                selectedField = key;
                 firstField = false;
               }
               menuItems = [...menuItems, { name: key, id: title }];
@@ -50,7 +50,7 @@ const FieldPicker = (props) => {
               takenData.data.fieldsType[title][key] === "عدد"
             ) {
               if (firstField) {
-                selected = key;
+                selectedField = key;
                 firstField = false;
               }
               menuItems = [...menuItems, { name: key, id: title }];
@@ -58,9 +58,13 @@ const FieldPicker = (props) => {
           }
         }
         setInitial(false);
-        setSelected(selected);
         setMenuItems(menuItems);
-        // setSelected(selected);
+        if (props.index > 0) {
+          setTimeout(() => {
+            setSelected(selectedField);
+          }, 200);
+        } else
+          setSelected(selectedField);
       }
     }
     if (takenData.filteredData) {
