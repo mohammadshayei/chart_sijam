@@ -75,6 +75,7 @@ const AccessibilityStep = () => {
     }, [pageBtnOrder])
 
     useEffect(() => {
+        if (!selectedHolding) return
         let controller = new AbortController();
         (async () => {
             try {
@@ -98,7 +99,7 @@ const AccessibilityStep = () => {
             }
             return () => controller?.abort()
         })()
-    }, []);
+    }, [selectedHolding]);
 
 
     return <div className="accessibility-step">

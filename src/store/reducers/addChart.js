@@ -7,6 +7,10 @@ const initialState = {
   emptyRequireds: [],
   data: {},
   filteredData: [],
+  metaData: {
+    fields: [],
+    filters: []
+  },
   chartData: {
     title: "",
     type: "Line",
@@ -92,6 +96,22 @@ const selectChartData = (state, action) => {
     ...state,
     data,
     filteredData: data.data,
+  };
+};
+const changeFieldsMEtaData = (state, action) => {
+  const { index, value } = action.payload;
+  let updatedMetaData = { ...state.metaData }
+  let updatedFields = [...updatedMetaData.fields]
+  let check = updatedFields.findIndex(item => item.index === index)
+  if (check > -1) {
+    updatedFields[check].value = value;
+  } else {
+    updatedFields.push({ index, value })
+  }
+  updatedMetaData.fields = updatedFields;
+  return {
+    ...state,
+    metaData: updatedMetaData,
   };
 };
 
@@ -394,6 +414,8 @@ const reducer = (state = initialState, action) => {
       return updateEmptyRequireds(state, action);
     case actionTypes.UPDATE_DATA_FIELD:
       return updatedDataField(state, action);
+    case actionTypes.CHANGE_FIELDS_IN_META_DATA:
+      return changeFieldsMEtaData(state, action);
 
     default:
       return state;

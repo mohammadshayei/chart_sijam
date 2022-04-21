@@ -115,6 +115,9 @@ const CreateCharts = (props) => {
   const updateEmptyRequireds = (emptyRequireds) => {
     dispatch(addChartActions.updateEmptyRequireds(emptyRequireds));
   };
+  const setEditMode = (isEdit) => {
+    dispatch(chartActions.setEditMode(isEdit));
+  };
 
   const setTitleHandler = (e) => {
     if (e.type === "keydown") {
@@ -151,6 +154,8 @@ const CreateCharts = (props) => {
     setChartData(clearedChartData);
     if (location.pathname === "/create_chart")
       navigate('/view')
+    else
+      fullscreenChart({ isFullscreen: false })
   };
 
   const onMouseEnter = (type) => {
@@ -267,6 +272,14 @@ const CreateCharts = (props) => {
         shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
+        dataInfo: {
+          filters: [],
+          fields: takenData.metaData.fields.map(item => {
+            return {
+              field: item.value
+            }
+          })
+        }
       };
     } else {
       chartApi = "edit_chart";
@@ -289,6 +302,7 @@ const CreateCharts = (props) => {
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
       };
     }
+    setError(null);
     try {
       const result = await axios.post(`${baseUrl}api/${chartApi}`, payload, {
         headers: { "auth-token": token },
@@ -300,7 +314,6 @@ const CreateCharts = (props) => {
           </ErrorDialog>
         );
       } else {
-        closeHandler();
         if (location.pathname !== "/create_chart") {
           updatedChartsData = {
             ...updatedChartsData,
@@ -317,10 +330,17 @@ const CreateCharts = (props) => {
               parent: updatedChartsData[takenData.id].parent,
               bankId: updatedChartsData[takenData.id].bankId,
               lastBankUpdate: updatedChartsData[takenData.id].lastBankUpdate,
+              shareAll: takenData.chartData.shareAll,
+              editAll: takenData.chartData.editAll,
+              viewAll: takenData.chartData.viewAll,
+              shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+              editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+              viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
             },
           };
           setChartsData(updatedChartsData);
         }
+        closeHandler();
         setError(
           <ErrorDialog success={true} onClose={setError}>
             {stringFa.success_save}
@@ -347,6 +367,7 @@ const CreateCharts = (props) => {
         });
       deleteChart({ chartId: takenData.id });
       fullscreenChart({ isFullscreen: false });
+      setError(null);
       setError(
         <ErrorDialog
           success={true}
@@ -381,6 +402,13 @@ const CreateCharts = (props) => {
     }
   };
 
+  const fullScreenCloseHandler = () => {
+    if (takenData.isEdit)
+      doneClickHandler();
+    else
+      closeHandler();
+  }
+
   useEffect(() => {
     for (const key in hover) {
       if (hover[key]) {
@@ -399,14 +427,6 @@ const CreateCharts = (props) => {
     }
   }, [hover]);
 
-  useEffect(() => {
-    if (!takenData.isFullscreen) {
-      if (takenData.isEdit) {
-        doneClickHandler();
-      }
-      setIsEdit(false);
-    }
-  }, [takenData.isFullscreen]);
 
   useEffect(() => {
     if (autoValidate)
@@ -421,6 +441,7 @@ const CreateCharts = (props) => {
       selectChartDatabase(result.data);
       setId(bankId);
       setIsEdit(true);
+      setEditMode({ isEdit: true });
     })()
     return controller?.abort()
   }, [location, token])
@@ -445,11 +466,8 @@ const CreateCharts = (props) => {
           <div className="header-buttons">
             <Button
               ButtonStyle={{
-                backgroundColor: theme.primary,
                 flex: "0 0 auto",
                 fontWeight: 400,
-                fontSize: "1rem",
-                color: theme.on_primary,
                 marginBottom: "1rem",
                 marginRight: "0.5rem",
               }}
@@ -458,12 +476,11 @@ const CreateCharts = (props) => {
               {stringFa.done}
             </Button>
             <Button
+              cancel={true}
               ButtonStyle={{
-                backgroundColor: "gray",
                 flex: "0 0 auto",
                 fontWeight: 400,
                 fontSize: "0.9rem",
-                color: theme.on_primary,
                 marginBottom: "1rem",
               }}
               onClick={closeHandler}
@@ -494,7 +511,7 @@ const CreateCharts = (props) => {
             hover={
               themeState.isDark ? theme.surface_1dp : theme.background_color
             }
-            onClick={() => fullscreenChart({ isFullscreen: false })}
+            onClick={fullScreenCloseHandler}
           >
             <VscClose />
           </StyledButton>

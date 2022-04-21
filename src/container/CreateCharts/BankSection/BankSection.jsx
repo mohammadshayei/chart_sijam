@@ -46,7 +46,7 @@ const BankSection = () => {
                 >
                   {Object.entries(v).map(([kcell, vcell]) => (
                     <td key={kcell} style={{ borderColor: theme.darken_border_color }}>
-                      {vcell}
+                      {vcell.data}
                     </td>))}
                 </tr>
               )) :

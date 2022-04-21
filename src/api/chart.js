@@ -1,10 +1,10 @@
 import axios from "axios";
 import { baseUrl } from "../constants/Config";
 
-export const onDeleteChart = async (userId, token) => {
+export const onDeleteChart = async (payload, token) => {
   const result = await axios.post(
     `${baseUrl}api/delete_chart`,
-    { userId },
+    { ...payload },
     { headers: { "auth-token": token } }
   );
   if (result.data.success) {

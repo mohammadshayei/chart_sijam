@@ -28,7 +28,7 @@ const BodyContent = (props) => {
             layouts={chartsData.layouts}
             isDraggable={chartsData.editMode ? true : false}
             draggableHandle=".draggable-handle"
-            isRearrangeable
+            // isRearrangeable
             isResizable={chartsData.editMode ? true : false}
             autoSize
             isBounded
@@ -43,9 +43,8 @@ const BodyContent = (props) => {
             // onLayoutChange={onLayoutChange}
             style={{
               backgroundImage: chartsData.editMode
-                ? `radial-gradient(${
-                    themeState.isDark ? theme.border_color : "#BBBBBB"
-                  } 2px, transparent 2px)`
+                ? `radial-gradient(${themeState.isDark ? theme.border_color : "#BBBBBB"
+                } 2px, transparent 2px)`
                 : theme.background_color,
               backgroundSize: chartsData.editMode ? "50px 50px" : "0",
             }}
@@ -78,7 +77,7 @@ const BodyContent = (props) => {
             rowHeight={60}
             breakpoints={{ lg: 1280, md: 992, sm: 767, xs: 480, xxs: 0 }}
             cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            // onLayoutChange={onLayoutChange}
+          // onLayoutChange={onLayoutChange}
           >
             {[1, 2].map((n) => (
               <div key={n} data-grid={{ w: 6, h: 6, x: 6 * (n - 1), y: 0 }}>

@@ -3,22 +3,35 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-// import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
+import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import am5themes_Dark from "@amcharts/amcharts5/themes/Dark";
 import am5themes_Dataviz from "@amcharts/amcharts5/themes/Dataviz";
 import am5themes_Frozen from "@amcharts/amcharts5/themes/Frozen";
 import am5themes_Moonrise from "@amcharts/amcharts5/themes/Moonrise";
 import am5themes_Spirited from "@amcharts/amcharts5/themes/Spirited";
 import * as am5plugins_exporting from "@amcharts/amcharts5/plugins/exporting";
+import { useTheme } from '../../styles/ThemeProvider';
+import { useSelector } from 'react-redux';
 
 function NewChart({ chartId, chartProps }) {
-    const [createdChart, setCreatedChart] = useState({ chart: null, applyedTheme: null, legendMethod: null, });
+    const themeState = useTheme();
+    const [createdChart, setCreatedChart] = useState({
+        chart: null,
+        applyedTheme: null,
+        legendMethod: null,
+        xAxis: null,
+        yAxis: null,
+        series: null
+    });
 
     const { data, options, type } = chartProps;
+    const addChartData = useSelector((state) => state.addChart);
+
     useLayoutEffect(() => {
         let updatedCreatedChart = { ...createdChart }
         let root = am5.Root.new(`${chartId}`);
 
+        const responsive = am5themes_Responsive.new(root);
         var exporting = am5plugins_exporting.Exporting.new(root, {
             dataSource: data,
             menu: am5plugins_exporting.ExportingMenu.new(root, {})
@@ -45,6 +58,8 @@ function NewChart({ chartId, chartProps }) {
 
                 break;
         }
+        if (themeState.isDark)
+            updatedCreatedChart.applyedTheme = am5themes_Dark.new(root);
 
         switch (options.legend.position) {
             case "top":
@@ -64,17 +79,85 @@ function NewChart({ chartId, chartProps }) {
                 break;
         }
 
+        responsive.addRule({
+            relevant: am5themes_Responsive.heightM,
+            applying: function () {
+                if (options.legend.position === "top" || options.legend.position === "bottom")
+                    legend.setAll({
+                        visible: false
+                    })
+                if (type === "Line" || type === "Column")
+                    updatedCreatedChart.xAxis.set("visible", false);
+
+            },
+            removing: function () {
+                if (options.legend.position === "top" || options.legend.position === "bottom")
+                    legend.setAll({
+                        visible: true
+                    })
+                if (type === "Line" || type === "Column")
+                    updatedCreatedChart.xAxis.set("visible", true);
+            }
+        });
+
+        responsive.addRule({
+            relevant: am5themes_Responsive.widthL,
+            applying: function () {
+                if (type == "Line" || type === "Column") {
+                    updatedCreatedChart.yAxis.set("visible", false)
+                    if (options.legend.position === "right" || options.legend.position === "left")
+                        legend.setAll({
+                            visible: false
+                        })
+                };
+            },
+            removing: function () {
+                if (type == "Line" || type === "Column") {
+                    updatedCreatedChart.yAxis.set("visible", true);
+                    if (options.legend.position === "right" || options.legend.position === "left")
+                        legend.setAll({
+                            visible: true
+                        })
+                }
+            }
+        });
+
+        responsive.addRule({
+            relevant: function (width, height) {
+                return width < 700 || height < 400;
+            },
+            applying: function () {
+                if (type == "Pie") {
+                    updatedCreatedChart.series.labels.template.setAll({
+                        forceHidden: true
+                    });
+                    updatedCreatedChart.series.ticks.template.set("visible", false);
+                }
+            },
+            removing: function () {
+                if (type == "Pie") {
+                    updatedCreatedChart.series.labels.template.setAll({
+                        forceHidden: false
+                    });
+                    updatedCreatedChart.series.ticks.template.set("visible", true);
+                }
+            }
+        });
+
+
         if (updatedCreatedChart.applyedTheme === options.theme)
             root.setThemes([
                 am5themes_Animated.new(root),
+                responsive,
             ]);
         else
             root.setThemes([
                 am5themes_Animated.new(root),
+                responsive,
                 updatedCreatedChart.applyedTheme
             ]);
 
-        let seriesType, yAxis, xAxis;
+        let seriesType;
         switch (type) {
             case "Line":
             case "Column":
@@ -82,11 +165,12 @@ function NewChart({ chartId, chartProps }) {
                     am5xy.XYChart.new(root, {
                         layout: options.legend.position === "top" || options.legend.position === "bottom" ?
                             root.verticalLayout : root.horizontalLayout,
-                        panX: true,
+                        panX: addChartData.isFullscreen ? true : false,
                         panY: false,
-                        wheelY: "zoomX",
                     })
                 );
+                if (addChartData.isFullscreen)
+                    updatedCreatedChart.chart.set("wheelY", "zoomX")
                 seriesType = `${type}Series`
                 if (type === "Line" && options.series.smooth)
                     seriesType = "SmoothedXLineSeries"
@@ -137,7 +221,7 @@ function NewChart({ chartId, chartProps }) {
 
         if (type === "Line" || type === "Column") {
             // Create Y-axis
-            yAxis = updatedCreatedChart.chart.yAxes.push(
+            updatedCreatedChart.yAxis = updatedCreatedChart.chart.yAxes.push(
                 am5xy.ValueAxis.new(root, {
                     maxDeviation: 0.3,
                     logarithmic: options.axes.yAxes.break.active,
@@ -147,13 +231,13 @@ function NewChart({ chartId, chartProps }) {
                 })
             );
 
-            yAxis.get("renderer").labels.template.setAll({
+            updatedCreatedChart.yAxis.get("renderer").labels.template.setAll({
                 fontFamily: "IRANSans",
             });
 
 
             // Create X-Axis
-            xAxis = updatedCreatedChart.chart.xAxes.push(
+            updatedCreatedChart.xAxis = updatedCreatedChart.chart.xAxes.push(
                 am5xy.CategoryAxis.new(root, {
                     maxDeviation: 0.3,
                     renderer: am5xy.AxisRendererX.new(root, {
@@ -163,7 +247,7 @@ function NewChart({ chartId, chartProps }) {
                 })
             );
 
-            xAxis.get("renderer").labels.template.setAll({
+            updatedCreatedChart.xAxis.get("renderer").labels.template.setAll({
                 fontSize: "0.8rem",
                 fontFamily: "IRANSans",
                 rotation: options.axes.xAxes.rotation ? 315 : 0,
@@ -172,15 +256,15 @@ function NewChart({ chartId, chartProps }) {
                 paddingRight: 5
             });
 
-            xAxis.data.setAll(data);
+            updatedCreatedChart.xAxis.data.setAll(data);
 
             for (const name in options.fieldNames) {
                 // Create series
-                let series1 = updatedCreatedChart.chart.series.push(
+                updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
                     am5xy[seriesType].new(root, {
                         name: options.fieldNames[name],
-                        xAxis: xAxis,
-                        yAxis: yAxis,
+                        xAxis: updatedCreatedChart.xAxis,
+                        yAxis: updatedCreatedChart.yAxis,
                         valueYField: `${name}`,
                         categoryXField: "category",
                         sequencedInterpolation: true,
@@ -195,9 +279,9 @@ function NewChart({ chartId, chartProps }) {
                     })
                 );
                 if (type === "Column")
-                    series1.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
-                series1.data.setAll(data);
-                series1.appear();    // ba animation miyad
+                    updatedCreatedChart.series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
+                updatedCreatedChart.series.data.setAll(data);
+                updatedCreatedChart.series.appear();    // ba animation miyad
             }
 
             if (legend)
@@ -210,7 +294,7 @@ function NewChart({ chartId, chartProps }) {
 
             for (const name in options.fieldNames) {
                 // Create series
-                let series1 = updatedCreatedChart.chart.series.push(
+                updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
                     am5percent.PieSeries.new(root, {
                         name: options.fieldNames[name],
                         categoryField: "category",
@@ -219,18 +303,28 @@ function NewChart({ chartId, chartProps }) {
                     })
                 );
 
-                series1.labels.template.setAll({
+                updatedCreatedChart.series.labels.template.setAll({
                     text: options.series.labels.text,
                     forceHidden: options.series.labels.disabled
                 });
-                series1.ticks.template.set("visible", !options.series.labels.disabled);
+                updatedCreatedChart.series.ticks.template.set("visible", !options.series.labels.disabled);
 
-                series1.data.setAll(data);
-                series1.appear();    // ba animation miyad
+                updatedCreatedChart.series.data.setAll(data);
+                updatedCreatedChart.series.appear();    // ba animation miyad
 
                 if (legend)
-                    legend.data.setAll(series1.dataItems);
+                    legend.data.setAll(updatedCreatedChart.series.dataItems);
+
+                if (options.insideLabel)
+                    updatedCreatedChart.series.children.push(am5.Label.new(root, {
+                        text: "{valueSum}",
+                        fontSize: 40,
+                        centerX: am5.percent(50),
+                        centerY: am5.percent(50),
+                        populateText: true
+                    }));
             }
+
 
         }
         setCreatedChart(updatedCreatedChart)
@@ -238,7 +332,7 @@ function NewChart({ chartId, chartProps }) {
         return () => {
             root.dispose();
         };
-    }, [chartId, options, type]);
+    }, [chartId, options, type, themeState.isDark]);
 
     return (
         <div id={`${chartId}`} style={{ width: "100%", height: "100%" }}></div>
