@@ -14,17 +14,15 @@ const Button = (props) => {
       setHover(true);
   };
   let newStyle = {
-    color: theme.on_primary,
-    backgroundColor: props.disabled ? "#adaebb" :
-      hover ? theme.primary_variant : theme.primary,
-    cursor: props.disabled ? "default" : "pointer"
+    color: props.cancel ? theme.on_background : theme.on_primary,
+    backgroundColor: props.cancel ? "transparent" : theme.primary,
   };
   const onMouseLeave = () => {
     if (props.onMouseLeave) props.onMouseLeave();
     setHover(false);
   };
-  if (props.hoverBGColor && hover) {
-    newStyle = { ...newStyle, backgroundColor: props.hoverBGColor };
+  if (props.cancel && hover) {
+    newStyle = { ...newStyle, backgroundColor: theme.border_color };
   }
   return (
     <button
