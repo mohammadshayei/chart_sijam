@@ -73,18 +73,19 @@ const TimerStep = () => {
   }, [selectedUnit]);
 
   const onChangeHandler = (e) => {
-    setTimeout(() => {
-      if (parseInt(e.target.value) < 10 || e.target.value === "")
-        setFinancialGoal("10");
-      for (const item in dropDownItems) {
-        if (dropDownItems[item].name === selectedUnit) {
-          if (dropDownItems[item].id === "h") setPeriod(e.target.value * 60);
-          else if (dropDownItems[item].id === "d")
-            setPeriod(e.target.value * 1440);
-          else setPeriod(e.target.value);
-        }
-      }
-    }, 2000);
+    setChartTimer({ period: e.target.value, autoUpdate: true });
+    // setTimeout(() => {
+    //   if (parseInt(e.target.value) < 10 || e.target.value === "")
+    //     setFinancialGoal("10");
+    //   for (const item in dropDownItems) {
+    //     if (dropDownItems[item].name === selectedUnit) {
+    //       if (dropDownItems[item].id === "h") setPeriod(e.target.value * 60);
+    //       else if (dropDownItems[item].id === "d")
+    //         setPeriod(e.target.value * 1440);
+    //       else setPeriod(e.target.value);
+    //     }
+    //   }
+    // }, 2000);
   };
 
   const handleCheckBoxClick = (checked) => {
@@ -157,17 +158,17 @@ const TimerStep = () => {
           <div
             className={`dropdown-wrapper ${dropDown && "open"}`}
             onClick={() => {
-              setDropDown(!dropDown);
+              // setDropDown(!dropDown);
             }}
-            style={{ borderColor: theme.border_color }}
+            style={{ borderColor: theme.border_color, cursor: "default" }}
           >
-            <div className="dropdown-indicator">
+            {/* <div className="dropdown-indicator">
               <div
                 className={`dropdown-indicator-icon ${dropDown && "rotate"}`}
               >
                 <BiChevronDown />
               </div>
-            </div>
+            </div> */}
             <div className="dropdown-title">
               <span className="title-text">{selectedUnit}</span>
             </div>

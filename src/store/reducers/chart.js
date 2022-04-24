@@ -41,22 +41,20 @@ const setChartData = (state, action) => {
 };
 const changeIdInCreatedList = (state, action) => {
   const { value, mode } = action.payload;
-  if (!value) return { ...state }
-  let updatedCreatedList = [...state.createdList]
-  if (mode === 'add_one') {
-    let exist = updatedCreatedList.findIndex(item => item === value) > -1
-    if (!exist)
-      updatedCreatedList.push(value)
-  } else if (mode === 'add_list') {
-    value.forEach(item => {
-      let exist = updatedCreatedList.findIndex(itm => itm === item) > -1
-      if (!exist)
-        updatedCreatedList.push(item)
+  if (!value) return { ...state };
+  let updatedCreatedList = [...state.createdList];
+  if (mode === "add_one") {
+    let exist = updatedCreatedList.findIndex((item) => item === value) > -1;
+    if (!exist) updatedCreatedList.push(value);
+  } else if (mode === "add_list") {
+    value.forEach((item) => {
+      let exist = updatedCreatedList.findIndex((itm) => itm === item) > -1;
+      if (!exist) updatedCreatedList.push(item);
     });
   }
   return {
     ...state,
-    createdList: updatedCreatedList
+    createdList: updatedCreatedList,
   };
 };
 
@@ -201,7 +199,7 @@ const updateChartData = (state, action) => {
         data: chartData,
         config: {
           ...state.data[chartId].config,
-          lastUpdate,
+          last_update: lastUpdate,
         },
       },
     },

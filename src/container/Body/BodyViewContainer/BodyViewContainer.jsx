@@ -204,6 +204,10 @@ const BodyViewContainer = (props) => {
           comments: item.chart.comments,
           editList: item.chart.edit,
           shareList: item.chart.share,
+          viewList: item.chart.view,
+          shareAll: item.chart.shareAll,
+          viewAll: item.chart.viewAll,
+          editAll: item.chart.editAll,
           editedBy: item.chart.edited_by,
           faveList: item.chart.fave_list,
           creator: item.chart.userCreator,
@@ -223,11 +227,13 @@ const BodyViewContainer = (props) => {
   const timer = async () => {
     let result;
     for (const chartId in chartsData.data) {
+      if (!(chartsData.data[chartId].config.auto_update)) continue;
       let lastUpdate = new Date(chartsData.data[chartId].config.last_update);
       let period = chartsData.data[chartId].config.period;
-      let now = new Date(
-        new Date(new Date()).setHours(new Date().getHours() + 1)
-      );
+      // let now = new Date(
+      //   new Date(new Date()).setHours(new Date().getHours() + 1)
+      // );
+      let now = new Date()
       if (getDifferenceInMinutes(now, lastUpdate) > period) {
         result = await axios.post(
           `${baseUrl}api/get_chart`,
