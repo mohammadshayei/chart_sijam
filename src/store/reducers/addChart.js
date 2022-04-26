@@ -341,35 +341,139 @@ const setChartDataFilter = (state, action) => {
 
 const setAccessToAll = (state, action) => {
   const { accessType, access } = action.payload;
+  let viewAll = state.chartData.viewAll,
+    shareAll = state.chartData.shareAll,
+    editAll = state.chartData.editAll,
+    viewList = [...state.chartData.viewList],
+    shareList = [...state.chartData.shareList],
+    editList = [...state.chartData.editList];
+
+  if (access) {
+    if (accessType === "view" || accessType === "share" || accessType === "edit") {
+      viewAll = access
+      viewList = []
+    }
+    if (accessType === "share" || accessType === "edit") {
+      shareAll = access
+      shareList = []
+    }
+    if (accessType === "edit") {
+      editAll = access
+      editList = []
+    }
+  } else {
+    if (accessType === "edit" || accessType === "share" || accessType === "view") {
+      editAll = access
+      editList = []
+    }
+    if (accessType === "share" || accessType === "view") {
+      shareAll = access
+      shareList = []
+    }
+    if (accessType === "view") {
+      viewAll = access
+      viewList = []
+    }
+  }
+
   return {
     ...state,
     chartData: {
       ...state.chartData,
-      [`${accessType}All`]: access,
-      [`${accessType}List`]: [],
+      viewAll,
+      shareAll,
+      editAll,
+      viewList,
+      editList,
+      shareList
     },
   };
 };
 
 const updateAccessList = (state, action) => {
   const { accessType, employee, add } = action.payload;
-  let updatedList = [...state.chartData[`${accessType}List`]];
+  let viewAll = state.chartData.viewAll,
+    shareAll = state.chartData.shareAll,
+    editAll = state.chartData.editAll,
+    viewList = [...state.chartData.viewList],
+    shareList = [...state.chartData.shareList],
+    editList = [...state.chartData.editList];
+
   if (add) {
     if (employee.length > 1) {
-      updatedList = [];
+      if (accessType === "view" || accessType === "share" || accessType === "edit") {
+        if (viewAll)
+          viewAll = false
+        viewList = [];
+      }
+      if (accessType === "share" || accessType === "edit") {
+        if (shareAll)
+          shareAll = false
+        shareList = [];
+      }
+      if (accessType === "edit") {
+        if (editAll)
+          editAll = false
+        editList = [];
+      }
       employee.forEach((emp) => {
-        updatedList = [...updatedList, emp.user._id];
+        if (accessType === "view" || accessType === "share" || accessType === "edit")
+          viewList = [...viewList, emp.user._id];
+        if (accessType === "share" || accessType === "edit")
+          shareList = [...shareList, emp.user._id];
+        if (accessType === "edit")
+          editList = [...editList, emp.user._id];
       });
-    } else updatedList = [...updatedList, ...employee];
-  } else {
-    if (employee.length > 1) updatedList = [];
-    else updatedList = updatedList.filter((emp) => emp !== employee[0]);
+    }
+    else {
+      if (accessType === "view" || accessType === "share" || accessType === "edit") {
+        if (viewAll)
+          viewAll = false
+      }
+      if (accessType === "share" || accessType === "edit") {
+        if (shareAll)
+          shareAll = false
+      }
+      if (accessType === "edit") {
+        if (editAll)
+          editAll = false
+      }
+      if (accessType === "view" || accessType === "share" || accessType === "edit")
+        viewList = viewList.includes(employee[0]) ? viewList : [...viewList, ...employee];
+      if (accessType === "share" || accessType === "edit")
+        shareList = shareList.includes(employee[0]) ? shareList : [...shareList, ...employee];
+      if (accessType === "edit")
+        editList = editList.includes(employee[0]) ? editList : [...editList, ...employee];
+    }
+  }
+  else {
+    if (employee.length > 1) {
+      if (accessType === "edit" || accessType === "share" || accessType === "view")
+        editList = [];
+      if (accessType === "share" || accessType === "view")
+        shareList = [];
+      if (accessType === "view")
+        viewList = [];
+    }
+    else {
+      if (accessType === "edit" || accessType === "share" || accessType === "view")
+        editList = editList.filter((emp) => emp !== employee[0]);
+      if (accessType === "share" || accessType === "view")
+        shareList = shareList.filter((emp) => emp !== employee[0]);
+      if (accessType === "view")
+        viewList = viewList.filter((emp) => emp !== employee[0]);
+    }
   }
   return {
     ...state,
     chartData: {
       ...state.chartData,
-      [`${accessType}List`]: updatedList,
+      viewAll,
+      shareAll,
+      editAll,
+      viewList,
+      editList,
+      shareList
     },
   };
 };

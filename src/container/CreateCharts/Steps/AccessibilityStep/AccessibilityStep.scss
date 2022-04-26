@@ -47,4 +47,14 @@
 		opacity: 0.4;
 		filter: grayscale(100%);
 	}
+	.is-changed-error {
+		position: absolute;
+		inset: 0 0 0 0;
+		backdrop-filter: blur(10px);
+		z-index: 999;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
 }
