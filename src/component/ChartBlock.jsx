@@ -42,7 +42,7 @@ const ChartBlock = React.memo(({ chartId, type, options, data }) => {
         });
       }
     }
-  }, [dependType, dependData, dependOptions, chartId]);
+  }, [dependType, dependData, dependOptions, type, chartId]);
 
   useEffect(() => {
     if (sentData) {
