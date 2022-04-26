@@ -274,7 +274,7 @@ const CreateCharts = (props) => {
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         dataInfo: {
           filters: [],
-          fields: takenData.metaData.fields.map(item => {
+          fields: takenData.metaData.fields.sort((a, b) => (a.index > b.index) ? 1 : -1).map(item => {
             return {
               field: item.value
             }
@@ -302,7 +302,7 @@ const CreateCharts = (props) => {
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         dataInfo: {
           filters: [],
-          fields: takenData.metaData.fields.map(item => {
+          fields: takenData.metaData.fields.sort((a, b) => (a.index > b.index) ? 1 : -1).map(item => {
             return {
               field: item.value
             }
