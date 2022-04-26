@@ -201,6 +201,7 @@ const BodyViewContainer = (props) => {
           path: item.chart.path,
           bankId: item.chart.bankCreator._id,
           lastBankUpdate: item.chart.data_updated_time,
+          dataInfo: item.chart.data_info,
           comments: item.chart.comments,
           editList: item.chart.edit,
           shareList: item.chart.share,

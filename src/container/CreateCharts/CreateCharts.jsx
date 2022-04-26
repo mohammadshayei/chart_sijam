@@ -147,11 +147,40 @@ const CreateCharts = (props) => {
       viewList: [],
       data: {
         data: [],
-        options: { ...clearedChartData.data.options, fieldNames: {} },
+        options: {
+          ...clearedChartData.data.options,
+          fieldNames: {},
+          theme: "noTheme",
+          insideLabel: false,
+          legend: {
+            display: true,
+            position: "top",
+            colorize: false,
+            valueLabelsText: "{name}",
+          },
+          axes: {
+            xAxes: {
+              rotation: true
+            },
+            yAxes: {
+              break: { active: false, start: 0, end: 0, size: 0 },
+            }
+          },
+          series: {
+            smooth: true,
+            labels: {
+              ...clearedChartData.data.options.series.labels,
+              disabled: false,
+              text: "{category}",
+            },
+          },
+        },
       },
     };
     setIsEdit(false)
     setChartData(clearedChartData);
+    setId("");
+    selectChartDatabase({ data: {} });
     if (location.pathname === "/create_chart")
       navigate('/view')
     else

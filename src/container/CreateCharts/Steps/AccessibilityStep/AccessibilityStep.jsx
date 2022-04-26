@@ -8,6 +8,7 @@ import { baseUrl } from "../../../../constants/Config";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import * as addChartActions from "../../../../store/actions/addChart";
 import "./AccessibilityStep.scss";
+import Button from "../../../../component/UI/Button/Button";
 
 const AccessibilityStep = () => {
     const themeState = useTheme();
@@ -19,14 +20,14 @@ const AccessibilityStep = () => {
                 title: stringFa.view,
                 selected: true
             },
-            edit: {
-                id: 2,
-                title: stringFa.Edit,
-                selected: false
-            },
             share: {
                 id: 3,
                 title: stringFa.share,
+                selected: false
+            },
+            edit: {
+                id: 2,
+                title: stringFa.Edit,
                 selected: false
             }
         })
@@ -34,6 +35,9 @@ const AccessibilityStep = () => {
     const [loading, setLoading] = useState(false);
     const [employees, setEmployees] = useState(new Array(0).fill(""));
     const [error, setError] = useState(null);
+    const [isChanged, setIsChanged] = useState({ view: false, share: false, edit: false });
+    const [changed, setChanged] = useState([]);
+    const [changedAccess, setChangedAccess] = useState(null);
 
     const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
     const { chartData, emptyRequireds } = useSelector((state) => state.addChart);
@@ -60,11 +64,81 @@ const AccessibilityStep = () => {
 
     const allCheckBoxOnChange = () => {
         let updatedAccess = !chartData[`${accessType}All`];
-        setAccessToAll({ accessType, access: updatedAccess })
+        if (accessType === "view") {
+            if ((chartData.shareAll || chartData.editAll) && !updatedAccess) {
+                setChangedAccess("ویرایش و اشتراک گذاری")
+                setChanged(["all"])
+            } else
+                setAccessToAll({ accessType, access: updatedAccess })
+        }
+        else if (accessType === "share") {
+            if (!chartData.viewAll && updatedAccess) {
+                setChangedAccess("نمایش")
+                setChanged(["all"])
+            } else
+                setAccessToAll({ accessType, access: updatedAccess })
+        }
+        else if (accessType === "edit") {
+            if ((!chartData.shareAll || !chartData.viewAll) && updatedAccess) {
+                setChangedAccess("نمایش و اشتراک گذاری")
+                setChanged(["all"])
+            } else
+                setAccessToAll({ accessType, access: updatedAccess })
+        }
     }
 
     const employeeCheckBoxOnChange = (e, emp) => {
-        updateAccessList({ accessType, employee: emp, add: e.target.checked })
+        let updatedIsChanged = { ...isChanged }
+
+        if (accessType === "view") {
+            if ((isChanged.edit || isChanged.share) && !e.target.checked) {
+                setChangedAccess("ویرایش و اشتراک گذاری")
+                setChanged([emp, e.target.checked])
+            } else
+                updateAccessList({ accessType, employee: emp, add: e.target.checked })
+            if (e.target.checked) {
+                updatedIsChanged.view = true;
+                setIsChanged(updatedIsChanged)
+            }
+        }
+        else if (accessType === "share") {
+            if (isChanged.view && e.target.checked) {
+                setChangedAccess("نمایش")
+                setChanged([emp, e.target.checked])
+            } else
+                updateAccessList({ accessType, employee: emp, add: e.target.checked })
+            if (e.target.checked) {
+                updatedIsChanged.share = true;
+                updatedIsChanged.view = true;
+                setIsChanged(updatedIsChanged)
+            }
+        }
+        else if (accessType === "edit") {
+            if ((isChanged.share || isChanged.view) && e.target.checked) {
+                setChangedAccess("نمایش و اشتراک گذاری")
+                setChanged([emp, e.target.checked])
+            } else
+                updateAccessList({ accessType, employee: emp, add: e.target.checked })
+            if (e.target.checked) {
+                updatedIsChanged.edit = true;
+                updatedIsChanged.share = true;
+                updatedIsChanged.view = true;
+                setIsChanged(updatedIsChanged)
+            }
+        }
+
+    }
+
+    const onChangeOkClick = () => {
+        if (changed.length === 1)
+            setAccessToAll({ accessType, access: !chartData[`${accessType}All`] })
+        else if (changed.length > 1) {
+            updateAccessList({ accessType, employee: changed[0], add: changed[1] })
+            setIsChanged({ view: false, share: false, edit: false })
+        }
+
+        setChanged([])
+        setChangedAccess(null)
     }
 
     useEffect(() => {
@@ -101,9 +175,31 @@ const AccessibilityStep = () => {
         })()
     }, [selectedHolding]);
 
-
     return <div className="accessibility-step">
         {error}
+        {changedAccess &&
+            <div className="is-changed-error">
+                <p>{`${changedAccess} هم تغییر می کند`}</p>
+                <div>
+                    <Button
+                        ButtonStyle={{
+                            margin: "1rem 0.3rem", fontSize: "0.8rem"
+                        }}
+                        onClick={onChangeOkClick}
+                    >
+                        باشه
+                    </Button>
+                    <Button
+                        cancel={true}
+                        ButtonStyle={{
+                            margin: "1rem 0.3rem", fontSize: "0.8rem"
+                        }}
+                        onClick={() => { setChangedAccess(null); setChanged([]) }}
+                    >
+                        انصراف
+                    </Button>
+                </div>
+            </div>}
         <div className="accessibility-page-btn">
             {
                 Object.entries(pageBtnOrder).map(([k, v], index) => {

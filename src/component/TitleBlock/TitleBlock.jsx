@@ -114,6 +114,9 @@ const TitleBlock = React.memo((props) => {
   const fullscreenChart = (isFullscreen) => {
     dispatch(addChartActions.fullscreenChart(isFullscreen));
   };
+  const changeFieldsMEtaData = (payload) => {
+    dispatch(addChartActions.changeFieldsMEtaData(payload));
+  };
 
   const undoDeleteChartHandler = () => {
     setChart({ chartId: props.chartId, chartData: deletedChart[0] });
@@ -138,6 +141,7 @@ const TitleBlock = React.memo((props) => {
     selectedChartData = {
       title: selectedChartData.title,
       type: selectedChartData.type,
+      dataInfo: selectedChartData.dataInfo,
       config: {
         period: selectedChartData.config.period,
         autoUpdate: selectedChartData.config.auto_update,
@@ -158,6 +162,9 @@ const TitleBlock = React.memo((props) => {
     setChartData(selectedChartData);
     if (id === "setting") setIsEdit(true);
     fullscreenChart({ isFullscreen: true });
+    selectedChartData.dataInfo.fields.forEach((field, i) => {
+      changeFieldsMEtaData({ index: i, value: field.field })
+    });
   }
 
   const onDelete = async () => {

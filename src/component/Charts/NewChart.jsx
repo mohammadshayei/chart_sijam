@@ -27,6 +27,32 @@ function NewChart({ chartId, chartProps }) {
     const { data, options, type } = chartProps;
     const addChartData = useSelector((state) => state.addChart);
 
+    // let data = [{
+    //     "category": "شهید دستغیب",
+    //     "در اختیار مستاجر": 2.5,
+    //     "در حال تعمیر": 2.5,
+    //     "آماده تحویل": 2.1,
+    //     "رزرو کمیسیون اسکان": 1,
+    //     "تخلیه": 0.8,
+    //     "در اختیار معاونت فرهنگی": 0.4
+    // }, {
+    //     "category": "شیهد هاشمی نژاد",
+    //     "در اختیار مستاجر": 2.6,
+    //     "در حال تعمیر": 2.7,
+    //     "آماده تحویل": 2.2,
+    //     "رزرو کمیسیون اسکان": 0.5,
+    //     "تخلیه": 0.4,
+    //     "در اختیار معاونت فرهنگی": 0.3
+    // }, {
+    //     "category": "شهید صدوقی",
+    //     "در اختیار مستاجر": 2.8,
+    //     "در حال تعمیر": 2.9,
+    //     "آماده تحویل": 2.4,
+    //     "رزرو کمیسیون اسکان": 0.3,
+    //     "تخلیه": 0.9,
+    //     "در اختیار معاونت فرهنگی": 0.5
+    // }]
+
     useLayoutEffect(() => {
         let updatedCreatedChart = { ...createdChart }
         let root = am5.Root.new(`${chartId}`);
@@ -241,7 +267,7 @@ function NewChart({ chartId, chartProps }) {
                 am5xy.CategoryAxis.new(root, {
                     maxDeviation: 0.3,
                     renderer: am5xy.AxisRendererX.new(root, {
-                        minGridDistance: 15
+                        minGridDistance: 10
                     }),
                     categoryField: "category",
                 })
@@ -258,34 +284,89 @@ function NewChart({ chartId, chartProps }) {
 
             updatedCreatedChart.xAxis.data.setAll(data);
 
-            for (const name in options.fieldNames) {
-                // Create series
-                updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
-                    am5xy[seriesType].new(root, {
-                        name: options.fieldNames[name],
+            const filtered = Object.entries(data[0]).filter(([key, value]) =>
+                key !== 'category' &&
+                key !== 'field1' &&
+                key !== 'field2' &&
+                key !== 'field3' &&
+                key !== 'field4' &&
+                key !== 'field5' &&
+                key !== 'field6' &&
+                key !== 'field7' &&
+                key !== 'field8'
+            );
+
+            if (filtered.length === 0) {
+                for (const name in options.fieldNames) {
+                    // Create series
+                    updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
+                        am5xy[seriesType].new(root, {
+                            name: options.fieldNames[name],
+                            xAxis: updatedCreatedChart.xAxis,
+                            yAxis: updatedCreatedChart.yAxis,
+                            valueYField: `${name}`,
+                            categoryXField: "category",
+                            sequencedInterpolation: true,
+                            stacked: options.series.stacked,
+                            legendLabelText: `[bold #888]{categoryX}[/] : ${options.legend.colorize ? "[{stroke}]" : ""}{name}[/] `,
+                            legendRangeLabelText: `${options.legend.colorize ? "[{stroke}]" : ""}{name}[/]  `,
+                            legendValueText: `[bold ${options.legend.colorize ? "{stroke}" : ""}]{valueY}[/]`,
+                            legendRangeValueText: `${options.legend.colorize ? "[{stroke}]" : ""}{valueYClose}[/]`,
+                            tooltip: am5.Tooltip.new(root, {
+                                labelText: "{valueY}"
+                            })
+                        })
+                    );
+                    if (type === "Column")
+                        updatedCreatedChart.series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
+                    updatedCreatedChart.series.data.setAll(data);
+                    updatedCreatedChart.series.appear();    // ba animation miyad
+                }
+
+                if (legend)
+                    legend.data.setAll(updatedCreatedChart.chart.series.values);
+            } else {
+                // clustered series 
+                function makeSeries(name, fieldName) {
+                    updatedCreatedChart.series = updatedCreatedChart.chart.series.push(am5xy[seriesType].new(root, {
+                        name: name,
                         xAxis: updatedCreatedChart.xAxis,
                         yAxis: updatedCreatedChart.yAxis,
-                        valueYField: `${name}`,
-                        categoryXField: "category",
-                        sequencedInterpolation: true,
-                        stacked: options.series.stacked,
-                        legendLabelText: `[bold #888]{categoryX}[/] : ${options.legend.colorize ? "[{stroke}]" : ""}{name}[/] `,
-                        legendRangeLabelText: `${options.legend.colorize ? "[{stroke}]" : ""}{name}[/]  `,
-                        legendValueText: `[bold ${options.legend.colorize ? "{stroke}" : ""}]{valueY}[/]`,
-                        legendRangeValueText: `${options.legend.colorize ? "[{stroke}]" : ""}{valueYClose}[/]`,
-                        tooltip: am5.Tooltip.new(root, {
-                            labelText: "{valueY}"
-                        })
-                    })
-                );
-                if (type === "Column")
-                    updatedCreatedChart.series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
-                updatedCreatedChart.series.data.setAll(data);
-                updatedCreatedChart.series.appear();    // ba animation miyad
-            }
+                        valueYField: fieldName,
+                        categoryXField: "category"
+                    }));
 
-            if (legend)
-                legend.data.setAll(updatedCreatedChart.chart.series.values);
+                    if (type === "Column")
+                        updatedCreatedChart.series.columns.template.setAll({
+                            tooltipText: "{valueY} : {categoryX} - {name}",
+                            width: am5.percent(90),
+                            tooltipY: 0
+                        });
+
+                    updatedCreatedChart.series.data.setAll(data);
+                    updatedCreatedChart.series.appear();
+
+                    updatedCreatedChart.series.bullets.push(function () {
+                        return am5.Bullet.new(root, {
+                            locationY: 0,
+                            sprite: am5.Label.new(root, {
+                                text: "{valueY}",
+                                fill: root.interfaceColors.get("alternativeText"),
+                                centerY: 0,
+                                centerX: am5.p50,
+                                populateText: true
+                            })
+                        });
+                    });
+
+                    if (legend)
+                        legend.data.push(updatedCreatedChart.series);
+                }
+
+                for (const key in Object.fromEntries(filtered)) {
+                    makeSeries(key, key);
+                }
+            }
 
             // Add cursor
             updatedCreatedChart.chart.set("cursor", am5xy.XYCursor.new(root, {}));
