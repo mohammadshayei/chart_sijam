@@ -44,7 +44,7 @@ const initialState = {
         xyCursor: false,
         axes: {
           xAxes: {
-            rotation: false,
+            rotation: true,
             repeatingCategories: true,
             minGridDistance: 30,
             gridTemplateLocation: 0,
