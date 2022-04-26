@@ -26,7 +26,7 @@ const GetPhoneNumber = (props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const token = useSelector((state) => state.auth.token);
-  const { selectedHolding} = useSelector((state) => state.holdingDetail);
+  const { selectedHolding } = useSelector((state) => state.holdingDetail);
   const maxLength = 10;
 
   const closeModal = () => {
@@ -82,7 +82,7 @@ const GetPhoneNumber = (props) => {
       if (resultSearchUser.data.result.goNextPage) {
         const code = Math.floor(Math.random() * 90001) + 10000
         props.setOtp(code)
-        sendSms(code, props.phone)
+        sendSms(code, phone)
       }
       else if (resultSearchUser.data.result.wantToAdd)
         props.setPage(3)
