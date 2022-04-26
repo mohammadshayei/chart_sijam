@@ -14,8 +14,27 @@ const XAxisStep = () => {
 
   const removeFieldPicker = (index) => {
     let updatedPickers = [];
-    if (index !== -1) {
-      updatedPickers = pickers.filter((picker) => picker.props.index !== index)
+    if (index < 0) return;
+    if (index === pickers.length - 1)
+      updatedPickers = pickers.filter(item => item.props.index !== index)
+    else {
+      let edited = false;
+      pickers.forEach((item, indx) => {
+        if (!edited) {
+          if (item.props.index === index) edited = true;
+          else updatedPickers.push(item)
+        } else {
+          updatedPickers.push({
+            ...item,
+            key: `${indx - 1}`,
+            props: {
+              ...item.props,
+              index: indx - 1
+            }
+          })
+        }
+
+      })
     }
     setPickers(updatedPickers)
   };

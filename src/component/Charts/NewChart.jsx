@@ -284,7 +284,17 @@ function NewChart({ chartId, chartProps }) {
 
             updatedCreatedChart.xAxis.data.setAll(data);
 
-            const filtered = Object.entries(data[0]).filter(([key, value]) => key !== 'category' && key !== 'field1');
+            const filtered = Object.entries(data[0]).filter(([key, value]) =>
+                key !== 'category' &&
+                key !== 'field1' &&
+                key !== 'field2' &&
+                key !== 'field3' &&
+                key !== 'field4' &&
+                key !== 'field5' &&
+                key !== 'field6' &&
+                key !== 'field7' &&
+                key !== 'field8'
+            );
 
             if (filtered.length === 0) {
                 for (const name in options.fieldNames) {
