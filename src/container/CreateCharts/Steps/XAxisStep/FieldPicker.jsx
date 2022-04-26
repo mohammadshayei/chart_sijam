@@ -34,6 +34,19 @@ const FieldPicker = (props) => {
         let firstField = true;
         let selectedField,
           menuItems = [];
+
+        // set initial selected field for edit
+        if (takenData.isFullscreen) {
+          for (const field in takenData.metaData.fields) {
+            if (takenData.metaData.fields[field].index === props.index) {
+              for (const key in takenData.filteredData[0]) {
+                if (takenData.metaData.fields[field].value === takenData.filteredData[0][key].fieldName) {
+                  selectedField = key
+                }
+              }
+            }
+          }
+        }
         for (const title in takenData.data.fieldsType) {
           for (const key in takenData.data.fieldsType[title]) {
             if (props.index === 0) {
@@ -41,7 +54,7 @@ const FieldPicker = (props) => {
                 firstField &&
                 takenData.data.fieldsType[title][key] === "عبارت‌"
               ) {
-                selectedField = key;
+                selectedField = takenData.isFullscreen ? selectedField : key;
                 firstField = false;
               }
               menuItems = [...menuItems, { name: key, id: title }];
@@ -50,7 +63,7 @@ const FieldPicker = (props) => {
               takenData.data.fieldsType[title][key] === "عدد"
             ) {
               if (firstField) {
-                selectedField = key;
+                selectedField = takenData.isFullscreen ? selectedField : key;
                 firstField = false;
               }
               menuItems = [...menuItems, { name: key, id: title }];
