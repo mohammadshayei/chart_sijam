@@ -300,6 +300,14 @@ const CreateCharts = (props) => {
         shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
+        dataInfo: {
+          filters: [],
+          fields: takenData.metaData.fields.map(item => {
+            return {
+              field: item.value
+            }
+          })
+        }
       };
     }
     setError(null);
@@ -330,12 +338,31 @@ const CreateCharts = (props) => {
               parent: updatedChartsData[takenData.id].parent,
               bankId: updatedChartsData[takenData.id].bankId,
               lastBankUpdate: updatedChartsData[takenData.id].lastBankUpdate,
-              shareAll: takenData.chartData.shareAll,
-              editAll: takenData.chartData.editAll,
-              viewAll: takenData.chartData.viewAll,
-              shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
-              editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
-              viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
+
+              // shareAll: takenData.chartData.shareAll,
+              // editAll: takenData.chartData.editAll,
+              // viewAll: takenData.chartData.viewAll,
+              // shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
+              // editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
+              // viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
+
+              shareAll: updatedChartsData[takenData.id].shareAll,
+              editAll: updatedChartsData[takenData.id].editAll,
+              viewAll: updatedChartsData[takenData.id].viewAll,
+              shareList: updatedChartsData[takenData.id].shareList,
+              editList: updatedChartsData[takenData.id].editList,
+              viewList: updatedChartsData[takenData.id].viewList,
+
+              time: updatedChartsData[takenData.id].time,
+              label: updatedChartsData[takenData.id].label,
+              receivedType: updatedChartsData[takenData.id].receivedType,
+              seeDuration: updatedChartsData[takenData.id].seeDuration,
+              comments: updatedChartsData[takenData.id].comments,
+              faveList: updatedChartsData[takenData.id].faveList,
+              editedBy: updatedChartsData[takenData.id].editedBy,
+              path: updatedChartsData[takenData.id].path,
+              creator: updatedChartsData[takenData.id].creator,
+              sharedFrom: updatedChartsData[takenData.id].sharedFrom,
             },
           };
           setChartsData(updatedChartsData);

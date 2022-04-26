@@ -69,7 +69,9 @@ const Card = React.memo((props) => {
       socket.emit('set_see_time', { chartId: props.chartId, duration: props.item.time.duration, userId, holdingId: selectedHolding.holdingId })
       resetTimeSee({ chartId: props.chartId })
     }
-  }, [props.item.time.duration])
+    // }, [props.item.time.duration])
+  }, [props.item.time?.duration])
+
   useEffect(() => {
     return () => {
       if (props.item.time.isSee && socket)
@@ -167,11 +169,11 @@ const Card = React.memo((props) => {
               :
               <AiOutlineHeart className="icon" onClick={onFaveClick} />
             }
-            <p className="number">{props.item.faveList.length}</p>
+            <p className="number">{props.item.faveList?.length}</p>
           </div>
           <div className="like">
             <FaRegComment className="icon" />
-            <p className="number">{props.item.comments.length}</p>
+            <p className="number">{props.item.comments?.length}</p>
           </div>
           <p className="date">{lastBankUpdate}</p>
 
