@@ -145,9 +145,9 @@ const TitleBlock = React.memo((props) => {
       shareAll: selectedChartData.shareAll ? selectedChartData.shareAll : false,
       editAll: selectedChartData.editAll ? selectedChartData.editAll : false,
       viewAll: selectedChartData.viewAll ? selectedChartData.viewAll : false,
-      shareList: selectedChartData.shareList ? selectedChartData.shareList.map(item => item.user._id) : [],
-      editList: selectedChartData.editList ? selectedChartData.editList.map(item => item.user._id) : [],
-      viewList: selectedChartData.viewList ? selectedChartData.viewList : [],
+      shareList: selectedChartData.shareAll ? [] : selectedChartData.shareList ? selectedChartData.shareList.map(item => item.user._id) : [],
+      editList: selectedChartData.editAll ? [] : selectedChartData.editList ? selectedChartData.editList.map(item => item.user._id) : [],
+      viewList: selectedChartData.viewAll ? [] : selectedChartData.viewList ? selectedChartData.viewList.map(item => item.user) : [],
       data: {
         data: selectedChartData.data,
         options: selectedChartData.options,

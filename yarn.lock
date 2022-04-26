@@ -24,9 +24,9 @@
     xlsx "^0.17.0"
 
 "@amcharts/amcharts5@^5.1.12":
-  version "5.1.12"
-  resolved "https://registry.yarnpkg.com/@amcharts/amcharts5/-/amcharts5-5.1.12.tgz#0a21a2e6c55c15189d6420fdb98f0374656f7257"
-  integrity sha512-YPz7Iw9ojQs1BcgxzxQXTJsbxBCw0UDSATabFFurBF2HWkbcU6zUio2Wm6Z1/UWEmo5a8IgWDeFaXiCM/ne5KQ==
+  version "5.1.13"
+  resolved "https://registry.yarnpkg.com/@amcharts/amcharts5/-/amcharts5-5.1.13.tgz#e7e0c7f9963fab2fc3ae62ddbfe5f6841b756cb6"
+  integrity sha512-epOT1uMUdw4+sxlOOaYTKMYkJqSBAt6H2ELa3AMtqt7RwACh2j0SL5jLZfPskf3WthRySpaH96Ny2ZDbo3i7mg==
   dependencies:
     "@types/d3" "^7.0.0"
     "@types/d3-chord" "^3.0.0"
@@ -8663,9 +8663,9 @@ map-visit@^1.0.0:
     object-visit "^1.0.0"
 
 markerjs2@^2.17.2:
-  version "2.21.0"
-  resolved "https://registry.yarnpkg.com/markerjs2/-/markerjs2-2.21.0.tgz#f2b4c524c058300709b54c0db2086569d00d9b1a"
-  integrity sha512-SC0/6VfT52laKWmnDQDKRqMREKhGzltJYWHaGFhoJza36IplFfrVRA1IYSPqHa5xKPApQmEn7fyNiSgfCi2VRA==
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/markerjs2/-/markerjs2-2.21.1.tgz#a85d76ed00c56023e359e4b99d9c1a0e30f0eda4"
+  integrity sha512-JnN+NJMeZElfGrxb8+ZmSN3TCYrs2uVumW7WC/db4iDTgLhePMLn7vXumrYFyyoe6x0NhliOoDfKmCh63EucxQ==
 
 mdn-data@2.0.14:
   version "2.0.14"

@@ -18,13 +18,13 @@ const StyledButton = (props) => {
       ? props.hover
         ? props.hover
         : themeState.isDark
-        ? theme.surface_12dp
-        : theme.background_color
+          ? theme.surface_12dp
+          : theme.background_color
       : props.backgroundColor,
   };
   return (
     <button
-      className={`sijam-style-button`}
+      className={`sijam-style-button ${props.className}`}
       style={{ ...newStyle, ...props.ButtonStyle }}
       onClick={(e) => {
         if (props.onClick) props.onClick();

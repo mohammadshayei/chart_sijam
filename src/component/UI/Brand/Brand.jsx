@@ -43,7 +43,7 @@ const Brand = (props) => {
       return {
         name: item.holdingName,
         id: item.holdingId,
-        icon: <img src={item.holdingImage === '' ? IMAGE : `${baseUrl}images/${item.holdingName}`} alt='holding' />
+        icon: <img src={item.holdingImage ? `${baseUrl}images/${item.holdingImage}` : IMAGE} alt='holding' />
       }
     })
     setData(updatedData)
