@@ -1,6 +1,7 @@
 import React from "react";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
 import Button from "../../../component/UI/Button/Button";
+import Input from "../../../component/UI/Input/Input";
 import { useTheme } from "../../../styles/ThemeProvider";
 import InputAnimatedTitle from "../../inputs/InputAnimatedTitle/InputAnimatedTitle";
 import "./MainAuth.scss";
@@ -14,56 +15,38 @@ const MainAuth = (props) => {
       onSubmit={props.onsubmit}
       className="mainauth-container"
       style={{
+        background: themeState.isDark ? theme.surface_2dp : theme.surface,
+        borderColor: theme.border_color
       }}
     >
       <div className="mainauth-input-container">
         {Object.entries(props.orderForm).map(([k, v]) => (
-          <InputAnimatedTitle
+          <Input
             key={k}
-            onChange={(e) => props.onChange(e, k, props.pageName)}
+            elementType={`${k === "password" ? "password" : "text"}`}
             value={v.value}
-            config={v.elementConfig}
-            isValid={v.isValid}
-            onBlur={(e) => props.onBlur(e, k, props.pageName)}
-            onFocus={(e) => props.onFocus(e, k, props.pageName)}
+            onChange={(e) => props.onChange(e, k, props.pageName)}
+            isOk={v.isValid}
             title={v.title}
             messageError={v.error}
-            inputClassName={
-              v.selected && v.value.length !== 0
-                ? "input-animated-focus-class"
-                : ""
-            }
-            pClassName={
-              v.isFocused ? "p-animated-focus-class" : "p-animated-blur-class"
-            }
-            divStyle={{
-              marginTop: props.pageName === "login" ? "4rem" : "2rem",
-            }}
-            inputStyle={{
-              width: "20rem",
-              borderBottom: `${
-                !v.isValid
-                  ? "red"
-                  : v.selected
-                  ? theme.background
-                  : theme.borderBlur
-              } ${v.selected ? "2px" : "1px"} solid`,
+            inputContainer={{ width: "100%", marginBottom: "1rem" }}
+            style={{ fontSize: "0.8rem" }}
+            config={{
+              autoFocus: k === "username" && true,
             }}
           />
         ))}
       </div>
       <div className="button-mainauth-container">
         <Button
-          hoverBGColor={theme.hover_background}
           disabled={!props.formIsValid}
           ButtonStyle={{
-            width: "15rem",
-            backgroundColor: theme.background,
-            color: theme.on_primary,
+            width: "100%",
             paddingTop: ".2rem",
+            fontSize: "0.9rem"
           }}
         >
-          <p>{stringFa.continue}</p>
+          <p>{stringFa.login}</p>
         </Button>
       </div>
     </form>

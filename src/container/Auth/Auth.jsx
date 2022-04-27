@@ -13,6 +13,7 @@ import Loading from "../../component/UI/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions/index";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog";
+import { useTheme } from "../../styles/ThemeProvider";
 
 const Auth = (props) => {
   const [orderAuth, setOrderAuth] = useState({
@@ -110,6 +111,8 @@ const Auth = (props) => {
   const locaiton = useLocation();
 
   const searchParams = new URLSearchParams(locaiton.search);
+  const themeState = useTheme();
+  const theme = themeState.computedTheme;
   const p = searchParams.get("p");
   const phone = searchParams.get("phone");
   const country_code = searchParams.get("country_code");
@@ -269,12 +272,14 @@ const Auth = (props) => {
     );
   }
   return (
-    <div className="auth-container">
+    <div className="auth-container"
+      style={{ color: theme.on_background }}
+    >
       {loginError ? (
         <ErrorDialog onClose={setLoginError}>{error}</ErrorDialog>
       ) : null}
       {/* onClose={setError} */}
-      <ImageSection />
+      {/* <ImageSection /> */}
 
       <div className="auth-body">
         {loading ? (
@@ -290,7 +295,7 @@ const Auth = (props) => {
           >
             <Loading
               imageConfig={{
-                opacity: "0.7",
+                opacity: "0.8",
                 height: "60",
                 width: "60",
                 alt: "loading",
@@ -303,8 +308,16 @@ const Auth = (props) => {
             <Logo
               style={{
                 backgroundColor: "transparent",
+                width: "100px",
+                padding: "1rem"
               }}
             />
+            {locaiton.pathname === "/login" &&
+              <p className="login-to-bi"
+                style={{
+                  color: theme.darken_border_color
+                }}
+              >{stringFa.login_to_bi}</p>}
             {body}
           </React.Fragment>
         )}

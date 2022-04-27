@@ -141,5 +141,7 @@ export const stringFa = {
   structure: "ساختار",
   company: "سازمان",
   software: "نرم افزار",
-  add_1:"افزودن"
+  add_1: "افزودن",
+  login: "ورود",
+  login_to_bi: "ورود به هوش تجاری"
 };

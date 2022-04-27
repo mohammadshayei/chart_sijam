@@ -1,20 +1,22 @@
 .mainauth-container {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .mainauth-input-container {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .button-mainauth-container {
-        width: 100%;
-        height: 4rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 5rem;
-    }
+	width: 19rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1rem 1rem;
+	border: 1px solid;
+	border-radius: 8px;
+	.mainauth-input-container {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.button-mainauth-container {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 1rem;
+	}
 }

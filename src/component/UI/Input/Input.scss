@@ -23,6 +23,9 @@
 		box-sizing: border-box;
 		transition: border 200ms ease-out;
 	}
+	.InputElement:-webkit-autofill {
+		box-shadow: 0 0 0 30px #dadafa inset !important;
+	}
 	.invalid {
 		border: 1px solid red;
 		background-color: #fda49a;
