@@ -28,136 +28,131 @@ const FieldPicker = (props) => {
   const changeFieldsMEtaData = (payload) => {
     dispatch(addChartActions.changeFieldsMEtaData(payload));
   };
-  useEffect(() => {
-    if (initial) {
-      if (takenData.data.fieldsType) {
-        let firstField = true;
-        let selectedField,
-          menuItems = [];
 
-        // set initial selected field for edit
-        if (takenData.isFullscreen) {
-          for (const field in takenData.metaData.fields) {
-            if (takenData.metaData.fields[field].index === props.index) {
-              for (const key in takenData.filteredData[0]) {
-                if (takenData.metaData.fields[field].value === takenData.filteredData[0][key].fieldName) {
-                  selectedField = key
-                }
+  useEffect(() => {
+    if (!takenData.data) return
+    if (initial && takenData.data.length > 0) {
+      let firstField = true;
+      let selectedField,
+        menuItems = [];
+      // set initial selected field for edit
+      if (takenData.isFullscreen) {
+        for (const field in takenData.metaData.fields) {
+          if (takenData.metaData.fields[field].index === props.index) {
+            for (const key in takenData.data[0]) {
+              if (takenData.metaData.fields[field].value === takenData.data[0][key].fieldName) {
+                selectedField = key
               }
             }
           }
         }
-        for (const title in takenData.data.fieldsType) {
-          for (const key in takenData.data.fieldsType[title]) {
-            if (props.index === 0) {
-              if (
-                firstField &&
-                takenData.data.fieldsType[title][key] === "عبارت‌"
-              ) {
-                selectedField = takenData.isFullscreen ? selectedField : key;
-                firstField = false;
-              }
-              menuItems = [...menuItems, { name: key, id: title }];
-            } else if (
-              props.index > 0 &&
-              takenData.data.fieldsType[title][key] === "عدد"
-            ) {
-              if (firstField) {
-                selectedField = takenData.isFullscreen ? selectedField : key;
-                firstField = false;
-              }
-              menuItems = [...menuItems, { name: key, id: title }];
-            }
-          }
-        }
-        setInitial(false);
-        setMenuItems(menuItems);
-        if (props.index > 0) {
-          setTimeout(() => {
-            setSelected(selectedField);
-          }, 200);
-        } else
-          setSelected(selectedField);
       }
-    }
-    if (takenData.filteredData) {
-      let fieldId;
-      let fieldValues = [];
-      Object.entries(takenData.filteredData).map(([key, value]) => {
-        Object.entries(value).map(([k, v]) => {
-          if (k === selected) {
-            fieldId = v.fieldName;
-            fieldValues = [...fieldValues, v.data];
+      for (const field in takenData.data[0]) {
+        if (props.index === 0) {
+          if (
+            firstField &&
+            takenData.data[0][field].fieldType === "عبارت‌"
+          ) {
+            selectedField = takenData.isFullscreen ? selectedField : field;
+            firstField = false;
           }
-        });
+        } else if (
+          props.index > 0 &&
+          takenData.data[0][field].fieldType === "عدد"
+        ) {
+          if (firstField) {
+            selectedField = takenData.isFullscreen ? selectedField : field;
+            firstField = false;
+          }
+        }
+        menuItems = [...menuItems, { name: field, id: takenData.data[0][field].fieldName }];
+      }
+      setInitial(false);
+      setMenuItems(menuItems);
+      if (props.index > 0) {
+        setTimeout(() => {
+          setSelected(selectedField);
+        }, 200);
+      } else
+        setSelected(selectedField);
+    }
+    let fieldId;
+    let fieldValues = [];
+    Object.entries(takenData.data).map(([key, value]) => {
+      Object.entries(value).map(([k, v]) => {
+        if (k === selected) {
+          fieldId = v.fieldName;
+          fieldValues = [...fieldValues, v.data];
+        }
       });
-      if (selected !== "") {
-        changeFieldsMEtaData({ index: props.index, value: fieldId })
-        let updatedChartsData = takenData.chartData;
-        if (takenData.chartData.data.data.length === 0) {
-          fieldValues.forEach((field) => {
-            const fieldName =
-              props.index === 0 ? "category" : `field${props.index}`;
-            updatedChartsData = {
-              ...updatedChartsData,
-              data: {
-                ...updatedChartsData.data,
-                data: [...updatedChartsData.data.data, { [fieldName]: props.index > 0 ? parseInt(field) : field }],
-                options:
-                  props.index > 0
-                    ? {
-                      ...updatedChartsData.data.options,
-                      fieldNames: {
-                        ...updatedChartsData.data.options.fieldNames,
-                        [fieldName]: selected,
-                      },
-                    }
-                    : { ...updatedChartsData.data.options },
-              },
-            };
-          });
-        } else
-          for (let index = 0; index < fieldValues.length; index++) {
-            const fieldName =
-              props.index === 0 ? "category" : `field${props.index}`;
-            let chartDataUpdated = takenData.chartData.data.data;
-            let chartOptionsUpdated = takenData.chartData.data.options;
-            let found = false;
-            for (const key in chartDataUpdated[index]) {
-              if (key === fieldName) {
-                chartDataUpdated[index][key] = props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index];
-                found = true;
-              }
-            }
-            if (!found) {
-              chartDataUpdated[index] = {
-                ...chartDataUpdated[index],
-                [fieldName]: props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index],
-              };
-            }
-            chartOptionsUpdated =
+    });
+    if (selected === "") return
+
+    changeFieldsMEtaData({ index: props.index, value: fieldId })
+    let updatedChartsData = takenData.chartData;
+    if (takenData.chartData.data.data.length === 0) {
+      fieldValues.forEach((field) => {
+        const fieldName =
+          props.index === 0 ? "category" : `field${props.index}`;
+        updatedChartsData = {
+          ...updatedChartsData,
+          data: {
+            ...updatedChartsData.data,
+            data: [...updatedChartsData.data.data, { [fieldName]: props.index > 0 ? parseInt(field) : field }],
+            options:
               props.index > 0
                 ? {
-                  ...chartOptionsUpdated,
+                  ...updatedChartsData.data.options,
                   fieldNames: {
-                    ...chartOptionsUpdated.fieldNames,
+                    ...updatedChartsData.data.options.fieldNames,
                     [fieldName]: selected,
                   },
                 }
-                : { ...chartOptionsUpdated };
-            updatedChartsData = {
-              ...updatedChartsData,
-              data: {
-                ...updatedChartsData.data,
-                data: chartDataUpdated,
-                options: chartOptionsUpdated,
-              },
-            };
+                : { ...updatedChartsData.data.options },
+          },
+        };
+      });
+    } else
+      for (let index = 0; index < fieldValues.length; index++) {
+        const fieldName =
+          props.index === 0 ? "category" : `field${props.index}`;
+        let chartDataUpdated = takenData.chartData.data.data;
+        let chartOptionsUpdated = takenData.chartData.data.options;
+        let found = false;
+        for (const key in chartDataUpdated[index]) {
+          if (key === fieldName) {
+            chartDataUpdated[index][key] = props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index];
+            found = true;
           }
-        setChartData(updatedChartsData);
+        }
+        if (!found) {
+          chartDataUpdated[index] = {
+            ...chartDataUpdated[index],
+            [fieldName]: props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index],
+          };
+        }
+        chartOptionsUpdated =
+          props.index > 0
+            ? {
+              ...chartOptionsUpdated,
+              fieldNames: {
+                ...chartOptionsUpdated.fieldNames,
+                [fieldName]: selected,
+              },
+            }
+            : { ...chartOptionsUpdated };
+        updatedChartsData = {
+          ...updatedChartsData,
+          data: {
+            ...updatedChartsData.data,
+            data: chartDataUpdated,
+            options: chartOptionsUpdated,
+          },
+        };
       }
-    }
-  }, [takenData.data, selected, takenData.filteredData]);
+    setChartData(updatedChartsData);
+
+  }, [takenData.data, selected]);
 
   const removeHandler = (index) => {
     props.removeFieldPicker(index);

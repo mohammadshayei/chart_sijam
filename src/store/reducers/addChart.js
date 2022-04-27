@@ -5,8 +5,8 @@ const initialState = {
   isEdit: false,
   isFullscreen: false,
   emptyRequireds: [],
-  data: {},
-  filteredData: [],
+  data: [],
+  filterRules: [],
   metaData: {
     fields: [],
     filters: []
@@ -95,7 +95,6 @@ const selectChartData = (state, action) => {
   return {
     ...state,
     data,
-    filteredData: data.data,
   };
 };
 const changeFieldsMEtaData = (state, action) => {
@@ -332,10 +331,10 @@ const fullscreenChart = (state, action) => {
 };
 
 const setChartDataFilter = (state, action) => {
-  const { data } = action.payload;
+  const { rules } = action.payload;
   return {
     ...state,
-    filteredData: data,
+    filterRules: rules,
   };
 };
 

@@ -18,35 +18,11 @@ const FilterFieldPicker = (props) => {
     const divRef = useRef();
 
     useEffect(() => {
-        if (takenData.data.fieldsType) {
-            let firstField = true;
-            let selected,
-                menuItems = [];
-            for (const title in takenData.data.fieldsType) {
-                for (const key in takenData.data.fieldsType[title]) {
-                    if (props.index === 0) {
-                        if (
-                            firstField &&
-                            takenData.data.fieldsType[title][key] === "عبارت‌"
-                        ) {
-                            selected = key;
-                            firstField = false;
-                        }
-                        menuItems = [...menuItems, { name: key, id: title }];
-                    } else if (
-                        props.index > 0 &&
-                        takenData.data.fieldsType[title][key] === "عدد"
-                    ) {
-                        if (firstField) {
-                            selected = key;
-                            firstField = false;
-                        }
-                        menuItems = [...menuItems, { name: key, id: title }];
-                    }
-                }
-            }
-            setMenuItems(menuItems);
-        }
+        if (!takenData.data) return
+        let menuItems = [];
+        for (const field in takenData.data[0])
+            menuItems = [...menuItems, { name: field, id: takenData.data[0][field].fieldName }];
+        setMenuItems(menuItems);
     }, [takenData.data]);
 
     const removeHandler = (index) => {

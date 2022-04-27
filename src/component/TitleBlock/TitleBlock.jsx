@@ -158,7 +158,7 @@ const TitleBlock = React.memo((props) => {
       },
     };
     setId(props.chartId);
-    selectChartDatabase(result.data.result);
+    selectChartDatabase(result.data.result.data);
     setChartData(selectedChartData);
     if (id === "setting") setIsEdit(true);
     fullscreenChart({ isFullscreen: true });

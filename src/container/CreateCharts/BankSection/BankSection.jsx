@@ -12,7 +12,7 @@ const BankSection = () => {
   const takenData = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    setData(takenData.filteredData)
+    setData(takenData.data)
   }, [takenData]);
 
   return (
