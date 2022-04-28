@@ -94,11 +94,11 @@ export const fullscreenChart =
       });
     };
 
-export const setChartDataFilter =
+export const setFilterFields =
   (payload) =>
     (dispatch) => {
       dispatch({
-        type: actionTypes.SET_CHART_DATA_FILTER,
+        type: actionTypes.SET_FILTER_FIELDS,
         payload,
       });
     };
@@ -127,5 +127,14 @@ export const updateEmptyRequireds =
       dispatch({
         type: actionTypes.UPDATE_EMPTY_REQUIREDS,
         payload: { emptyRequireds },
+      });
+    };
+
+export const setFilterOperator =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_FILTER_OPERATOR,
+        payload,
       });
     };

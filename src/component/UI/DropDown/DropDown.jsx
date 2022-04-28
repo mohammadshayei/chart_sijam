@@ -34,9 +34,9 @@ const DropDown = (props) => {
     props.setDropDown(false);
   });
 
-  const handleClick = (value, id) => {
+  const handleClick = (value, id, extra) => {
     props.onClick && props.onClick(id);
-    props.setSelected && props.setSelected(value);
+    props.setSelected && props.setSelected(value, id, extra);
     props.setDropDown(false); //state of dropdown activate
   };
   // ReactDom.createPortal
@@ -54,7 +54,7 @@ const DropDown = (props) => {
           <div
             key={item._id ? item._id : item.name}
             onClick={() => {
-              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id);
+              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id, item.extra ? item.extra : "");
             }}
             className="dropdown-item"
             style={{
@@ -77,7 +77,7 @@ const DropDown = (props) => {
           <div
             key={item.name}
             onClick={() => {
-              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id);
+              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id, item.extra ? item.extra : "");
             }}
             className="dropdown-item"
             style={{ ...props.contentStyle, color: theme.on_background }}

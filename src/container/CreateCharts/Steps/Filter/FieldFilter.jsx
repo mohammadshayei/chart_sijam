@@ -1,85 +1,59 @@
 import { useEffect, useState } from "react";
 import "./Filter.scss";
 import Input from "../../../../component/UI/Input/Input";
-import Spinner from "../../../../component/UI/Loading/Spinner/Spinner";
+import CheckBox from "../../../../component/UI/CheckBox/CheckBox";
+import StyledButton from "../../../../component/UI/Button/StyledButton";
+import { MdCancel } from "react-icons/md";
 import { useTheme } from "../../../../styles/ThemeProvider";
-import FilterFieldPicker from "./FilterFieldPicker";
 
 const FieldFilter = (props) => {
+    const [value, setValue] = useState("");
+    const [not, setNot] = useState(false);
+
     const themeState = useTheme();
     const theme = themeState.computedTheme;
-    const [selectedFunction, setSelectedFunction] = useState("");
-    const [selectedField, setSelectedField] = useState(null);
-    const [value, setValue] = useState("");
-    const functions = ["AND", "OR", "NOT", "EXACT"];
-
-    const onSelectLabelChangeHandler = (e) => {
-        if (e.target.value === '') {
-            setSelectedFunction("");
-            return;
-        }
-        const labelFinded = functions.find(
-            (item) => item === e.target.value
-        );
-        setSelectedFunction(labelFinded);
-    };
 
     const onInputChange = (e) => {
         setValue(e)
-        let updatedFilterValues = props.filterValues;
-        updatedFilterValues[props.index].loading = true;
-        updatedFilterValues[props.index].text = e;
-        props.setFilterValues(updatedFilterValues);
-        props.filter(props.index);
     }
 
     useEffect(() => {
         let updatedFilterValues = props.filterValues;
-        updatedFilterValues[props.index].field = selectedField;
+        updatedFilterValues[props.index].content.not = not;
         props.setFilterValues(updatedFilterValues);
-    }, [selectedField]);
+    }, [not]);
 
+    useEffect(() => {
+        let updatedFilterValues = props.filterValues;
+        updatedFilterValues[props.index].content.value = value;
+        props.setFilterValues(updatedFilterValues);
+    }, [value]);
 
     return <div className="field-filter-wrapper">
-        <FilterFieldPicker index={props.index} setSelected={setSelectedField} selected={selectedField} />
+        <StyledButton
+            onClick={() => props.remove(props.index)}
+            ButtonStyle={{ margin: "0.3rem 0 0.3rem 0.3rem" }}
+            hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+            }
+        >
+            <MdCancel />
+        </StyledButton>
         <Input
             inputContainer={{ width: "100%" }}
             elementType="input"
             onChange={(e) => onInputChange(e.target.value)}
             isOk={true}
             value={value}
+            title={props.field.name}
         />
-        <div className="filter-setup">
-            {props.filterValues[props.index].loading &&
-                <div className="loading-spinner">
-                    <Spinner />
-                </div>}
-            <select
-                style={{
-                    background: themeState.isDark
-                        ? theme.surface_1dp
-                        : theme.surface,
-                    color: theme.on_background,
-                    borderColor: theme.darken_border_color,
-                    cursor: "pointer",
-                }}
-                value={selectedFunction}
-                onChange={onSelectLabelChangeHandler}>
-                {functions.map((option, i) => (
-                    <option key={i}
-                        value={option}
-                        style={{
-                            backgroundColor: themeState.isDark
-                                ? "black"
-                                : "white",
-                            color: theme.on_background,
-                            cursor: "pointer",
-                        }}>
-                        {option}
-                    </option>
-                ))}
-            </select>
-        </div>
+        <CheckBox
+            checked={not}
+            onChange={(e) => setNot(e.target.checked)}
+            style={{ fontSize: "0.7rem", marginRight: "1rem", marginBottom: "0.5rem" }}
+            checkmarkStyle={{ width: "15px", height: "15px" }}
+        >نقیض
+        </CheckBox>
     </div>;
 };
 

@@ -4,13 +4,21 @@ import { useTheme } from "../../../../styles/ThemeProvider";
 import { stringFa } from "../../../../assets/strings/stringFaCollection.js";
 import StyledButton from "./../../../../component/UI/Button/StyledButton";
 import FieldPicker from "./FieldPicker.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as addChartActions from "../../../../store/actions/addChart";
+import { filterData } from "../../../../store/utility";
 
 const XAxisStep = () => {
+  const [pickers, setPickers] = useState([]);
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const takenData = useSelector((state) => state.addChart);
-  const [pickers, setPickers] = useState([]);
+  const { metaData, emptyRequireds, filterRules, data, chartData } = useSelector((state) => state.addChart);
+
+  const dispatch = useDispatch();
+  const setChartData = (chartData) => {
+    dispatch(addChartActions.setChartData(chartData));
+  };
 
   const removeFieldPicker = (index) => {
     let updatedPickers = [];
@@ -49,12 +57,100 @@ const XAxisStep = () => {
     setPickers([
       <FieldPicker key="0" title={stringFa.column_type} index={0}
         removeFieldPicker={removeFieldPicker}
-        error={takenData.emptyRequireds.includes("category")} />,
+        error={emptyRequireds.includes("category")} />,
       <FieldPicker key="1" title={stringFa.values} index={1}
         removeFieldPicker={removeFieldPicker}
-        error={takenData.emptyRequireds.includes("field1")} />,
+        error={emptyRequireds.includes("field1")} />,
     ])
-  }, [takenData.emptyRequireds]);
+  }, [emptyRequireds]);
+
+  useEffect(() => {
+    if (!metaData || !data) return;
+    let rawData = [];
+    if (filterRules.fields.length > 0) {
+      rawData = filterData(data, filterRules);
+    } else
+      rawData = data
+
+    let updatedChartData = chartData;
+    let chartDataUpdated = [];
+    let chartOptionsUpdated = chartData.data.options;
+
+    metaData.fields.forEach(field => {
+      let fieldValues = [];
+      rawData.forEach(record => {
+        for (const key in record) {
+          if (record[key].fieldName === field.value)
+            fieldValues = [...fieldValues, record[key].data];
+        }
+      });
+
+      if (chartData.data.data.length === 0) {
+        fieldValues.forEach((value) => {
+          const fieldName =
+            field.index === 0 ? "category" : `field${field.index}`;
+          updatedChartData = {
+            ...updatedChartData,
+            data: {
+              ...updatedChartData.data,
+              data: [...updatedChartData.data.data, { [fieldName]: field.index > 0 ? parseInt(value) : value }],
+              options:
+                field.index > 0
+                  ? {
+                    ...updatedChartData.data.options,
+                    fieldNames: {
+                      ...updatedChartData.data.options.fieldNames,
+                      [fieldName]: field.name,
+                    },
+                  }
+                  : { ...updatedChartData.data.options },
+            },
+          };
+        });
+      } else {
+        for (let index = 0; index < fieldValues.length; index++) {
+          const fieldName =
+            field.index === 0 ? "category" : `field${field.index}`;
+          let found = false;
+          for (const key in chartDataUpdated[index]) {
+            if (key === fieldName) {
+              chartDataUpdated[index][key] = field.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index];
+              found = true;
+            }
+          }
+          if (!found) {
+            chartDataUpdated[index] = {
+              ...chartDataUpdated[index],
+              [fieldName]: field.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index],
+            };
+          }
+          chartOptionsUpdated =
+            field.index > 0
+              ? {
+                ...chartOptionsUpdated,
+                fieldNames: {
+                  ...chartOptionsUpdated.fieldNames,
+                  [fieldName]: field.name,
+                },
+              }
+              : { ...chartOptionsUpdated };
+          updatedChartData = {
+            ...updatedChartData,
+            data: {
+              ...updatedChartData.data,
+              data: chartDataUpdated,
+              options: chartOptionsUpdated,
+            },
+          };
+        }
+      }
+
+    });
+
+    setChartData(updatedChartData);
+
+  }, [metaData, filterRules]);
+
 
   return (
     <div className="settings-content">

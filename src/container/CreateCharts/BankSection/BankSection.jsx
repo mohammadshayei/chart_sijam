@@ -4,16 +4,21 @@ import EditTitle from "../../../component/UI/EditTitle/EditTitle";
 import { useTheme } from "../../../styles/ThemeProvider";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
 import { useSelector } from "react-redux";
+import { filterData } from "../../../store/utility";
 
 const BankSection = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const [data, setData] = useState([]);
-  const takenData = useSelector((state) => state.addChart);
+  const [tableData, setTableData] = useState([]);
+  const { data, filterRules } = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    setData(takenData.data)
-  }, [takenData]);
+    if (!data || !filterRules) return
+    if (filterRules.fields.length > 0) {
+      setTableData(filterData(data, filterRules))
+    } else
+      setTableData(data)
+  }, [data, filterRules]);
 
   return (
     <div className="bank-section-container">
@@ -26,21 +31,21 @@ const BankSection = () => {
             color: theme.on_background,
           }}>
           <thead>
-            {data.length > 0 &&
+            {tableData.length > 0 &&
               <tr className="tabe-bank-thead-tr"
                 style={{
                   background: theme.secondary,
                   color: theme.on_secondary,
                 }}>
-                {Object.entries(data[0]).map(([key, value]) => (
+                {Object.entries(tableData[0]).map(([key, value]) => (
                   <th key={key} style={{ borderColor: theme.darken_border_color }}>
                     {key}
                   </th>))}
               </tr>}
           </thead>
           <tbody>
-            {data.length > 0 ?
-              data.map((v, i) => (
+            {tableData.length > 0 ?
+              tableData.map((v, i) => (
                 <tr className="tabe-bank-tbody-tr" key={i}
                   style={{ background: i % 2 === 0 ? theme.background : theme.border_color }}
                 >

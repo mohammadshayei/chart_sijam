@@ -9,63 +9,73 @@ import StyledButton from "../../../../component/UI/Button/StyledButton.jsx";
 import { MdCancel } from "react-icons/md";
 
 const FieldPicker = (props) => {
-  const takenData = useSelector((state) => state.addChart);
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState({ name: "", id: "" });
   const [initial, setInitial] = useState(true);
   const [menuItems, setMenuItems] = useState([]);
+
   const themeState = useTheme();
   const theme = themeState.computedTheme;
+  const { data, metaData, isFullscreen } = useSelector((state) => state.addChart);
   const divRef = useRef();
 
   const dispatch = useDispatch();
   const removeDataField = (index) => {
     dispatch(addChartActions.removeDataField(index));
   };
-  const setChartData = (chartData) => {
-    dispatch(addChartActions.setChartData(chartData));
-  };
   const changeFieldsMEtaData = (payload) => {
     dispatch(addChartActions.changeFieldsMEtaData(payload));
   };
 
+  const setSelectedName = (value, id) => {
+    let updatedSelected = { ...selected }
+    updatedSelected.id = id;
+    updatedSelected.name = value;
+    setSelected(updatedSelected)
+  }
+
+  // const setSelectedId = (id) => {
+  //   let updatedSelected = { ...selected }
+  //   setSelected(updatedSelected)
+  // }
+
   useEffect(() => {
-    if (!takenData.data) return
-    if (initial && takenData.data.length > 0) {
+    if (!data) return
+    if (initial && data.length > 0) {
       let firstField = true;
       let selectedField,
         menuItems = [];
       // set initial selected field for edit
-      if (takenData.isFullscreen) {
-        for (const field in takenData.metaData.fields) {
-          if (takenData.metaData.fields[field].index === props.index) {
-            for (const key in takenData.data[0]) {
-              if (takenData.metaData.fields[field].value === takenData.data[0][key].fieldName) {
-                selectedField = key
+      if (isFullscreen) {
+        for (const field in metaData.fields) {
+          if (metaData.fields[field].index === props.index) {
+            for (const key in data[0]) {
+              if (metaData.fields[field].value === data[0][key].fieldName) {
+                selectedField = { name: key, id: data[0][key].fieldName }
               }
             }
           }
         }
       }
-      for (const field in takenData.data[0]) {
+      for (const field in data[0]) {
         if (props.index === 0) {
           if (
             firstField &&
-            takenData.data[0][field].fieldType === "عبارت‌"
+            data[0][field].fieldType === "عبارت‌"
           ) {
-            selectedField = takenData.isFullscreen ? selectedField : field;
+            selectedField = isFullscreen ? selectedField : { name: field, id: data[0][field].fieldName };
             firstField = false;
           }
         } else if (
           props.index > 0 &&
-          takenData.data[0][field].fieldType === "عدد"
+          data[0][field].fieldType === "عدد"
         ) {
           if (firstField) {
-            selectedField = takenData.isFullscreen ? selectedField : field;
+            selectedField = isFullscreen ? selectedField : { name: field, id: data[0][field].fieldName };
             firstField = false;
           }
         }
-        menuItems = [...menuItems, { name: field, id: takenData.data[0][field].fieldName }];
+        menuItems = [...menuItems, { name: field, id: data[0][field].fieldName }];
       }
       setInitial(false);
       setMenuItems(menuItems);
@@ -76,83 +86,11 @@ const FieldPicker = (props) => {
       } else
         setSelected(selectedField);
     }
-    let fieldId;
-    let fieldValues = [];
-    Object.entries(takenData.data).map(([key, value]) => {
-      Object.entries(value).map(([k, v]) => {
-        if (k === selected) {
-          fieldId = v.fieldName;
-          fieldValues = [...fieldValues, v.data];
-        }
-      });
-    });
-    if (selected === "") return
 
-    changeFieldsMEtaData({ index: props.index, value: fieldId })
-    let updatedChartsData = takenData.chartData;
-    if (takenData.chartData.data.data.length === 0) {
-      fieldValues.forEach((field) => {
-        const fieldName =
-          props.index === 0 ? "category" : `field${props.index}`;
-        updatedChartsData = {
-          ...updatedChartsData,
-          data: {
-            ...updatedChartsData.data,
-            data: [...updatedChartsData.data.data, { [fieldName]: props.index > 0 ? parseInt(field) : field }],
-            options:
-              props.index > 0
-                ? {
-                  ...updatedChartsData.data.options,
-                  fieldNames: {
-                    ...updatedChartsData.data.options.fieldNames,
-                    [fieldName]: selected,
-                  },
-                }
-                : { ...updatedChartsData.data.options },
-          },
-        };
-      });
-    } else
-      for (let index = 0; index < fieldValues.length; index++) {
-        const fieldName =
-          props.index === 0 ? "category" : `field${props.index}`;
-        let chartDataUpdated = takenData.chartData.data.data;
-        let chartOptionsUpdated = takenData.chartData.data.options;
-        let found = false;
-        for (const key in chartDataUpdated[index]) {
-          if (key === fieldName) {
-            chartDataUpdated[index][key] = props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index];
-            found = true;
-          }
-        }
-        if (!found) {
-          chartDataUpdated[index] = {
-            ...chartDataUpdated[index],
-            [fieldName]: props.index > 0 ? parseInt(fieldValues[index]) : fieldValues[index],
-          };
-        }
-        chartOptionsUpdated =
-          props.index > 0
-            ? {
-              ...chartOptionsUpdated,
-              fieldNames: {
-                ...chartOptionsUpdated.fieldNames,
-                [fieldName]: selected,
-              },
-            }
-            : { ...chartOptionsUpdated };
-        updatedChartsData = {
-          ...updatedChartsData,
-          data: {
-            ...updatedChartsData.data,
-            data: chartDataUpdated,
-            options: chartOptionsUpdated,
-          },
-        };
-      }
-    setChartData(updatedChartsData);
+    if (selected.name === "") return
+    changeFieldsMEtaData({ index: props.index, value: selected.id, name: selected.name })
 
-  }, [takenData.data, selected]);
+  }, [data, selected]);
 
   const removeHandler = (index) => {
     props.removeFieldPicker(index);
@@ -181,7 +119,8 @@ const FieldPicker = (props) => {
               minWidth: "22.4rem",
             }}
             items={menuItems}
-            setSelected={setSelected}
+            setSelected={setSelectedName}
+            // onClick={setSelectedId}
             setDropDown={setIsOpen}
             divContainerRef={divRef}
           />
@@ -210,7 +149,7 @@ const FieldPicker = (props) => {
             </div>
           </div>
           <div className="dropdown-title">
-            <span className="title-text">{selected}</span>
+            <span className="title-text">{selected.name}</span>
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@ const FilterFieldPicker = (props) => {
         if (!takenData.data) return
         let menuItems = [];
         for (const field in takenData.data[0])
-            menuItems = [...menuItems, { name: field, id: takenData.data[0][field].fieldName }];
+            menuItems = [...menuItems, { name: field, id: takenData.data[0][field].fieldName, extra: takenData.data[0][field].fieldType }];
         setMenuItems(menuItems);
     }, [takenData.data]);
 
@@ -74,7 +74,7 @@ const FilterFieldPicker = (props) => {
                         </div>
                     </div>
                     <div className="dropdown-title">
-                        <span className="title-text">{props.selected}</span>
+                        <span className="title-text">{props.selected?.name}</span>
                     </div>
                 </div>
             </div>

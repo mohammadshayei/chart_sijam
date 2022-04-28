@@ -1,13 +1,22 @@
 .filter-step-container {
-	.field-filter-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	.fields-and-rule {
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: center;
+		width: 100%;
+		margin-bottom: 1rem;
 		.filter-setup {
 			position: relative;
 			display: flex;
-			margin-top: 1rem;
-			.loading-spinner {
-				position: absolute;
-				left: 0.3rem;
-				align-self: center;
+			margin-right: 0.5rem;
+			select {
+				cursor: pointer;
+				direction: rtl;
+				text-align: center;
+				border-radius: 3px;
 			}
 		}
 		.filter-field-picker {
@@ -17,6 +26,7 @@
 			overflow: visible;
 			.settings-field-title-wrapper {
 				margin-bottom: 8px;
+				margin-left: 1rem;
 				width: 100%;
 				.settings-field-title {
 					font-weight: 400;
@@ -32,7 +42,6 @@
 			}
 			.setting-dropdown-component {
 				position: relative;
-				margin-bottom: 0.5rem;
 				.dropdown-wrapper {
 					position: relative;
 					flex: 1;
@@ -106,5 +115,12 @@
 				flex-direction: row-reverse;
 			}
 		}
+	}
+	.field-filter-wrapper {
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: center;
+		align-items: flex-end;
+		width: 100%;
 	}
 }

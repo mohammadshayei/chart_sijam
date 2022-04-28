@@ -6,7 +6,10 @@ const initialState = {
   isFullscreen: false,
   emptyRequireds: [],
   data: [],
-  filterRules: [],
+  filterRules: {
+    operator: "",
+    fields: []
+  },
   metaData: {
     fields: [],
     filters: []
@@ -98,14 +101,15 @@ const selectChartData = (state, action) => {
   };
 };
 const changeFieldsMEtaData = (state, action) => {
-  const { index, value } = action.payload;
+  const { index, value, name } = action.payload;
   let updatedMetaData = { ...state.metaData }
   let updatedFields = [...updatedMetaData.fields]
   let check = updatedFields.findIndex(item => item.index === index)
   if (check > -1) {
     updatedFields[check].value = value;
+    updatedFields[check].name = name;
   } else {
-    updatedFields.push({ index, value })
+    updatedFields.push({ index, value, name })
   }
   updatedMetaData.fields = updatedFields;
   return {
@@ -330,11 +334,25 @@ const fullscreenChart = (state, action) => {
   };
 };
 
-const setChartDataFilter = (state, action) => {
-  const { rules } = action.payload;
+const setFilterFields = (state, action) => {
+  const { operator, fields } = action.payload;
   return {
     ...state,
-    filterRules: rules,
+    filterRules: {
+      operator,
+      fields
+    },
+  };
+};
+
+const setFilterOperator = (state, action) => {
+  const { operator } = action.payload;
+  return {
+    ...state,
+    filterRules: {
+      ...state.filterRules,
+      operator
+    },
   };
 };
 
@@ -507,8 +525,8 @@ const reducer = (state = initialState, action) => {
       return setChartOptionsAndType(state, action);
     case actionTypes.FULL_SCREEN_CHART:
       return fullscreenChart(state, action);
-    case actionTypes.SET_CHART_DATA_FILTER:
-      return setChartDataFilter(state, action);
+    case actionTypes.SET_FILTER_FIELDS:
+      return setFilterFields(state, action);
     case actionTypes.SET_ACCESS_TO_ALL:
       return setAccessToAll(state, action);
     case actionTypes.UPDATE_ACCESS_LIST:
@@ -519,6 +537,8 @@ const reducer = (state = initialState, action) => {
       return updatedDataField(state, action);
     case actionTypes.CHANGE_FIELDS_IN_META_DATA:
       return changeFieldsMEtaData(state, action);
+    case actionTypes.SET_FILTER_OPERATOR:
+      return setFilterOperator(state, action);
 
     default:
       return state;
