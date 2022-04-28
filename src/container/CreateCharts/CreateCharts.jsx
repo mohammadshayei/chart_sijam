@@ -5,22 +5,34 @@ import Steps from "./Steps/Steps";
 import { useNavigate, useLocation } from "react-router-dom";
 import { stringFa } from "../../assets/strings/stringFaCollection";
 import Button from "../../component/UI/Button/Button.jsx";
-import { VscSplitVertical, VscClose } from "react-icons/vsc";
-import { BsFullscreenExit } from "react-icons/bs";
 import { useTheme } from "../../styles/ThemeProvider.js";
 import * as addChartActions from "../../store/actions/addChart";
 import * as chartActions from "../../store/actions/chart.js";
+import * as detailActions from "../../store/actions/detail.js";
+import * as holdingActions from "../../store/actions/holdingDetail.js";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { baseUrl } from "./../../constants/Config";
 import ErrorDialog from "../../component/UI/Error/ErrorDialog.jsx";
 import StyledButton from "../../component/UI/Button/StyledButton";
 import DropDown from "../../component/UI/DropDown/DropDown";
-import { FcSettings, FcFullTrash } from "react-icons/fc";
-import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
 import BankSection from "./BankSection/BankSection";
 import Hint from "../../component/UI/Hint/Hint";
-import { fetchData } from "../../api/chart";
+import { fetchData, onDeleteChart } from "../../api/chart";
+import ShareBox from "../../component/ShareBox/ShareBox";
+import AddChartToCategory from "../../component/TitleBlock/AddChartToCategory/AddChartToCategory";
+import Modal from "../../component/UI/Modal/Modal";
+
+import { VscSplitVertical, VscClose } from "react-icons/vsc";
+import { FcSettings, FcFullTrash } from "react-icons/fc";
+import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
+import { FaUserFriends, FaUser, FaRegComment } from "react-icons/fa";
+import { AiOutlinePlus, AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
+import { BsStarFill, BsStar, BsReplyFill, BsFullscreenExit } from "react-icons/bs";
+import { MdModeEditOutline } from 'react-icons/md'
+
+
+
 
 function useOnClickOutside(ref, handler) {
   useEffect(() => {
@@ -42,11 +54,6 @@ function useOnClickOutside(ref, handler) {
 }
 
 const CreateCharts = (props) => {
-  const takenData = useSelector((state) => state.addChart);
-  const chartsData = useSelector((state) => state.chart);
-  const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
-  const { token, userId } = useSelector((state) => state.auth);
-  // const [id, setId] = useState("");
   const [input, setInput] = useState(false);
   const [error, setError] = useState(null);
   const [dropDown, setDropDown] = useState(false);
@@ -54,27 +61,53 @@ const CreateCharts = (props) => {
   const [hintShow, setHintShow] = useState({ split: false });
   const [hover, setHover] = useState({ split: false, title: false });
   const [autoValidate, setAutoValidate] = useState(false);
+  const [faveCat, setFaveCat] = useState(false)
+  const [shareable, setShareable] = useState(false)
+  const [editable, setEditable] = useState(false)
+  const [titleValue, setTitleValue] = useState('')
+  const [editableInput, setEditableInput] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const [addChartModal, setAddChartModal] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
+  const [fave, setFave] = useState(false)
+  const [lastBankUpdate, setLastBankUpdate] = useState(null);
+
+
+  const takenData = useSelector((state) => state.addChart);
+  const chartsData = useSelector((state) => state.chart);
+  const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
+  const { token, userId, socket } = useSelector((state) => state.auth);
+
 
   const location = useLocation();
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const navigate = useNavigate()
-  const menuItems = [
-    {
-      name: stringFa.exit_full_screen,
-      id: "noFullScreen",
-      icon: <BsFullscreenExit />,
-    },
-    { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
-    { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },
-  ];
+
+  // const menuItems = [
+  //   {
+  //     name: stringFa.exit_full_screen,
+  //     id: "noFullScreen",
+  //     icon: <BsFullscreenExit />,
+  //   },
+  //   { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
+  //   { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },
+  // ];
+
   let deletedChart;
 
 
   const searchParams = new URLSearchParams(location.search);
   const bankId = searchParams.get("bankId");
   const ref = useRef();
+  const titleRef = useRef();
 
+
+
+  const starStyles = {
+    color: faveCat ? theme.star_color : theme.on_surface,
+    fontSize: "1rem",
+  };
   // useEffect(() => {
   //   const { chartId } = location.state;
   //   setId(chartId);
@@ -84,6 +117,10 @@ const CreateCharts = (props) => {
     setInput(false);
     onMouseLeave("title")
   });
+  useOnClickOutside(titleRef, () => {
+    setEditableInput(false);
+  });
+
   const dispatch = useDispatch();
 
   const selectChartDatabase = (data) => {
@@ -92,7 +129,9 @@ const CreateCharts = (props) => {
   const setId = (id) => {
     dispatch(addChartActions.setAddChartId(id));
   };
-
+  const setchartLabel = (payload) => {
+    dispatch(chartActions.setchartLabel(payload));
+  };
 
   const setChartTitle = (chartTitle) => {
     dispatch(addChartActions.setChartTitle(chartTitle));
@@ -118,6 +157,21 @@ const CreateCharts = (props) => {
   const setEditMode = (isEdit) => {
     dispatch(chartActions.setEditMode(isEdit));
   };
+  const changeInfoINSourceCharts = (payload) => {
+    dispatch(detailActions.changeInfoINSourceCharts(payload));
+  };
+  const updateFaveCategory = (payload) => {
+    dispatch(holdingActions.updateFaveCategory(payload));
+  };
+
+
+
+  const toggleShareModal = () => {
+    setShowModal(!showModal)
+  }
+  const toggleCreateCategoruModal = () => {
+    setAddChartModal(!addChartModal)
+  }
 
   const setTitleHandler = (e) => {
     if (e.type === "keydown") {
@@ -128,7 +182,23 @@ const CreateCharts = (props) => {
       }
     } else setChartTitle({ title: e.target.value });
   };
+  const saveCustomTitle = () => {
+    if (props.title === titleValue) return;
+    socket.emit('change_chart_label', { chartId: takenData.id, label: titleValue, userId, holdingId: selectedHolding.holdingId })
+    setchartLabel({ chartId: takenData.id, label: titleValue })
+    changeInfoINSourceCharts({ chartId: takenData.id, value: titleValue, mode: "label" })
+  }
 
+  const setTitleHandlerEditMode = (e) => {
+    setError(null);
+    if (e.type === "keydown") {
+      if (e.key === "Enter") {
+        setTitleValue(e.target.value);
+        setEditableInput(false);
+        saveCustomTitle()
+      }
+    } else setTitleValue(e.target.value);
+  };
   const closeHandler = () => {
     let clearedChartData = takenData.chartData;
     clearedChartData = {
@@ -197,11 +267,23 @@ const CreateCharts = (props) => {
     updatedHover[type] = false;
     setHover(updatedHover);
   };
-
-  const splitViewHandler = () => {
+  const fetchBankData = async () => {
+    if (Object.entries(takenData.data).length === 0 || Object.entries(takenData.data?.data).length === 0) {
+      const result = await axios.post(
+        `${baseUrl}api/get_data`,
+        {
+          id: chartsData.data[takenData.id].bankId,
+        },
+        { headers: { "auth-token": token } }
+      );
+      selectChartDatabase(result.data.result);
+    }
+  }
+  const splitViewHandler = async () => {
     switch (splitView) {
       case "نمودار":
         setSplitView("تقسیم شده")
+        fetchBankData()
         break;
       case "تقسیم شده":
         setSplitView("نمودار")
@@ -410,51 +492,49 @@ const CreateCharts = (props) => {
     }
   };
 
-  const settingMenuHandler = async (id) => {
-    if (id === "noFullScreen") {
+  const onDelete = async () => {
+    deleteChart({ chartId: props.chartId });
+    try {
+      const result = await onDeleteChart({ id: takenData.id }, token)
+      if (result.success)
+        setError(
+          <ErrorDialog
+            success={true}
+            onClose={setError}
+          >
+            {stringFa.delete_chart_success}
+          </ErrorDialog>
+        );
       fullscreenChart({ isFullscreen: false });
-    } else if (id === "setting") {
-      setIsEdit(true);
-    } else if (id === "delete") {
-      deletedChart = Object.keys(chartsData.data)
-        .filter((key) => key === takenData.id)
-        .map((key) => {
-          return chartsData.data[key];
-        });
-      deleteChart({ chartId: takenData.id });
-      fullscreenChart({ isFullscreen: false });
-      setError(null);
+    } catch (error) {
       setError(
         <ErrorDialog
-          success={true}
-          // undoClick={undoDeleteChartHandler}
           onClose={setError}
         >
-          {stringFa.delete_chart_success}
+          {stringFa.error_occured_try_again}
         </ErrorDialog>
       );
-      setTimeout(async () => {
-        // console.log(error);
-        // if (error) {
-        let result;
-        try {
-          result = await axios.post(
-            `${baseUrl}api/delete_chart`,
-            {
-              id: takenData.id,
-            },
-            { headers: { "auth-token": token } }
-          );
-          setError(null);
-        } catch (error) {
-          setError(
-            <ErrorDialog onClose={setError}>
-              {stringFa.error_delete_chart}
-            </ErrorDialog>
-          );
-        }
-        // }
-      }, 3000);
+    }
+  }
+  const settingMenuHandler = async (id) => {
+    switch (id) {
+      case "noFullScreen":
+        fullscreenChart({ isFullscreen: false });
+        break;
+      case "setting":
+        setIsEdit(true);
+        break;
+      case "delete":
+        onDelete()
+        break;
+      case "createList":
+        toggleCreateCategoruModal()
+        break;
+      case "share":
+        toggleShareModal()
+        break;
+      default:
+        break;
     }
   };
 
@@ -463,6 +543,21 @@ const CreateCharts = (props) => {
       doneClickHandler();
     else
       closeHandler();
+  }
+  const changeEditMode = async () => {
+    setIsEdit(!takenData.isEdit)
+    fetchBankData()
+  }
+
+  const onFaveCategoryClickHandler = () => {
+    if (!selectedHolding.categories) return;
+    let faveCategory = selectedHolding.categories.find(item => item.category.name === 'fave')
+    if (!faveCategory) return;
+    socket.emit('add_chart_to_fave_category', { chartId: takenData.id, categoryId: faveCategory.category._id, checked: !faveCat })
+    updateFaveCategory({ chartId: takenData.id, checked: !faveCat })
+  }
+  const onFaveClick = () => {
+    socket.emit('change_fave_chart', { chartId: takenData.id, isFave: !fave, userId })
   }
 
   useEffect(() => {
@@ -502,6 +597,78 @@ const CreateCharts = (props) => {
     return controller?.abort()
   }, [location, token])
 
+  useEffect(() => {
+    if (!selectedHolding || !selectedHolding.categories || !takenData.id) return;
+    let faveCategory = selectedHolding.categories.find(item => item.category.name === 'fave')
+    if (!faveCategory) return;
+    let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === takenData.id) > -1
+    setFaveCat(updatedFaveCat)
+  }, [selectedHolding, takenData.id])
+  // shareable={chartsData.data[takenData.id].shareList.findIndex(item => item.user._id === userId) > -1}
+  useEffect(() => {
+    if (Object.entries(chartsData.data).length > 0 && takenData.id) {
+      setShareable(chartsData.data[takenData.id]?.shareList.findIndex(item => item.user._id === userId) > -1)
+      setEditable(chartsData.data[takenData.id]?.editList.findIndex(item => item.user._id === userId) > -1)
+    }
+  }, [chartsData.data, takenData.id])
+
+  useEffect(() => {
+    let updatedMenuItems = [
+      {
+        name: stringFa.exit_full_screen,
+        id: "noFullScreen",
+        icon: <BsFullscreenExit />,
+      },
+      {
+        name: stringFa.add_to_list_2,
+        id: "createList",
+        icon: <AiOutlinePlus />,
+      }]
+    if (shareable) updatedMenuItems.push({
+      name: stringFa.share,
+      id: "share",
+      icon: <FaUserFriends />,
+    })
+    if (editable) {
+      updatedMenuItems = [...updatedMenuItems,
+      { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
+      { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
+    }
+    setMenuItems(updatedMenuItems)
+  }, [shareable, editable])
+
+  useEffect(() => {
+    if (!(chartsData.data[takenData?.id]?.faveList)) return;
+    let fave = chartsData.data[takenData?.id].faveList.findIndex(item => item.user === userId) > -1;
+    setFave(fave)
+  }, [chartsData.data[takenData?.id]?.faveList])
+
+
+  useEffect(() => {
+    if (!(chartsData.data[takenData?.id])) return;
+    let weekday = new Date(chartsData.data[takenData?.id].lastBankUpdate).toLocaleString("fa-IR", {
+      weekday: "long",
+    });
+    let day = new Date(chartsData.data[takenData?.id].lastBankUpdate).toLocaleString("fa-IR", {
+      day: "numeric",
+    });
+    let month = new Date(chartsData.data[takenData?.id].lastBankUpdate).toLocaleString("fa-IR", {
+      month: "long",
+    });
+    let year_Time = new Date(chartsData.data[takenData?.id].lastBankUpdate).toLocaleString(
+      "fa-IR",
+      {
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      }
+    );
+    const lastBankUpdate = `${weekday} - ${day} ${month} ${year_Time}`;
+    setLastBankUpdate(lastBankUpdate);
+  }, [chartsData.data[takenData?.id]?.lastBankUpdate]);
+
+
   return (
     <div
       className="create-charts-container"
@@ -514,9 +681,42 @@ const CreateCharts = (props) => {
       }}
     >
       {error}
+
+      <Modal
+        show={showModal}
+        modalClosed={() => setShowModal(false)}
+        style={{
+          height: "60%",
+          width: "30%",
+          minHeight: "230px",
+          minWidth: "340px",
+          zIndex: 600,
+        }}
+        bdStyle={{
+          zIndex: 550,
+        }}
+      >
+        <ShareBox chartId={takenData.id} setShowModal={setShowModal} />
+      </Modal>
+      <Modal
+        show={addChartModal}
+        modalClosed={() => setAddChartModal(false)}
+        style={{
+          height: "60%",
+          width: "30%",
+          minHeight: "230px",
+          minWidth: "340px",
+          zIndex: 600,
+        }}
+        bdStyle={{
+          zIndex: 550,
+        }}
+      >
+        <AddChartToCategory chartId={takenData.id} close={() => setAddChartModal(false)} />
+      </Modal>
       {!takenData.isFullscreen && (
         <div
-          className="section-header-wrapper"
+          className="section-header-wrapper create"
           style={{ borderColor: theme.border_color }}
         >
           <div className="header-buttons">
@@ -555,76 +755,144 @@ const CreateCharts = (props) => {
       {takenData.isFullscreen && (
         <div
           className="section-header-wrapper"
-          style={{ borderColor: theme.border_color }}
+          style={{ borderColor: theme.border_color, height: '4rem' }}
         >
-          <StyledButton
-            ButtonStyle={{
-              flex: "0 0 auto",
-              fontSize: "1.4rem",
-              marginBottom: "1rem",
-              padding: "4px",
-            }}
-            hover={
-              themeState.isDark ? theme.surface_1dp : theme.background_color
+          <div className="path">
+            {
+              chartsData.data[takenData.id]?.parent.map((text, index) => (
+                <p key={`${text}${index}`} className="item">
+                  {text}
+                </p>)
+              )
             }
-            onClick={fullScreenCloseHandler}
-          >
-            <VscClose />
-          </StyledButton>
-          {chartsData.editMode ? (
-            <div ref={ref}>
-              <StyledButton
-                ButtonStyle={{
-                  flex: "0 0 auto",
-                  fontSize: "1rem",
-                  marginBottom: "1rem",
-                  backgroundColor: takenData.isEdit
-                    ? themeState.isDark
-                      ? theme.surface_24dp
-                      : theme.background_color
-                    : "transparent",
-                }}
-                hover={
-                  themeState.isDark ? theme.surface_1dp : theme.background_color
-                }
-                onClick={() => setIsEdit(!takenData.isEdit)}
-              >
-                <IoSettingsOutline />
-              </StyledButton>
-              <StyledButton
-                ButtonStyle={{
-                  flex: "0 0 auto",
-                  fontSize: "1rem",
-                  marginBottom: "1rem",
-                  marginLeft: "0.5rem",
-                }}
-                hover={
-                  themeState.isDark ? theme.surface_1dp : theme.background_color
-                }
-                onClick={() => setDropDown(!dropDown)}
-              >
-                <IoEllipsisVertical />
-              </StyledButton>
-              {dropDown && (
-                <DropDown
-                  divStyle={{
-                    top: "1.7rem",
-                    right: "1rem",
+          </div>
+          <div className="close">
+            <StyledButton
+              ButtonStyle={{
+                flex: "0 0 auto",
+                fontSize: "1.4rem",
+                marginBottom: "1rem",
+                padding: "4px",
+              }}
+              hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+              }
+              onClick={fullScreenCloseHandler}
+            >
+              <VscClose />
+            </StyledButton>
+          </div>
+          <div className="action">
+            {chartsData.editMode ? (
+              <div className="editmode" ref={ref}>
+                <StyledButton
+                  ButtonStyle={{
+                    fontSize: "1rem",
+                    backgroundColor: takenData.isEdit
+                      ? themeState.isDark
+                        ? theme.surface_24dp
+                        : theme.background_color
+                      : "transparent",
+                    marginRight: ".5rem"
                   }}
-                  items={menuItems}
-                  onClick={settingMenuHandler}
-                  setDropDown={setDropDown}
-                  divContainerRef={ref}
-                />
-              )}
-            </div>
-          ) : (
-            <span style={{ marginBottom: "1rem", marginRight: "1rem" }}>
-              {takenData.chartData.title
-                ? takenData.chartData.title
-                : stringFa.title}
-            </span>
-          )}
+                  hover={
+                    themeState.isDark ? theme.surface_1dp : theme.background_color
+                  }
+                  onClick={changeEditMode}
+
+                >
+                  <IoSettingsOutline />
+                </StyledButton>
+                <StyledButton
+                  ButtonStyle={{
+                    fontSize: "1rem",
+                  }}
+                  hover={
+                    themeState.isDark ? theme.surface_1dp : theme.background_color
+                  }
+                  onClick={() => setDropDown(!dropDown)}
+                >
+                  <IoEllipsisVertical />
+                </StyledButton>
+                {dropDown && (
+                  <DropDown
+                    divStyle={{
+                      top: "1.7rem",
+                      right: "1rem",
+                    }}
+                    items={menuItems}
+                    onClick={settingMenuHandler}
+                    setDropDown={setDropDown}
+                    divContainerRef={ref}
+                  />
+                )}
+              </div>
+            ) : (
+              <div className="not_editmode">
+                <div
+                  className="title"
+                  ref={titleRef}
+                  onClick={() => {
+                    setEditableInput(true);
+                    setTitleValue(props.label ? props.label : props.title)
+                  }}
+                >
+                  {editableInput ? (
+                    <input
+                      className="editable-input"
+                      dir="rtl"
+                      placeholder={stringFa.title}
+                      value={titleValue}
+                      onChange={setTitleHandlerEditMode}
+                      autoFocus
+                      onKeyDown={setTitleHandlerEditMode}
+                      style={{ borderColor: error ? "red" : "" }}
+                    />
+                  ) : (
+                    <div className="text-component" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
+                      {
+                        chartsData?.data[takenData?.id]?.label ?
+                          <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
+                          <p>{chartsData.data[takenData.id].title}</p>
+                      }
+                    </div>
+                  )}
+                </div>
+                {shareable &&
+                  <StyledButton
+                    onClick={toggleShareModal}
+                    hover={
+                      themeState.isDark ? theme.surface_1dp : theme.background_color
+                    }
+                  >
+                    <FaUserFriends color={theme.primary} />
+                  </StyledButton>
+                }
+                <StyledButton
+                  onClick={toggleCreateCategoruModal}
+                  hover={
+                    themeState.isDark ? theme.surface_1dp : theme.background_color
+                  }
+                >
+                  <AiOutlinePlus color={theme.primary} fontSize={'1.2rem'} />
+                </StyledButton>
+
+                <StyledButton
+                  hover={
+                    themeState.isDark ? theme.surface_1dp : theme.background_color
+                  }
+                  onClick={onFaveCategoryClickHandler}
+                >
+                  {faveCat ? (
+                    <BsStarFill style={starStyles} />
+                  ) : (
+                    <BsStar style={starStyles} />
+                  )}
+                </StyledButton>
+
+              </div>
+            )}
+          </div>
         </div>
       )}
       <div className="section-settings-wrapper">
@@ -646,7 +914,7 @@ const CreateCharts = (props) => {
             className="section-settings-display-type-switcher-wrapper"
             onMouseEnter={() => onMouseEnter("split")}
             onMouseLeave={() => onMouseLeave("split")}
-            style={{ top: chartsData.editMode ? "1.5rem" : "-4.55rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
+            style={{ top: chartsData.editMode ? "1.5rem" : "-4.5rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
           >
             {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
               tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
@@ -738,6 +1006,46 @@ const CreateCharts = (props) => {
           <Steps type={"Line"} />
         }
       </div>
+      {
+        takenData.isFullscreen &&
+        <div className="footer">
+          <div className="right" >
+            <div className="item" >
+              <p className="name">{chartsData.data[takenData?.id].editedBy.username}</p>
+              <FaUser className="icon" style={{ fontSize: "1rem" }} />
+            </div>
+            {
+              chartsData?.data[takenData?.id]?.editedBy &&
+              <div className="item" >
+                <p className="name">{chartsData.data[takenData?.id].creator.username}</p>
+                <MdModeEditOutline className="icon" />
+              </div>
+            }
+            {chartsData?.data[takenData?.id]?.receivedType === 4 &&
+              <div className="item" >
+                <p className="name">{chartsData.data[takenData.id].sharedFrom && chartsData.data[takenData.id].sharedFrom.username}</p>
+                <BsReplyFill className="icon" />
+              </div>
+            }
+          </div>
+          <div className="left">
+            <div className="like">
+              {fave ?
+                <AiFillHeart color="red" className="icon" onClick={onFaveClick} />
+                :
+                <AiOutlineHeart className="icon" onClick={onFaveClick} />
+              }
+              <p className="number">{chartsData.data[takenData.id].faveList?.length}</p>
+            </div>
+            <div className="like">
+              <FaRegComment className="icon" />
+              <p className="number">{chartsData.data[takenData.id].comments?.length}</p>
+            </div>
+            <p className="date">{lastBankUpdate}</p>
+
+          </div>
+        </div>
+      }
     </div>
   );
 };

@@ -45,7 +45,7 @@ const Modal = (props) => {
       (styles, item) =>
         item && (
           <>
-            <Backdrop show={props.show} clicked={props.modalClosed}></Backdrop>
+            <Backdrop bdStyle={props.bdStyle} show={props.show} clicked={props.modalClosed}></Backdrop>
             <animated.div
               className={myClassName.join(" ")}
               style={{

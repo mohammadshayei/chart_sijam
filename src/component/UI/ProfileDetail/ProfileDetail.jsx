@@ -27,7 +27,7 @@ const ProfileDetail = (props) => {
   const dispatch = useDispatch();
 
   const baseMenuOrder = [
-    { name: stringFa.my_profile, id: "my_profile", icon: <FaRegUser /> },
+    // { name: stringFa.my_profile, id: "my_profile", icon: <FaRegUser /> },
     {
       name: "-",
       id: "change_theme",
@@ -55,13 +55,12 @@ const ProfileDetail = (props) => {
   const onMouseLeave = () => {
     setIsHover(false);
   };
-
   useEffect(() => {
     let updatedMenuOrders = [...menuOrders];
-    updatedMenuOrders[1].name = themeState.isDark
+    updatedMenuOrders[0].name = themeState.isDark
       ? stringFa.light_theme
       : stringFa.dark_theme;
-    updatedMenuOrders[1].icon = themeState.isDark ? (
+    updatedMenuOrders[0].icon = themeState.isDark ? (
       <IoSunnyOutline />
     ) : (
       <IoMoon />
@@ -78,9 +77,18 @@ const ProfileDetail = (props) => {
 
   useEffect(() => {
     if (!selectedHolding) return;
+    const isDark = localStorage.getItem("dark");
     if (selectedHolding.customization || selectedHolding.users || selectedHolding.permissions) {
       let updated = false;
       let updatedMenuOrders = [...menuOrders];
+      updatedMenuOrders[0].name = !isDark
+        ? stringFa.light_theme
+        : stringFa.dark_theme;
+      updatedMenuOrders[0].icon = !isDark ? (
+        <IoSunnyOutline />
+      ) : (
+        <IoMoon />
+      );
       updatedMenuOrders.forEach((element) => {
         if (element.id === "setting") {
           updated = true;
@@ -95,7 +103,16 @@ const ProfileDetail = (props) => {
       }
       setMenuOrders(updatedMenuOrders);
     } else {
-      setMenuOrders(baseMenuOrder);
+      let updatedMenuOrders = [...baseMenuOrder];
+      updatedMenuOrders[0].name = isDark
+        ? stringFa.light_theme
+        : stringFa.dark_theme;
+      updatedMenuOrders[0].icon = isDark ? (
+        <IoSunnyOutline />
+      ) : (
+        <IoMoon />
+      );
+      setMenuOrders(updatedMenuOrders);
     }
   }, [selectedHolding])
 

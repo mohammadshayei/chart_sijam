@@ -130,13 +130,6 @@ const TitleBlock = React.memo((props) => {
   }
 
   const onSetting_FullScreenClickHandler = async id => {
-    const result = await axios.post(
-      `${baseUrl}api/get_data`,
-      {
-        id: props.bankId,
-      },
-      { headers: { "auth-token": token } }
-    );
     let selectedChartData = chartsData.data[props.chartId];
     selectedChartData = {
       title: selectedChartData.title,
@@ -158,11 +151,20 @@ const TitleBlock = React.memo((props) => {
       },
     };
     setId(props.chartId);
-    selectChartDatabase(result.data.result);
     setChartData(selectedChartData);
-    if (id === "setting") setIsEdit(true);
+    if (id === "setting") {
+      const result = await axios.post(
+        `${baseUrl}api/get_data`,
+        {
+          id: props.bankId,
+        },
+        { headers: { "auth-token": token } }
+      );
+      selectChartDatabase(result.data.result);
+      setIsEdit(true);
+    }
     fullscreenChart({ isFullscreen: true });
-    selectedChartData.dataInfo.fields.forEach((field, i) => {
+    selectedChartData.dataInfo?.fields.forEach((field, i) => {
       changeFieldsMEtaData({ index: i, value: field.field })
     });
   }
@@ -198,6 +200,8 @@ const TitleBlock = React.memo((props) => {
   const settingMenuHandler = async (id) => {
     switch (id) {
       case "fullScreen":
+        onSetting_FullScreenClickHandler(id)
+        break;
       case "setting":
         onSetting_FullScreenClickHandler(id)
         break;
@@ -211,19 +215,12 @@ const TitleBlock = React.memo((props) => {
         toggleShareModal()
         break;
       default:
+        chartTypes.forEach((type) => {
+          if (id === type.id) {
+            setChartType({ key: props.chartId, value: id, item: "type" });
+          }
+        });
         break;
-    }
-    if (id === "setting" || id === "fullScreen") {
-
-      // setRedirect(<Redirect to="/create_chart" />);
-    } else if (id === "delete") {
-
-    } else {
-      chartTypes.forEach((type) => {
-        if (id === type.id) {
-          setChartType({ key: props.chartId, value: id, item: "type" });
-        }
-      });
     }
   };
 

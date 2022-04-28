@@ -1,23 +1,28 @@
 .bank-section-container {
-	width: 100%;
-	height: 100%;
-	.table-bank {
-		text-align: center;
-		border-collapse: collapse;
-		width: 100%;
-		overflow: auto;
-		.tabe-bank-thead-tr {
-			th {
-				padding: 0.5rem;
-				border-width: 1px;
-				border-style: solid;
-			}
-		}
-		.tabe-bank-tbody-tr {
-			td {
-				border-width: 1px;
-				border-style: solid;
-			}
-		}
-	}
+  width: 100%;
+  height: 100%;
+  .table-bank {
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+    overflow: auto;
+    .tabe-bank-thead-tr {
+      th {
+        padding: 0.5rem;
+        border-width: 1px;
+        border-style: solid;
+      }
+    }
+    .tabe-bank-tbody-tr {
+      td {
+        border-width: 1px;
+        border-style: solid;
+      }
+    }
+    thead tr:nth-child(1) th {
+      position: sticky;
+	  background-color: #554ac5;
+      top: 0;
+    }
+  }
 }

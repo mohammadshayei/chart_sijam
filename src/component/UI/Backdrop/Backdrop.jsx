@@ -17,7 +17,7 @@ const Backdrop = (props) => {
     <animated.div
       className={classes.Backdrop}
       onClick={props.clicked}
-      style={spring}
+      style={{ ...spring, ...props.bdStyle }}
     ></animated.div>
   );
 };

@@ -31,6 +31,7 @@ const BankSection = () => {
                 style={{
                   background: theme.secondary,
                   color: theme.on_secondary,
+
                 }}>
                 {Object.entries(data[0]).map(([key, value]) => (
                   <th key={key} style={{ borderColor: theme.darken_border_color }}>
