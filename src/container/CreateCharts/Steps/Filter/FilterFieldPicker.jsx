@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Filter.scss";
 import { BiChevronDown } from "react-icons/bi";
 import DropDown from "../../../../component/UI/DropDown/DropDown";
 import { useTheme } from "../../../../styles/ThemeProvider";
-import * as addChartActions from "../../../../store/actions/addChart";
-// import * as fieldPickerActions from "../../../../store/actions/fieldPicker";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import StyledButton from "../../../../component/UI/Button/StyledButton.jsx";
 import { MdCancel } from "react-icons/md";
 

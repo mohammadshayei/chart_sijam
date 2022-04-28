@@ -78,7 +78,7 @@ const XAxisStep = () => {
 
     metaData.fields.forEach(field => {
       let fieldValues = [];
-      rawData.forEach(record => {
+      rawData?.forEach(record => {
         for (const key in record) {
           if (record[key].fieldName === field.value)
             fieldValues = [...fieldValues, record[key].data];

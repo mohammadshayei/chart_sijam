@@ -69,6 +69,7 @@ const Filter = () => {
     useEffect(() => {
         if (filterValues.length > 0) return
         setSelectedField(null)
+        filter()
     }, [filterValues]);
 
 

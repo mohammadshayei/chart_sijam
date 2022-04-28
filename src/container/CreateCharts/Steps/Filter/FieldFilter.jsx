@@ -29,6 +29,13 @@ const FieldFilter = (props) => {
         props.setFilterValues(updatedFilterValues);
     }, [value]);
 
+    useEffect(() => {
+        if (!props.filterValues) return
+        setValue(props.filterValues[props.index].content.value)
+        setNot(props.filterValues[props.index].content.not)
+    }, [props.filterValues]);
+
+
     return <div className="field-filter-wrapper">
         <StyledButton
             onClick={() => props.remove(props.index)}
