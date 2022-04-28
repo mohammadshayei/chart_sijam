@@ -384,7 +384,7 @@ const CreateCharts = (props) => {
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         dataInfo: {
-          filters: takenData.filterRules.fields.map((item) => {
+          filters: takenData.filterRules.fields?.map((item) => {
             return {
               filter: {
                 field: {
@@ -422,7 +422,7 @@ const CreateCharts = (props) => {
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         dataInfo: {
-          filters: takenData.filterRules.map((item) => {
+          filters: takenData.filterRules.fields?.map((item) => {
             return {
               filter: {
                 field: {
