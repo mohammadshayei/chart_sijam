@@ -97,7 +97,7 @@ const selectChartData = (state, action) => {
   const { data } = action;
   return {
     ...state,
-    data,
+    data: data ? data : [],
   };
 };
 const changeFieldsMEtaData = (state, action) => {

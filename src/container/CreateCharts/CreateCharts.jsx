@@ -250,7 +250,7 @@ const CreateCharts = (props) => {
     setIsEdit(false)
     setChartData(clearedChartData);
     setId("");
-    selectChartDatabase({ data: [] });
+    selectChartDatabase([]);
     if (location.pathname === "/create_chart")
       navigate('/view')
     else
@@ -268,7 +268,7 @@ const CreateCharts = (props) => {
     setHover(updatedHover);
   };
   const fetchBankData = async () => {
-    if (Object.entries(takenData.data).length === 0 || Object.entries(takenData.data?.data).length === 0) {
+    if (takenData.data.length === 0) {
       const result = await axios.post(
         `${baseUrl}api/get_data`,
         {
@@ -276,7 +276,7 @@ const CreateCharts = (props) => {
         },
         { headers: { "auth-token": token } }
       );
-      selectChartDatabase(result.data.result);
+      selectChartDatabase(result.data.result.data);
     }
   }
   const splitViewHandler = async () => {
