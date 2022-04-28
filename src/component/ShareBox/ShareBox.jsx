@@ -120,7 +120,7 @@ const ShareBox = ({ chartId, setShowModal }) => {
             style={{ borderColor: theme.border_color }}
           >
             <div className="user-details">
-              <img src={item.user.image !== '' ? `${baseUrl}images/${item.user.image}` : `${baseUrl}images/avatar.png`} alt="user_image" className="avatar" />
+              <img src={item.user.image !== '' ? `${baseUrl}images/${item.user.image}` : `${baseUrl}images/avatar.svg`} alt="user_image" className="avatar" />
               <div className="user-name">{item.user.username}</div>
             </div>
             {

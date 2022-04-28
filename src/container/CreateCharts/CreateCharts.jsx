@@ -1035,11 +1035,11 @@ const CreateCharts = (props) => {
                 :
                 <AiOutlineHeart className="icon" onClick={onFaveClick} />
               }
-              <p className="number">{chartsData.data[takenData.id].faveList?.length}</p>
+              <p className="number">{chartsData?.data[takenData?.id]?.faveList?.length}</p>
             </div>
             <div className="like">
               <FaRegComment className="icon" />
-              <p className="number">{chartsData.data[takenData.id].comments?.length}</p>
+              <p className="number">{chartsData?.data[takenData?.id]?.comments?.length}</p>
             </div>
             <p className="date">{lastBankUpdate}</p>
 

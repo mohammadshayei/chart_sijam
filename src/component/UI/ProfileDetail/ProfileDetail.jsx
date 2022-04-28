@@ -18,7 +18,7 @@ const ProfileDetail = (props) => {
   const theme = themeState.computedTheme;
   const [isHover, setIsHover] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
-  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
+  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.svg`);
   let navigate = useNavigate();
 
   const userDetail = useSelector((state) => state.auth.user);

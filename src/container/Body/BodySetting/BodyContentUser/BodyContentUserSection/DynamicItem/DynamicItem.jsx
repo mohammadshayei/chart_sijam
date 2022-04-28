@@ -22,7 +22,7 @@ const DynamicItem = ({ data, config, labels, onChange }) => {
                 setCmp(
                     <UserImage
                         alt='profile'
-                        src={`${baseUrl}images/${data.user.image !== '' ? data.user.image : 'avatar'}.png`}
+                        src={`${baseUrl}images/${data.user.image !== '' ? data.user.image : 'avatar.svg'}`}
                         title={data[config.path[0]][config.path[1]]}
                     />)
                 break;
