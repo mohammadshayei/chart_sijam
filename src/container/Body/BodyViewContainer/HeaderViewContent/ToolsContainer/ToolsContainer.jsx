@@ -37,7 +37,7 @@ const ToolsContainer = (props) => {
     );
     let result;
     for (const chartId in chartsData.data) {
-      if (!chartsData.data[chartId].config.autoUpdate) {
+      if (!(chartsData.data[chartId].config.auto_update)) {
         result = await axios.post(`${baseUrl}api/get_chart`, {
           id: chartId,
         }, { headers: { 'auth-token': token } });

@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const BodyUserProfile = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.png`);
+  const [imageSrc, setImageSrc] = useState(`${baseUrl}images/avatar.svg`);
   const [body, setBody] = useState(null)
   const [headerOrder, setHeaderOrder] = useState(
     {
