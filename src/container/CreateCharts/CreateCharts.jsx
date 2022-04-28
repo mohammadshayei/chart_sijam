@@ -250,7 +250,7 @@ const CreateCharts = (props) => {
     setIsEdit(false)
     setChartData(clearedChartData);
     setId("");
-    selectChartDatabase({ data: {} });
+    selectChartDatabase({ data: [] });
     if (location.pathname === "/create_chart")
       navigate('/view')
     else
@@ -589,7 +589,7 @@ const CreateCharts = (props) => {
     let controller = new AbortController();
     (async () => {
       let result = await fetchData({ id: bankId }, token)
-      selectChartDatabase(result.data);
+      selectChartDatabase(result.data.data);
       setId(bankId);
       setIsEdit(true);
       setEditMode({ isEdit: true });

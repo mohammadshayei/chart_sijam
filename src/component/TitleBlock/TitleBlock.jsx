@@ -160,7 +160,7 @@ const TitleBlock = React.memo((props) => {
         },
         { headers: { "auth-token": token } }
       );
-      selectChartDatabase(result.data.result);
+      selectChartDatabase(result.data.result.data);
       setIsEdit(true);
     }
     fullscreenChart({ isFullscreen: true });

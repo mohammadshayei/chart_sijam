@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 // import UnderlineInput from "../../../container/inputs/UnderlineInput/UnderlineInput";
 import { useTheme } from "../../../styles/ThemeProvider";
 import OTPInput from "../OTPInput/OTPInput";
@@ -20,9 +20,10 @@ const Input = (props) => {
   useEffect(() => {
     switch (props.elementType) {
       case "input":
+      case "password":
         setInputElement(
           <input
-          
+            type={props.elementType}
             className={`InputElement ${props.inputClass} ${props.invalid && props.shouldValidate && props.touched
               ? "invalid"
               : ""

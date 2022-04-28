@@ -95,11 +95,11 @@ export const fullscreenChart =
     };
 
 export const setChartDataFilter =
-  ({ data }) =>
+  (payload) =>
     (dispatch) => {
       dispatch({
         type: actionTypes.SET_CHART_DATA_FILTER,
-        payload: { data },
+        payload,
       });
     };
 
