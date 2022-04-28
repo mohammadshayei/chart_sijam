@@ -105,7 +105,6 @@ const CreateUserSection = (props) => {
         if (!rules) {
             return true;
         }
-
         if (rules.required) {
             isValid = value.trim() !== "" && isValid;
         }
@@ -191,7 +190,6 @@ const CreateUserSection = (props) => {
             )
         }
     }
-
     const onChangeImage = (event) => {
         if (event.target.files[0]) {
             setImagePath(event.target.files[0]);
@@ -217,8 +215,9 @@ const CreateUserSection = (props) => {
                     { holdingId: selectedHolding.holdingId },
                     { headers: { "auth-token": token } }
                 );
-
                 setLabels(resultFetchingLabels.data.labels);
+                if (resultFetchingLabels.data.labels.length > 0)
+                    setSelectedLabel(resultFetchingLabels.data.labels[0].label._id)
                 controller = null
             } catch (e) {
             }
