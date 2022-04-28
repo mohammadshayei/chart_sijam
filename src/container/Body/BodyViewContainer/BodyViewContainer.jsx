@@ -235,7 +235,7 @@ const BodyViewContainer = (props) => {
       //   new Date(new Date()).setHours(new Date().getHours() + 1)
       // );
       let now = new Date()
-      if (getDifferenceInMinutes(now, lastUpdate) > period) {
+      if (getDifferenceInMinutes(now, lastUpdate) >= period) {
         result = await axios.post(
           `${baseUrl}api/get_chart`,
           {
