@@ -1011,13 +1011,13 @@ const CreateCharts = (props) => {
         <div className="footer">
           <div className="right" >
             <div className="item" >
-              <p className="name">{chartsData.data[takenData?.id].editedBy.username}</p>
+              <p className="name">{chartsData.data[takenData?.id]?.creator?.username}</p>
               <FaUser className="icon" style={{ fontSize: "1rem" }} />
             </div>
             {
               chartsData?.data[takenData?.id]?.editedBy &&
               <div className="item" >
-                <p className="name">{chartsData.data[takenData?.id].creator.username}</p>
+                <p className="name">{chartsData.data[takenData?.id]?.editedBy?.username}</p>
                 <MdModeEditOutline className="icon" />
               </div>
             }
