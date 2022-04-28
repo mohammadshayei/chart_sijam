@@ -87,6 +87,7 @@ const AddChartToCategory = ({ chartId, close }) => {
             })
         }
         setLoading(false)
+        close()
     }
 
     useEffect(() => {
@@ -191,7 +192,7 @@ const AddChartToCategory = ({ chartId, close }) => {
                     ButtonStyle={{
                         padding: ".1rem 1rem"
                     }}
-                    onClick={onCreateCategory}
+                    onClick={()=>close()}
                 >
                     {stringFa.cancel}
                 </Button>
