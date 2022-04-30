@@ -10,7 +10,11 @@ export const filterData = (data, filterRules) => {
   data.forEach(record => {
     let valid = filterRules.operator === 'یا' ? false : true;
     filterRules.fields.forEach(rule => {
-      let tempValid = rule.content.not ? record[rule.name].data !== rule.content.value : record[rule.name].data.localeCompare(rule.content.value) === 0
+      let tempValid;
+      if (rule.content.value === "")
+        tempValid = true
+      else
+        tempValid = rule.content.not ? record[rule.name].data !== rule.content.value : record[rule.name].data.localeCompare(rule.content.value) === 0
       valid = filterRules.operator === 'یا' ? (valid || tempValid) : (valid && tempValid);
     });
     if (valid) filteredData.push(record)
