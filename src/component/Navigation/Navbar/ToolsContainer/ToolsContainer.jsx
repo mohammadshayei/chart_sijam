@@ -14,7 +14,7 @@ const ToolsContainer = (props) => {
   const chartsData = useSelector((state) => state.chart);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-
+  // en nist
   const dispatch = useDispatch();
   const updateChartData = (chartData) => {
     dispatch(chartActions.updateChartData(chartData));

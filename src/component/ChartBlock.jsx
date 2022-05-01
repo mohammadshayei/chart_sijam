@@ -6,34 +6,24 @@ import { useSelector } from "react-redux";
 import SkeletonChart from "../component/Skeletons/SkeletonChart";
 import NewChart from "./Charts/NewChart.jsx";
 
-const ChartBlock = React.memo(({ chartId, type, options, data }) => {
+const ChartBlock = React.memo(({ chartId, type, options, data, loading }) => {
   const [chart, setChart] = useState(null);
   const [sentData, setSentData] = useState(null);
-  const [loading, setLoading] = useState(null);
 
   const chartData = useSelector((state) => state.addChart);
-
   let dependType = chartData?.chartData?.type,
     dependData = chartData?.chartData?.data?.data,
     dependOptions = chartData?.chartData?.data?.options;
-
-
   useEffect(() => {
     if (chartId === "123456789") {
       if (chartData.chartData.data.data.length > 0) {
-        setLoading(<SkeletonChart />);
-        setTimeout(() => {
-          setSentData({
-            type: chartData.chartData.type,
-            data: chartData.chartData.data.data,
-            options: chartData.chartData.data.options,
-          });
-        }, 100);
+        setSentData({
+          type: chartData.chartData.type,
+          data: chartData.chartData.data.data,
+          options: chartData.chartData.data.options,
+        });
       }
-      else
-        setLoading(".لطفا فیلد های مورد نظر را انتخاب کنید");
     } else {
-      setLoading(<SkeletonChart />);
       if (chartId) {
         setSentData({
           type,
@@ -42,7 +32,7 @@ const ChartBlock = React.memo(({ chartId, type, options, data }) => {
         });
       }
     }
-  }, [dependType, dependData, dependOptions, type, chartId]);
+  }, [dependType, dependData, dependOptions, type, chartId, data]);
 
   useEffect(() => {
     if (sentData) {
@@ -69,21 +59,25 @@ const ChartBlock = React.memo(({ chartId, type, options, data }) => {
     }
   }, [sentData]);
 
-  return sentData && sentData.data.length > 0 ? (
-    chart
-  ) : (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
-      {loading}
-    </div>
-  );
+  let loadingComponent =
+    (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        {loading && <SkeletonChart />}
+      </div>
+    )
+
+  return loading ?
+    (loadingComponent) : sentData?.data?.length > 0 ? (
+      chart
+    ) : (loadingComponent)
 });
 
 export default ChartBlock;

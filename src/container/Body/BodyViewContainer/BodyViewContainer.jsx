@@ -14,6 +14,7 @@ import SelectBankModal from "../../CreateCharts/SelectBankModal/SelectBankModal"
 import BanksContainer from "./BanksContainer/BanksContainer";
 import HeaderViewContent from "./HeaderViewContent/HeaderViewContent";
 import Modal from "../../../component/UI/Modal/Modal";
+import { getFilteredData } from "../../../api/home";
 const PERIOD_INTRAVEL = 60000;
 
 const BodyViewContainer = (props) => {
@@ -43,7 +44,9 @@ const BodyViewContainer = (props) => {
   const clearCharts = () => {
     dispatch(chartActions.clearCharts());
   };
-
+  const changeLoading = (payload) => {
+    dispatch(chartActions.changeLoading(payload));
+  };
   function getDifferenceInMinutes(date1, date2) {
     const diffInMs = Math.abs(date2 - date1);
     return Math.floor(diffInMs / (1000 * 60));
@@ -217,6 +220,8 @@ const BodyViewContainer = (props) => {
           sharedFrom: item.shared_from,
           label: item.label,
           time: item.time,
+          selectedFilterId: item.chart.data_info.filters?.length > 0 ? item.chart.data_info.filters[item.chart.data_info.selectedFilter]._id : null,
+          loading: false,
         },
       };
     });
@@ -236,17 +241,15 @@ const BodyViewContainer = (props) => {
       // );
       let now = new Date()
       if (getDifferenceInMinutes(now, lastUpdate) >= period) {
-        result = await axios.post(
-          `${baseUrl}api/get_chart`,
-          {
-            id: chartId,
-          },
-          { headers: { "auth-token": token } }
-        );
-        if (result) {
+        changeLoading({
+          chartId: chartId,
+          loading: true,
+        })
+        result = await getFilteredData({ chartId: chartId, filterId: chartsData.data[chartId].selectedFilterId }, token)
+        if (result.success) {
           updateChartData({
             chartId,
-            chartData: result.data.message.result,
+            chartData: result.data,
             lastUpdate: new Date(),
           });
         }

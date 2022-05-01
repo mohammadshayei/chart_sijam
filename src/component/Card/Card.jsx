@@ -119,8 +119,8 @@ const Card = React.memo((props) => {
     setFave(fave)
   }, [props.item.faveList])
 
-  // 1-> access, 2-> creator, 3-> specific send  ,4-> shared to you
 
+  // 1-> access, 2-> creator, 3-> specific send  ,4-> shared to you
   return (
     <div
       className="card card-container"
@@ -152,6 +152,9 @@ const Card = React.memo((props) => {
         editable={props.item.editList.findIndex(item => item.user._id === userId) > -1}
         shareable={props.item.shareList.findIndex(item => item.user._id === userId) > -1}
         cardIsHover={isHover}
+        filters={props.item?.dataInfo?.filters}
+        selectedFilter={props.item?.dataInfo?.selectedFilter}
+
       />
       <div className="card-body">
         <ChartBlock
@@ -159,6 +162,7 @@ const Card = React.memo((props) => {
           type={props.item.type}
           options={props.item.options}
           data={props.item.data}
+          loading={props.item.loading}
         />
       </div>
       <div className="card-footer">
