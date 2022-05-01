@@ -401,6 +401,7 @@ const CreateCharts = (props) => {
                   return {
                     rule: {
                       field: {
+                        name: item.name,
                         type: item.type,
                         value: item.value
                       },
@@ -448,6 +449,7 @@ const CreateCharts = (props) => {
                   return {
                     rule: {
                       field: {
+                        name: item.name,
                         type: item.type,
                         value: item.value
                       },
@@ -713,6 +715,45 @@ const CreateCharts = (props) => {
     const lastBankUpdate = `${weekday} - ${day} ${month} ${year_Time}`;
     setLastBankUpdate(lastBankUpdate);
   }, [chartsData.data[takenData?.id]?.lastBankUpdate]);
+
+  useEffect(() => {
+    if (!takenData.isEdit) return
+    console.log("dsf");
+    let selectedChartData = chartsData.data[takenData.id];
+    let takenMetaData = [], takenFilterRules;
+    selectedChartData.dataInfo.filters.forEach((element, i) => {
+      takenMetaData = [...takenMetaData,
+      {
+        id: element.filter._id,
+        name: element.filter.name,
+        type: element.filter.type,
+        filters: element.filter.rules.map(item => {
+          return {
+            type: item.rule.field.type,
+            name: item.rule.field.name,
+            value: item.rule.field.value,
+            content: item.rule.content
+          }
+        })
+      }
+      ]
+      if (i === selectedChartData.dataInfo.selectedFilter)
+        takenFilterRules = element.filter.rules.map(item => {
+          return {
+            type: item.rule.field.type,
+            name: item.rule.field.name,
+            value: item.rule.field.value,
+            content: item.rule.content
+          }
+        })
+    });
+    setFilterFields({
+      operator: takenMetaData[selectedChartData.dataInfo.selectedFilter].type,
+      selected: selectedChartData.dataInfo.selectedFilter,
+      fields: takenFilterRules
+    })
+
+  }, [takenData.isEdit]);
 
 
   return (
