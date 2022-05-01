@@ -163,6 +163,12 @@ const CreateCharts = (props) => {
   const updateFaveCategory = (payload) => {
     dispatch(holdingActions.updateFaveCategory(payload));
   };
+  const setFilterFields = (payload) => {
+    dispatch(addChartActions.setFilterFields(payload));
+  };
+  const clearMetaData = () => {
+    dispatch(addChartActions.clearMetaData());
+  };
 
 
 
@@ -251,6 +257,8 @@ const CreateCharts = (props) => {
     setChartData(clearedChartData);
     setId("");
     selectChartDatabase([]);
+    setFilterFields({ operator: "", selected: 0, fields: [] });
+    clearMetaData()
     if (location.pathname === "/create_chart")
       navigate('/view')
     else
@@ -384,14 +392,22 @@ const CreateCharts = (props) => {
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         dataInfo: {
-          filters: takenData.filterRules.fields?.map((item) => {
+          filters: takenData.metaData.filters?.map((item) => {
             return {
               filter: {
-                field: {
-                  type: item.type,
-                  value: item.value
-                },
-                content: { ...item.content }
+                name: item.name,
+                type: item.type,
+                rules: item.filters?.map((item) => {
+                  return {
+                    rule: {
+                      field: {
+                        type: item.type,
+                        value: item.value
+                      },
+                      content: { ...item.content }
+                    }
+                  }
+                }),
               }
             }
           }),
@@ -399,7 +415,8 @@ const CreateCharts = (props) => {
             return {
               field: item.value
             }
-          })
+          }),
+          selectedFilter: takenData.filterRules.selectedFilter,
         }
       };
     } else {
@@ -422,14 +439,22 @@ const CreateCharts = (props) => {
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
         dataInfo: {
-          filters: takenData.filterRules.fields?.map((item) => {
+          filters: takenData.metaData.filters?.map((item) => {
             return {
               filter: {
-                field: {
-                  type: item.type,
-                  value: item.value
-                },
-                content: { ...item.content }
+                name: item.name,
+                type: item.type,
+                rules: item.filters?.map((item) => {
+                  return {
+                    rule: {
+                      field: {
+                        type: item.type,
+                        value: item.value
+                      },
+                      content: { ...item.content }
+                    }
+                  }
+                }),
               }
             }
           }),
@@ -437,7 +462,8 @@ const CreateCharts = (props) => {
             return {
               field: item.value
             }
-          })
+          }),
+          selectedFilter: takenData.filterRules.selectedFilter,
         }
       };
     }

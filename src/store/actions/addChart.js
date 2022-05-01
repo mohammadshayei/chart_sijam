@@ -130,11 +130,20 @@ export const updateEmptyRequireds =
       });
     };
 
-export const setFilterOperator =
+export const changeFiltersMetaData =
   (payload) =>
     (dispatch) => {
       dispatch({
-        type: actionTypes.SET_FILTER_OPERATOR,
+        type: actionTypes.CHANGE_FILTERS_IN_META_DATA,
+        payload,
+      });
+    };
+
+export const clearMetaData =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.CHANGE_CLEAR_META_DATA,
         payload,
       });
     };

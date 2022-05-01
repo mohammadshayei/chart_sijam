@@ -8,6 +8,7 @@ const initialState = {
   data: [],
   filterRules: {
     operator: "",
+    selectedFilter: 0,
     fields: []
   },
   metaData: {
@@ -335,23 +336,58 @@ const fullscreenChart = (state, action) => {
 };
 
 const setFilterFields = (state, action) => {
-  const { operator, fields } = action.payload;
+  const { operator, selected, fields } = action.payload;
   return {
     ...state,
     filterRules: {
       operator,
-      fields
+      selectedFilter: selected,
+      fields: fields
     },
   };
 };
 
-const setFilterOperator = (state, action) => {
-  const { operator } = action.payload;
+const changeFiltersMetaData = (state, action) => {
+  const { id, name, add, value } = action.payload;
+  let updatedMetaData = { ...state.metaData }
+  let updatedFilters = [...updatedMetaData.filters]
+
+  let check = updatedFilters.findIndex(item => item.id === id)
+  if (check > -1) {
+    if (add) {
+      updatedFilters[check].name = name;
+      updatedFilters[check].type = state.filterRules.operator;
+      updatedFilters[check].rules = state.filterRules.filters;
+    }
+    else {
+      updatedFilters = updatedFilters.filter(item => item.id !== id)
+    }
+  } else {
+    updatedFilters = [
+      ...updatedFilters,
+      {
+        id,
+        name,
+        type: state.filterRules.operator === "یا" ?
+          "or" : state.filterRules.operator === "و" ?
+            "and" : "",
+        filters: value
+      }
+    ]
+  }
+  updatedMetaData.filters = updatedFilters;
   return {
     ...state,
-    filterRules: {
-      ...state.filterRules,
-      operator
+    metaData: updatedMetaData,
+  };
+};
+
+const clearMetaData = (state) => {
+  return {
+    ...state,
+    metaData: {
+      fields: [],
+      filters: []
     },
   };
 };
@@ -537,8 +573,10 @@ const reducer = (state = initialState, action) => {
       return updatedDataField(state, action);
     case actionTypes.CHANGE_FIELDS_IN_META_DATA:
       return changeFieldsMEtaData(state, action);
-    case actionTypes.SET_FILTER_OPERATOR:
-      return setFilterOperator(state, action);
+    case actionTypes.CHANGE_FILTERS_IN_META_DATA:
+      return changeFiltersMetaData(state, action);
+    case actionTypes.CHANGE_CLEAR_META_DATA:
+      return clearMetaData(state);
 
     default:
       return state;

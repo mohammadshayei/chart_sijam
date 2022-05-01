@@ -123,4 +123,27 @@
 		align-items: flex-end;
 		width: 100%;
 	}
+	.save-filter-section {
+		display: flex;
+		flex-direction: row-reverse;
+		width: 100%;
+		margin: 1rem 0;
+	}
+	.saved-filters-list {
+		padding-top: 1rem;
+		border-top: 1px solid;
+		width: 100%;
+		.saved-filter {
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: space-between;
+			text-align: right;
+			width: 100%;
+			padding: 0.2em 0.5em;
+			border-radius: 5px;
+			cursor: pointer;
+			border: 1px solid;
+			transition: all 0.3s ease;
+		}
+	}
 }
