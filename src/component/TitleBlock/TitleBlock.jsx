@@ -22,6 +22,9 @@ import AddChartToCategory from "./AddChartToCategory/AddChartToCategory";
 import { onDeleteChart } from "../../api/chart";
 import * as holdingActions from "../../store/actions/holdingDetail.js";
 import * as detailActions from "../../store/actions/detail.js";
+import CustomSelect from "../UI/CustomSelect/CustomSelect";
+import FilterSelector from "./FilterSelector/FilterSelector";
+import { getFilteredData } from "../../api/home";
 
 
 function useOnClickOutside(ref, handler) {
@@ -116,6 +119,15 @@ const TitleBlock = React.memo((props) => {
   };
   const changeFieldsMEtaData = (payload) => {
     dispatch(addChartActions.changeFieldsMEtaData(payload));
+  };
+  const updateChartData = (chartData) => {
+    dispatch(chartActions.updateChartData(chartData));
+  };
+  const changeLoading = (payload) => {
+    dispatch(chartActions.changeLoading(payload));
+  };
+  const changeSelectedFilter = (payload) => {
+    dispatch(chartActions.changeSelectedFilter(payload));
   };
 
   const undoDeleteChartHandler = () => {
@@ -251,6 +263,22 @@ const TitleBlock = React.memo((props) => {
     changeInfoINSourceCharts({ chartId: props.chartId, value: titleValue, mode: "label" })
   }
 
+  const onChangeFilter = async (e) => {
+    changeLoading({
+      chartId: props.chartId,
+      loading: true,
+    })
+    let result = await getFilteredData({ chartId: props.chartId, filterId: e.target.value }, token)
+    changeSelectedFilter({
+      chartId: props.chartId,
+      id: e.target.value
+    })
+    updateChartData({
+      chartId: props.chartId,
+      chartData: result.data,
+      lastUpdate: new Date(),
+    });
+  }
 
   useEffect(() => {
     let updatedExtraItems = [{
@@ -356,37 +384,48 @@ const TitleBlock = React.memo((props) => {
           </div>
         </div>
         <div className="details">
-          {/* <p>{props.title}</p> */}
-          <div
-            className="editable-component"
-            ref={titleRef}
-            onClick={() => {
-              setEditableInput(true);
-              setTitleValue(props.label ? props.label : props.title)
-            }}
-          >
-            {editableInput ? (
-              <input
-                className="editable-input"
-                dir="rtl"
-                placeholder={stringFa.title}
-                value={titleValue}
-                onChange={setTitleHandler}
-                autoFocus
-                onKeyDown={setTitleHandler}
-                style={{ borderColor: error ? "red" : "" }}
+          {
+            props.filters.length > 0 &&
+            <div className="filter">
+              <FilterSelector
+                onChange={onChangeFilter}
+                filters={props.filters}
+                selectedFilter={props.selectedFilter}
               />
-            ) : (
-              <div className="text-component" dir="rtl">
-                <span>
-                  {props.label ? props.label : props.title}
-                </span>
-              </div>
-            )}
+            </div>
+          }
+          <div className="title">
+            <div
+              className="editable-component"
+              ref={titleRef}
+              onClick={() => {
+                setEditableInput(true);
+                setTitleValue(props.label ? props.label : props.title)
+              }}
+            >
+              {editableInput ? (
+                <input
+                  className="editable-input"
+                  dir="rtl"
+                  placeholder={stringFa.title}
+                  value={titleValue}
+                  onChange={setTitleHandler}
+                  autoFocus
+                  onKeyDown={setTitleHandler}
+                  style={{ borderColor: error ? "red" : "" }}
+                />
+              ) : (
+                <div className="text-component" dir="rtl">
+                  <span>
+                    {props.label ? props.label : props.title}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {chartsData.editMode ? (
-          <div className="right-icon-container">
+          <div className="right-icon-container small">
             {props.cardIsHover && (
               <div className="icon-container draggable-handle">
                 <MdDragHandle
@@ -431,7 +470,7 @@ const TitleBlock = React.memo((props) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 });
 

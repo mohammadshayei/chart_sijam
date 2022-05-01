@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as chartActions from "../../../../../store/actions/chart.js";
 import axios from "axios";
 import { baseUrl } from "../../../../../constants/Config";
+import { getFilteredData } from "../../../../../api/home.js";
 
 const ToolsContainer = (props) => {
   const [loading, setLoading] = useState(null);
@@ -21,7 +22,9 @@ const ToolsContainer = (props) => {
   const updateChartData = (chartData) => {
     dispatch(chartActions.updateChartData(chartData));
   };
-
+  const changeLoading = (payload) => {
+    dispatch(chartActions.changeLoading(payload));
+  };
   const creatChartClickHandler = () => {
     props.setIsModalOpen(true);
   };
@@ -38,13 +41,15 @@ const ToolsContainer = (props) => {
     let result;
     for (const chartId in chartsData.data) {
       if (!(chartsData.data[chartId].config.auto_update)) {
-        result = await axios.post(`${baseUrl}api/get_chart`, {
-          id: chartId,
-        }, { headers: { 'auth-token': token } });
-        if (result) {
+        changeLoading({
+          chartId: chartId,
+          loading: true,
+        })
+        result = await getFilteredData({ chartId: chartId, filterId: chartsData.data[chartId].selectedFilterId }, token)
+        if (result.success) {
           updateChartData({
             chartId,
-            chartData: result.data.message.result,
+            chartData: result.data,
             lastUpdate: new Date(),
           });
         }

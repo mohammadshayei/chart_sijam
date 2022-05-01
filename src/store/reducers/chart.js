@@ -201,6 +201,33 @@ const updateChartData = (state, action) => {
           ...state.data[chartId].config,
           last_update: lastUpdate,
         },
+        loading: false,
+      },
+    },
+  };
+};
+const changeLoading = (state, action) => {
+  const { chartId, loading } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [chartId]: {
+        ...state.data[chartId],
+        loading,
+      },
+    },
+  };
+};
+const changeSelectedFilterId = (state, action) => {
+  const { chartId, id } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [chartId]: {
+        ...state.data[chartId],
+        selectedFilterId: id,
       },
     },
   };
@@ -239,6 +266,10 @@ const reducer = (state = initialState, action) => {
       return setchartLabel(state, action);
     case actionTypes.CHANGE_CREATED_CHART_LIST:
       return changeIdInCreatedList(state, action);
+    case actionTypes.CHANGE_LOADING_CHART:
+      return changeLoading(state, action);
+    case actionTypes.CHANGE_SELECTED_FILTER:
+      return changeSelectedFilterId(state, action);
     default:
       return state;
   }

@@ -413,7 +413,7 @@ function NewChart({ chartId, chartProps }) {
         return () => {
             root.dispose();
         };
-    }, [chartId, options, type, themeState.isDark]);
+    }, [chartId, options, type, themeState.isDark, data]);
 
     return (
         <div id={`${chartId}`} style={{ width: "100%", height: "100%" }}></div>
