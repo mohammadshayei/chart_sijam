@@ -373,20 +373,28 @@ function NewChart({ chartId, chartProps }) {
 
         } else if (type === "Pie") {
 
+            let percentY, idx = 0;
             for (const name in options.fieldNames) {
+                percentY = Object.entries(options.fieldNames).length === 1 ? 50 :
+                    100 - ((100 / (Object.entries(options.fieldNames).length - 1)) * idx);
                 // Create series
                 updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
                     am5percent.PieSeries.new(root, {
                         name: options.fieldNames[name],
                         categoryField: "category",
                         valueField: `${name}`,
-                        // alignLabels: false
+                        legendLabelText: `  : ${options.legend.colorize ? "[{fill}]" : ""}{category}[/]`,
+                        legendValueText: `[bold${options.legend.colorize ? " {fill}" : ""}]{value}[/]`,
+                        // alignLabels: false,
                     })
                 );
 
                 updatedCreatedChart.series.labels.template.setAll({
                     text: options.series.labels.text,
-                    forceHidden: options.series.labels.disabled
+                    forceHidden: options.series.labels.disabled,
+                    // textType: "circular",
+                    // centerX: 0,
+                    // centerY: 0
                 });
                 updatedCreatedChart.series.ticks.template.set("visible", !options.series.labels.disabled);
 
@@ -398,12 +406,13 @@ function NewChart({ chartId, chartProps }) {
 
                 if (options.insideLabel)
                     updatedCreatedChart.series.children.push(am5.Label.new(root, {
-                        text: "{valueSum}",
-                        fontSize: 40,
+                        text: "[bold]{valueSum}",
+                        fontSize: 30,
                         centerX: am5.percent(50),
-                        centerY: am5.percent(50),
+                        centerY: am5.percent(percentY),
                         populateText: true
                     }));
+                idx++;
             }
 
 
