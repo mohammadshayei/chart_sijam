@@ -718,10 +718,10 @@ const CreateCharts = (props) => {
 
   useEffect(() => {
     if (!takenData.isEdit) return
-    console.log("dsf");
     let selectedChartData = chartsData.data[takenData.id];
+    if (!selectedChartData) return
     let takenMetaData = [], takenFilterRules;
-    selectedChartData.dataInfo.filters.forEach((element, i) => {
+    selectedChartData?.dataInfo?.filters.forEach((element, i) => {
       takenMetaData = [...takenMetaData,
       {
         id: element.filter._id,

@@ -385,7 +385,7 @@ const TitleBlock = React.memo((props) => {
         </div>
         <div className="details">
           {
-            props.filters.length > 0 &&
+            props.filters?.length > 0 &&
             <div className="filter">
               <FilterSelector
                 onChange={onChangeFilter}
