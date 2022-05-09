@@ -87,8 +87,8 @@ const FieldPicker = (props) => {
         setSelected(selectedField);
     }
 
-    if (selected.name === "") return
-    changeFieldsMEtaData({ index: props.index, value: selected.id, name: selected.name })
+    if (selected.name !== "")
+      changeFieldsMEtaData({ index: props.index, value: selected.id, name: selected.name })
 
   }, [data, selected]);
 

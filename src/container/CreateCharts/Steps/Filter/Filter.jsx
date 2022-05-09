@@ -97,17 +97,17 @@ const Filter = () => {
     }, [selectedField]);
 
     useEffect(() => {
-        if (filterValues.length > 0) return
-        setSelectedField(null)
-        filter()
-    }, [filterValues]);
-
-    useEffect(() => {
         if (filterRules.fields.length === 0 || !initial) return
         setOperator(filterRules.operator)
         setFilterValues(filterRules.fields)
         setInitial(false)
     }, [filterRules.fields]);
+
+    useEffect(() => {
+        if (filterValues.length > 0 || initial) return
+        setSelectedField(null)
+        filter()
+    }, [filterValues]);
 
     return <div className="filter-step-container">
         <div className="fields-and-rule">

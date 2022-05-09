@@ -169,8 +169,9 @@ const CreateCharts = (props) => {
   const clearMetaData = () => {
     dispatch(addChartActions.clearMetaData());
   };
-
-
+  const setFiltersMetaData = (payload) => {
+    dispatch(addChartActions.setFiltersMetaData(payload));
+  };
 
   const toggleShareModal = () => {
     setShowModal(!showModal)
@@ -512,6 +513,35 @@ const CreateCharts = (props) => {
               editList: updatedChartsData[takenData.id].editList,
               viewList: updatedChartsData[takenData.id].viewList,
 
+              dataInfo: {
+                filters: takenData.metaData.filters?.map((item) => {
+                  return {
+                    filter: {
+                      name: item.name,
+                      type: item.type,
+                      rules: item.filters?.map((item) => {
+                        return {
+                          rule: {
+                            field: {
+                              name: item.name,
+                              type: item.type,
+                              value: item.value
+                            },
+                            content: { ...item.content }
+                          }
+                        }
+                      }),
+                    }
+                  }
+                }),
+                fields: takenData.metaData.fields.sort((a, b) => (a.index > b.index) ? 1 : -1).map(item => {
+                  return {
+                    field: item.value
+                  }
+                }),
+                selectedFilter: takenData.filterRules.selectedFilter,
+              },
+
               time: updatedChartsData[takenData.id].time,
               label: updatedChartsData[takenData.id].label,
               receivedType: updatedChartsData[takenData.id].receivedType,
@@ -717,10 +747,9 @@ const CreateCharts = (props) => {
   }, [chartsData.data[takenData?.id]?.lastBankUpdate]);
 
   useEffect(() => {
-    if (!takenData.isEdit) return
     let selectedChartData = chartsData.data[takenData.id];
-    if (!selectedChartData) return
-    let takenMetaData = [], takenFilterRules;
+    if (!takenData.isEdit || !takenData.isFullscreen || !selectedChartData) return
+    let takenMetaData = [], filterValues;
     selectedChartData?.dataInfo?.filters.forEach((element, i) => {
       takenMetaData = [...takenMetaData,
       {
@@ -737,23 +766,24 @@ const CreateCharts = (props) => {
         })
       }
       ]
-      if (i === selectedChartData.dataInfo.selectedFilter)
-        takenFilterRules = element.filter.rules.map(item => {
+      if (i === selectedChartData.dataInfo.selectedFilter) {
+        filterValues = element.filter.rules.map(item => {
           return {
             type: item.rule.field.type,
-            name: item.rule.field.name,
             value: item.rule.field.value,
+            name: item.rule.field.name,
             content: item.rule.content
           }
         })
+        setFilterFields({
+          operator: element.filter.type,
+          selected: selectedChartData.dataInfo.selectedFilter,
+          fields: filterValues
+        })
+      }
     });
-    setFilterFields({
-      operator: takenMetaData[selectedChartData.dataInfo.selectedFilter].type,
-      selected: selectedChartData.dataInfo.selectedFilter,
-      fields: takenFilterRules
-    })
-
-  }, [takenData.isEdit]);
+    setFiltersMetaData({ filters: takenMetaData })
+  }, [takenData.isEdit, takenData.isFullscreen]);
 
 
   return (

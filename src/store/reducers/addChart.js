@@ -382,6 +382,17 @@ const changeFiltersMetaData = (state, action) => {
   };
 };
 
+const setFiltersMetaData = (state, action) => {
+  const { filters } = action.payload;
+  return {
+    ...state,
+    metaData: {
+      ...state.metaData,
+      filters
+    },
+  };
+};
+
 const clearMetaData = (state) => {
   return {
     ...state,
@@ -577,6 +588,8 @@ const reducer = (state = initialState, action) => {
       return changeFiltersMetaData(state, action);
     case actionTypes.CHANGE_CLEAR_META_DATA:
       return clearMetaData(state);
+    case actionTypes.SET_FILTERS_META_DATA:
+      return setFiltersMetaData(state, action);
 
     default:
       return state;

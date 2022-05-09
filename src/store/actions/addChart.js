@@ -147,3 +147,12 @@ export const clearMetaData =
         payload,
       });
     };
+
+export const setFiltersMetaData =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SET_FILTERS_META_DATA,
+        payload,
+      });
+    };
