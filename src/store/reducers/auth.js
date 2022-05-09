@@ -116,7 +116,13 @@ const changeStructure = (state, action) => {
             ) < 0
           )
             data[updatedCompanyIndex].softwares.push(calValue);
-          if (needed) data[updatedCompanyIndex].opened = true;
+          if (needed) {
+            data.forEach((_, itemIndex) => {
+              if (itemIndex === updatedCompanyIndex)
+                data[itemIndex].opened = true;
+              else data[itemIndex].opened = false;
+            });
+          }
           return data;
         };
         updatedHoldingAccess = update(updatedHoldingAccess, parents[0], true);
@@ -128,7 +134,13 @@ const changeStructure = (state, action) => {
           data[updatedCompanyIndex].softwares = data[
             updatedCompanyIndex
           ].softwares.filter((item) => item._id !== value);
-          if (needed) data[updatedCompanyIndex].opened = true;
+          if (needed) {
+            data.forEach((_, itemIndex) => {
+              if (itemIndex === updatedCompanyIndex)
+                data[itemIndex].opened = true;
+              else data[itemIndex].opened = false;
+            });
+          }
           return data;
         };
         updatedHoldingAccess = remove(updatedHoldingAccess, parents[0], true);
@@ -155,10 +167,16 @@ const changeStructure = (state, action) => {
             ].active_backups.push(value);
 
           if (needed) {
-            data[updatedCompanyIndex].opened = true;
-            data[updatedCompanyIndex].softwares[
-              updatedSoftwareIndex
-            ].opened = true;
+            data.forEach((_, itemIndex) => {
+              if (itemIndex === updatedCompanyIndex) {
+                data[itemIndex].opened = true;
+                data[itemIndex].softwares.forEach((_, sftIndex) => {
+                  if (sftIndex === updatedSoftwareIndex)
+                    data[itemIndex].softwares[sftIndex].opened = true;
+                  else data[itemIndex].softwares[sftIndex].opened = false;
+                });
+              } else data[itemIndex].opened = false;
+            });
           }
           return data;
         };
@@ -180,12 +198,68 @@ const changeStructure = (state, action) => {
           ].active_backups = data[updatedCompanyIndex].softwares[
             updatedSoftwareIndex
           ].active_backups.filter((item) => item._id !== value);
-
           if (needed) {
-            data[updatedCompanyIndex].opened = true;
-            data[updatedCompanyIndex].softwares[
-              updatedSoftwareIndex
-            ].opened = true;
+            data.forEach((_, itemIndex) => {
+              if (itemIndex === updatedCompanyIndex) {
+                data[itemIndex].opened = true;
+                data[itemIndex].softwares.forEach((_, sftIndex) => {
+                  if (sftIndex === updatedSoftwareIndex)
+                    data[itemIndex].softwares[sftIndex].opened = true;
+                  else data[itemIndex].softwares[sftIndex].opened = false;
+                });
+              } else data[itemIndex].opened = false;
+            });
+          }
+          return data;
+        };
+        updatedHoldingAccess = remove(updatedHoldingAccess, parents, true);
+        updatedParentsCharts = remove(updatedParentsCharts, parents);
+      }
+    } else if (parents.length === 3) {
+      if (mode === "remove") {
+        const remove = (data, parents, needed) => {
+          let updatedCompanyIndex = data.findIndex(
+            (item) => item._id === parents[0]
+          );
+          if (updatedCompanyIndex < 0) return;
+          let updatedSoftwareIndex = data[
+            updatedCompanyIndex
+          ].softwares.findIndex((item) => item._id === parents[1]);
+          if (updatedSoftwareIndex < 0) return;
+          let updatedActiveBackupIndex = data[updatedCompanyIndex].softwares[
+            updatedSoftwareIndex
+          ].active_backups.findIndex((item) => item._id === parents[2]);
+          if (updatedActiveBackupIndex < 0) return;
+          data[updatedCompanyIndex].softwares[
+            updatedSoftwareIndex
+          ].active_backups[updatedActiveBackupIndex].banks = data[
+            updatedCompanyIndex
+          ].softwares[updatedSoftwareIndex].active_backups[
+            updatedActiveBackupIndex
+          ].banks.filter((item) => item._id !== value);
+          if (needed) {
+            data.forEach((_, itemIndex) => {
+              if (itemIndex === updatedCompanyIndex) {
+                data[itemIndex].opened = true;
+                data[itemIndex].softwares.forEach((_, sftIndex) => {
+                  if (sftIndex === updatedSoftwareIndex) {
+                    data[itemIndex].softwares[sftIndex].opened = true;
+                    data[itemIndex].softwares[sftIndex].active_backups.forEach(
+                      (_, acbIndex) => {
+                        if (acbIndex === updatedActiveBackupIndex)
+                          data[itemIndex].softwares[sftIndex].active_backups[
+                            acbIndex
+                          ].opened = true;
+                        else
+                          data[itemIndex].softwares[sftIndex].active_backups[
+                            acbIndex
+                          ].opened = false;
+                      }
+                    );
+                  } else data[itemIndex].softwares[sftIndex].opened = false;
+                });
+              } else data[itemIndex].opened = false;
+            });
           }
           return data;
         };
@@ -213,14 +287,17 @@ const changeItemTitle = (state, action) => {
     } else if (path.length === 2) {
       let fCmp = data.findIndex((item) => item._id === path[0]);
       if (fCmp < 0) return;
+      data[fCmp].opened = true;
       let fSft = data[fCmp].softwares.findIndex((item) => item._id === path[1]);
       if (fSft < 0) return;
       data[fCmp].softwares[fSft].name = name;
     } else if (path.length === 3) {
       let fCmp = data.findIndex((item) => item._id === path[0]);
       if (fCmp < 0) return;
+      data[fCmp].opened = true;
       let fSft = data[fCmp].softwares.findIndex((item) => item._id === path[1]);
       if (fSft < 0) return;
+      data[fCmp].softwares[fSft].opened = true;
       let fAcb = data[fCmp].softwares[fSft].active_backups.findIndex(
         (item) => item._id === path[2]
       );
@@ -229,12 +306,15 @@ const changeItemTitle = (state, action) => {
     } else if (path.length === 4) {
       let fCmp = data.findIndex((item) => item._id === path[0]);
       if (fCmp < 0) return;
+      data[fCmp].opened = true;
       let fSft = data[fCmp].softwares.findIndex((item) => item._id === path[1]);
       if (fSft < 0) return;
+      data[fCmp].softwares[fSft].opened = true;
       let fAcb = data[fCmp].softwares[fSft].active_backups.findIndex(
         (item) => item._id === path[2]
       );
       if (fAcb < 0) return;
+      data[fCmp].softwares[fSft].active_backups[fAcb].opened = true;
       let fBnk = data[fCmp].softwares[fSft].active_backups[
         fAcb
       ].banks.findIndex((item) => item._id === path[3]);
@@ -265,7 +345,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_AUTH_REDIRECT_PATH:
       return setAuthRedirectPath(state, action);
     case actionTypes.SET_USER_DATA:
-      return setUserData(state, action)
+      return setUserData(state, action);
     case actionTypes.SET_USER_LABEL:
       return setUserLabel(state, action);
     case actionTypes.SET_CHECKED:

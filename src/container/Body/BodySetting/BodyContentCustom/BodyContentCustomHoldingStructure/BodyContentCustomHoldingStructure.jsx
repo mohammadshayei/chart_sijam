@@ -313,6 +313,7 @@ const BodyContentCustomHoldingStructure = () => {
   const deleteItemHandler = async (title, id, parents) => {
     setError(null)
     let url = '';
+    console.log(title, id)
     switch (title) {
       case stringFa.company:
         url = 'delete_company'
@@ -322,6 +323,9 @@ const BodyContentCustomHoldingStructure = () => {
         break;
       case stringFa.active_backup:
         url = 'delete_active_backup'
+        break;
+      case stringFa.banks:
+        url = 'delete_bank'
         break;
       default:
         break;

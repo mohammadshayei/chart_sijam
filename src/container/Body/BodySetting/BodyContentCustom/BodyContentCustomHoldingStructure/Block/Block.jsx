@@ -73,6 +73,8 @@ const Block = ({ data, title, hasChild, onChange, addItem, addLoading, deleteIte
                 {data.map(info =>
                     <StructureItem
                         key={info._id}
+                        bankId={info.bankId}
+                        typeId={info.typeId}
                         name={info.name}
                         parents={info.parents}
                         path={info.orgParents}

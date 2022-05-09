@@ -5,8 +5,9 @@ import doubleRingLoading from "../../../../../../assets/images/DoubleRing.svg"
 import { IoMdCloseCircle } from "react-icons/io";
 import { useEffect, useRef, useState } from 'react';
 import { stringFa } from '../../../../../../assets/strings/stringFaCollection';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from "../../../../../../store/actions/auth.js";
+import Hint from '../../../../../../component/UI/Hint/Hint';
 
 function useOnClickOutside(ref, handler) {
     useEffect(() => {
@@ -26,11 +27,13 @@ function useOnClickOutside(ref, handler) {
         };
     }, [ref, handler]);
 }
-const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, deleteItem, removeLoading, title, path }) => {
+const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, deleteItem, removeLoading, title, path, typeId, bankId }) => {
     //_id, parents, key, value)
     const [titleValue, setTitleValue] = useState('')
     const themeState = useTheme();
     const theme = themeState.computedTheme;
+
+    const { socket } = useSelector((state) => state.auth);
 
     const titleRef = useRef();
 
@@ -67,6 +70,11 @@ const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, 
             if (e.key === "Enter") {
                 setTitleValue(e.target.value);
                 onChange(_id, parents, 'edited', true)
+                let payload = {
+                    path: [...path, _id],
+                    title: e.target.value
+                }
+                socket.emit('change_structure_item_title', payload)
                 saveTitle()
                 // saveCustomTitle()
             } else if (e.key === "Escape") {
@@ -138,6 +146,8 @@ const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, 
                     />
                 </div>
             }
+            {title === stringFa.banks && hovered && <Hint show={hovered} hint={`بانک : ${bankId} , کاربر : ${typeId.substring(1, 4)} , نوع : ${typeId[0] === '0' ? 'sm' : 'cl'}`} />}
+
         </div>
     )
 }
