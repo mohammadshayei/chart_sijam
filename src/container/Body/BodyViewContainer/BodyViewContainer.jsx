@@ -198,6 +198,7 @@ const BodyViewContainer = (props) => {
           title: item.chart.title,
           type: item.chart.type,
           data: item.chart.data,
+          mergedData: {},
           options: item.chart.options,
           config: item.chart.config,
           parent: item.chart.parent,
@@ -222,6 +223,8 @@ const BodyViewContainer = (props) => {
           time: item.time,
           selectedFilterId: item.chart.data_info.filters?.length > 0 ? item.chart.data_info.filters[item.chart.data_info.selectedFilter]._id : null,
           loading: false,
+          hide: false,
+          seprated: ''
         },
       };
     });

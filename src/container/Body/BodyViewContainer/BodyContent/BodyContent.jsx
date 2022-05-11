@@ -49,7 +49,7 @@ const BodyContent = (props) => {
               backgroundSize: chartsData.editMode ? "50px 50px" : "0",
             }}
           >
-            {Object.entries(chartsData.data).map(([k, v]) => (
+            {Object.entries(chartsData.data).filter(([k, v]) => !v.hide).map(([k, v]) => (
               <div
                 className="card-container"
                 key={k}

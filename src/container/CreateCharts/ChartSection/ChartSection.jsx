@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import "./ChartSection.scss";
 import CardSettingContainer from "./CardSettingContainer/CardSettingContainer";
 import { useSelector } from "react-redux";
 
-const ChartSection = (props) => {
+const ChartSection = memo((props) => {
   // const chartsData = useSelector((state) => state.chart.data[props.chartId]);
   // return chartsData ? (
   //   <div className="ChartSectionContainer">
@@ -16,5 +16,5 @@ const ChartSection = (props) => {
       <CardSettingContainer />
     </div>
   );
-};
+})
 export default ChartSection;

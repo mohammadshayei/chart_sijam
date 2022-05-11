@@ -143,5 +143,7 @@ export const stringFa = {
   software: "نرم افزار",
   add_1: "افزودن",
   login: "ورود",
-  login_to_bi: "ورود به سیستم های گزارشات هوش تجاری"
+  login_to_bi: "ورود به سیستم های گزارشات هوش تجاری",
+  separately: "نمایش مجزا",
+  merge_filters: "ادغام فیلترها"
 };

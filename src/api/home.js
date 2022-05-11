@@ -88,3 +88,14 @@ export const getFilteredData = async (payload, token) => {
   } else
     return { success: false, data: null, error: result.data.message.error };
 };
+export const getChartFilterData = async (payload, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/get_chart_filter_data`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.message.result, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.message.error };
+};

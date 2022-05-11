@@ -23,3 +23,6 @@ export const filterData = (data, filterRules) => {
   });
   return filteredData;
 };
+export const isRealValue = (obj) => {
+  return obj && obj !== 'null' && obj !== 'undefined' && Object.keys(obj).length !== 0
+}

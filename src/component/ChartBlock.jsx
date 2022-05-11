@@ -5,8 +5,9 @@ import GaugeChart from "./Charts/GaugeChart";
 import { useSelector } from "react-redux";
 import SkeletonChart from "../component/Skeletons/SkeletonChart";
 import NewChart from "./Charts/NewChart.jsx";
+import { isRealValue } from "../store/utility.js";
 
-const ChartBlock = React.memo(({ chartId, type, options, data, loading }) => {
+const ChartBlock = React.memo(({ chartId, type, options, data, loading, mergedData }) => {
   const [chart, setChart] = useState(null);
   const [sentData, setSentData] = useState(null);
 
@@ -18,7 +19,9 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading }) => {
     if (chartId === "123456789") {
       if (chartData.chartData.data.data.length > 0) {
         setSentData({
+          // type: Object.entries(mergedData).length > 0 ? 'Column' : chartData.chartData.type,
           type: chartData.chartData.type,
+          // data: Object.entries(mergedData).length > 0 ? mergedData : chartData.chartData.data.data,
           data: chartData.chartData.data.data,
           options: chartData.chartData.data.options,
         });
@@ -26,14 +29,13 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading }) => {
     } else {
       if (chartId) {
         setSentData({
-          type,
-          data,
+          type: isRealValue(mergedData) ? 'Column' : type,
+          data: isRealValue(mergedData) ? mergedData : data,
           options,
         });
       }
     }
-  }, [dependType, dependData, dependOptions, type, chartId, data]);
-
+  }, [dependType, dependData, dependOptions, type, chartId, data, mergedData]);
   useEffect(() => {
     if (sentData) {
       let newChart;
@@ -44,7 +46,6 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading }) => {
         case "Pie":
         case "Radar":
           newChart = <NewChart chartId={chartId} chartProps={sentData} />;
-          // newChart = <XYChart chartId={chartId} chartProps={sentData} />;
           break;
         // case "Pie":
         //   newChart = <PieChart chartId={chartId} chartProps={sentData} />;
@@ -74,10 +75,14 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading }) => {
       </div>
     )
 
+  // return loading ?
+  //   (loadingComponent) : sentData?.data?.length > 0 ? (
+  //     chart
+  //   ) : (loadingComponent)
+
   return loading ?
-    (loadingComponent) : sentData?.data?.length > 0 ? (
-      chart
-    ) : (loadingComponent)
+    loadingComponent : chart
+
 });
 
 export default ChartBlock;

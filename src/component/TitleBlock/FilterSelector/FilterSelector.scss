@@ -6,7 +6,10 @@
 		outline: none;
 		width: 100%;
 		border: 1px solid;
-		font-size: .8rem;
+		font-size: 0.8rem;
 		border-radius: 4px;
+		.extra {
+			border: 1px solid red;
+		}
 	}
 }

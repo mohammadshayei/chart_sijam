@@ -11,6 +11,7 @@ import { MdModeEditOutline } from 'react-icons/md'
 import * as chartActions from "../../store/actions/chart.js";
 import * as detailActions from "../../store/actions/detail.js";
 import { useIntersection } from "../../useIntersection";
+import { isRealValue } from "../../store/utility";
 // import { useIntersection } from "../../useIntersection";
 
 
@@ -119,7 +120,6 @@ const Card = React.memo((props) => {
     setFave(fave)
   }, [props.item.faveList])
 
-
   // 1-> access, 2-> creator, 3-> specific send  ,4-> shared to you
   return (
     <div
@@ -128,6 +128,8 @@ const Card = React.memo((props) => {
       onMouseLeave={onMouseLeave}
       ref={cardRef}
       style={{
+        boxShadow: props.item.seprated !== "" ? `0 0 0 1rem ${theme.darken_border_color}` : '',
+        borderRadius: props.item.seprated !== "" ? "0" : "10px",
         backgroundColor: isHover
           ? themeState.isDark
             ? theme.surface_4dp
@@ -149,6 +151,8 @@ const Card = React.memo((props) => {
         label={props.item.label}
         parent={props.item.parent}
         bankId={props.item.bankId}
+        seprated={props.item.seprated}
+        isMerged={isRealValue(props.item.mergedData)}
         editable={props.item.editList.findIndex(item => item.user._id === userId) > -1}
         shareable={props.item.shareList.findIndex(item => item.user._id === userId) > -1}
         cardIsHover={isHover}
@@ -162,6 +166,7 @@ const Card = React.memo((props) => {
           type={props.item.type}
           options={props.item.options}
           data={props.item.data}
+          mergedData={props.item.mergedData}
           loading={props.item.loading}
         />
       </div>

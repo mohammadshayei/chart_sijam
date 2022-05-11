@@ -22,6 +22,9 @@ import { fetchData, onDeleteChart } from "../../api/chart";
 import ShareBox from "../../component/ShareBox/ShareBox";
 import AddChartToCategory from "../../component/TitleBlock/AddChartToCategory/AddChartToCategory";
 import Modal from "../../component/UI/Modal/Modal";
+import { MdCancel } from "react-icons/md";
+
+
 
 import { VscSplitVertical, VscClose } from "react-icons/vsc";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
@@ -30,6 +33,8 @@ import { FaUserFriends, FaUser, FaRegComment } from "react-icons/fa";
 import { AiOutlinePlus, AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { BsStarFill, BsStar, BsReplyFill, BsFullscreenExit } from "react-icons/bs";
 import { MdModeEditOutline } from 'react-icons/md'
+import FilterSelector from "../../component/TitleBlock/FilterSelector/FilterSelector";
+import { getChartFilterData, getFilteredData } from "../../api/home";
 
 
 
@@ -142,8 +147,17 @@ const CreateCharts = (props) => {
   const fullscreenChart = (isFullscreen) => {
     dispatch(addChartActions.fullscreenChart(isFullscreen));
   };
+  const changeSelectedFilter = (payload) => {
+    dispatch(chartActions.changeSelectedFilter(payload));
+  };
+  const updateChartData = (chartData) => {
+    dispatch(chartActions.updateChartData(chartData));
+  };
   const deleteChart = (chartId) => {
     dispatch(chartActions.deleteChart(chartId));
+  };
+  const setMergedData = (payload) => {
+    dispatch(chartActions.setMergedData(payload));
   };
   const setIsEdit = (isEdit) => {
     dispatch(addChartActions.setIsEdit(isEdit));
@@ -176,6 +190,7 @@ const CreateCharts = (props) => {
   const toggleShareModal = () => {
     setShowModal(!showModal)
   }
+
   const toggleCreateCategoruModal = () => {
     setAddChartModal(!addChartModal)
   }
@@ -189,6 +204,7 @@ const CreateCharts = (props) => {
       }
     } else setChartTitle({ title: e.target.value });
   };
+
   const saveCustomTitle = () => {
     if (props.title === titleValue) return;
     socket.emit('change_chart_label', { chartId: takenData.id, label: titleValue, userId, holdingId: selectedHolding.holdingId })
@@ -206,6 +222,7 @@ const CreateCharts = (props) => {
       }
     } else setTitleValue(e.target.value);
   };
+
   const closeHandler = () => {
     let clearedChartData = takenData.chartData;
     clearedChartData = {
@@ -594,6 +611,7 @@ const CreateCharts = (props) => {
       );
     }
   }
+
   const settingMenuHandler = async (id) => {
     switch (id) {
       case "noFullScreen":
@@ -622,6 +640,7 @@ const CreateCharts = (props) => {
     else
       closeHandler();
   }
+
   const changeEditMode = async () => {
     setIsEdit(!takenData.isEdit)
     fetchBankData()
@@ -634,8 +653,49 @@ const CreateCharts = (props) => {
     socket.emit('add_chart_to_fave_category', { chartId: takenData.id, categoryId: faveCategory.category._id, checked: !faveCat })
     updateFaveCategory({ chartId: takenData.id, checked: !faveCat })
   }
+
   const onFaveClick = () => {
     socket.emit('change_fave_chart', { chartId: takenData.id, isFave: !fave, userId })
+  }
+  const onChangeFilter = async (e) => {
+    if (e.target.value === "merged") {
+      let result = await getChartFilterData({ id: takenData.id }, token)
+      let updatedData = [];
+      if (result.success) {
+        console.log(result.data);
+        result.data.forEach((item, index) => {
+          let temp = { group: chartsData.data[takenData?.id]?.dataInfo.filters[index].filter.name }
+          item.forEach(row => {
+            temp = { ...temp, [row.category]: row.field1 }
+          })
+          updatedData = [...updatedData, temp]
+        })
+      }
+      setMergedData({ chartId: takenData.id, mergedData: updatedData })
+    } else {
+      let result = await getFilteredData({ chartId: takenData.id, filterId: e.target.value }, token)
+      changeSelectedFilter({
+        chartId: takenData.id,
+        id: e.target.value
+      })
+      updateChartData({
+        chartId: takenData.id,
+        chartData: result.data,
+        lastUpdate: new Date(),
+      });
+    }
+  }
+  const onCancelMerge = async () => {
+    let result = await getFilteredData({ chartId: takenData.id, filterId: chartsData.data[takenData?.id]?.dataInfo.filters[chartsData.data[takenData?.id]?.dataInfo.selectedFilter]._id }, token)
+    changeSelectedFilter({
+      chartId: takenData.id,
+      id: chartsData.data[takenData?.id]?.dataInfo.filters[chartsData.data[takenData?.id]?.dataInfo.selectedFilter]._id
+    })
+    updateChartData({
+      chartId: takenData.id,
+      chartData: result.data,
+      lastUpdate: new Date(),
+    });
   }
 
   useEffect(() => {
@@ -655,7 +715,6 @@ const CreateCharts = (props) => {
       }
     }
   }, [hover]);
-
 
   useEffect(() => {
     if (autoValidate)
@@ -682,7 +741,7 @@ const CreateCharts = (props) => {
     let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === takenData.id) > -1
     setFaveCat(updatedFaveCat)
   }, [selectedHolding, takenData.id])
-  // shareable={chartsData.data[takenData.id].shareList.findIndex(item => item.user._id === userId) > -1}
+
   useEffect(() => {
     if (Object.entries(chartsData.data).length > 0 && takenData.id) {
       setShareable(chartsData.data[takenData.id]?.shareList.findIndex(item => item.user._id === userId) > -1)
@@ -720,7 +779,6 @@ const CreateCharts = (props) => {
     let fave = chartsData.data[takenData?.id].faveList.findIndex(item => item.user === userId) > -1;
     setFave(fave)
   }, [chartsData.data[takenData?.id]?.faveList])
-
 
   useEffect(() => {
     if (!(chartsData.data[takenData?.id])) return;
@@ -874,14 +932,24 @@ const CreateCharts = (props) => {
           className="section-header-wrapper"
           style={{ borderColor: theme.border_color, height: '4rem' }}
         >
-          <div className="path">
-            {
-              chartsData.data[takenData.id]?.parent.map((text, index) => (
-                <p key={`${text}${index}`} className="item">
-                  {text}
-                </p>)
-              )
-            }
+          <div className="filters">
+            <div className="wrapper">
+              {
+                Object.entries(chartsData.data[takenData?.id]?.mergedData).length > 0 ?
+                  <div onClick={onCancelMerge}
+                    className="cancel"
+                    style={{ borderColor: theme.primary, color: theme.primary }} >
+                    <MdCancel />
+                    <p>{stringFa.merge_filters}</p>
+                  </div>
+                  :
+                  <FilterSelector
+                    onChange={onChangeFilter}
+                    filters={chartsData.data[takenData?.id]?.dataInfo.filters}
+                    selectedFilter={chartsData.data[takenData?.id]?.dataInfo.selectedFilter}
+                  />
+              }
+            </div>
           </div>
           <div className="close">
             <StyledButton
@@ -898,6 +966,15 @@ const CreateCharts = (props) => {
             >
               <VscClose />
             </StyledButton>
+          </div>
+          <div className="path">
+            {
+              chartsData.data[takenData.id]?.parent.map((text, index) => (
+                <p key={`${text}${index}`} className="item">
+                  {text}
+                </p>)
+              )
+            }
           </div>
           <div className="action">
             {chartsData.editMode ? (

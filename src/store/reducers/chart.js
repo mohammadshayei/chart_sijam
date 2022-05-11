@@ -39,6 +39,7 @@ const setChartData = (state, action) => {
     },
   };
 };
+
 const changeIdInCreatedList = (state, action) => {
   const { value, mode } = action.payload;
   if (!value) return { ...state };
@@ -197,10 +198,25 @@ const updateChartData = (state, action) => {
       [chartId]: {
         ...state.data[chartId],
         data: chartData,
+        mergedData: {},
         config: {
           ...state.data[chartId].config,
           last_update: lastUpdate,
         },
+        loading: false,
+      },
+    },
+  };
+};
+const setMergedData = (state, action) => {
+  const { chartId, mergedData } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [chartId]: {
+        ...state.data[chartId],
+        mergedData: mergedData,
         loading: false,
       },
     },
@@ -270,6 +286,8 @@ const reducer = (state = initialState, action) => {
       return changeLoading(state, action);
     case actionTypes.CHANGE_SELECTED_FILTER:
       return changeSelectedFilterId(state, action);
+    case actionTypes.SET_MERGED_DATA:
+      return setMergedData(state, action);
     default:
       return state;
   }

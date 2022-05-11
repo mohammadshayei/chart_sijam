@@ -24,7 +24,9 @@ import * as holdingActions from "../../store/actions/holdingDetail.js";
 import * as detailActions from "../../store/actions/detail.js";
 import CustomSelect from "../UI/CustomSelect/CustomSelect";
 import FilterSelector from "./FilterSelector/FilterSelector";
-import { getFilteredData } from "../../api/home";
+import { getChartFilterData, getFilteredData } from "../../api/home";
+import { v4 as uuidv4 } from "uuid";
+import { MdCancel } from "react-icons/md";
 
 
 function useOnClickOutside(ref, handler) {
@@ -123,11 +125,17 @@ const TitleBlock = React.memo((props) => {
   const updateChartData = (chartData) => {
     dispatch(chartActions.updateChartData(chartData));
   };
+  const setMergedData = (payload) => {
+    dispatch(chartActions.setMergedData(payload));
+  };
   const changeLoading = (payload) => {
     dispatch(chartActions.changeLoading(payload));
   };
   const changeSelectedFilter = (payload) => {
     dispatch(chartActions.changeSelectedFilter(payload));
+  };
+  const setChartsData = (chartsData) => {
+    dispatch(chartActions.setChartsData(chartsData));
   };
 
   const undoDeleteChartHandler = () => {
@@ -262,22 +270,72 @@ const TitleBlock = React.memo((props) => {
     setchartLabel({ chartId: props.chartId, label: titleValue })
     changeInfoINSourceCharts({ chartId: props.chartId, value: titleValue, mode: "label" })
   }
-
-  const onChangeFilter = async (e) => {
-    changeLoading({
-      chartId: props.chartId,
-      loading: true,
-    })
-    let result = await getFilteredData({ chartId: props.chartId, filterId: e.target.value }, token)
+  const onCancelMerge = async () => {
+    let result = await getFilteredData({ chartId: props.chartId, filterId: props.filters[props.selectedFilter]._id }, token)
     changeSelectedFilter({
       chartId: props.chartId,
-      id: e.target.value
+      id: props.filters[props.selectedFilter]._id
     })
     updateChartData({
       chartId: props.chartId,
       chartData: result.data,
       lastUpdate: new Date(),
     });
+  }
+  const onChangeFilter = async (e) => {
+    changeLoading({
+      chartId: props.chartId,
+      loading: true,
+    })
+    if (e.target.value === "merged") {
+      let result = await getChartFilterData({ id: props.chartId }, token)
+      let updatedData = [];
+      if (result.success) {
+        result.data.forEach((item, index) => {
+          let temp = { group: props.filters[index].filter.name }
+          item.forEach(row => {
+            temp = { ...temp, [row.category]: row.field1 }
+          })
+          updatedData = [...updatedData, temp]
+        })
+      }
+      setMergedData({ chartId: props.chartId, mergedData: updatedData })
+    }
+    else if (e.target.value === "seprately") {
+      let result = await getChartFilterData({ id: props.chartId }, token)
+      if (!result.success) changeLoading({
+        chartId: props.chartId,
+        loading: false,
+      })
+
+      let updatedChartsData = { ...chartsData.data }
+      updatedChartsData[props.chartId].hide = true;
+      result.data.forEach((item) => {
+        updatedChartsData = {
+          ...updatedChartsData,
+          [uuidv4().replace(/\-/g, "")]: {
+            ...updatedChartsData[props.chartId],
+            data: item,
+            hide: false,
+            loading: false,
+            seprated: props.chartId
+          }
+        }
+      })
+      setChartsData(updatedChartsData)
+    }
+    else {
+      let result = await getFilteredData({ chartId: props.chartId, filterId: e.target.value }, token)
+      changeSelectedFilter({
+        chartId: props.chartId,
+        id: e.target.value
+      })
+      updateChartData({
+        chartId: props.chartId,
+        chartData: result.data,
+        lastUpdate: new Date(),
+      });
+    }
   }
 
   useEffect(() => {
@@ -310,7 +368,6 @@ const TitleBlock = React.memo((props) => {
     let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === props.chartId) > -1
     setFaveCat(updatedFaveCat)
   }, [selectedHolding])
-
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
       {error}
@@ -387,11 +444,32 @@ const TitleBlock = React.memo((props) => {
           {
             props.filters?.length > 0 &&
             <div className="filter">
-              <FilterSelector
-                onChange={onChangeFilter}
-                filters={props.filters}
-                selectedFilter={props.selectedFilter}
-              />
+              {
+                props.isMerged ?
+                  <div className="merged-filters">
+                    <div onClick={onCancelMerge} className="cancel" style={{ borderColor: theme.primary, color: theme.primary }} >
+                      <MdCancel />
+                      <p>{stringFa.merge_filters}</p>
+                    </div>
+                    {/* <img
+                      className="chart-image"
+                      src={`${baseUrl}images/bar-chart-default.svg`}
+                      alt=""
+                    />
+                    <img
+                      className="chart-image"
+                      src={`${baseUrl}images/stacked-bar-chart-default.svg`}
+                      alt=""
+                    /> */}
+                  </div>
+                  :
+                  <FilterSelector
+                    onChange={onChangeFilter}
+                    filters={props.filters}
+                    // filters={props.seprated ? [] : props.filters}
+                    selectedFilter={props.selectedFilter}
+                  />
+              }
             </div>
           }
           <div className="title">

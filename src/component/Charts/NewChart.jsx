@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5percent from "@amcharts/amcharts5/percent";
@@ -13,7 +13,7 @@ import * as am5plugins_exporting from "@amcharts/amcharts5/plugins/exporting";
 import { useTheme } from '../../styles/ThemeProvider';
 import { useSelector } from 'react-redux';
 
-function NewChart({ chartId, chartProps }) {
+const NewChart = ({ chartId, chartProps }) => {
     const themeState = useTheme();
     const [createdChart, setCreatedChart] = useState({
         chart: null,
@@ -246,57 +246,55 @@ function NewChart({ chartId, chartProps }) {
         }
 
         if (type === "Line" || type === "Column") {
-            // Create Y-axis
-            updatedCreatedChart.yAxis = updatedCreatedChart.chart.yAxes.push(
-                am5xy.ValueAxis.new(root, {
-                    maxDeviation: 0.3,
-                    logarithmic: options.axes.yAxes.break.active,
-                    treatZeroAs: 0.000001,
-                    renderer: am5xy.AxisRendererY.new(root, {
+            let categoryExist = false;
+            let fieldExist = false;
+            if (Array.isArray(data)) {
+                for (const key in data[0]) {
+                    if (key === "category")
+                        categoryExist = true
+                    if (key === "field1")
+                        fieldExist = true
+                }
+            }
+            if (categoryExist && fieldExist) {
+                // Create Y-axis
+                updatedCreatedChart.yAxis = updatedCreatedChart.chart.yAxes.push(
+                    am5xy.ValueAxis.new(root, {
+                        maxDeviation: 0.3,
+                        logarithmic: options.axes.yAxes.break.active,
+                        treatZeroAs: 0.000001,
+                        renderer: am5xy.AxisRendererY.new(root, {
+                        })
                     })
-                })
-            );
+                );
 
-            updatedCreatedChart.yAxis.get("renderer").labels.template.setAll({
-                fontFamily: "IRANSans",
-            });
+                updatedCreatedChart.yAxis.get("renderer").labels.template.setAll({
+                    fontFamily: "IRANSans",
+                });
 
 
-            // Create X-Axis
-            updatedCreatedChart.xAxis = updatedCreatedChart.chart.xAxes.push(
-                am5xy.CategoryAxis.new(root, {
-                    maxDeviation: 0.3,
-                    renderer: am5xy.AxisRendererX.new(root, {
-                        minGridDistance: 10
-                    }),
-                    categoryField: "category",
-                })
-            );
+                // Create X-Axis
+                updatedCreatedChart.xAxis = updatedCreatedChart.chart.xAxes.push(
+                    am5xy.CategoryAxis.new(root, {
+                        maxDeviation: 0.3,
+                        renderer: am5xy.AxisRendererX.new(root, {
+                            minGridDistance: 10
+                        }),
+                        categoryField: "category",
+                    })
+                );
 
-            updatedCreatedChart.xAxis.get("renderer").labels.template.setAll({
-                fontSize: "0.8rem",
-                fontFamily: "IRANSans",
-                rotation: options.axes.xAxes.rotation ? 315 : 0,
-                centerY: am5.p50,
-                centerX: am5.p100,
-                paddingRight: 5
-            });
+                updatedCreatedChart.xAxis.get("renderer").labels.template.setAll({
+                    fontSize: "0.8rem",
+                    fontFamily: "IRANSans",
+                    rotation: options.axes.xAxes.rotation ? 315 : 0,
+                    centerY: am5.p50,
+                    centerX: am5.p100,
+                    paddingRight: 5
+                });
 
-            updatedCreatedChart.xAxis.data.setAll(data);
+                updatedCreatedChart.xAxis.data.setAll(data);
 
-            const filtered = Object.entries(data[0]).filter(([key, value]) =>
-                key !== 'category' &&
-                key !== 'field1' &&
-                key !== 'field2' &&
-                key !== 'field3' &&
-                key !== 'field4' &&
-                key !== 'field5' &&
-                key !== 'field6' &&
-                key !== 'field7' &&
-                key !== 'field8'
-            );
-
-            if (filtered.length === 0) {
                 for (const name in options.fieldNames) {
                     // Create series
                     updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
@@ -325,7 +323,45 @@ function NewChart({ chartId, chartProps }) {
 
                 if (legend)
                     legend.data.setAll(updatedCreatedChart.chart.series.values);
-            } else {
+            } else if (categoryExist && !fieldExist) {
+                // Create Y-axis
+                updatedCreatedChart.yAxis = updatedCreatedChart.chart.yAxes.push(
+                    am5xy.ValueAxis.new(root, {
+                        maxDeviation: 0.3,
+                        logarithmic: options.axes.yAxes.break.active,
+                        treatZeroAs: 0.000001,
+                        renderer: am5xy.AxisRendererY.new(root, {
+                        })
+                    })
+                );
+
+                updatedCreatedChart.yAxis.get("renderer").labels.template.setAll({
+                    fontFamily: "IRANSans",
+                });
+
+
+                // Create X-Axis
+                updatedCreatedChart.xAxis = updatedCreatedChart.chart.xAxes.push(
+                    am5xy.CategoryAxis.new(root, {
+                        maxDeviation: 0.3,
+                        renderer: am5xy.AxisRendererX.new(root, {
+                            minGridDistance: 10
+                        }),
+                        categoryField: "category",
+                    })
+                );
+
+                updatedCreatedChart.xAxis.get("renderer").labels.template.setAll({
+                    fontSize: "0.8rem",
+                    fontFamily: "IRANSans",
+                    rotation: options.axes.xAxes.rotation ? 315 : 0,
+                    centerY: am5.p50,
+                    centerX: am5.p100,
+                    paddingRight: 5
+                });
+
+                updatedCreatedChart.xAxis.data.setAll(data);
+
                 // clustered series 
                 function makeSeries(name, fieldName) {
                     updatedCreatedChart.series = updatedCreatedChart.chart.series.push(am5xy[seriesType].new(root, {
@@ -363,9 +399,234 @@ function NewChart({ chartId, chartProps }) {
                         legend.data.push(updatedCreatedChart.series);
                 }
 
+                const filtered = Object.entries(data[0]).filter(([key, value]) =>
+                    key !== 'category' &&
+                    key !== 'field1' &&
+                    key !== 'field2' &&
+                    key !== 'field3' &&
+                    key !== 'field4' &&
+                    key !== 'field5' &&
+                    key !== 'field6' &&
+                    key !== 'field7' &&
+                    key !== 'field8'
+                );
                 for (const key in Object.fromEntries(filtered)) {
                     makeSeries(key, key);
                 }
+            } else if (!categoryExist && !fieldExist) {
+
+                // ----------------------  seprate groups ------------------------------
+
+                // let legendData = [];
+                // // Create axes
+                // let xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
+                // xRenderer.labels.template.setAll({ text: "{realName}" });
+
+                // updatedCreatedChart.xAxis = updatedCreatedChart.chart.xAxes.push(
+                //     am5xy.CategoryAxis.new(root, {
+                //         maxDeviation: 0,
+                //         categoryField: "category",
+                //         renderer: xRenderer,
+                //         tooltip: am5.Tooltip.new(root, {
+                //             labelText: "{realName}"
+                //         })
+                //     })
+                // );
+
+                // updatedCreatedChart.xAxis.get("renderer").labels.template.setAll({
+                //     fontSize: "0.8rem",
+                //     fontFamily: "IRANSans",
+                // });
+
+                // updatedCreatedChart.yAxis = updatedCreatedChart.chart.yAxes.push(
+                //     am5xy.ValueAxis.new(root, {
+                //         maxDeviation: 0.3,
+                //         renderer: am5xy.AxisRendererY.new(root, {})
+                //     })
+                // );
+
+                // updatedCreatedChart.yAxis.get("renderer").labels.template.setAll({
+                //     fontFamily: "IRANSans",
+                // });
+
+                // // Create series
+                // updatedCreatedChart.series = updatedCreatedChart.chart.series.push(
+                //     am5xy.ColumnSeries.new(root, {
+                //         name: "series",
+                //         xAxis: updatedCreatedChart.xAxis,
+                //         yAxis: updatedCreatedChart.yAxis,
+                //         valueYField: "value",
+                //         sequencedInterpolation: true,
+                //         categoryXField: "category",
+                //         tooltip: am5.Tooltip.new(root, {
+                //             labelText: "{provider} - {realName} : {valueY}"
+                //         })
+                //     })
+                // );
+
+                // updatedCreatedChart.series.columns.template.setAll({
+                //     fillOpacity: 0.9,
+                //     strokeOpacity: 0
+                // });
+                // updatedCreatedChart.series.columns.template.adapters.add("fill", (fill, target) => {
+                //     return updatedCreatedChart.chart.get("colors").getIndex(updatedCreatedChart.series.columns.indexOf(target));
+                // });
+
+                // updatedCreatedChart.series.columns.template.adapters.add("stroke", (stroke, target) => {
+                //     return updatedCreatedChart.chart.get("colors").getIndex(updatedCreatedChart.series.columns.indexOf(target));
+                // });
+
+                // let chartData = [], index = 0;
+
+                // // process data ant prepare it for the chart
+                // for (var providerName in data) {
+                //     let providerData = data[providerName];
+
+                //     // add data of one provider to temp array
+                //     let tempArray = [];
+                //     // add items
+                //     for (var itemName in providerData) {
+                //         // we generate unique category for each column (providerName + "_" + itemName) and store realName
+                //         tempArray.push({
+                //             category: providerName + "_" + itemName,
+                //             realName: itemName,
+                //             value: providerData[itemName],
+                //             provider: providerName
+                //         });
+                //     }
+
+                //     // push to the final data
+                //     am5.array.each(tempArray, function (item) {
+                //         chartData.push(item);
+                //     });
+
+                //     // create range (the additional label at the bottom)
+
+                //     let range = updatedCreatedChart.xAxis.makeDataItem({});
+                //     updatedCreatedChart.xAxis.createAxisRange(range);
+
+                //     range.set("category", tempArray[0].category);
+                //     range.set("endCategory", tempArray[tempArray.length - 1].category);
+
+                //     let label = range.get("label");
+
+                //     label.setAll({
+                //         fill: updatedCreatedChart.chart.get("colors").getIndex(index),
+                //         text: tempArray[0].provider,
+                //         dy: 40,
+                //         fontSize: "1rem",
+                //         fontWeight: "bold",
+                //         tooltipText: tempArray[0].provider
+                //     });
+
+                //     let tick = range.get("tick");
+                //     tick.setAll({ visible: true, strokeOpacity: 1, length: 50, location: 0 });
+
+                //     let grid = range.get("grid");
+                //     grid.setAll({ strokeOpacity: 1 });
+
+                //     index++;
+                // }
+
+                // // add range for the last grid
+                // let range = updatedCreatedChart.xAxis.makeDataItem({});
+                // updatedCreatedChart.xAxis.createAxisRange(range);
+                // range.set("category", chartData[chartData.length - 1].category);
+                // let tick = range.get("tick");
+                // tick.setAll({ visible: true, strokeOpacity: 1, length: 50, location: 1 });
+
+                // let grid = range.get("grid");
+                // grid.setAll({ strokeOpacity: 1, location: 1 });
+
+                // updatedCreatedChart.xAxis.data.setAll(chartData);
+                // updatedCreatedChart.series.data.setAll(chartData);
+
+
+                // ----------------------  stacked group ------------------------------
+                // Create axes
+                updatedCreatedChart.xAxis = updatedCreatedChart.chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+                    categoryField: "group",
+                    renderer: am5xy.AxisRendererX.new(root, {
+                        cellStartLocation: 0.1,
+                        cellEndLocation: 0.9
+                    }),
+                    tooltip: am5.Tooltip.new(root, {
+                        themeTags: ["axis"],
+                        animationDuration: 200
+                    })
+                }));
+
+                updatedCreatedChart.xAxis.data.setAll(data);
+
+                updatedCreatedChart.yAxis = updatedCreatedChart.chart.yAxes.push(am5xy.ValueAxis.new(root, {
+                    renderer: am5xy.AxisRendererY.new(root, {})
+                }));
+
+                // Add series
+                function makeSeries(name, fieldName, index) {
+                    updatedCreatedChart.series = updatedCreatedChart.chart.series.push(am5xy.ColumnSeries.new(root, {
+                        name: name,
+                        xAxis: updatedCreatedChart.xAxis,
+                        yAxis: updatedCreatedChart.yAxis,
+                        stacked: true,
+                        valueYField: fieldName,
+                        categoryXField: "group",
+                        maskBullets: false
+                    }));
+
+                    updatedCreatedChart.series.columns.template.setAll({
+                        fill: updatedCreatedChart.chart.get("colors").getIndex(index * 3),
+                        stroke: updatedCreatedChart.chart.get("colors").getIndex(index * 3),
+                        tooltipText: "{categoryX} - {name} : {valueY}",
+                        width: am5.percent(90),
+                        tooltipY: 0
+                    });
+
+                    updatedCreatedChart.series.data.setAll(data);
+
+                    // Make stuff animate on load
+                    updatedCreatedChart.series.appear();
+
+                    updatedCreatedChart.series.bullets.push(function () {
+                        return am5.Bullet.new(root, {
+                            locationX: 0.5,
+                            locationY: 1,
+                            sprite: am5.Circle.new(root, {
+                                radius: 12,
+                                fill: am5.color(0xffffff),
+                                opacity: 0.9
+                            })
+                        });
+                    });
+
+                    updatedCreatedChart.series.bullets.push(function () {
+                        return am5.Bullet.new(root, {
+                            locationX: 0.5,
+                            locationY: 1,
+                            sprite: am5.Label.new(root, {
+                                text: "{valueY}",
+                                fill: root.interfaceColors.get(0x000000),
+                                centerX: am5.percent(50),
+                                centerY: am5.percent(50),
+                                textAlign: "center",
+                                populateText: true
+                            })
+                        });
+                    });
+
+                    legend.data.push(updatedCreatedChart.series);
+                }
+                let series = []
+                data.forEach(obj => {
+                    for (const key in obj) {
+                        if (key !== "group" && !series.includes(key))
+                            series = [...series, key]
+                    }
+                });
+                series.forEach((name, index) => {
+                    makeSeries(name, name, index)
+                });
+
             }
 
             // Add cursor
