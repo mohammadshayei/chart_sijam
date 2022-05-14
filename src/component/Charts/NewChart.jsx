@@ -153,7 +153,7 @@ const NewChart = ({ chartId, chartProps }) => {
                 return width < 700 || height < 400;
             },
             applying: function () {
-                if (type == "Pie") {
+                if (type === "Pie" || type === "Doughnut") {
                     updatedCreatedChart.series.labels.template.setAll({
                         forceHidden: true
                     });
@@ -161,7 +161,7 @@ const NewChart = ({ chartId, chartProps }) => {
                 }
             },
             removing: function () {
-                if (type == "Pie") {
+                if (type === "Pie" || type === "Doughnut") {
                     updatedCreatedChart.series.labels.template.setAll({
                         forceHidden: false
                     });
@@ -202,11 +202,12 @@ const NewChart = ({ chartId, chartProps }) => {
                     seriesType = "SmoothedXLineSeries"
                 break;
             case "Pie":
+            case "Doughnut":
                 updatedCreatedChart.chart = root.container.children.push(
                     am5percent.PieChart.new(root, {
                         layout: options.legend.position === "top" || options.legend.position === "bottom" ?
                             root.verticalLayout : root.horizontalLayout,
-                        innerRadius: am5.percent(options.innerRadius)
+                        innerRadius: type === "Doughnut" ? am5.percent(50) : am5.percent(0.0001)
                     })
                 );
                 seriesType = "PieSeries"
@@ -632,8 +633,7 @@ const NewChart = ({ chartId, chartProps }) => {
             // Add cursor
             updatedCreatedChart.chart.set("cursor", am5xy.XYCursor.new(root, {}));
 
-        } else if (type === "Pie") {
-
+        } else if (type === "Pie" || type === 'Doughnut') {
             let percentY, idx = 0;
             for (const name in options.fieldNames) {
                 percentY = Object.entries(options.fieldNames).length === 1 ? 50 :
@@ -687,6 +687,7 @@ const NewChart = ({ chartId, chartProps }) => {
 
     return (
         <div id={`${chartId}`} style={{ width: "100%", height: "100%" }}></div>
+
     );
 }
 export default NewChart;

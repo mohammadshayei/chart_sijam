@@ -10,7 +10,6 @@ import { isRealValue } from "../store/utility.js";
 const ChartBlock = React.memo(({ chartId, type, options, data, loading, mergedData }) => {
   const [chart, setChart] = useState(null);
   const [sentData, setSentData] = useState(null);
-
   const chartData = useSelector((state) => state.addChart);
   let dependType = chartData?.chartData?.type,
     dependData = chartData?.chartData?.data?.data,
@@ -44,6 +43,7 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading, mergedDa
         case "Column":
         case "Bubble":
         case "Pie":
+        case "Doughnut":
         case "Radar":
           newChart = <NewChart chartId={chartId} chartProps={sentData} />;
           break;

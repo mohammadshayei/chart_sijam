@@ -726,6 +726,7 @@ const CreateCharts = (props) => {
     let controller = new AbortController();
     (async () => {
       let result = await fetchData({ id: bankId }, token)
+      console.log(result.data.data)
       selectChartDatabase(result.data.data);
       setId(bankId);
       setIsEdit(true);

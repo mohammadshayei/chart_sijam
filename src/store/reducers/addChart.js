@@ -306,7 +306,7 @@ const setChartOptionsAndType = (state, action) => {
       updatedOptions.innerRadius = 0.0001;
       break;
     case "donut":
-      updatedType = "Pie";
+      updatedType = "Doughnut";
       updatedOptions.isDoughnut = true;
       updatedOptions.innerRadius = 50;
       break;

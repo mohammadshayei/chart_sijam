@@ -27,9 +27,10 @@ function useOnClickOutside(ref, handler) {
         };
     }, [ref, handler]);
 }
-const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, deleteItem, removeLoading, title, path, typeId, bankId }) => {
+const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, deleteItem, removeLoading, title, path, typeId, bankId, dataTime }) => {
     //_id, parents, key, value)
     const [titleValue, setTitleValue] = useState('')
+    const [time, setTime] = useState('')
     const themeState = useTheme();
     const theme = themeState.computedTheme;
 
@@ -82,7 +83,28 @@ const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, 
             }
         } else setTitleValue(e.target.value);
     };
-
+    useEffect(() => {
+        let weekday = new Date(dataTime).toLocaleString("fa-IR", {
+            weekday: "long",
+        });
+        let day = new Date(dataTime).toLocaleString("fa-IR", {
+            day: "numeric",
+        });
+        let month = new Date(dataTime).toLocaleString("fa-IR", {
+            month: "long",
+        });
+        let year_Time = new Date(dataTime).toLocaleString(
+            "fa-IR",
+            {
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+            }
+        );
+        const lastBankUpdate = `${weekday} - ${day} ${month} ${year_Time}`;
+        setTime(lastBankUpdate);
+    }, [dataTime]);
     return (
         <div
             className="structure-item-warpper"
@@ -146,7 +168,7 @@ const StructureItem = ({ _id, name, opened, hovered, parents, edited, onChange, 
                     />
                 </div>
             }
-            {title === stringFa.banks && hovered && <Hint show={hovered} hint={`بانک : ${bankId} , کاربر : ${typeId.substring(1, 4)} , نوع : ${typeId[0] === '0' ? 'sm' : 'cl'}`} />}
+            {title === stringFa.banks && hovered && <Hint show={hovered} hint={`بانک : ${bankId} , کاربر : ${typeId.substring(1, 4)} , نوع : ${typeId[0] === '0' ? 'sm' : 'cl'} , زمان : ${time}`} />}
 
         </div>
     )

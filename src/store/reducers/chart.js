@@ -1,7 +1,9 @@
 import * as actionTypes from "../actions/actionTypes";
+import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
   data: {},
+  sepratedChartInfo: [],
   layouts: { lg: [], md: [], sm: [], xs: [], xxs: [] },
   loading: false,
   breakpoint: "lg",
@@ -58,7 +60,113 @@ const changeIdInCreatedList = (state, action) => {
     createdList: updatedCreatedList,
   };
 };
+const seprateChart = (state, action) => {
+  const { chartId, data, filters } = action.payload;
+  let newLayouts = { lg: [], md: [], sm: [], xs: [], xxs: [] };
+  let updatedSepratedChartInfo = [...state.sepratedChartInfo];
+  let updatedChartsData = {};
 
+  Object.entries(state.data).forEach(([k, v]) => {
+    if (k === chartId) {
+      updatedChartsData = { ...updatedChartsData, [k]: { ...v, hide: true } };
+      data.forEach((item, index) => {
+        updatedChartsData = {
+          ...updatedChartsData,
+          [uuidv4().replace(/\-/g, "")]: {
+            ...state.data[chartId],
+            data: item,
+            loading: false,
+            seprated: chartId,
+            filterName: filters[index].filter.name,
+          },
+        };
+      });
+    } else updatedChartsData = { ...updatedChartsData, [k]: v };
+  });
+
+  Object.entries(updatedChartsData)
+    .filter(([_, v]) => !v.hide)
+    .forEach(([k, v], index) => {
+      newLayouts = {
+        lg: [
+          ...newLayouts.lg,
+          {
+            minW: 5,
+            minH: 4,
+            w: 6,
+            h: 6,
+            x: ((index + 2) * 6) % 12,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        md: [
+          ...newLayouts.md,
+          {
+            minW: 5,
+            minH: 4,
+            w: 5,
+            h: 4,
+            x: (index * 5) % 10,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        sm: [
+          ...newLayouts.sm,
+          {
+            minW: 4,
+            minH: 4,
+            w: 6,
+            h: 4,
+            x: ((index + 2) * 6) % 6,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        xs: [
+          ...newLayouts.xs,
+          {
+            minW: 3,
+            minH: 3,
+            w: 4,
+            h: 4,
+            x: ((index + 2) * 4) % 4,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        xxs: [
+          ...newLayouts.xxs,
+          {
+            minW: 2,
+            minH: 3,
+            w: 3,
+            h: 3,
+            x: ((index + 2) * 3) % 4,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+      };
+    });
+
+  updatedSepratedChartInfo.push({
+    chartId: chartId,
+    colorIndex: (state.sepratedChartInfo.length + 1) % 2,
+  });
+  return {
+    ...state,
+    data: updatedChartsData,
+    layouts: newLayouts,
+    sepratedChartInfo: updatedSepratedChartInfo,
+  };
+};
 const clearCharts = (state, action) => {
   return {
     ...state,
@@ -84,80 +192,82 @@ const updateFaveList = (state, action) => {
 
 const setChartsData = (state, action) => {
   let newData = state.data;
-  let newLayouts = state.layouts;
-  Object.entries(action.data).map(([k, v], index) => {
-    newLayouts = {
-      lg: [
-        ...newLayouts.lg,
-        {
-          minW: 5,
-          minH: 4,
-          w: 6,
-          h: 6,
-          x: ((index + 2) * 6) % 12,
-          y: 0,
-          i: k,
-          // resizeHandles: ["se", "sw"]
-        },
-      ],
-      md: [
-        ...newLayouts.md,
-        {
-          minW: 5,
-          minH: 4,
-          w: 5,
-          h: 4,
-          x: ((index + 2) * 5) % 10,
-          y: 0,
-          i: k,
-          // resizeHandles: ["se", "sw"]
-        },
-      ],
-      sm: [
-        ...newLayouts.sm,
-        {
-          minW: 4,
-          minH: 4,
-          w: 6,
-          h: 4,
-          x: ((index + 2) * 6) % 6,
-          y: 0,
-          i: k,
-          // resizeHandles: ["se", "sw"]
-        },
-      ],
-      xs: [
-        ...newLayouts.xs,
-        {
-          minW: 3,
-          minH: 3,
-          w: 4,
-          h: 4,
-          x: ((index + 2) * 4) % 4,
-          y: 0,
-          i: k,
-          // resizeHandles: ["se", "sw"]
-        },
-      ],
-      xxs: [
-        ...newLayouts.xxs,
-        {
-          minW: 2,
-          minH: 3,
-          w: 3,
-          h: 3,
-          x: ((index + 2) * 3) % 4,
-          y: 0,
-          i: k,
-          // resizeHandles: ["se", "sw"]
-        },
-      ],
-    };
-    newData = {
-      ...newData,
-      [k]: v,
-    };
-  });
+  let newLayouts = { lg: [], md: [], sm: [], xs: [], xxs: [] };
+  Object.entries(action.data)
+    .filter((_, v) => !v.hide)
+    .map(([k, v], index) => {
+      newLayouts = {
+        lg: [
+          ...newLayouts.lg,
+          {
+            minW: 5,
+            minH: 4,
+            w: 6,
+            h: 6,
+            x: ((index + 2) * 6) % 12,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        md: [
+          ...newLayouts.md,
+          {
+            minW: 5,
+            minH: 4,
+            w: 5,
+            h: 4,
+            x: ((index + 2) * 5) % 10,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        sm: [
+          ...newLayouts.sm,
+          {
+            minW: 4,
+            minH: 4,
+            w: 6,
+            h: 4,
+            x: ((index + 2) * 6) % 6,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        xs: [
+          ...newLayouts.xs,
+          {
+            minW: 3,
+            minH: 3,
+            w: 4,
+            h: 4,
+            x: ((index + 2) * 4) % 4,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        xxs: [
+          ...newLayouts.xxs,
+          {
+            minW: 2,
+            minH: 3,
+            w: 3,
+            h: 3,
+            x: ((index + 2) * 3) % 4,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+      };
+      newData = {
+        ...newData,
+        [k]: v,
+      };
+    });
   return {
     ...state,
     data: newData,
@@ -186,6 +296,120 @@ const deleteChart = (state, action) => {
   return {
     ...state,
     data: newData,
+  };
+};
+const deleteCharts = (state, action) => {
+  const { chartsId } = action.payload;
+  let newData = {};
+
+  Object.entries(state.data).forEach(([k, v]) => {
+    if (chartsId.findIndex((item) => item === k) < 0)
+      newData = {
+        ...newData,
+        [k]: v,
+      };
+  });
+
+  return {
+    ...state,
+    data: newData,
+  };
+};
+const deleteSepratedCharts = (state, action) => {
+  const { id } = action.payload;
+  let updatedChartsData = {};
+  let newLayouts = { lg: [], md: [], sm: [], xs: [], xxs: [] };
+  let updatedSepratedChartInfo = [...state.sepratedChartInfo];
+
+  Object.entries(state.data).forEach(([k, v]) => {
+    if (k === id) {
+      updatedChartsData = {
+        ...updatedChartsData,
+        [k]: { ...v, hide: false },
+      };
+    } else if (v.seprated !== id)
+      updatedChartsData = { ...updatedChartsData, [k]: v };
+  });
+  Object.entries(updatedChartsData)
+    .filter(([_, v]) => !v.hide)
+    .forEach(([k, v], index) => {
+      newLayouts = {
+        lg: [
+          ...newLayouts.lg,
+          {
+            minW: 5,
+            minH: 4,
+            w: 6,
+            h: 6,
+            x: ((index + 2) * 6) % 12,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        md: [
+          ...newLayouts.md,
+          {
+            minW: 5,
+            minH: 4,
+            w: 5,
+            h: 4,
+            x: ((index + 2) * 5) % 10,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        sm: [
+          ...newLayouts.sm,
+          {
+            minW: 4,
+            minH: 4,
+            w: 6,
+            h: 4,
+            x: ((index + 2) * 6) % 6,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        xs: [
+          ...newLayouts.xs,
+          {
+            minW: 3,
+            minH: 3,
+            w: 4,
+            h: 4,
+            x: ((index + 2) * 4) % 4,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+        xxs: [
+          ...newLayouts.xxs,
+          {
+            minW: 2,
+            minH: 3,
+            w: 3,
+            h: 3,
+            x: ((index + 2) * 3) % 4,
+            y: 0,
+            i: k,
+            // resizeHandles: ["se", "sw"]
+          },
+        ],
+      };
+    });
+
+  updatedSepratedChartInfo = updatedSepratedChartInfo.filter(
+    (item) => item.chartId !== id
+  );
+  return {
+    ...state,
+    data: updatedChartsData,
+    layouts: newLayouts,
+    sepratedChartInfo: updatedSepratedChartInfo,
   };
 };
 
@@ -270,6 +494,10 @@ const reducer = (state = initialState, action) => {
       return setEditMode(state, action);
     case actionTypes.DELETE_CHART:
       return deleteChart(state, action);
+    case actionTypes.DELETE_SEPRATED_CHARTS:
+      return deleteSepratedCharts(state, action);
+    case actionTypes.DELETE_CHARTS:
+      return deleteCharts(state, action);
     case actionTypes.CLEAR_CHARTS:
       return clearCharts(state, action);
     case actionTypes.UPDATE_CHART_DATA:
@@ -288,6 +516,8 @@ const reducer = (state = initialState, action) => {
       return changeSelectedFilterId(state, action);
     case actionTypes.SET_MERGED_DATA:
       return setMergedData(state, action);
+    case actionTypes.SEPRATE_CHART:
+      return seprateChart(state, action);
     default:
       return state;
   }
