@@ -5,15 +5,12 @@ import Button from "../../../../component/UI/Button/Button";
 import * as addChartActions from "../../../../store/actions/addChart"
 import { useDispatch } from "react-redux";
 
-const SavedFilter = ({ item, setInitial, setFilterTitle, setId, index }) => {
+const SavedFilter = ({ item, setId, setFilterValues }) => {
     const [hover, setHover] = useState(false);
 
     const themeState = useTheme();
     const theme = themeState.computedTheme;
     const dispatch = useDispatch();
-    const setFilterFields = (payload) => {
-        dispatch(addChartActions.setFilterFields(payload));
-    };
     const changeFiltersMetaData = (payload) => {
         dispatch(addChartActions.changeFiltersMetaData(payload));
     };
@@ -27,21 +24,24 @@ const SavedFilter = ({ item, setInitial, setFilterTitle, setId, index }) => {
     }
 
     const onSavedFilterClick = () => {
-        const operator = item.type === "or" ?
-            "یا" : item.type === "and" ?
-                "و" : "";
-        setInitial(true)
-        setFilterFields({ operator, selected: index, fields: item.filters })
-        setFilterTitle(item.name)
         setId(item.id)
+    }
+
+    const onRemoveFilter = () => {
+        if (item.selected) {
+            setFilterValues(null)
+            setId(null)
+        }
+        changeFiltersMetaData({ id: item.id, name: item.name, remove: true, operator: "" })
     }
 
     return <div className="saved-filter"
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
-        onClick={onSavedFilterClick}
-        style={{ borderColor: hover ? theme.darken_border_color : theme.surface }}>
-        <p>{item.name}</p>
+        style={{ borderColor: hover || item.selected ? theme.darken_border_color : theme.surface }}>
+        <p
+            onClick={onSavedFilterClick}
+        >{item.name}</p>
         <Button
             ButtonStyle={{
                 opacity: hover ? "1" : "0",
@@ -51,7 +51,7 @@ const SavedFilter = ({ item, setInitial, setFilterTitle, setId, index }) => {
                 transition: "opacity 0.3s ease",
                 zIndex: "900"
             }}
-            onClick={() => changeFiltersMetaData({ id: item.id, name: item.name, add: false })}
+            onClick={onRemoveFilter}
         >حذف</Button>
     </div>;
 };

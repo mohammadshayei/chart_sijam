@@ -145,5 +145,6 @@ export const stringFa = {
   login: "ورود",
   login_to_bi: "ورود به سیستم های گزارشات هوش تجاری",
   separately: "نمایش مجزا",
-  merge_filters: "ادغام فیلترها"
+  merge_filters: "ادغام فیلترها",
+  select_a_filter: ".یک فیلتر را انتخاب کنید"
 };

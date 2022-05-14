@@ -48,10 +48,10 @@ export const removeDataField =
       });
     };
 
-export const setIsEdit = (isEdit) => (dispatch) => {
+export const setIsEdit = (payload) => (dispatch) => {
   dispatch({
     type: actionTypes.SET_IS_EDIT,
-    isEdit,
+    payload,
   });
 };
 export const updatedDataField = (payload) => (dispatch) => {
@@ -94,14 +94,6 @@ export const fullscreenChart =
       });
     };
 
-export const setFilterFields =
-  (payload) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.SET_FILTER_FIELDS,
-        payload,
-      });
-    };
 
 export const setAccessToAll =
   ({ accessType, access }) =>
@@ -153,6 +145,24 @@ export const setFiltersMetaData =
     (dispatch) => {
       dispatch({
         type: actionTypes.SET_FILTERS_META_DATA,
+        payload,
+      });
+    };
+
+export const selectFilter =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SELECT_FILTER,
+        payload,
+      });
+    };
+
+export const saveFilter =
+  (payload) =>
+    (dispatch) => {
+      dispatch({
+        type: actionTypes.SAVE_FILTER,
         payload,
       });
     };

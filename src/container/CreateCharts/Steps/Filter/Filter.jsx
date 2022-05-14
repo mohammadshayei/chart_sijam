@@ -9,27 +9,31 @@ import FilterFieldPicker from "./FilterFieldPicker";
 import Input from "../../../../component/UI/Input/Input";
 import SavedFilter from "./SavedFilter";
 import { v4 as uuidv4 } from 'uuid';
+import StyledButton from "../../../../component/UI/Button/StyledButton";
 
 const Filter = () => {
     const [loading, setLoading] = useState(false);
     const [selectedField, setSelectedField] = useState(null);
-    const [filterValues, setFilterValues] = useState([]);
+    const [filterValues, setFilterValues] = useState(null);
     const [operator, setOperator] = useState("یا");
     const [filterTitle, setFilterTitle] = useState("");
-    const [initial, setInitial] = useState(true);
     const [id, setId] = useState(null);
+    const [saveBtnText, setSaveBtnText] = useState("ذخیره فیلتر");
 
     const themeState = useTheme();
     const theme = themeState.computedTheme;
-    const { filterRules, metaData } = useSelector((state) => state.addChart);
+    const { metaData } = useSelector((state) => state.addChart);
     const functions = ["و", "یا"];
 
     const dispatch = useDispatch();
-    const setFilterFields = (payload) => {
-        dispatch(addChartActions.setFilterFields(payload));
-    };
     const changeFiltersMetaData = (payload) => {
         dispatch(addChartActions.changeFiltersMetaData(payload));
+    };
+    const selectFilter = (payload) => {
+        dispatch(addChartActions.selectFilter(payload));
+    };
+    const saveFilter = (payload) => {
+        dispatch(addChartActions.saveFilter(payload));
     };
 
     const onSelectLabelChangeHandler = (e) => {
@@ -60,17 +64,29 @@ const Filter = () => {
 
     const filter = () => {
         setLoading(true);
-        setFilterFields({ operator, selected: metaData.filters.length, fields: filterValues })
+        let updatedId = id ? id : uuidv4()
+        changeFiltersMetaData({ id: updatedId, name: filterTitle, remove: false, value: filterValues, operator })
+        setId(updatedId)
         setLoading(false)
     }
 
     const onSaveHandler = () => {
-        let updatedFilterValues = [...filterValues]
-        let updatedId = id ? id : uuidv4()
-        changeFiltersMetaData({ id: updatedId, name: filterTitle, add: true, value: updatedFilterValues })
-        setFilterValues([]);
+        saveFilter({ id, name: filterTitle })
+        setSaveBtnText("تغییر")
+        // setFilterValues(null)
+        // setId(null)
+        // setSelectedField(null)
+        // setFilterTitle("")
+        // selectFilter({ id: "" })
+    }
+
+    const newFilter = () => {
+        setFilterValues([])
         setId(null)
+        setSelectedField(null)
         setFilterTitle("")
+        setSaveBtnText("ذخیره فیلتر")
+        selectFilter({ id: "" })
     }
 
     const onFilterValueChangeHandler = (e, index) => {
@@ -85,6 +101,7 @@ const Filter = () => {
     }
 
     useEffect(() => {
+        if (!filterValues) return
         const exists = filterValues.some(f => (f.value === selectedField.id));
         if (!selectedField || exists) return
         let updatedFilterValues = [...filterValues];
@@ -97,20 +114,52 @@ const Filter = () => {
     }, [selectedField]);
 
     useEffect(() => {
-        if (filterRules.fields.length === 0 || !initial) return
-        setOperator(filterRules.operator)
-        setFilterValues(filterRules.fields)
-        setInitial(false)
-    }, [filterRules.fields]);
+        if (metaData.filters.length === 0) return
+        metaData.filters.forEach(filter => {
+            if (filter.selected)
+                setId(filter.id)
+        });
+    }, [metaData.filters]);
+
 
     useEffect(() => {
-        if (filterValues.length > 0 || initial) return
-        setSelectedField(null)
-        filter()
-    }, [filterValues]);
+        if (!id) return
+        selectFilter({ id })
+        metaData.filters.forEach(filter => {
+            if (filter.id === id) {
+                setOperator(filter.type === "and" ? "و" : "یا")
+                setFilterValues(filter.filters)
+                setFilterTitle(filter.name)
+                if (filter.saved)
+                    setSaveBtnText("تغییر")
+            }
+        });
+    }, [id]);
 
     return <div className="filter-step-container">
-        <div className="fields-and-rule">
+        {metaData.filters.length > 0 &&
+            <div className="saved-filters-list">
+                {metaData.filters.map((item, index) => {
+                    if (item.saved)
+                        return <SavedFilter
+                            key={item.id}
+                            item={item}
+                            setId={setId}
+                            setFilterValues={setFilterValues}
+                        />
+                })}
+            </div>}
+        <StyledButton
+            onClick={newFilter}
+            hover={
+                themeState.isDark ? theme.surface_1dp : theme.background_color
+            }
+            ButtonStyle={{ marginBottom: "1rem" }}
+        >
+            فیلتر جدید
+        </StyledButton>
+        {filterValues && <div className="fields-and-rule"
+            style={{ borderColor: theme.border_color }}>
             <FilterFieldPicker
                 index={0}
                 setSelected={onSelectField}
@@ -141,8 +190,8 @@ const Filter = () => {
                     ))}
                 </select>
             </div>
-        </div>
-        {filterValues.map((field, index) =>
+        </div>}
+        {filterValues?.map((field, index) =>
             <FieldFilter
                 key={index}
                 index={index}
@@ -152,13 +201,13 @@ const Filter = () => {
                 onNotValueChange={(e) => onNotValueChangeHandler(e, index)}
                 remove={removeFieldFilter} />
         )}
-        {filterValues.length > 0 && <Button
+        {filterValues?.length > 0 && <Button
             disabled={filterValues.length === 0 && true}
             loading={loading}
             ButtonStyle={{ fontSize: "0.7rem", margin: "1.5rem 0 0.5rem 0" }}
             onClick={filter}
         >فیلتر کردن</Button>}
-        {filterRules.fields.length > 0 && <div className="save-filter-section">
+        {id && <div className="save-filter-section">
             <Input
                 inputContainer={{ width: "75%" }}
                 elementType="input"
@@ -172,25 +221,12 @@ const Filter = () => {
                 ButtonStyle={{
                     fontSize: "0.6rem",
                     margin: "0 0.5rem 0 0",
-                    backgroundColor: theme.success
+                    backgroundColor: theme.success,
+                    width: "25%"
                 }}
                 onClick={onSaveHandler}
-            >ذخیره فیلتر</Button>
+            >{saveBtnText}</Button>
         </div>}
-        {metaData.filters.length > 0 &&
-            <div className="saved-filters-list"
-                style={{ borderColor: theme.border_color }}>
-                {metaData.filters.map((item, index) => {
-                    return <SavedFilter
-                        key={item.id}
-                        item={item}
-                        index={index}
-                        setInitial={setInitial}
-                        setFilterTitle={setFilterTitle}
-                        setId={setId}
-                    />
-                })}
-            </div>}
     </div>;
 };
 

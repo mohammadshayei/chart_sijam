@@ -2,12 +2,35 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	.saved-filters-list {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 1rem;
+		width: 100%;
+		.saved-filter {
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: space-between;
+			text-align: right;
+			width: 100%;
+			padding: 0.2em 0.5em;
+			border-radius: 5px;
+			cursor: pointer;
+			border: 1px solid;
+			transition: all 0.3s ease;
+			p {
+				width: 100%;
+			}
+		}
+	}
 	.fields-and-rule {
 		display: flex;
 		flex-direction: row-reverse;
 		align-items: center;
+		border-top: 1px solid;
 		width: 100%;
-		margin-bottom: 1rem;
+		padding-top: 1rem;
 		.filter-setup {
 			position: relative;
 			display: flex;
@@ -121,6 +144,7 @@
 		flex-direction: row-reverse;
 		justify-content: center;
 		align-items: flex-end;
+		margin-top: 1rem;
 		width: 100%;
 	}
 	.save-filter-section {
@@ -128,22 +152,5 @@
 		flex-direction: row-reverse;
 		width: 100%;
 		margin: 1rem 0;
-	}
-	.saved-filters-list {
-		padding-top: 1rem;
-		border-top: 1px solid;
-		width: 100%;
-		.saved-filter {
-			display: flex;
-			flex-direction: row-reverse;
-			justify-content: space-between;
-			text-align: right;
-			width: 100%;
-			padding: 0.2em 0.5em;
-			border-radius: 5px;
-			cursor: pointer;
-			border: 1px solid;
-			transition: all 0.3s ease;
-		}
 	}
 }

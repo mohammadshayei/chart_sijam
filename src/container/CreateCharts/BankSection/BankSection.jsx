@@ -10,15 +10,20 @@ const BankSection = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const [tableData, setTableData] = useState([]);
-  const { data, filterRules } = useSelector((state) => state.addChart);
+  const { data, metaData } = useSelector((state) => state.addChart);
 
   useEffect(() => {
-    if (!data || !filterRules) return
-    if (filterRules.fields.length > 0) {
-      setTableData(filterData(data, filterRules))
-    } else
-      setTableData(data)
-  }, [data, filterRules]);
+    if (!data || !metaData) return
+    let newData = data
+    if (metaData.filters.length > 0) {
+      metaData.filters.forEach(filter => {
+        if (filter.selected) {
+          newData = filterData(data, filter)
+        }
+      });
+    }
+    setTableData(newData)
+  }, [data, metaData]);
 
   return (
     <div className="bank-section-container">

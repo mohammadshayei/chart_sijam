@@ -13,7 +13,7 @@ const XAxisStep = () => {
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
-  const { metaData, emptyRequireds, filterRules, data, chartData } = useSelector((state) => state.addChart);
+  const { metaData, emptyRequireds, data, chartData } = useSelector((state) => state.addChart);
 
   const dispatch = useDispatch();
   const setChartData = (chartData) => {
@@ -66,11 +66,14 @@ const XAxisStep = () => {
 
   useEffect(() => {
     if (!metaData || !data) return;
-    let rawData = [];
-    if (filterRules.fields.length > 0) {
-      rawData = filterData(data, filterRules);
-    } else
-      rawData = data
+    let rawData = data;
+    if (metaData.filters.length > 0) {
+      metaData.filters.forEach(filter => {
+        if (filter.selected) {
+          rawData = filterData(data, filter);
+        }
+      });
+    }
 
     let updatedChartData = chartData;
     let chartDataUpdated = [];
@@ -149,7 +152,7 @@ const XAxisStep = () => {
 
     setChartData(updatedChartData);
 
-  }, [metaData, filterRules]);
+  }, [metaData]);
 
 
   return (

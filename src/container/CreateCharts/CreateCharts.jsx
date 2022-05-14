@@ -177,9 +177,6 @@ const CreateCharts = (props) => {
   const updateFaveCategory = (payload) => {
     dispatch(holdingActions.updateFaveCategory(payload));
   };
-  const setFilterFields = (payload) => {
-    dispatch(addChartActions.setFilterFields(payload));
-  };
   const clearMetaData = () => {
     dispatch(addChartActions.clearMetaData());
   };
@@ -271,11 +268,10 @@ const CreateCharts = (props) => {
         },
       },
     };
-    setIsEdit(false)
+    setIsEdit({ isEdit: false })
     setChartData(clearedChartData);
     setId("");
     selectChartDatabase([]);
-    setFilterFields({ operator: "", selected: 0, fields: [] });
     clearMetaData()
     if (location.pathname === "/create_chart")
       navigate('/view')
@@ -327,6 +323,17 @@ const CreateCharts = (props) => {
   const checkValidation = (dialog) => {
     setAutoValidate(true)
     let errorText, updatedStepErrors = []
+    if (takenData.metaData.filters.length > 0) {
+      let isSelect = false;
+      takenData.metaData.filters.forEach(filter => {
+        if (filter.selected)
+          isSelect = true;
+      })
+      if (!isSelect) {
+        updatedStepErrors = [...updatedStepErrors, "filter"]
+        errorText = stringFa.select_a_filter
+      }
+    };
     if (!takenData.chartData.title) {
       updatedStepErrors = [...updatedStepErrors, "input"]
       errorText = stringFa.title_is_empty
@@ -435,7 +442,7 @@ const CreateCharts = (props) => {
               field: item.value
             }
           }),
-          selectedFilter: takenData.filterRules.selectedFilter,
+          selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
         }
       };
     } else {
@@ -483,7 +490,7 @@ const CreateCharts = (props) => {
               field: item.value
             }
           }),
-          selectedFilter: takenData.filterRules.selectedFilter,
+          selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
         }
       };
     }
@@ -556,7 +563,7 @@ const CreateCharts = (props) => {
                     field: item.value
                   }
                 }),
-                selectedFilter: takenData.filterRules.selectedFilter,
+                selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
               },
 
               time: updatedChartsData[takenData.id].time,
@@ -618,7 +625,7 @@ const CreateCharts = (props) => {
         fullscreenChart({ isFullscreen: false });
         break;
       case "setting":
-        setIsEdit(true);
+        setIsEdit({ isEdit: true });
         break;
       case "delete":
         onDelete()
@@ -642,7 +649,7 @@ const CreateCharts = (props) => {
   }
 
   const changeEditMode = async () => {
-    setIsEdit(!takenData.isEdit)
+    setIsEdit({ isEdit: !takenData.isEdit })
     fetchBankData()
   }
 
@@ -728,7 +735,7 @@ const CreateCharts = (props) => {
       let result = await fetchData({ id: bankId }, token)
       selectChartDatabase(result.data.data);
       setId(bankId);
-      setIsEdit(true);
+      setIsEdit({ isEdit: true });
       setEditMode({ isEdit: true });
     })()
     return controller?.abort()
@@ -807,7 +814,7 @@ const CreateCharts = (props) => {
   useEffect(() => {
     let selectedChartData = chartsData.data[takenData.id];
     if (!takenData.isEdit || !takenData.isFullscreen || !selectedChartData) return
-    let takenMetaData = [], filterValues;
+    let takenMetaData = [];
     selectedChartData?.dataInfo?.filters.forEach((element, i) => {
       takenMetaData = [...takenMetaData,
       {
@@ -821,24 +828,10 @@ const CreateCharts = (props) => {
             value: item.rule.field.value,
             content: item.rule.content
           }
-        })
-      }
-      ]
-      if (i === selectedChartData.dataInfo.selectedFilter) {
-        filterValues = element.filter.rules.map(item => {
-          return {
-            type: item.rule.field.type,
-            value: item.rule.field.value,
-            name: item.rule.field.name,
-            content: item.rule.content
-          }
-        })
-        setFilterFields({
-          operator: element.filter.type,
-          selected: selectedChartData.dataInfo.selectedFilter,
-          fields: filterValues
-        })
-      }
+        }),
+        saved: true,
+        selected: i === selectedChartData.dataInfo.selectedFilter && true
+      }]
     });
     setFiltersMetaData({ filters: takenMetaData })
   }, [takenData.isEdit, takenData.isFullscreen]);
@@ -932,10 +925,10 @@ const CreateCharts = (props) => {
           className="section-header-wrapper"
           style={{ borderColor: theme.border_color, height: '4rem' }}
         >
-          <div className="filters">
+          {!takenData.isEdit && <div className="filters">
             <div className="wrapper">
               {
-                Object.entries(chartsData.data[takenData?.id]?.mergedData).length > 0 ?
+                Object.entries(chartsData?.data[takenData?.id]?.mergedData).length > 0 ?
                   <div onClick={onCancelMerge}
                     className="cancel"
                     style={{ borderColor: theme.primary, color: theme.primary }} >
@@ -950,7 +943,7 @@ const CreateCharts = (props) => {
                   />
               }
             </div>
-          </div>
+          </div>}
           <div className="close">
             <StyledButton
               ButtonStyle={{

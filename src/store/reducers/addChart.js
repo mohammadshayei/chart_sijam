@@ -260,7 +260,7 @@ const removeDataField = (state, action) => {
 };
 
 const setIsEdit = (state, action) => {
-  const { isEdit } = action;
+  const { isEdit } = action.payload;
   return {
     ...state,
     isEdit,
@@ -335,32 +335,21 @@ const fullscreenChart = (state, action) => {
   };
 };
 
-const setFilterFields = (state, action) => {
-  const { operator, selected, fields } = action.payload;
-  return {
-    ...state,
-    filterRules: {
-      operator,
-      selectedFilter: selected,
-      fields: fields
-    },
-  };
-};
 
 const changeFiltersMetaData = (state, action) => {
-  const { id, name, add, value } = action.payload;
+  const { id, name, remove, value, operator } = action.payload;
   let updatedMetaData = { ...state.metaData }
   let updatedFilters = [...updatedMetaData.filters]
 
   let check = updatedFilters.findIndex(item => item.id === id)
   if (check > -1) {
-    if (add) {
-      updatedFilters[check].name = name;
-      updatedFilters[check].type = state.filterRules.operator;
-      updatedFilters[check].rules = state.filterRules.filters;
+    if (remove) {
+      updatedFilters = updatedFilters.filter(item => item.id !== id)
     }
     else {
-      updatedFilters = updatedFilters.filter(item => item.id !== id)
+      updatedFilters[check].name = name;
+      updatedFilters[check].type = operator;
+      updatedFilters[check].rules = value;
     }
   } else {
     updatedFilters = [
@@ -368,13 +357,49 @@ const changeFiltersMetaData = (state, action) => {
       {
         id,
         name,
-        type: state.filterRules.operator === "یا" ?
-          "or" : state.filterRules.operator === "و" ?
+        type: operator === "یا" ?
+          "or" : operator === "و" ?
             "and" : "",
-        filters: value
+        filters: value,
+        selected: false,
+        saved: false
       }
     ]
   }
+  updatedMetaData.filters = updatedFilters;
+  return {
+    ...state,
+    metaData: updatedMetaData,
+  };
+};
+
+const selectFilter = (state, action) => {
+  const { id } = action.payload;
+  let updatedMetaData = { ...state.metaData }
+
+  updatedMetaData.filters.forEach(filter => {
+    if (filter.id === id)
+      filter.selected = true
+    else
+      filter.selected = false
+  });
+  return {
+    ...state,
+    metaData: updatedMetaData,
+  };
+};
+
+const saveFilter = (state, action) => {
+  const { id, name } = action.payload;
+  let updatedMetaData = { ...state.metaData }
+  let updatedFilters = [...updatedMetaData.filters]
+
+  updatedFilters.forEach(filter => {
+    if (filter.id === id) {
+      filter.name = name
+      filter.saved = true
+    }
+  });
   updatedMetaData.filters = updatedFilters;
   return {
     ...state,
@@ -572,8 +597,6 @@ const reducer = (state = initialState, action) => {
       return setChartOptionsAndType(state, action);
     case actionTypes.FULL_SCREEN_CHART:
       return fullscreenChart(state, action);
-    case actionTypes.SET_FILTER_FIELDS:
-      return setFilterFields(state, action);
     case actionTypes.SET_ACCESS_TO_ALL:
       return setAccessToAll(state, action);
     case actionTypes.UPDATE_ACCESS_LIST:
@@ -586,6 +609,10 @@ const reducer = (state = initialState, action) => {
       return changeFieldsMEtaData(state, action);
     case actionTypes.CHANGE_FILTERS_IN_META_DATA:
       return changeFiltersMetaData(state, action);
+    case actionTypes.SELECT_FILTER:
+      return selectFilter(state, action);
+    case actionTypes.SAVE_FILTER:
+      return saveFilter(state, action);
     case actionTypes.CHANGE_CLEAR_META_DATA:
       return clearMetaData(state);
     case actionTypes.SET_FILTERS_META_DATA:
