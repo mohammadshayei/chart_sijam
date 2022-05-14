@@ -5,11 +5,11 @@ export const updateObject = (oldObject, updatedProperties) => {
   };
 };
 
-export const filterData = (data, filterRules) => {
+export const filterData = (data, filter) => {
   let filteredData = [];
   data.forEach((record) => {
-    let valid = filterRules.operator === "یا" ? false : true;
-    filterRules.fields.forEach((rule) => {
+    let valid = filter.type === "or" ? false : true;
+    filter.filters.forEach((rule) => {
       let tempValid;
       if (rule.content.value === "") tempValid = true;
       else
@@ -17,7 +17,7 @@ export const filterData = (data, filterRules) => {
           ? record[rule.name].data.localeCompare(rule.content.value) !== 0
           : record[rule.name].data.localeCompare(rule.content.value) === 0;
       valid =
-        filterRules.operator === "یا" ? valid || tempValid : valid && tempValid;
+        filter.type === "or" ? valid || tempValid : valid && tempValid;
     });
     if (valid) filteredData.push(record);
   });
