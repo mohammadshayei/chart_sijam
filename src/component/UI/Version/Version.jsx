@@ -12,6 +12,10 @@ const Version = () => {
     const themeState = useTheme();
     const theme = themeState.computedTheme;
 
+    const major = 1;
+    const minor = 0;
+    const revision = 8;
+
     const onMouseEnter = () => {
         setHover(true);
     };
@@ -40,7 +44,7 @@ const Version = () => {
             {hintShow &&
                 <Hint
                     show={hintShow}
-                    hint={stringFa.version}
+                    hint={`${major}.${minor}.${revision} ${stringFa.version}`}
                     tooltipStyle={{ fontSize: "0.8rem", fontWegith: "bolder" }} />}
         </div>
     )
