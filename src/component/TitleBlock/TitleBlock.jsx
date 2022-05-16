@@ -137,6 +137,15 @@ const TitleBlock = React.memo((props) => {
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
+  const deleteSepratedCharts = (payload) => {
+    dispatch(chartActions.deleteSepratedCharts(payload));
+  };
+  const seprateChart = (payload) => {
+    dispatch(chartActions.seprateChart(payload));
+  };
+  const updateChartOptions = (payload) => {
+    dispatch(chartActions.updateChartOptions(payload));
+  };
 
   const undoDeleteChartHandler = () => {
     setChart({ chartId: props.chartId, chartData: deletedChart[0] });
@@ -181,7 +190,7 @@ const TitleBlock = React.memo((props) => {
         { headers: { "auth-token": token } }
       );
       selectChartDatabase(result.data.result.data);
-      setIsEdit(true);
+      setIsEdit({ isEdit: true });
     }
     fullscreenChart({ isFullscreen: true });
     selectedChartData.dataInfo?.fields.forEach((field, i) => {
@@ -237,7 +246,29 @@ const TitleBlock = React.memo((props) => {
       default:
         chartTypes.forEach((type) => {
           if (id === type.id) {
-            setChartType({ key: props.chartId, value: id, item: "type" });
+            if (id === "Doughnut") {
+              let payload = {
+                key: props.chartId,
+                items: {
+                  isDoughnut: true,
+                  innerRadius: 50
+                }
+              }
+              updateChartOptions(payload)
+              setChartType({ key: props.chartId, value: "Pie", item: "type" });
+            } else {
+              if (id === "Pie") {
+                let payload = {
+                  key: props.chartId,
+                  items: {
+                    isDoughnut: false,
+                    innerRadius: 0.0001
+                  }
+                }
+                updateChartOptions(payload)
+              }
+              setChartType({ key: props.chartId, value: id, item: "type" });
+            }
           }
         });
         break;
@@ -270,18 +301,34 @@ const TitleBlock = React.memo((props) => {
     setchartLabel({ chartId: props.chartId, label: titleValue })
     changeInfoINSourceCharts({ chartId: props.chartId, value: titleValue, mode: "label" })
   }
-  const onCancelMerge = async () => {
-    let result = await getFilteredData({ chartId: props.chartId, filterId: props.filters[props.selectedFilter]._id }, token)
-    changeSelectedFilter({
-      chartId: props.chartId,
-      id: props.filters[props.selectedFilter]._id
-    })
-    updateChartData({
-      chartId: props.chartId,
-      chartData: result.data,
-      lastUpdate: new Date(),
-    });
+  const onCancelMergeOrSeprate = async (type) => {
+    if (type === 'merge') {
+      let result = await getFilteredData({ chartId: props.chartId, filterId: props.filters[props.selectedFilter]._id }, token)
+      changeSelectedFilter({
+        chartId: props.chartId,
+        id: props.filters[props.selectedFilter]._id
+      })
+      updateChartData({
+        chartId: props.chartId,
+        chartData: result.data,
+        lastUpdate: new Date(),
+      });
+    } else {
+      deleteSepratedCharts({ id: props.seprated })
+      let result = await getFilteredData({ chartId: props.seprated, filterId: props.filters[props.selectedFilter]._id }, token)
+      changeSelectedFilter({
+        chartId: props.seprated,
+        id: props.filters[props.selectedFilter]._id
+      })
+      updateChartData({
+        chartId: props.seprated,
+        chartData: result.data,
+        lastUpdate: new Date(),
+      });
+
+    }
   }
+
   const onChangeFilter = async (e) => {
     changeLoading({
       chartId: props.chartId,
@@ -307,22 +354,7 @@ const TitleBlock = React.memo((props) => {
         chartId: props.chartId,
         loading: false,
       })
-
-      let updatedChartsData = { ...chartsData.data }
-      updatedChartsData[props.chartId].hide = true;
-      result.data.forEach((item) => {
-        updatedChartsData = {
-          ...updatedChartsData,
-          [uuidv4().replace(/\-/g, "")]: {
-            ...updatedChartsData[props.chartId],
-            data: item,
-            hide: false,
-            loading: false,
-            seprated: props.chartId
-          }
-        }
-      })
-      setChartsData(updatedChartsData)
+      seprateChart({ chartId: props.chartId, data: result.data, filters: props.filters })
     }
     else {
       let result = await getFilteredData({ chartId: props.chartId, filterId: e.target.value }, token)
@@ -343,23 +375,24 @@ const TitleBlock = React.memo((props) => {
       name: stringFa.full_screen,
       id: "fullScreen",
       icon: <BsArrowsFullscreen />,
-    }, {
+    }]
+    if (!props.seprated) updatedExtraItems.push({
       name: stringFa.add_to_list_2,
       id: "createList",
       icon: <AiOutlinePlus />,
-    }]
-    if (props.shareable) updatedExtraItems.push({
+    })
+    if (props.shareable && !props.seprated) updatedExtraItems.push({
       name: stringFa.share,
       id: "share",
       icon: <FaUserFriends />,
     })
-    if (props.editable) {
+    if (props.editable && !props.seprated) {
       updatedExtraItems = [...updatedExtraItems,
       { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
       { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
     }
     setExtraItems(updatedExtraItems)
-  }, [props.shareable, props.editable])
+  }, [props.shareable, props.editable, props.seprated])
 
   useEffect(() => {
     if (!selectedHolding || !selectedHolding.categories) return;
@@ -368,6 +401,7 @@ const TitleBlock = React.memo((props) => {
     let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === props.chartId) > -1
     setFaveCat(updatedFaveCat)
   }, [selectedHolding])
+
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
       {error}
@@ -445,35 +479,24 @@ const TitleBlock = React.memo((props) => {
             props.filters?.length > 0 &&
             <div className="filter">
               {
-                props.isMerged ?
+                props.isMerged || props.filterName ?
                   <div className="merged-filters">
-                    <div onClick={onCancelMerge} className="cancel" style={{ borderColor: theme.primary, color: theme.primary }} >
+                    <div onClick={() => onCancelMergeOrSeprate(props.filterName ? 'seprate' : 'merge')} className="cancel" style={{ borderColor: theme.primary, color: theme.primary }} >
                       <MdCancel />
-                      <p>{stringFa.merge_filters}</p>
+                      <p>{props.filterName ? props.filterName : stringFa.merge_filters}</p>
                     </div>
-                    {/* <img
-                      className="chart-image"
-                      src={`${baseUrl}images/bar-chart-default.svg`}
-                      alt=""
-                    />
-                    <img
-                      className="chart-image"
-                      src={`${baseUrl}images/stacked-bar-chart-default.svg`}
-                      alt=""
-                    /> */}
                   </div>
                   :
                   <FilterSelector
                     onChange={onChangeFilter}
                     filters={props.filters}
-                    // filters={props.seprated ? [] : props.filters}
                     selectedFilter={props.selectedFilter}
                   />
               }
             </div>
           }
           <div className="title">
-            <div
+            {!props.seprated ? <div
               className="editable-component"
               ref={titleRef}
               onClick={() => {
@@ -500,6 +523,12 @@ const TitleBlock = React.memo((props) => {
                 </div>
               )}
             </div>
+              :
+              <div className="not_editable">
+                {props.label ? props.label : props.title}
+              </div>
+            }
+
           </div>
         </div>
         {chartsData.editMode ? (
@@ -513,6 +542,7 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         ) : (
+          !props.seprated &&
           <div className="right-icon-container">
             {props.shareable &&
               <StyledButton
@@ -546,7 +576,8 @@ const TitleBlock = React.memo((props) => {
               )}
             </StyledButton>
           </div>
-        )}
+        )
+        }
       </div>
     </div >
   );

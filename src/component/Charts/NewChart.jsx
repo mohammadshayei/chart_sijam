@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5percent from "@amcharts/amcharts5/percent";
@@ -52,7 +52,7 @@ const NewChart = ({ chartId, chartProps }) => {
     //     "تخلیه": 0.9,
     //     "در اختیار معاونت فرهنگی": 0.5
     // }]
-
+    
     useLayoutEffect(() => {
         let updatedCreatedChart = { ...createdChart }
         let root = am5.Root.new(`${chartId}`);
@@ -150,10 +150,10 @@ const NewChart = ({ chartId, chartProps }) => {
 
         responsive.addRule({
             relevant: function (width, height) {
-                return width < 700 || height < 400;
+                return width < 850 || height < 400;
             },
             applying: function () {
-                if (type == "Pie") {
+                if (type === "Pie") {
                     updatedCreatedChart.series.labels.template.setAll({
                         forceHidden: true
                     });
@@ -161,7 +161,7 @@ const NewChart = ({ chartId, chartProps }) => {
                 }
             },
             removing: function () {
-                if (type == "Pie") {
+                if (type === "Pie") {
                     updatedCreatedChart.series.labels.template.setAll({
                         forceHidden: false
                     });
@@ -278,7 +278,7 @@ const NewChart = ({ chartId, chartProps }) => {
                     am5xy.CategoryAxis.new(root, {
                         maxDeviation: 0.3,
                         renderer: am5xy.AxisRendererX.new(root, {
-                            minGridDistance: 10
+                            minGridDistance: 30
                         }),
                         categoryField: "category",
                     })
@@ -345,7 +345,7 @@ const NewChart = ({ chartId, chartProps }) => {
                     am5xy.CategoryAxis.new(root, {
                         maxDeviation: 0.3,
                         renderer: am5xy.AxisRendererX.new(root, {
-                            minGridDistance: 10
+                            minGridDistance: 30
                         }),
                         categoryField: "category",
                     })
@@ -633,7 +633,6 @@ const NewChart = ({ chartId, chartProps }) => {
             updatedCreatedChart.chart.set("cursor", am5xy.XYCursor.new(root, {}));
 
         } else if (type === "Pie") {
-
             let percentY, idx = 0;
             for (const name in options.fieldNames) {
                 percentY = Object.entries(options.fieldNames).length === 1 ? 50 :
@@ -687,6 +686,7 @@ const NewChart = ({ chartId, chartProps }) => {
 
     return (
         <div id={`${chartId}`} style={{ width: "100%", height: "100%" }}></div>
+
     );
 }
 export default NewChart;

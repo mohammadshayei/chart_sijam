@@ -2,21 +2,21 @@ import * as actionTypes from "./actionTypes";
 
 export const setChartType =
   ({ key, value, item }) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.SET_CHART_TYPE,
-        payload: { key, value, item },
-      });
-    };
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_CHART_TYPE,
+      payload: { key, value, item },
+    });
+  };
 
 export const setChartData =
   ({ chartId, chartData }) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.SET_CHART_DATA,
-        payload: { chartId, chartData },
-      });
-    };
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_CHART_DATA,
+      payload: { chartId, chartData },
+    });
+  };
 
 export const setChartsData = (data) => (dispatch) => {
   dispatch({
@@ -27,21 +27,21 @@ export const setChartsData = (data) => (dispatch) => {
 
 export const setEditMode =
   ({ isEdit }) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.SET_EDIT_MODE,
-        payload: { isEdit },
-      });
-    };
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.SET_EDIT_MODE,
+      payload: { isEdit },
+    });
+  };
 
 export const deleteChart =
   ({ chartId }) =>
-    (dispatch) => {
-      dispatch({
-        type: actionTypes.DELETE_CHART,
-        payload: { chartId },
-      });
-    };
+  (dispatch) => {
+    dispatch({
+      type: actionTypes.DELETE_CHART,
+      payload: { chartId },
+    });
+  };
 
 export const clearCharts = () => (dispatch) => {
   dispatch({
@@ -95,6 +95,31 @@ export const changeLoading = (payload) => (dispatch) => {
 export const changeSelectedFilter = (payload) => (dispatch) => {
   dispatch({
     type: actionTypes.CHANGE_SELECTED_FILTER,
+    payload,
+  });
+};
+export const deleteCharts = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.DELETE_CHARTS,
+    payload,
+  });
+};
+export const deleteSepratedCharts = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.DELETE_SEPRATED_CHARTS,
+    payload,
+  });
+};
+
+export const seprateChart = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.SEPRATE_CHART,
+    payload,
+  });
+};
+export const updateChartOptions = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_CHART_OPTIONS,
     payload,
   });
 };

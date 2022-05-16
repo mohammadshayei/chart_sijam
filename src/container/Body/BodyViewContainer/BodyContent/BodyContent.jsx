@@ -40,7 +40,7 @@ const BodyContent = (props) => {
             rowHeight={60}
             breakpoints={{ lg: 1280, md: 992, sm: 767, xs: 480, xxs: 0 }}
             cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            // onLayoutChange={onLayoutChange}
+            // onLayoutChange={(e)=>{console.log(e)}}
             style={{
               backgroundImage: chartsData.editMode
                 ? `radial-gradient(${themeState.isDark ? theme.border_color : "#BBBBBB"

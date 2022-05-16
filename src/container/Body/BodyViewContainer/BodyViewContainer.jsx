@@ -223,14 +223,14 @@ const BodyViewContainer = (props) => {
           time: item.time,
           selectedFilterId: item.chart.data_info.filters?.length > 0 ? item.chart.data_info.filters[item.chart.data_info.selectedFilter]._id : null,
           loading: false,
+          seprated: '',
           hide: false,
-          seprated: ''
+          filterName: ""
         },
       };
     });
     setChartsData(newChartsData);
   }, [filteredCharts])
-
 
 
   const timer = async () => {

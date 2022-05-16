@@ -75,6 +75,7 @@ const Block = ({ data, title, hasChild, onChange, addItem, addLoading, deleteIte
                         key={info._id}
                         bankId={info.bankId}
                         typeId={info.typeId}
+                        dataTime={info.dataTime}
                         name={info.name}
                         parents={info.parents}
                         path={info.orgParents}

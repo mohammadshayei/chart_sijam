@@ -19,8 +19,7 @@ const Card = React.memo((props) => {
   const [isHover, setIsHover] = useState(false);
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const [fave, setFave] = useState(false)
-
-
+  const [sepratedInfo, setSepratedInfo] = useState(null)
 
   const chartsData = useSelector((state) => state.chart);
   const { userId, socket } = useSelector((state) => state.auth);
@@ -31,6 +30,8 @@ const Card = React.memo((props) => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
+
+  let colors = [theme.border_color, theme.darken_border_color]
   const rootMargin = '-250px'
   let isVisible = useIntersection(cardRef, rootMargin)
   const dispatch = useDispatch();
@@ -119,6 +120,9 @@ const Card = React.memo((props) => {
     let fave = props.item.faveList.findIndex(item => item.user === userId) > -1;
     setFave(fave)
   }, [props.item.faveList])
+  useEffect(() => {
+    setSepratedInfo(chartsData.sepratedChartInfo.find(item => item.chartId === props.item.seprated))
+  }, [props.seprated, chartsData.sepratedChartInfo])
 
   // 1-> access, 2-> creator, 3-> specific send  ,4-> shared to you
   return (
@@ -128,8 +132,8 @@ const Card = React.memo((props) => {
       onMouseLeave={onMouseLeave}
       ref={cardRef}
       style={{
-        boxShadow: props.item.seprated !== "" ? `0 0 0 1rem ${theme.darken_border_color}` : '',
-        borderRadius: props.item.seprated !== "" ? "0" : "10px",
+        boxShadow: sepratedInfo ? `0 0 0 1rem ${colors[sepratedInfo.colorIndex]}` : '',
+        borderRadius: sepratedInfo ? "0" : "10px",
         backgroundColor: isHover
           ? themeState.isDark
             ? theme.surface_4dp
@@ -152,6 +156,7 @@ const Card = React.memo((props) => {
         parent={props.item.parent}
         bankId={props.item.bankId}
         seprated={props.item.seprated}
+        filterName={props.item.filterName}
         isMerged={isRealValue(props.item.mergedData)}
         editable={props.item.editList.findIndex(item => item.user._id === userId) > -1}
         shareable={props.item.shareList.findIndex(item => item.user._id === userId) > -1}
@@ -172,18 +177,22 @@ const Card = React.memo((props) => {
       </div>
       <div className="card-footer">
         <div className="left-side">
-          <div className="like">
-            {fave ?
-              <AiFillHeart color="red" className="icon" onClick={onFaveClick} />
-              :
-              <AiOutlineHeart className="icon" onClick={onFaveClick} />
-            }
-            <p className="number">{props.item.faveList?.length}</p>
-          </div>
-          <div className="like">
-            <FaRegComment className="icon" />
-            <p className="number">{props.item.comments?.length}</p>
-          </div>
+          {!props.item.seprated &&
+            <>
+              <div className="like">
+                {fave ?
+                  <AiFillHeart color="red" className="icon" onClick={onFaveClick} />
+                  :
+                  <AiOutlineHeart className="icon" onClick={onFaveClick} />
+                }
+                <p className="number">{props.item.faveList?.length}</p>
+              </div>
+              <div className="like">
+                <FaRegComment className="icon" />
+                <p className="number">{props.item.comments?.length}</p>
+              </div>
+            </>
+          }
           <p className="date">{lastBankUpdate}</p>
 
         </div>

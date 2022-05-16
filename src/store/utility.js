@@ -11,18 +11,26 @@ export const filterData = (data, filter) => {
     let valid = filter.type === "or" ? false : true;
     filter.filters.forEach((rule) => {
       let tempValid;
-      if (rule.content.value === "") tempValid = true;
-      else
+      if (rule.content.value === "") {
+        // tempValid = true;
+        if (record[rule.name].data) tempValid = rule.content.not ? true : false;
+        else tempValid = rule.content.not ? false : true;
+      } else {
         tempValid = rule.content.not
-          ? record[rule.name].data.localeCompare(rule.content.value) !== 0
-          : record[rule.name].data.localeCompare(rule.content.value) === 0;
-      valid =
-        filter.type === "or" ? valid || tempValid : valid && tempValid;
+          ? record[rule.name].data?.localeCompare(rule.content.value) !== 0
+          : record[rule.name].data?.localeCompare(rule.content.value) === 0;
+      }
+      valid = filter.type === "or" ? valid || tempValid : valid && tempValid;
     });
     if (valid) filteredData.push(record);
   });
   return filteredData;
 };
 export const isRealValue = (obj) => {
-  return obj && obj !== 'null' && obj !== 'undefined' && Object.keys(obj).length !== 0
-}
+  return (
+    obj &&
+    obj !== "null" &&
+    obj !== "undefined" &&
+    Object.keys(obj).length !== 0
+  );
+};
