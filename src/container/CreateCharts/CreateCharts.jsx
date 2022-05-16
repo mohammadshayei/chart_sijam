@@ -183,6 +183,9 @@ const CreateCharts = (props) => {
   const setFiltersMetaData = (payload) => {
     dispatch(addChartActions.setFiltersMetaData(payload));
   };
+  const selectFilter = (payload) => {
+    dispatch(addChartActions.selectFilter(payload));
+  };
 
   const toggleShareModal = () => {
     setShowModal(!showModal)
@@ -669,7 +672,6 @@ const CreateCharts = (props) => {
       let result = await getChartFilterData({ id: takenData.id }, token)
       let updatedData = [];
       if (result.success) {
-        console.log(result.data);
         result.data.forEach((item, index) => {
           let temp = { group: chartsData.data[takenData?.id]?.dataInfo.filters[index].filter.name }
           item.forEach(row => {
@@ -813,12 +815,12 @@ const CreateCharts = (props) => {
 
   useEffect(() => {
     let selectedChartData = chartsData.data[takenData.id];
-    if (!takenData.isEdit || !takenData.isFullscreen || !selectedChartData) return
+    if (!takenData.isFullscreen || !selectedChartData) return
     let takenMetaData = [];
     selectedChartData?.dataInfo?.filters.forEach((element, i) => {
       takenMetaData = [...takenMetaData,
       {
-        id: element.filter._id,
+        id: element._id,
         name: element.filter.name,
         type: element.filter.type,
         filters: element.filter.rules.map(item => {
@@ -834,8 +836,17 @@ const CreateCharts = (props) => {
       }]
     });
     setFiltersMetaData({ filters: takenMetaData })
-  }, [takenData.isEdit, takenData.isFullscreen]);
+  }, [takenData.isFullscreen]);
 
+  useEffect(() => {
+    let selectedChartData = chartsData?.data[takenData.id];
+    if (!takenData.isFullscreen || !selectedChartData) return
+    takenData.metaData.filters.forEach((filter) => {
+      if (filter.id === selectedChartData.selectedFilterId) {
+        selectFilter({ id: filter.id })
+      }
+    });
+  }, [chartsData?.data[takenData.id]?.selectedFilterId]);
 
   return (
     <div
