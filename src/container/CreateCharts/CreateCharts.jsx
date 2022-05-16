@@ -24,8 +24,6 @@ import AddChartToCategory from "../../component/TitleBlock/AddChartToCategory/Ad
 import Modal from "../../component/UI/Modal/Modal";
 import { MdCancel } from "react-icons/md";
 
-
-
 import { VscSplitVertical, VscClose } from "react-icons/vsc";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
 import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
@@ -35,6 +33,7 @@ import { BsStarFill, BsStar, BsReplyFill, BsFullscreenExit } from "react-icons/b
 import { MdModeEditOutline } from 'react-icons/md'
 import FilterSelector from "../../component/TitleBlock/FilterSelector/FilterSelector";
 import { getChartFilterData, getFilteredData } from "../../api/home";
+import { v4 as uuidv4 } from "uuid";
 
 
 
@@ -77,7 +76,6 @@ const CreateCharts = (props) => {
   const [fave, setFave] = useState(false)
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
 
-
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
@@ -89,15 +87,6 @@ const CreateCharts = (props) => {
   const theme = themeState.computedTheme;
   const navigate = useNavigate()
 
-  // const menuItems = [
-  //   {
-  //     name: stringFa.exit_full_screen,
-  //     id: "noFullScreen",
-  //     icon: <BsFullscreenExit />,
-  //   },
-  //   { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
-  //   { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },
-  // ];
 
   let deletedChart;
 
@@ -187,6 +176,10 @@ const CreateCharts = (props) => {
   const toggleShareModal = () => {
     setShowModal(!showModal)
   }
+
+  const changeLoading = (payload) => {
+    dispatch(chartActions.changeLoading(payload));
+  };
 
   const toggleCreateCategoruModal = () => {
     setAddChartModal(!addChartModal)
@@ -522,50 +515,13 @@ const CreateCharts = (props) => {
               parent: updatedChartsData[takenData.id].parent,
               bankId: updatedChartsData[takenData.id].bankId,
               lastBankUpdate: updatedChartsData[takenData.id].lastBankUpdate,
-
-              // shareAll: takenData.chartData.shareAll,
-              // editAll: takenData.chartData.editAll,
-              // viewAll: takenData.chartData.viewAll,
-              // shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
-              // editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
-              // viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
-
               shareAll: updatedChartsData[takenData.id].shareAll,
               editAll: updatedChartsData[takenData.id].editAll,
               viewAll: updatedChartsData[takenData.id].viewAll,
               shareList: updatedChartsData[takenData.id].shareList,
               editList: updatedChartsData[takenData.id].editList,
               viewList: updatedChartsData[takenData.id].viewList,
-
-              dataInfo: {
-                filters: takenData.metaData.filters?.map((item) => {
-                  return {
-                    filter: {
-                      name: item.name,
-                      type: item.type,
-                      rules: item.filters?.map((item) => {
-                        return {
-                          rule: {
-                            field: {
-                              name: item.name,
-                              type: item.type,
-                              value: item.value
-                            },
-                            content: { ...item.content }
-                          }
-                        }
-                      }),
-                    }
-                  }
-                }),
-                fields: takenData.metaData.fields.sort((a, b) => (a.index > b.index) ? 1 : -1).map(item => {
-                  return {
-                    field: item.value
-                  }
-                }),
-                selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
-              },
-
+              dataInfo: result.data.message.chart.data_info,
               time: updatedChartsData[takenData.id].time,
               label: updatedChartsData[takenData.id].label,
               receivedType: updatedChartsData[takenData.id].receivedType,
@@ -576,6 +532,13 @@ const CreateCharts = (props) => {
               path: updatedChartsData[takenData.id].path,
               creator: updatedChartsData[takenData.id].creator,
               sharedFrom: updatedChartsData[takenData.id].sharedFrom,
+
+              selectedFilterId: result.data.message.chart.data_info.filters?.length > 0 ? result.data.message.chart.data_info.filters[takenData.metaData.filters.findIndex(filter => filter.selected)]._id : null,
+              loading: false,
+              seprated: '',
+              hide: false,
+              filterName: "",
+              mergedData: {},
             },
           };
           setChartsData(updatedChartsData);
@@ -665,11 +628,14 @@ const CreateCharts = (props) => {
     socket.emit('change_fave_chart', { chartId: takenData.id, isFave: !fave, userId })
   }
   const onChangeFilter = async (e) => {
+    changeLoading({
+      chartId: takenData.id,
+      loading: true,
+    })
     if (e.target.value === "merged") {
       let result = await getChartFilterData({ id: takenData.id }, token)
       let updatedData = [];
       if (result.success) {
-        console.log(result.data);
         result.data.forEach((item, index) => {
           let temp = { group: chartsData.data[takenData?.id]?.dataInfo.filters[index].filter.name }
           item.forEach(row => {
@@ -680,7 +646,9 @@ const CreateCharts = (props) => {
       }
       setMergedData({ chartId: takenData.id, mergedData: updatedData })
     } else {
-      let result = await getFilteredData({ chartId: takenData.id, filterId: e.target.value }, token)
+      let chrtId = chartsData?.data[takenData.id]?.seprated ? chartsData?.data[takenData.id]?.seprated : takenData.id
+
+      let result = await getFilteredData({ chartId: chrtId, filterId: e.target.value }, token)
       changeSelectedFilter({
         chartId: takenData.id,
         id: e.target.value
@@ -733,7 +701,6 @@ const CreateCharts = (props) => {
     let controller = new AbortController();
     (async () => {
       let result = await fetchData({ id: bankId }, token)
-      console.log(result.data.data)
       selectChartDatabase(result.data.data);
       setId(bankId);
       setIsEdit({ isEdit: true });
@@ -763,18 +730,19 @@ const CreateCharts = (props) => {
         name: stringFa.exit_full_screen,
         id: "noFullScreen",
         icon: <BsFullscreenExit />,
-      },
-      {
+      }]
+    if (!chartsData?.data[takenData.id]?.seprated)
+      updatedMenuItems.push({
         name: stringFa.add_to_list_2,
         id: "createList",
         icon: <AiOutlinePlus />,
-      }]
-    if (shareable) updatedMenuItems.push({
+      })
+    if (shareable && !chartsData?.data[takenData.id]?.seprated) updatedMenuItems.push({
       name: stringFa.share,
       id: "share",
       icon: <FaUserFriends />,
     })
-    if (editable) {
+    if (editable && !chartsData?.data[takenData.id]?.seprated) {
       updatedMenuItems = [...updatedMenuItems,
       { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
       { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
@@ -836,8 +804,6 @@ const CreateCharts = (props) => {
     });
     setFiltersMetaData({ filters: takenMetaData })
   }, [takenData.isEdit, takenData.isFullscreen]);
-
-
   return (
     <div
       className="create-charts-container"
@@ -926,7 +892,7 @@ const CreateCharts = (props) => {
           className="section-header-wrapper"
           style={{ borderColor: theme.border_color, height: '4rem' }}
         >
-          {!takenData.isEdit && <div className="filters">
+          {!takenData.isEdit && chartsData?.data[takenData?.id] && chartsData.data[takenData.id].dataInfo.filters.length > 0 && <div className="filters">
             <div className="wrapper">
               {
                 Object.entries(chartsData?.data[takenData?.id]?.mergedData).length > 0 ?
@@ -940,7 +906,10 @@ const CreateCharts = (props) => {
                   <FilterSelector
                     onChange={onChangeFilter}
                     filters={chartsData.data[takenData?.id]?.dataInfo.filters}
-                    selectedFilter={chartsData.data[takenData?.id]?.dataInfo.selectedFilter}
+                    selectedFilter={chartsData.data[takenData?.id]?.filterName ?
+                      chartsData.data[takenData?.id]?.dataInfo.filters.findIndex(item => item.filter.name === chartsData.data[takenData?.id]?.filterName)
+                      : chartsData.data[takenData?.id]?.dataInfo.selectedFilter}
+                    seprated={chartsData?.data[takenData.id]?.seprated ? true : false}
                   />
               }
             </div>
@@ -973,24 +942,28 @@ const CreateCharts = (props) => {
           <div className="action">
             {chartsData.editMode ? (
               <div className="editmode" ref={ref}>
-                <StyledButton
-                  ButtonStyle={{
-                    fontSize: "1rem",
-                    backgroundColor: takenData.isEdit
-                      ? themeState.isDark
-                        ? theme.surface_24dp
-                        : theme.background_color
-                      : "transparent",
-                    marginRight: ".5rem"
-                  }}
-                  hover={
-                    themeState.isDark ? theme.surface_1dp : theme.background_color
-                  }
-                  onClick={changeEditMode}
 
-                >
-                  <IoSettingsOutline />
-                </StyledButton>
+                {
+                  !chartsData?.data[takenData.id]?.seprated &&
+                  <StyledButton
+                    ButtonStyle={{
+                      fontSize: "1rem",
+                      backgroundColor: takenData.isEdit
+                        ? themeState.isDark
+                          ? theme.surface_24dp
+                          : theme.background_color
+                        : "transparent",
+                      marginRight: ".5rem"
+                    }}
+                    hover={
+                      themeState.isDark ? theme.surface_1dp : theme.background_color
+                    }
+                    onClick={changeEditMode}
+
+                  >
+                    <IoSettingsOutline />
+                  </StyledButton>
+                }
                 <StyledButton
                   ButtonStyle={{
                     fontSize: "1rem",
@@ -1017,66 +990,81 @@ const CreateCharts = (props) => {
               </div>
             ) : (
               <div className="not_editmode">
-                <div
-                  className="title"
-                  ref={titleRef}
-                  onClick={() => {
-                    setEditableInput(true);
-                    setTitleValue(props.label ? props.label : props.title)
-                  }}
-                >
-                  {editableInput ? (
-                    <input
-                      className="editable-input"
-                      dir="rtl"
-                      placeholder={stringFa.title}
-                      value={titleValue}
-                      onChange={setTitleHandlerEditMode}
-                      autoFocus
-                      onKeyDown={setTitleHandlerEditMode}
-                      style={{ borderColor: error ? "red" : "" }}
-                    />
-                  ) : (
-                    <div className="text-component" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
-                      {
-                        chartsData?.data[takenData?.id]?.label ?
-                          <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
-                          <p>{chartsData.data[takenData.id].title}</p>
-                      }
-                    </div>
-                  )}
-                </div>
-                {shareable &&
-                  <StyledButton
-                    onClick={toggleShareModal}
-                    hover={
-                      themeState.isDark ? theme.surface_1dp : theme.background_color
-                    }
+                {!chartsData?.data[takenData.id]?.seprated ?
+                  <div
+                    className="title"
+                    ref={titleRef}
+                    onClick={() => {
+                      setEditableInput(true);
+                      setTitleValue(props.label ? props.label : props.title)
+                    }}
                   >
-                    <FaUserFriends color={theme.primary} />
-                  </StyledButton>
+                    {editableInput ? (
+                      <input
+                        className="editable-input"
+                        dir="rtl"
+                        placeholder={stringFa.title}
+                        value={titleValue}
+                        onChange={setTitleHandlerEditMode}
+                        autoFocus
+                        onKeyDown={setTitleHandlerEditMode}
+                        style={{ borderColor: error ? "red" : "" }}
+                      />
+                    ) : (
+                      <div className="text-component" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
+                        {
+                          chartsData?.data[takenData?.id]?.label ?
+                            <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
+                            <p>{chartsData.data[takenData.id].title}</p>
+                        }
+                      </div>
+                    )}
+                  </div>
+                  :
+                  <div className="not_editable" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
+                    {
+                      chartsData?.data[takenData?.id]?.label ?
+                        <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
+                        <p>{chartsData.data[takenData.id].title}</p>
+                    }
+                  </div>
                 }
-                <StyledButton
-                  onClick={toggleCreateCategoruModal}
-                  hover={
-                    themeState.isDark ? theme.surface_1dp : theme.background_color
-                  }
-                >
-                  <AiOutlinePlus color={theme.primary} fontSize={'1.2rem'} />
-                </StyledButton>
+                {
+                  !chartsData?.data[takenData.id]?.seprated &&
+                  <>
+                    {shareable &&
+                      <StyledButton
+                        onClick={toggleShareModal}
+                        hover={
+                          themeState.isDark ? theme.surface_1dp : theme.background_color
+                        }
+                      >
+                        <FaUserFriends color={theme.primary} />
+                      </StyledButton>
+                    }
+                    <StyledButton
+                      onClick={toggleCreateCategoruModal}
+                      hover={
+                        themeState.isDark ? theme.surface_1dp : theme.background_color
+                      }
+                    >
+                      <AiOutlinePlus color={theme.primary} fontSize={'1.2rem'} />
+                    </StyledButton>
 
-                <StyledButton
-                  hover={
-                    themeState.isDark ? theme.surface_1dp : theme.background_color
-                  }
-                  onClick={onFaveCategoryClickHandler}
-                >
-                  {faveCat ? (
-                    <BsStarFill style={starStyles} />
-                  ) : (
-                    <BsStar style={starStyles} />
-                  )}
-                </StyledButton>
+                    <StyledButton
+                      hover={
+                        themeState.isDark ? theme.surface_1dp : theme.background_color
+                      }
+                      onClick={onFaveCategoryClickHandler}
+                    >
+                      {faveCat ? (
+                        <BsStarFill style={starStyles} />
+                      ) : (
+                        <BsStar style={starStyles} />
+                      )}
+                    </StyledButton>
+                  </>
+                }
 
               </div>
             )}
@@ -1178,7 +1166,7 @@ const CreateCharts = (props) => {
                 </div>
               </div>
             )}
-            {(splitView === "نمودار" || splitView === "تقسیم شده") &&
+            {(splitView === "نمودار" || splitView === "تقسیم شده") && chartsData?.data[takenData?.id] &&
               <div className="section-chart-content-container">
                 <ChartSection />
               </div>}
@@ -1217,18 +1205,23 @@ const CreateCharts = (props) => {
             }
           </div>
           <div className="left">
-            <div className="like">
-              {fave ?
-                <AiFillHeart color="red" className="icon" onClick={onFaveClick} />
-                :
-                <AiOutlineHeart className="icon" onClick={onFaveClick} />
-              }
-              <p className="number">{chartsData?.data[takenData?.id]?.faveList?.length}</p>
-            </div>
-            <div className="like">
-              <FaRegComment className="icon" />
-              <p className="number">{chartsData?.data[takenData?.id]?.comments?.length}</p>
-            </div>
+            {
+              !chartsData?.data[takenData.id]?.seprated &&
+              <>
+                <div className="like">
+                  {fave ?
+                    <AiFillHeart color="red" className="icon" onClick={onFaveClick} />
+                    :
+                    <AiOutlineHeart className="icon" onClick={onFaveClick} />
+                  }
+                  <p className="number">{chartsData?.data[takenData?.id]?.faveList?.length}</p>
+                </div>
+                <div className="like">
+                  <FaRegComment className="icon" />
+                  <p className="number">{chartsData?.data[takenData?.id]?.comments?.length}</p>
+                </div>
+              </>
+            }
             <p className="date">{lastBankUpdate}</p>
 
           </div>

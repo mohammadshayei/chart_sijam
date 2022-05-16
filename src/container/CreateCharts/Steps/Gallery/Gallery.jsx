@@ -106,11 +106,10 @@ const Gallery = (props) => {
               break;
             }
             case "Pie": {
-              updatedGroups[type].items["pie"].selected = true;
-              break;
-            }
-            case "Pie": {
-              updatedGroups[type].items["donut"].selected = true;
+              if (takenData.chartData.data.options.isDoughnut)
+                updatedGroups[type].items["donut"].selected = true;
+              else
+                updatedGroups[type].items["pie"].selected = true;
               break;
             }
             default:
