@@ -1166,7 +1166,7 @@ const CreateCharts = (props) => {
                 </div>
               </div>
             )}
-            {(splitView === "نمودار" || splitView === "تقسیم شده") && chartsData?.data[takenData?.id] &&
+            {(splitView === "نمودار" || splitView === "تقسیم شده") && 
               <div className="section-chart-content-container">
                 <ChartSection />
               </div>}

@@ -41,6 +41,7 @@ const FieldPicker = (props) => {
 
   useEffect(() => {
     if (!data) return
+    // console.log(data)
     if (initial && data.length > 0) {
       let firstField = true;
       let selectedField,
@@ -66,6 +67,7 @@ const FieldPicker = (props) => {
             selectedField = isFullscreen ? selectedField : { name: field, id: data[0][field].fieldName };
             firstField = false;
           }
+          menuItems.push({ name: field, id: data[0][field].fieldName })
         } else if (
           props.index > 0 &&
           data[0][field].fieldType === "عدد"
@@ -74,8 +76,8 @@ const FieldPicker = (props) => {
             selectedField = isFullscreen ? selectedField : { name: field, id: data[0][field].fieldName };
             firstField = false;
           }
+          menuItems.push({ name: field, id: data[0][field].fieldName })
         }
-        menuItems = [...menuItems, { name: field, id: data[0][field].fieldName }];
       }
       setInitial(false);
       setMenuItems(menuItems);

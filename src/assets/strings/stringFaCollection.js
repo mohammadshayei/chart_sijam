@@ -147,5 +147,5 @@ export const stringFa = {
   separately: "نمایش مجزا",
   merge_filters: "ادغام فیلترها",
   select_a_filter: ".یک فیلتر را انتخاب کنید",
-  version: "نسخه 1.0.8",
+  version: "نسخه 1.0.10",
 };
