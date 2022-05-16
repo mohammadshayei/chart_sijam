@@ -143,7 +143,9 @@ const TitleBlock = React.memo((props) => {
   const seprateChart = (payload) => {
     dispatch(chartActions.seprateChart(payload));
   };
-
+  const updateChartOptions = (payload) => {
+    dispatch(chartActions.updateChartOptions(payload));
+  };
 
   const undoDeleteChartHandler = () => {
     setChart({ chartId: props.chartId, chartData: deletedChart[0] });
@@ -188,7 +190,7 @@ const TitleBlock = React.memo((props) => {
         { headers: { "auth-token": token } }
       );
       selectChartDatabase(result.data.result.data);
-      setIsEdit(true);
+      setIsEdit({ isEdit: true });
     }
     fullscreenChart({ isFullscreen: true });
     selectedChartData.dataInfo?.fields.forEach((field, i) => {
@@ -244,7 +246,29 @@ const TitleBlock = React.memo((props) => {
       default:
         chartTypes.forEach((type) => {
           if (id === type.id) {
-            setChartType({ key: props.chartId, value: id, item: "type" });
+            if (id === "Doughnut") {
+              let payload = {
+                key: props.chartId,
+                items: {
+                  isDoughnut: true,
+                  innerRadius: 50
+                }
+              }
+              updateChartOptions(payload)
+              setChartType({ key: props.chartId, value: "Pie", item: "type" });
+            } else {
+              if (id === "Pie") {
+                let payload = {
+                  key: props.chartId,
+                  items: {
+                    isDoughnut: false,
+                    innerRadius: 0.0001
+                  }
+                }
+                updateChartOptions(payload)
+              }
+              setChartType({ key: props.chartId, value: id, item: "type" });
+            }
           }
         });
         break;
@@ -377,6 +401,7 @@ const TitleBlock = React.memo((props) => {
     let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === props.chartId) > -1
     setFaveCat(updatedFaveCat)
   }, [selectedHolding])
+
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
       {error}
@@ -465,7 +490,6 @@ const TitleBlock = React.memo((props) => {
                   <FilterSelector
                     onChange={onChangeFilter}
                     filters={props.filters}
-                    // filters={props.seprated ? [] : props.filters}
                     selectedFilter={props.selectedFilter}
                   />
               }
@@ -498,8 +522,9 @@ const TitleBlock = React.memo((props) => {
                   </span>
                 </div>
               )}
-            </div> :
-              <div>
+            </div>
+              :
+              <div className="not_editable">
                 {props.label ? props.label : props.title}
               </div>
             }
@@ -517,6 +542,7 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         ) : (
+          !props.seprated &&
           <div className="right-icon-container">
             {props.shareable &&
               <StyledButton
@@ -550,7 +576,8 @@ const TitleBlock = React.memo((props) => {
               )}
             </StyledButton>
           </div>
-        )}
+        )
+        }
       </div>
     </div >
   );

@@ -11,30 +11,30 @@ import { MdBubbleChart } from "react-icons/md";
 
 export const chartTypes = [
   {
-    name: "ستونی",
-    id: "Column",
-    icon: <FcBarChart />,
-  },
-  // {
-  //   name: "حبابی",
-  //   id: "Bubble",
-  //   icon: <MdBubbleChart />,
-  // },
-  {
-    name: "دونات",
-    id: "Doughnut",
-    icon: <FcDoughnutChart />,
-  },
-  {
     name: "خطی",
     id: "Line",
     icon: <FcLineChart />,
+  },
+  {
+    name: "ستونی",
+    id: "Column",
+    icon: <FcBarChart />,
   },
   {
     name: "دایره ای",
     id: "Pie",
     icon: <FcPieChart />,
   },
+  {
+    name: "دونات",
+    id: "Doughnut",
+    icon: <FcDoughnutChart />,
+  },  
+  // {
+  //   name: "حبابی",
+  //   id: "Bubble",
+  //   icon: <MdBubbleChart />,
+  // },
   // {
   //   name: "مساحت قطبی",
   //   id: "Radar",

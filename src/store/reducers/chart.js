@@ -482,6 +482,22 @@ const setchartLabel = (state, action) => {
     data: updatedData,
   };
 };
+const updateChartOptions = (state, action) => {
+  const { key, items } = action.payload;
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      [key]: {
+        ...state.data[key],
+        options: {
+          ...state.data[key].options,
+          ...items,
+        },
+      },
+    },
+  };
+};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CHART_TYPE:
@@ -518,6 +534,8 @@ const reducer = (state = initialState, action) => {
       return setMergedData(state, action);
     case actionTypes.SEPRATE_CHART:
       return seprateChart(state, action);
+    case actionTypes.UPDATE_CHART_OPTIONS:
+      return updateChartOptions(state, action);
     default:
       return state;
   }

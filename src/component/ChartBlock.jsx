@@ -34,7 +34,7 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading, mergedDa
         });
       }
     }
-  }, [dependType, dependData, dependOptions, type, chartId, data, mergedData]);
+  }, [dependType, dependData, dependOptions, options, type, chartId, data, mergedData]);
   useEffect(() => {
     if (sentData) {
       let newChart;
@@ -43,7 +43,6 @@ const ChartBlock = React.memo(({ chartId, type, options, data, loading, mergedDa
         case "Column":
         case "Bubble":
         case "Pie":
-        case "Doughnut":
         case "Radar":
           newChart = <NewChart chartId={chartId} chartProps={sentData} />;
           break;

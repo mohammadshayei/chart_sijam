@@ -117,3 +117,9 @@ export const seprateChart = (payload) => (dispatch) => {
     payload,
   });
 };
+export const updateChartOptions = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.UPDATE_CHART_OPTIONS,
+    payload,
+  });
+};
