@@ -72,8 +72,8 @@ const BanksContainer = () => {
     setError(null)
     try {
       if (updatedList[selectedIndex].selected) {
-        let payload = { chartsId: [...Object.entries(data).map(([k, _]) => k)], filterName }
-        result = await getChartsDataWithSameFilter(payload, token)
+        let payload = { chartsId: [...Object.entries(data).filter(([_, item]) => !item.hide && !item.seprated).map(([k, _]) => k)], filterName }
+          result = await getChartsDataWithSameFilter(payload, token)
         if (!result.success)
           setError(<ErrorDialog onClose={setError}>{result.error}</ErrorDialog>)
         let updatedCharts = { ...data }
@@ -99,7 +99,7 @@ const BanksContainer = () => {
   useEffect(() => {
     if (!data) return;
     let updatedFilterList = []
-    Object.entries(data).forEach(([_, chart], chartIndex) => {
+    Object.entries(data).filter(([_, item]) => !item.hide && !item.seprated).forEach(([_, chart], chartIndex) => {
       if (chartIndex === 0) {
         updatedFilterList = chart.dataInfo.filters.map(item => { return { name: item.filter.name, _id: item._id, selected: false, exist: true } })
       } else {

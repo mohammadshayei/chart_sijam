@@ -24,8 +24,8 @@ const ToolsContainer = (props) => {
   const updateChartData = (chartData) => {
     dispatch(chartActions.updateChartData(chartData));
   };
-  const changeLoading = (payload) => {
-    dispatch(chartActions.changeLoading(payload));
+  const changeLoadingCharts = (payload) => {
+    dispatch(chartActions.changeLoadingCharts(payload));
   };
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
@@ -50,7 +50,7 @@ const ToolsContainer = (props) => {
     let chartsId = []
     let chartsInfo = [];
     for (const chartId in chartsData.data) {
-      if (!(chartsData.data[chartId].config.auto_update)) {
+      if (!(chartsData.data[chartId].config.auto_update) && !chartsData.data[chartId].seprated && !chartsData.data[chartId].hide) {
         chartsId.push(chartId)
         chartsInfo.push({
           chartId,
@@ -59,6 +59,7 @@ const ToolsContainer = (props) => {
       }
     }
     try {
+      changeLoadingCharts({ chartsId, loading: true })
       result = await getChartsDataWithSpecificFilter({ chartsInfo }, token)
       if (!result.success)
         setError(<ErrorDialog onClose={setError}>{result.error}</ErrorDialog>)
@@ -66,6 +67,8 @@ const ToolsContainer = (props) => {
       let updatedCharts = { ...chartsData.data }
       result.data.forEach(item => {
         updatedCharts[item._id].data = item.data
+        updatedCharts[item._id].loading = false
+        updatedCharts[item._id].last_update = new Date()
       })
       setChartsData(updatedCharts)
     } catch (error) {
@@ -74,23 +77,6 @@ const ToolsContainer = (props) => {
       setLoading(null);
 
     }
-    console.log(chartsInfo)
-    // for (const chartId in chartsData.data) {
-    //   if (!(chartsData.data[chartId].config.auto_update)) {
-    //     changeLoading({
-    //       chartId: chartId,
-    //       loading: true,
-    //     })
-    //     result = await getFilteredData({ chartId: chartId, filterId: chartsData.data[chartId].selectedFilterId }, token)
-    //     if (result.success) {
-    //       updateChartData({
-    //         chartId,
-    //         chartData: result.data,
-    //         lastUpdate: new Date(),
-    //       });
-    //     }
-    //   }
-    // }
     setLoading(null);
   };
 
