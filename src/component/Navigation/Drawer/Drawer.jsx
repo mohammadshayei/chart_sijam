@@ -30,9 +30,8 @@ const Drawer = React.memo((props) => {
   }, [location.pathname, props.isMenuOpen]);
   return (
     <div
-      className={`DrawerContainer ${
-        props.isMenuOpen ? "ShowDrawer" : "HideDrawer"
-      }`}
+      className={`DrawerContainer ${props.isMenuOpen ? "ShowDrawer" : "HideDrawer"
+        }`}
       style={{
         backgroundColor: themeState.isDark ? theme.surface_12dp : theme.surface,
         borderLeftColor: theme.border_color,

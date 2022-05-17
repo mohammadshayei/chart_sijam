@@ -2,17 +2,15 @@
   height: 96%;
   margin-top: 0;
   width: 100%;
+  // max-width: calc(100% - 25rem);
+  // max-width: calc( 100% - 25rem ) !important;
   //   overflow-y: auto;
   .header-body-view-container {
     width: 100%;
     height: 70px;
     border-bottom: 1px solid;
   }
-  .bank-container {
-    width: 100%;
-    height: 50px;
-    border-bottom: 1px solid;
-  }
+
   .body-content {
     display: flex;
     flex-direction: row;

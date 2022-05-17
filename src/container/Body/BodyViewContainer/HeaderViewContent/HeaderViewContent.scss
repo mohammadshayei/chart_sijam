@@ -15,6 +15,13 @@
       align-items: center;
       justify-content: center;
     }
+    .unity-filter {
+      width: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: .8rem;
+    }
     .star-container {
       width: 40px;
       height: 40px;
@@ -24,12 +31,36 @@
       border-radius: 20px;
       position: relative;
       overflow: hidden;
-      margin: 0 0.5rem;
+      margin-left: .3rem;
+      // margin-right: .2rem;
     }
     .selected {
-      width: 100%;
-      white-space: nowrap;
-      font-size: 0.9rem;
+      display: flex;
+      .cancel {
+        // width: 7rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.05rem 0.4rem;
+        border: 1px solid #c5c7d0;
+        cursor: pointer;
+        border-radius: 5px;
+        white-space: nowrap;
+        p {
+          font-size: 0.8rem;
+          margin-left: 0.4rem;
+        }
+      }
+      .chart-image {
+        border: 1px solid;
+        padding: 0.2rem;
+        border-radius: 5px;
+        width: 1.5rem;
+        margin-left: 0.5rem;
+        &:hover {
+          filter: grayscale(50);
+        }
+      }
     }
   }
   .header-view-middle-section {

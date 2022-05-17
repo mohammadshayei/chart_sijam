@@ -20,6 +20,7 @@ const Card = React.memo((props) => {
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const [fave, setFave] = useState(false)
   const [sepratedInfo, setSepratedInfo] = useState(null)
+  const [selectedFilterIndex, setSelectedFilterIndex] = useState(0)
 
   const chartsData = useSelector((state) => state.chart);
   const { userId, socket } = useSelector((state) => state.auth);
@@ -124,6 +125,13 @@ const Card = React.memo((props) => {
     setSepratedInfo(chartsData.sepratedChartInfo.find(item => item.chartId === props.item.seprated))
   }, [props.seprated, chartsData.sepratedChartInfo])
 
+
+  useEffect(() => {
+    if (!props.item?.selectedFilterId) return;
+    setSelectedFilterIndex(props.item.dataInfo.filters.findIndex(item => item._id === props.item?.selectedFilterId))
+  }, [props.item?.selectedFilterId])
+
+
   // 1-> access, 2-> creator, 3-> specific send  ,4-> shared to you
   return (
     <div
@@ -162,7 +170,7 @@ const Card = React.memo((props) => {
         shareable={props.item.shareList.findIndex(item => item.user._id === userId) > -1}
         cardIsHover={isHover}
         filters={props.item?.dataInfo?.filters}
-        selectedFilter={props.item?.dataInfo?.selectedFilter}
+        selectedFilter={selectedFilterIndex}
 
       />
       <div className="card-body">

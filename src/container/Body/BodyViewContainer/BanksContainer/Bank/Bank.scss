@@ -1,18 +1,24 @@
-@import "../../../../../assets/config/global";
-
-.BankContainer {
+.bank-item-container {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+	justify-content: center;
+	align-items: center;
   cursor: pointer;
   padding: 0.2rem 1rem;
   border-radius: 0.25rem;
   margin-left: 1rem;
-  overflow: hidden;
   position: relative;
-  transition: background 100ms;
+	transition: all 0.1s ease;
   outline: 0;
   border: 0;
   border-radius: 0.25rem;
   cursor: pointer;
+  white-space: nowrap;
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 30%;
+    }
+  }
 }

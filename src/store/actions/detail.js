@@ -54,3 +54,9 @@ export const resetTimeSee = (payload) => {
     payload,
   };
 };
+export const setUnityFilter = (payload) => {
+  return {
+    type: actionTypes.SET_UNITY_FILTER,
+    payload,
+  };
+};

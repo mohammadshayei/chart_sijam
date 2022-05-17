@@ -11,14 +11,17 @@ const CardSettingContainer = () => {
   return (
     <div className="ChartShowContainer">
       {isFullscreen && !isEdit ?
-        <ChartBlock
-          chartId={uuidv4().replace(/\-/g, "")}
-          type={data[id].type}
-          options={data[id].options}
-          data={data[id].data}
-          mergedData={data[id].mergedData}
-          loading={data[id].loading}
-        /> :
+        (
+          data[id] && <ChartBlock
+            chartId={uuidv4().replace(/\-/g, "")}
+            type={data[id].type}
+            options={data[id].options}
+            data={data[id].data}
+            mergedData={data[id].mergedData}
+            loading={data[id].loading}
+          />
+        )
+        :
         <ChartBlock chartId="123456789" />}
     </div>
   );

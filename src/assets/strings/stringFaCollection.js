@@ -148,4 +148,7 @@ export const stringFa = {
   merge_filters: "ادغام فیلترها",
   select_a_filter: ".یک فیلتر را انتخاب کنید",
   version: "نسخه 1.0.10",
+  unity_filter_list: "لیست فیلتر های مشابه",
+  no_exist_unity_filter_list: "فیلتر مشترک موجود نمی باشد",
+
 };

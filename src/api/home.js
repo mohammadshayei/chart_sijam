@@ -99,3 +99,25 @@ export const getChartFilterData = async (payload, token) => {
   } else
     return { success: false, data: null, error: result.data.message.error };
 };
+export const getChartsDataWithSameFilter = async (payload, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/get_charts_data_with_same_filter`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.message.result, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.message.error };
+};
+export const getChartsDataWithSpecificFilter = async (payload, token) => {
+  const result = await axios.post(
+    `${baseUrl}api/get_charts_data_with_specific_filter`,
+    { ...payload },
+    { headers: { "auth-token": token } }
+  );
+  if (result.data.success) {
+    return { success: true, data: result.data.message.result, error: "" };
+  } else
+    return { success: false, data: null, error: result.data.message.error };
+};

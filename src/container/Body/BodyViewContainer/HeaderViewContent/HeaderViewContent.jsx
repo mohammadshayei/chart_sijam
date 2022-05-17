@@ -15,7 +15,10 @@ import Dropdown from "../../../../component/UI/DropDown/DropDown";
 import Modal from '../../../../component/UI/Modal/Modal';
 import AddCategory from './AddCategory/AddCategory';
 import * as holdingActions from "../../../../store/actions/holdingDetail.js";
-import { useIntersection } from '../../../../useIntersection';
+import * as detailActions from "../../../../store/actions/detail.js";
+
+import { MdCancel } from "react-icons/md";
+import { RiFilter2Fill, RiFilter2Line } from 'react-icons/ri'
 
 const HeaderViewContent = (props) => {
     const [isFav, setIsFav] = useState(false)
@@ -28,6 +31,8 @@ const HeaderViewContent = (props) => {
     const chartsData = useSelector((state) => state.chart);
     // const { } = useSelector((state) => state.auth);
     const { selectedHolding, selectedCategory } = useSelector((state) => state.holdingDetail);
+    const { unityFilter } = useSelector((state) => state.detail);
+
 
     const ref = useRef();
 
@@ -35,6 +40,9 @@ const HeaderViewContent = (props) => {
 
     const setCategory = (payload) => {
         dispatch(holdingActions.setCategory(payload));
+    };
+    const setUnityFilter = (payload) => {
+        dispatch(detailActions.setUnityFilter(payload));
     };
 
     const onStarClickHandler = (e) => {
@@ -73,10 +81,10 @@ const HeaderViewContent = (props) => {
 
             let cat = selectedHolding.categories.find(item => item.category._id === _id).category
 
-            if (selectedCategory && selectedCategory._id === _id)
-                setCategory({ category: null })
-            else
-                setCategory({ category: cat })
+            // if (selectedCategory?._id === _id)
+            //     setCategory({ category: null })
+            // else
+            setCategory({ category: cat })
 
             setDropDown(false)
         }
@@ -84,9 +92,16 @@ const HeaderViewContent = (props) => {
     const onToggle = () => {
         setDropDown(!dropDown)
     }
+    const onToggleUnityFilter = () => {
+        setUnityFilter({ value: !unityFilter })
+
+    }
     const closeModal = () => {
         setShowModal(false);
     };
+    const deSelectCategory = () => {
+        setCategory({ category: null })
+    }
     useEffect(() => {
         if (!selectedCategory) {
             setIsFav(false)
@@ -132,7 +147,21 @@ const HeaderViewContent = (props) => {
                         )}
                     </div>
                 }
-                {selectedCategory && selectedCategory.name !== 'fave' && <p className='selected'>{selectedCategory.name}</p>}
+                <div className='unity-filter' style={{ color: theme.primary }}>
+                    {
+                        unityFilter ?
+                            <RiFilter2Fill style={{ cursor: "pointer", fontSize: "1.2rem" }} onClick={onToggleUnityFilter} /> :
+                            <RiFilter2Line style={{ cursor: "pointer", fontSize: "1.2rem" }} onClick={onToggleUnityFilter} />
+                    }
+                </div>
+                {selectedCategory && selectedCategory.name !== 'fave' &&
+                    <div className="selected">
+                        <div onClick={deSelectCategory} className="cancel" style={{ borderColor: theme.primary, color: theme.primary }} >
+                            <MdCancel />
+                            <p>{selectedCategory.name}</p>
+                        </div>
+                    </div>
+                }
                 {
                     // for share categories to other employee
                     false && <Button
