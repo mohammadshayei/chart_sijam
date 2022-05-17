@@ -816,8 +816,9 @@ const CreateCharts = (props) => {
         selectFilter({ id: filter.id })
       }
     });
-  }, [chartsData?.data[takenData.id]?.selectedFilterId]);
+  }, [chartsData?.data[takenData.id]?.selectedFilterId, takenData.metaData.filters.length]);
 
+  
   return (
     <div
       className="create-charts-container"
@@ -1180,7 +1181,7 @@ const CreateCharts = (props) => {
                 </div>
               </div>
             )}
-            {(splitView === "نمودار" || splitView === "تقسیم شده") && 
+            {(splitView === "نمودار" || splitView === "تقسیم شده") &&
               <div className="section-chart-content-container">
                 <ChartSection />
               </div>}
