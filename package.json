@@ -34,6 +34,7 @@
     "react-sizeme": "^3.0.2",
     "react-slick": "^0.28.1",
     "react-spring": "^9.4.4",
+    "react-switch": "^6.0.0",
     "react-table": "^7.7.0",
     "react-time-picker": "^4.5.0",
     "react-use": "^17.3.2",
