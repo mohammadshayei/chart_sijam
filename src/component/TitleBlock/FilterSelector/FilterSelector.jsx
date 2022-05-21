@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { stringFa } from '../../../assets/strings/stringFaCollection';
 import { useTheme } from '../../../styles/ThemeProvider';
 import './FilterSelector.scss'
-const FilterSelector = (props) => {
+const FilterSelector = memo((props) => {
     const { isFullscreen } = useSelector((state) => state.addChart);
     const [extraItems, setExtraItems] = useState([]);
-
+    const [value, setValue] = useState('')
     const themeState = useTheme();
     const theme = themeState.computedTheme;
     // const extraItems = [
@@ -14,16 +14,21 @@ const FilterSelector = (props) => {
     //     { name: stringFa.merge_filters, value: "merged", key: 2 }]
 
     useEffect(() => {
-        let updatedExtraItems = [
-            { name: stringFa.separately, value: "seprately", key: 1 },
-            { name: stringFa.merge_filters, value: "merged", key: 2 }]
-        if (isFullscreen) updatedExtraItems.splice(0, 1)
+        let updatedExtraItems = []
+        if (!isFullscreen) updatedExtraItems.push({ name: stringFa.separately, value: "seprately", key: 1 })
+        if (!props.seprated) updatedExtraItems.push({ name: stringFa.merge_filters, value: "merged", key: 2 })
         setExtraItems(updatedExtraItems)
 
-    }, [isFullscreen]);
+    }, [isFullscreen, props.seprated]);
+    useEffect(() => {
+        if (!props.selectedFilter || !props.filters) return;
+        setValue(props.filters[props.selectedFilter]._id)
+    }, [props.selectedFilter, props.filters])
 
-
-
+    const onChange = (e) => {
+        props.onChange(e)
+        setValue(e.target.value)
+    }
     return (
         <div className='filter-container'>
             <select
@@ -36,8 +41,9 @@ const FilterSelector = (props) => {
                     cursor: "pointer",
                     ...props.selectStyle
                 }}
-                defaultValue={props.filters[props.selectedFilter]._id}
-                onChange={props.onChange}
+                value={value}
+                // defaultValue={props.filters[props.selectedFilter]._id}
+                onChange={onChange}
             >
                 {props.filters?.map((item, index) => (
                     <option key={item.filter._id}
@@ -68,6 +74,6 @@ const FilterSelector = (props) => {
             </select>
         </div>
     )
-}
+})
 
 export default FilterSelector

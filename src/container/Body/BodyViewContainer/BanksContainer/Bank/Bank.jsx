@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./Bank.scss";
-import { } from "react-redux";
 import { ripple } from "../../../../../assets/config/ripple";
 import { useTheme } from "../../../../../styles/ThemeProvider";
+import loading_icon from "../../../../../assets/images/btn_loading.gif"
 
-function Bank({ name, selected, parents, _id, onClick }) {
+function Bank({ name, selected, _id, onClick, parents = [], loading = '', mode = 'bank' }) {
   const [style, setStyle] = useState(null);
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -14,7 +14,7 @@ function Bank({ name, selected, parents, _id, onClick }) {
   // };
   useEffect(() => {
     // console.log(1, selected)
-    if (selected)
+    if (selected || loading === _id)
       setStyle({
         background: `linear-gradient(150deg,${theme.primary},${theme.secondary})`,
         color: theme.on_primary,
@@ -25,7 +25,7 @@ function Bank({ name, selected, parents, _id, onClick }) {
         color: theme.on_background,
       });
     }
-  }, [_id, selected, themeState.isDark]);
+  }, [_id, selected, themeState.isDark, loading]);
   const onMouseEnter = () => {
     if (!selected) {
       setStyle({
@@ -45,18 +45,28 @@ function Bank({ name, selected, parents, _id, onClick }) {
     }
   };
   const onBankClickHandler = (e) => {
-    ripple(e);
-    onClick(_id, parents, selected)
+    if (mode === 'bank') {
+      // ripple(e);
+      onClick(_id, parents, selected)
+    } else {
+      onClick()
+    }
   };
   return (
     <div
-      className="BankContainer"
+      className="bank-item-container"
       onMouseLeave={onMouseLeave}
       onMouseEnter={onMouseEnter}
       style={{ ...style }}
       onClick={onBankClickHandler}
     >
-      <span style={{ fontSize: 12 }}>{name}</span>
+      {
+        loading === _id ?
+          <div className="loading-spinner" style={{ minWidth: '5rem' }}>
+            <img src={loading_icon} alt="" />
+          </div> :
+          <span style={{ fontSize: 12 }}>{name}</span>
+      }
     </div>
   );
 };

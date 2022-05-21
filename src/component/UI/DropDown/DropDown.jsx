@@ -49,23 +49,22 @@ const DropDown = (props) => {
         backgroundColor: themeState.isDark ? theme.surface_24dp : theme.surface,
       }}
     >
-      {props.items &&
-        props.items.map((item, index) => (
-          <div
-            key={item._id ? item._id : item.name}
-            onClick={() => {
-              handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id, item.extra ? item.extra : "");
-            }}
-            className="dropdown-item"
-            style={{
-              ...props.contentStyle,
-              color: theme.on_background,
-            }}
-          >
-            {item.icon && <div className="dropdown-icon">{item.icon}</div>}
-            {props.selector ? item[props.selector] : item.name}
-          </div>
-        ))}
+      {props.items?.map((item) => (
+        <div
+          key={item._id ? item._id : item.name}
+          onClick={() => {
+            handleClick(props.selector ? item[props.selector] : item.name, item._id ? item._id : item.id, item.extra ? item.extra : "");
+          }}
+          className="dropdown-item"
+          style={{
+            ...props.contentStyle,
+            color: theme.on_background,
+          }}
+        >
+          {item.icon && <div className="dropdown-icon">{item.icon}</div>}
+          {props.selector ? item[props.selector] : item.name}
+        </div>
+      ))}
       {props.extraItems && (
         <div
           className="dropdown-divider"

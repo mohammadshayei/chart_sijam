@@ -17,7 +17,7 @@ import Modal from "../../../component/UI/Modal/Modal";
 import { getFilteredData } from "../../../api/home";
 const PERIOD_INTRAVEL = 60000;
 
-const BodyViewContainer = (props) => {
+const BodyViewContainer = ({ isMenuOpen }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const [filteredCharts, setFilteredCharts] = useState([])
@@ -27,6 +27,7 @@ const BodyViewContainer = (props) => {
   const { selectedCompanies, selectedSoftwares, selectedActiveBackups, selectedBanks, sourceCharts } = useSelector((state) => state.detail);
   const chartsData = useSelector((state) => state.chart);
   const { selectedCategory } = useSelector((state) => state.holdingDetail);
+  const { unityFilter } = useSelector((state) => state.detail);
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
@@ -275,9 +276,11 @@ const BodyViewContainer = (props) => {
     }
     return count;
   };
+
   return (
     <div
       className="body-container"
+      style={{ maxWidth: isMenuOpen ? `calc(100% - 25rem)` : `calc(100% - 2rem)` }}
     >
       <div
         className="header-body-view-container"
@@ -290,18 +293,8 @@ const BodyViewContainer = (props) => {
       >
         <HeaderViewContent setIsModalOpen={setIsModalOpen} />
       </div>
-      {detail.banks.length > 0 && (
-        <div
-          className="bank-container"
-          style={{
-            borderColor: theme.border_color,
-            backgroundColor: themeState.isDark
-              ? theme.surface_12dp
-              : theme.surface,
-          }}
-        >
-          <BanksContainer />
-        </div>
+      {(detail.banks.length > 0 || unityFilter) && (
+        <BanksContainer />
       )}
       <Modal
         show={isModalOpen}
@@ -334,20 +327,7 @@ const BodyViewContainer = (props) => {
           </div>
         )
       }
-      {/* {
-        detail.software || detail.company || detail.holding ? 
-       : (
-            <div
-              className="body-content"
-              style={{
-                height: detail.software
-                  ? "calc( 100% - 120px )"
-                  : "calc( 100% - 70px )",
-              }}
-            >
-              {stringFa.clicked_software_to_see_charts}
-            </div>
-          )} */}
+
     </div>
   );
 };

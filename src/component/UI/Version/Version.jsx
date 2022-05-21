@@ -14,7 +14,7 @@ const Version = () => {
 
     const major = 1;
     const minor = 0;
-    const revision = 8;
+    const revision = 12;
 
     const onMouseEnter = () => {
         setHover(true);

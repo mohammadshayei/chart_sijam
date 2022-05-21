@@ -8,10 +8,12 @@ import { useSelector, useDispatch } from "react-redux";
 import * as chartActions from "../../../../../store/actions/chart.js";
 import axios from "axios";
 import { baseUrl } from "../../../../../constants/Config";
-import { getFilteredData } from "../../../../../api/home.js";
+import { getChartsDataWithSpecificFilter, getFilteredData } from "../../../../../api/home.js";
+import ErrorDialog from "../../../../../component/UI/Error/ErrorDialog.jsx";
 
 const ToolsContainer = (props) => {
   const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null)
   const chartsData = useSelector((state) => state.chart);
   const token = useSelector((state) => state.auth.token);
 
@@ -22,8 +24,11 @@ const ToolsContainer = (props) => {
   const updateChartData = (chartData) => {
     dispatch(chartActions.updateChartData(chartData));
   };
-  const changeLoading = (payload) => {
-    dispatch(chartActions.changeLoading(payload));
+  const changeLoadingCharts = (payload) => {
+    dispatch(chartActions.changeLoadingCharts(payload));
+  };
+  const setChartsData = (chartsData) => {
+    dispatch(chartActions.setChartsData(chartsData));
   };
   const creatChartClickHandler = () => {
     props.setIsModalOpen(true);
@@ -39,21 +44,38 @@ const ToolsContainer = (props) => {
       </div>
     );
     let result;
+    // let payload = {
+    //   chartsInfo: Object.entries(chartsData.data).filter(item => !item.config.auto_update)
+    // };
+    let chartsId = []
+    let chartsInfo = [];
     for (const chartId in chartsData.data) {
-      if (!(chartsData.data[chartId].config.auto_update)) {
-        changeLoading({
-          chartId: chartId,
-          loading: true,
+      if (!(chartsData.data[chartId].config.auto_update) && !chartsData.data[chartId].seprated && !chartsData.data[chartId].hide) {
+        chartsId.push(chartId)
+        chartsInfo.push({
+          chartId,
+          filterId: chartsData.data[chartId].selectedFilterId
         })
-        result = await getFilteredData({ chartId: chartId, filterId: chartsData.data[chartId].selectedFilterId }, token)
-        if (result.success) {
-          updateChartData({
-            chartId,
-            chartData: result.data,
-            lastUpdate: new Date(),
-          });
-        }
       }
+    }
+    try {
+      changeLoadingCharts({ chartsId, loading: true })
+      result = await getChartsDataWithSpecificFilter({ chartsInfo }, token)
+      if (!result.success)
+        setError(<ErrorDialog onClose={setError}>{result.error}</ErrorDialog>)
+
+      let updatedCharts = { ...chartsData.data }
+      result.data.forEach(item => {
+        updatedCharts[item._id].data = item.data
+        updatedCharts[item._id].loading = false
+        updatedCharts[item._id].last_update = new Date()
+      })
+      setChartsData(updatedCharts)
+    } catch (error) {
+      console.log(error)
+      setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+      setLoading(null);
+
     }
     setLoading(null);
   };

@@ -459,6 +459,17 @@ const changeLoading = (state, action) => {
     },
   };
 };
+const changeLoadingCharts = (state, action) => {
+  const { chartsId, loading } = action.payload;
+  let updatedChartsData = { ...state.data };
+  chartsId.forEach((chartId) => {
+    updatedChartsData[chartId].loading = loading;
+  });
+  return {
+    ...state,
+    data: updatedChartsData,
+  };
+};
 const changeSelectedFilterId = (state, action) => {
   const { chartId, id } = action.payload;
   return {
@@ -528,6 +539,8 @@ const reducer = (state = initialState, action) => {
       return changeIdInCreatedList(state, action);
     case actionTypes.CHANGE_LOADING_CHART:
       return changeLoading(state, action);
+    case actionTypes.CHANGE_LOADING_CHARTS:
+      return changeLoadingCharts(state, action);
     case actionTypes.CHANGE_SELECTED_FILTER:
       return changeSelectedFilterId(state, action);
     case actionTypes.SET_MERGED_DATA:

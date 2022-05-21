@@ -27,7 +27,7 @@ const LayoutContent = (props) => {
   useEffect(() => {
     switch (location.pathname) {
       case "/view":
-        setBodyComponent(<BodyViewContainer />);
+        setBodyComponent(<BodyViewContainer isMenuOpen={isMenuOpen} />);
         setShowDrawer(true);
         break;
       case "/view/setting":
@@ -39,13 +39,11 @@ const LayoutContent = (props) => {
         setShowDrawer(false);
         break;
       default:
-        setBodyComponent(<BodyViewContainer />);
+        setBodyComponent(<BodyViewContainer isMenuOpen={isMenuOpen} />);
         setShowDrawer(true);
-
         break;
     }
-  }, [location.pathname]);
-
+  }, [location.pathname, isMenuOpen]);
   const dispatch = useDispatch();
   const fullscreenChart = (isFullscreen) => {
     dispatch(addChartActions.fullscreenChart(isFullscreen));

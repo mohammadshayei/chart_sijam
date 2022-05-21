@@ -92,6 +92,12 @@ export const changeLoading = (payload) => (dispatch) => {
     payload,
   });
 };
+export const changeLoadingCharts = (payload) => (dispatch) => {
+  dispatch({
+    type: actionTypes.CHANGE_LOADING_CHARTS,
+    payload,
+  });
+};
 export const changeSelectedFilter = (payload) => (dispatch) => {
   dispatch({
     type: actionTypes.CHANGE_SELECTED_FILTER,

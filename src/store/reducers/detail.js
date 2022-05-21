@@ -1,18 +1,13 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  // holding: null,
-  // company: null,
-  // software: null,
-  // activeBackup: null,
-  // banks: null,
-  // items: { holdings: [] },
   banks: [],
   selectedCompanies: [],
   selectedSoftwares: [],
   selectedActiveBackups: [],
   selectedBanks: [],
   sourceCharts: [],
+  unityFilter: false,
 };
 
 const setBanks = (state, action) => {
@@ -46,6 +41,13 @@ const changeSelectedMenuItems = (state, action) => {
   return {
     ...state,
     [key]: updatedValues,
+  };
+};
+const setUnityFilter = (state, action) => {
+  const { value } = action.payload;
+  return {
+    ...state,
+    unityFilter: value,
   };
 };
 const removedChildSelectedMenuItems = (state, action) => {
@@ -187,6 +189,8 @@ const reducer = (state = initialState, action) => {
       return changeSeeTimeChart(state, action);
     case actionTypes.RESET_TIME_SEE:
       return resetTimeSee(state, action);
+    case actionTypes.SET_UNITY_FILTER:
+      return setUnityFilter(state, action);
     default:
       return state;
   }

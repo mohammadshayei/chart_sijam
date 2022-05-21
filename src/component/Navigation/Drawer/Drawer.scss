@@ -32,25 +32,19 @@
   }
 }
 .HideDrawer {
-  animation: ease-out 200ms forwards HideDrawer;
+  animation: ease-out 1ms forwards HideDrawer;
 }
 .ShowDrawer {
-  animation: ease-out 200ms forwards ShowDrawer;
+  animation: ease-out 1ms forwards ShowDrawer;
 }
 @keyframes HideDrawer {
   0% {
     width: 25rem;
     opacity: 0.9;
   }
-  50% {
-    width: 15rem;
-    opacity: 0.4;
-  }
   100% {
     width: 2rem;
     opacity: 1;
-
-    // transform: translateX(110%);
   }
 }
 
@@ -58,10 +52,6 @@
   0% {
     width: 1rem;
     opacity: 0.1;
-  }
-  50% {
-    width: 16rem;
-    opacity: 0.6;
   }
   100% {
     width: 25rem;

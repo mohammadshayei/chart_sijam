@@ -1,5 +1,5 @@
-.BanksContainer {
-  height: 100%;
+.banks-container {
+  height: 50px;
   width: 100%;
   padding: 0.3rem 2rem;
   display: flex;
@@ -8,5 +8,6 @@
   align-items: center;
   overflow-x: auto;
   overflow-y: hidden;
-  
+  border-bottom: 1px solid;
+  // max-width: calc(100% - 25rem);
 }
