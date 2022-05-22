@@ -52,7 +52,7 @@ const NewChart = ({ chartId, chartProps }) => {
     //     "تخلیه": 0.9,
     //     "در اختیار معاونت فرهنگی": 0.5
     // }]
-    
+
     useLayoutEffect(() => {
         let updatedCreatedChart = { ...createdChart }
         let root = am5.Root.new(`${chartId}`);
@@ -664,14 +664,19 @@ const NewChart = ({ chartId, chartProps }) => {
                 if (legend)
                     legend.data.setAll(updatedCreatedChart.series.dataItems);
 
-                if (options.insideLabel)
-                    updatedCreatedChart.series.children.push(am5.Label.new(root, {
-                        text: "[bold]{valueSum}",
+                if (options.insideLabel) {
+                    var label = updatedCreatedChart.series.children.push(am5.Label.new(root, {
+                        text: "[bold]{valueSum.formatNumber('#.')}",
                         fontSize: 30,
                         centerX: am5.percent(50),
                         centerY: am5.percent(percentY),
                         populateText: true
                     }));
+                    updatedCreatedChart.series.onPrivate("valueSum", function () {
+                        label.text.markDirtyText();
+                    })
+                }
+
                 idx++;
             }
 
