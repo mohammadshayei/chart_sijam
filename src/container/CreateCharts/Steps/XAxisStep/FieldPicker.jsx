@@ -26,7 +26,9 @@ const FieldPicker = (props) => {
   const changeFieldsMEtaData = (payload) => {
     dispatch(addChartActions.changeFieldsMEtaData(payload));
   };
-
+  const setError = (payload) => {
+    dispatch(addChartActions.setError(payload));
+  };
   const setSelectedName = (value, id) => {
     let updatedSelected = { ...selected }
     updatedSelected.id = id;
@@ -40,7 +42,8 @@ const FieldPicker = (props) => {
   // }
 
   useEffect(() => {
-    if (!data) return
+    if (!data)
+      return
     // console.log(data)
     if (initial && data.length > 0) {
       let firstField = true;
@@ -83,13 +86,18 @@ const FieldPicker = (props) => {
       setMenuItems(menuItems);
       if (props.index > 0) {
         setTimeout(() => {
+          if (!selectedField)
+            setError({ error: '.بانک مورد نظر فیلد عددی ندارد' })
           setSelected(selectedField);
         }, 200);
-      } else
+      } else {
+        if (!selectedField)
+          setError({ error: '.بانک مورد نظر فیلد عبارت ندارد' })
         setSelected(selectedField);
+      }
     }
 
-    if (selected.name !== "")
+    if (selected && selected.name !== "")
       changeFieldsMEtaData({ index: props.index, value: selected.id, name: selected.name })
 
   }, [data, selected]);
@@ -151,7 +159,7 @@ const FieldPicker = (props) => {
             </div>
           </div>
           <div className="dropdown-title">
-            <span className="title-text">{selected.name}</span>
+            <span className="title-text">{selected?.name}</span>
           </div>
         </div>
       </div>

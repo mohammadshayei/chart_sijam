@@ -1,156 +1,211 @@
 .filter-step-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	.saved-filters-list {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-bottom: 1rem;
-		width: 100%;
-		.saved-filter {
-			display: flex;
-			flex-direction: row-reverse;
-			justify-content: space-between;
-			text-align: right;
-			width: 100%;
-			padding: 0.2em 0.5em;
-			border-radius: 5px;
-			cursor: pointer;
-			border: 1px solid;
-			transition: all 0.3s ease;
-			p {
-				width: 100%;
-			}
-		}
-	}
-	.fields-and-rule {
-		display: flex;
-		flex-direction: row-reverse;
-		align-items: center;
-		border-top: 1px solid;
-		width: 100%;
-		padding-top: 1rem;
-		.filter-setup {
-			position: relative;
-			display: flex;
-			margin-right: 0.5rem;
-			select {
-				cursor: pointer;
-				direction: rtl;
-				text-align: center;
-				border-radius: 3px;
-			}
-		}
-		.filter-field-picker {
-			display: flex;
-			flex-direction: column;
-			flex: 1 0 auto;
-			overflow: visible;
-			.settings-field-title-wrapper {
-				margin-bottom: 8px;
-				margin-left: 1rem;
-				width: 100%;
-				.settings-field-title {
-					font-weight: 400;
-					font-size: 14px;
-					margin-bottom: 8px;
-					flex-shrink: 0;
-					letter-spacing: 0px;
-					width: 100%;
-					display: inline-flex;
-					justify-content: flex-end;
-					align-items: center;
-				}
-			}
-			.setting-dropdown-component {
-				position: relative;
-				.dropdown-wrapper {
-					position: relative;
-					flex: 1;
-					box-sizing: border-box;
-					height: 40px;
-					min-height: 30px;
-					border: 1px solid;
-					box-shadow: none;
-					border-radius: 3px;
-					transition: border 0.1s;
-					align-items: center;
-					cursor: pointer;
-					display: flex;
-					flex-wrap: wrap;
-					justify-content: space-between;
-					transition: all 100ms ease 0s;
-					&:hover {
-						border: 1px solid rgb(64, 64, 68);
-					}
-					.dropdown-title {
-						align-items: center;
-						display: flex;
-						justify-content: flex-end;
-						flex: 1 1 0%;
-						flex-wrap: wrap;
-						padding: 2px 16px 2px 8px;
-						position: relative;
-						overflow: hidden;
-						box-sizing: border-box;
-						font-size: 14px;
-						line-height: 14px;
-						height: 38px;
-					}
-					.dropdown-indicator {
-						align-items: center;
-						align-self: stretch;
-						display: flex;
-						flex-shrink: 0;
-						box-sizing: border-box;
-						width: 32px;
-						height: 32px;
-						font-size: 14px;
-						line-height: 14px;
-						transition: color 150ms ease 0s;
-						justify-content: center;
-						border-radius: 3px;
-						margin: 3px;
-						.dropdown-indicator-icon {
-							transition: all 0.1s ease;
-							transform: rotate(0deg);
-							margin-top: 1px;
-						}
-						.rotate {
-							transform: rotate(180deg);
-							margin-bottom: 6px;
-						}
-						&:hover {
-							background-color: #e6e9ef;
-						}
-					}
-				}
-				.open {
-					border: 1.2px solid rgb(19, 19, 233);
-					&:hover {
-						border: 1.2px solid rgb(19, 19, 233);
-					}
-				}
-			}
-			.picker {
-				display: flex;
-				flex-direction: row-reverse;
-			}
-		}
-	}
-	.field-filter-wrapper {
-		display: flex;
-		flex-direction: row-reverse;
-		justify-content: center;
-		align-items: flex-end;
-		margin-top: 1rem;
-		width: 100%;
-	}
-	.save-filter-section {
-		display: flex;
-		flex-direction: row-reverse;
-		width: 100%;
-		margin: 1rem 0;
-	}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .saved-filters-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    width: 100%;
+    .saved-filter {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      text-align: right;
+      width: 100%;
+      padding: 0.2em 0.5em;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 1px solid;
+      transition: all 0.3s ease;
+      p {
+        width: 100%;
+      }
+    }
+  }
+  .fields-and-rule {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    border-top: 1px solid;
+    width: 100%;
+    padding-top: 1rem;
+    .filter-setup {
+      position: relative;
+      display: flex;
+      margin-right: 0.5rem;
+      select {
+        cursor: pointer;
+        direction: rtl;
+        text-align: center;
+        border-radius: 3px;
+      }
+    }
+    .filter-field-picker {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 auto;
+      overflow: visible;
+      .settings-field-title-wrapper {
+        margin-bottom: 8px;
+        margin-left: 1rem;
+        width: 100%;
+        .settings-field-title {
+          font-weight: 400;
+          font-size: 14px;
+          margin-bottom: 8px;
+          flex-shrink: 0;
+          letter-spacing: 0px;
+          width: 100%;
+          display: inline-flex;
+          justify-content: flex-end;
+          align-items: center;
+        }
+      }
+      .setting-dropdown-component {
+        position: relative;
+        .dropdown-wrapper {
+          position: relative;
+          flex: 1;
+          box-sizing: border-box;
+          height: 40px;
+          min-height: 30px;
+          border: 1px solid;
+          box-shadow: none;
+          border-radius: 3px;
+          transition: border 0.1s;
+          align-items: center;
+          cursor: pointer;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          transition: all 100ms ease 0s;
+          &:hover {
+            border: 1px solid rgb(64, 64, 68);
+          }
+          .dropdown-title {
+            align-items: center;
+            display: flex;
+            justify-content: flex-end;
+            flex: 1 1 0%;
+            flex-wrap: wrap;
+            padding: 2px 16px 2px 8px;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 14px;
+            height: 38px;
+          }
+          .dropdown-indicator {
+            align-items: center;
+            align-self: stretch;
+            display: flex;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+            line-height: 14px;
+            transition: color 150ms ease 0s;
+            justify-content: center;
+            border-radius: 3px;
+            margin: 3px;
+            .dropdown-indicator-icon {
+              transition: all 0.1s ease;
+              transform: rotate(0deg);
+              margin-top: 1px;
+            }
+            .rotate {
+              transform: rotate(180deg);
+              margin-bottom: 6px;
+            }
+            &:hover {
+              background-color: #e6e9ef;
+            }
+          }
+        }
+        .open {
+          border: 1.2px solid rgb(19, 19, 233);
+          &:hover {
+            border: 1.2px solid rgb(19, 19, 233);
+          }
+        }
+      }
+      .picker {
+        display: flex;
+        flex-direction: row-reverse;
+      }
+    }
+  }
+  .field-filter-wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .save-filter-section {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    margin: 1rem 0;
+  }
+  .caption-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 1rem 0;
+    .hint {
+      // width: 100%;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+    .button-text {
+      display: flex;
+      font-size: 0.8rem;
+      .button-icon {
+        display: flex;
+        align-items: center;
+        margin-left: 0.5rem;
+      }
+    }
+  }
+  .access-wrapper {
+    display: block;
+    width: 100%;
+    .employees-list {
+      border-top: 1px solid;
+      font-size: 0.8rem;
+      padding: 0.5rem 2rem;
+      .all {
+        display: flex;
+        flex-direction: row-reverse;
+        margin-bottom: 0.3rem;
+      }
+      .employee-item {
+        display: flex;
+        flex-direction: row-reverse;
+      }
+    }
+    .allowed-employees {
+      display: flex;
+      flex-direction: row-reverse;
+      margin-bottom: 0.3rem;
+      font-size: 0.8rem;
+      margin: 1rem 2rem 0.5rem 2rem;
+    }
+    .disabled-div {
+      pointer-events: none;
+      opacity: 0.4;
+      filter: grayscale(100%);
+    }
+  }
 }
