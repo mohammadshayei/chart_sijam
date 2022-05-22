@@ -306,10 +306,9 @@ const NewChart = ({ chartId, chartProps }) => {
                             categoryXField: "category",
                             sequencedInterpolation: true,
                             stacked: options.series.stacked,
-                            legendLabelText: `[bold #888]{categoryX}[/] : ${options.legend.colorize ? "[{stroke}]" : ""}{name}[/] `,
-                            legendRangeLabelText: `${options.legend.colorize ? "[{stroke}]" : ""}{name}[/]  `,
+                            legendLabelText: `           [bold #888]{categoryX}[/] : ${options.legend.colorize ? "[{stroke}]" : ""}{name}[/]`,
+                            legendRangeLabelText: `${options.legend.colorize ? "[{stroke}]" : ""}{name}[/]`,
                             legendValueText: `[bold ${options.legend.colorize ? "{stroke}" : ""}]{valueY}[/]`,
-                            legendRangeValueText: `${options.legend.colorize ? "[{stroke}]" : ""}{valueYClose}[/]`,
                             tooltip: am5.Tooltip.new(root, {
                                 labelText: "{valueY}"
                             })
