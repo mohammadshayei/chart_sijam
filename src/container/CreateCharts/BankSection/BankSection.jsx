@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./BankSection.scss";
-import EditTitle from "../../../component/UI/EditTitle/EditTitle";
 import { useTheme } from "../../../styles/ThemeProvider";
 import { stringFa } from "../../../assets/strings/stringFaCollection";
 import { useSelector } from "react-redux";
@@ -10,20 +9,22 @@ const BankSection = () => {
   const themeState = useTheme();
   const theme = themeState.computedTheme;
   const [tableData, setTableData] = useState([]);
-  const { data, metaData } = useSelector((state) => state.addChart);
+  const { data, metaData, id } = useSelector((state) => state.addChart);
+  const chartsData = useSelector((state) => state.chart);
 
   useEffect(() => {
-    if (!data || !metaData) return
+    if (!data || !metaData || !chartsData.data[id]?.mergedData) return
     let newData = data
-    if (metaData.filters.length > 0) {
-      metaData.filters.forEach(filter => {
-        if (filter.selected) {
-          newData = filterData(data, filter)
-        }
-      });
-    }
+    if (chartsData.data[id]?.mergedData && Object.entries(chartsData.data[id].mergedData).length === 0)
+      if (metaData.filters.length > 0) {
+        metaData.filters.forEach(filter => {
+          if (filter.selected) {
+            newData = filterData(data, filter)
+          }
+        });
+      }
     setTableData(newData)
-  }, [data, metaData]);
+  }, [data, metaData, chartsData.data[id]?.mergedData]);
 
   return (
     <div className="bank-section-container">
