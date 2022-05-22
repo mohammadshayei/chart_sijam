@@ -12,6 +12,7 @@ import * as chartActions from "../../store/actions/chart.js";
 import * as detailActions from "../../store/actions/detail.js";
 import { useIntersection } from "../../useIntersection";
 import { isRealValue } from "../../store/utility";
+import { stringFa } from "../../assets/strings/stringFaCollection";
 // import { useIntersection } from "../../useIntersection";
 
 
@@ -33,10 +34,7 @@ const Card = React.memo((props) => {
 
 
   let colors = [theme.border_color, theme.darken_border_color]
-  const rootMargin = '-250px'
-  let isVisible = useIntersection(cardRef, rootMargin)
   const dispatch = useDispatch();
-
 
   const updateFaveList = (payload) => {
     dispatch(chartActions.updateFaveList(payload));
@@ -44,13 +42,7 @@ const Card = React.memo((props) => {
   const changeInfoINSourceCharts = (payload) => {
     dispatch(detailActions.changeInfoINSourceCharts(payload));
   };
-  const resetTimeSee = (payload) => {
-    dispatch(detailActions.resetTimeSee(payload));
-  };
-  const changeSeeTimeChart = (payload) => {
-    //chartId, isSee
-    dispatch(detailActions.changeSeeTimeChart(payload));
-  };
+
   const onMouseEnter = () => {
     setIsHover(true);
   };
@@ -58,30 +50,12 @@ const Card = React.memo((props) => {
     setIsHover(false);
   };
 
-  const onFaveClick = () => {
+  const onFaveClick = (visible) => {
+    if (!visible) return;
     socket.emit('change_fave_chart', { chartId: props.chartId, isFave: !fave, userId })
   }
 
 
-  useEffect(() => {
-    changeSeeTimeChart({ chartId: props.chartId, isSee: isVisible })
-  }, [isVisible])
-
-  useEffect(() => {
-    if (props.item.time && props.item.time.duration > 0) {
-      socket.emit('set_see_time', { chartId: props.chartId, duration: props.item.time.duration, userId, holdingId: selectedHolding.holdingId })
-      resetTimeSee({ chartId: props.chartId })
-    }
-    // }, [props.item.time.duration])
-  }, [props.item.time?.duration])
-
-  useEffect(() => {
-    return () => {
-      if (props.item.time.isSee && socket)
-        // console.log(props.item.time.duration)
-        socket.emit('set_see_time', { chartId: props.chartId, duration: props.item.time.duration, userId, holdingId: selectedHolding.holdingId })
-    }
-  }, [])
 
 
   useEffect(() => {
@@ -171,17 +145,24 @@ const Card = React.memo((props) => {
         cardIsHover={isHover}
         filters={props.item?.dataInfo?.filters}
         selectedFilter={selectedFilterIndex}
+        visible={props.item.visible}
 
       />
       <div className="card-body">
-        <ChartBlock
-          chartId={props.chartId}
-          type={props.item.type}
-          options={props.item.options}
-          data={props.item.data}
-          mergedData={props.item.mergedData}
-          loading={props.item.loading}
-        />
+        {
+          props.item.visible ?
+            <ChartBlock
+              chartId={props.chartId}
+              type={props.item.type}
+              options={props.item.options}
+              data={props.item.data}
+              mergedData={props.item.mergedData}
+              loading={props.item.loading}
+            />
+            : <div className="no_access_to_filter">
+              <p>{stringFa.no_acccess_to_filters_chart}</p>
+            </div>
+        }
       </div>
       <div className="card-footer">
         <div className="left-side">
@@ -189,9 +170,9 @@ const Card = React.memo((props) => {
             <>
               <div className="like">
                 {fave ?
-                  <AiFillHeart color="red" className="icon" onClick={onFaveClick} />
+                  <AiFillHeart color="red" className="icon" onClick={() => onFaveClick(props.item.visible)} />
                   :
-                  <AiOutlineHeart className="icon" onClick={onFaveClick} />
+                  <AiOutlineHeart className="icon" onClick={() => onFaveClick(props.item.visible)} />
                 }
                 <p className="number">{props.item.faveList?.length}</p>
               </div>
