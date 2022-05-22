@@ -23,18 +23,16 @@ import ShareBox from "../../component/ShareBox/ShareBox";
 import AddChartToCategory from "../../component/TitleBlock/AddChartToCategory/AddChartToCategory";
 import Modal from "../../component/UI/Modal/Modal";
 import { MdCancel } from "react-icons/md";
-
 import { VscSplitVertical, VscClose } from "react-icons/vsc";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
 import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
-import { FaUserFriends, FaUser, FaRegComment } from "react-icons/fa";
+import { FaUserFriends, FaUser, FaRegComment, FaPlusCircle } from "react-icons/fa";
 import { AiOutlinePlus, AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { BsStarFill, BsStar, BsReplyFill, BsFullscreenExit } from "react-icons/bs";
-import { MdModeEditOutline } from 'react-icons/md'
+import { MdModeEditOutline, MdErrorOutline } from 'react-icons/md'
 import FilterSelector from "../../component/TitleBlock/FilterSelector/FilterSelector";
 import { getChartFilterData, getFilteredData } from "../../api/home";
-import { v4 as uuidv4 } from "uuid";
-
+import AddCaption from "./AddCaption/AddCaption";
 
 
 
@@ -71,11 +69,13 @@ const CreateCharts = (props) => {
   const [titleValue, setTitleValue] = useState('')
   const [editableInput, setEditableInput] = useState(false)
   const [showModal, setShowModal] = useState(false);
+  const [captionModal, setCaptionModal] = useState(false);
   const [addChartModal, setAddChartModal] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
+  const [mainCaption, setMainCaption] = useState('')
   const [fave, setFave] = useState(false)
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
-
+  const [captionHovered, setCaptionHovered] = useState(false)
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
@@ -151,6 +151,9 @@ const CreateCharts = (props) => {
   const setIsEdit = (isEdit) => {
     dispatch(addChartActions.setIsEdit(isEdit));
   };
+  const setChartCaption = (payload) => {
+    dispatch(addChartActions.setCaptionToChart(payload));
+  };
   const setChartsData = (chartsData) => {
     dispatch(chartActions.setChartsData(chartsData));
   };
@@ -175,7 +178,12 @@ const CreateCharts = (props) => {
   const selectFilter = (payload) => {
     dispatch(addChartActions.selectFilter(payload));
   };
-
+  const setChartError = (payload) => {
+    dispatch(addChartActions.setError(payload));
+  };
+  const setEmployees = (payload) => {
+    dispatch(addChartActions.setEmployees(payload));
+  };
   const toggleShareModal = () => {
     setShowModal(!showModal)
   }
@@ -232,6 +240,7 @@ const CreateCharts = (props) => {
       shareList: [],
       editList: [],
       viewList: [],
+      caption: "",
       data: {
         data: [],
         options: {
@@ -264,6 +273,7 @@ const CreateCharts = (props) => {
         },
       },
     };
+    setChartError({ error: '' })
     setIsEdit({ isEdit: false })
     setChartData(clearedChartData);
     setId("");
@@ -408,6 +418,7 @@ const CreateCharts = (props) => {
         userId,
         shareAll: takenData.chartData.shareAll,
         editAll: takenData.chartData.editAll,
+        caption: takenData.chartData.caption,
         viewAll: takenData.chartData.viewAll,
         shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
@@ -430,7 +441,8 @@ const CreateCharts = (props) => {
                     }
                   }
                 }),
-              }
+              },
+              caption: item.caption
             }
           }),
           fields: takenData.metaData.fields.sort((a, b) => (a.index > b.index) ? 1 : -1).map(item => {
@@ -439,7 +451,13 @@ const CreateCharts = (props) => {
             }
           }),
           selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
-        }
+        },
+        filtersAccess: takenData.metaData.filters?.map(item => {
+          return {
+            all: item.all,
+            users: item.users.map(i => i._id)
+          }
+        })
       };
     } else {
       chartApi = "edit_chart";
@@ -457,6 +475,7 @@ const CreateCharts = (props) => {
         shareAll: takenData.chartData.shareAll,
         editAll: takenData.chartData.editAll,
         viewAll: takenData.chartData.viewAll,
+        caption: takenData.chartData.caption,
         shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
@@ -488,6 +507,7 @@ const CreateCharts = (props) => {
           }),
           selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
         }
+
       };
     }
     setError(null);
@@ -676,6 +696,10 @@ const CreateCharts = (props) => {
     });
   }
 
+  const onSaveChartCaption = (caption) => {
+    setChartCaption({ caption })
+  }
+
   useEffect(() => {
     for (const key in hover) {
       if (hover[key]) {
@@ -704,6 +728,9 @@ const CreateCharts = (props) => {
     let controller = new AbortController();
     (async () => {
       let result = await fetchData({ id: bankId }, token)
+      if (result.data?.data?.length === 0) {
+        setChartError({ error: 'بانک مورد نظر دیتا ندارد' })
+      }
       selectChartDatabase(result.data.data);
       setId(bankId);
       setIsEdit({ isEdit: true });
@@ -818,7 +845,50 @@ const CreateCharts = (props) => {
     });
   }, [chartsData?.data[takenData.id]?.selectedFilterId, takenData.metaData.filters.length]);
 
-  
+  useEffect(() => {
+    if (takenData.error) {
+      setError(null)
+      setError(
+        <ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>
+      )
+    }
+  }, [takenData.error])
+
+  useEffect(() => {
+    if (!selectedHolding) return
+    let controller = new AbortController();
+    (async () => {
+      try {
+        const resultFetchingUsers = await axios.post(
+          `${baseUrl}api/get_employees`,
+          { id: selectedHolding.holdingId },
+          { headers: { "auth-token": token } }
+        );
+        if (resultFetchingUsers.data.success) {
+          const res = resultFetchingUsers.data.result.employees.filter((employee) => !employee.user.is_fekrafzar && userId !== employee.user._id)
+          setEmployees({ employees: res })
+        }
+        else
+          setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
+        controller = null;
+
+      } catch (e) {
+        setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+      }
+      return () => controller?.abort()
+    })()
+  }, [selectedHolding]);
+
+  useEffect(() => {
+    if (takenData.chartData?.caption)
+      setMainCaption(takenData.chartData?.caption)
+    else if (chartsData?.data[takenData.id]?.caption)
+      setMainCaption(chartsData?.data[takenData.id]?.caption)
+    else
+      setMainCaption(stringFa.caption_not_added)
+
+  }, [takenData.chartData?.caption, chartsData?.data[takenData.id]?.caption])
+
   return (
     <div
       className="create-charts-container"
@@ -831,6 +901,22 @@ const CreateCharts = (props) => {
       }}
     >
       {error}
+      <Modal
+        show={captionModal}
+        modalClosed={() => setCaptionModal(false)}
+        style={{
+          height: "60%",
+          width: "30%",
+          minHeight: "230px",
+          minWidth: "340px",
+          zIndex: 600,
+        }}
+        bdStyle={{
+          zIndex: 550,
+        }}
+      >
+        <AddCaption currentValue={takenData.chartData?.caption} onSaveChartCaption={onSaveChartCaption} close={() => setCaptionModal(false)} />
+      </Modal>
 
       <Modal
         show={showModal}
@@ -870,7 +956,7 @@ const CreateCharts = (props) => {
           style={{ borderColor: theme.border_color }}
         >
           <div className="header-buttons">
-            <Button
+            {!takenData.error && <Button
               ButtonStyle={{
                 flex: "0 0 auto",
                 fontWeight: 400,
@@ -880,7 +966,7 @@ const CreateCharts = (props) => {
               onClick={doneClickHandler}
             >
               {stringFa.done}
-            </Button>
+            </Button>}
             <Button
               cancel={true}
               ButtonStyle={{
@@ -1086,117 +1172,156 @@ const CreateCharts = (props) => {
           </div>
         </div>
       )}
-      <div className="section-settings-wrapper">
-        <div
-          className="section-settings"
-          style={{
-            border: chartsData.editMode && `1px solid ${theme.border_color}`,
-          }}
-        >
+      {takenData.error ?
+        <div className="error-wrapper" >
+          <span onClick={closeHandler} className="go-back" style={{ color: theme.primary }}>{stringFa.back}</span>
+          <span className="content">{takenData.error}</span>
+          <MdErrorOutline fontSize={'1.3rem'} color={theme.error} />
+
+        </div>
+        :
+        <div className="section-settings-wrapper">
           <div
-            className="section-settings-header-wrapper"
+            className="section-settings"
             style={{
-              borderBottom:
-                chartsData.editMode && `1px solid ${theme.border_color}`,
+              border: chartsData.editMode && `1px solid ${theme.border_color}`,
             }}
           >
-          </div>
-          <div
-            className="section-settings-display-type-switcher-wrapper"
-            onMouseEnter={() => onMouseEnter("split")}
-            onMouseLeave={() => onMouseLeave("split")}
-            style={{ top: chartsData.editMode ? "1.5rem" : "-4.5rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
-          >
-            {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
-              tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
-            <StyledButton
-              ButtonStyle={{
-                flex: "0 0 auto",
-                fontSize: "1rem",
-                marginBottom: "1rem",
-                padding: "4px",
+            <div
+              className="section-settings-header-wrapper"
+              style={{
+                borderBottom:
+                  chartsData.editMode && `1px solid ${theme.border_color}`,
               }}
-              hover={
-                themeState.isDark ? theme.surface_1dp : theme.background_color
-              }
-              onClick={splitViewHandler}
             >
-              <VscSplitVertical />
-            </StyledButton>
-          </div>
-          <div className="section-settings-content-component">
-            {chartsData.editMode && (
-              <div className="section-settings-content-header-container">
-                <div className="base-section-settings-header-component">
-                  <div
-                    className={`base-section-settings-header ${input && "renaming-section"
-                      }`}
-                  >
+            </div>
+
+            <div
+              className="section-settings-display-type-switcher-wrapper"
+              onMouseEnter={() => onMouseEnter("split")}
+              onMouseLeave={() => onMouseLeave("split")}
+              style={{ top: chartsData.editMode ? "1rem" : "-4.5rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
+            >
+              {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
+                tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
+              <StyledButton
+                ButtonStyle={{
+                  flex: "0 0 auto",
+                  fontSize: "1rem",
+                  marginBottom: "1rem",
+                  padding: "4px",
+                }}
+                hover={
+                  themeState.isDark ? theme.surface_1dp : theme.background_color
+                }
+                onClick={splitViewHandler}
+              >
+                <VscSplitVertical />
+              </StyledButton>
+            </div>
+
+            <div
+              style={{ top: chartsData.editMode ? "1rem" : "-3.5rem", left: chartsData.editMode ? "3rem" : "4.5rem" }}
+              onMouseEnter={() => setCaptionHovered(true)}
+              onMouseLeave={() => setCaptionHovered(false)}
+              className="setting-caption-wrapper"
+            >
+              {captionHovered && <Hint show={captionHovered} hint={mainCaption}
+                tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.7rem" }} arrowStyle={{ left: chartsData.editMode ? "13%" : "33%" }}
+              />}
+              <StyledButton
+                onClick={() => {
+                  setCaptionModal(true)
+                }}
+                hover={
+                  themeState.isDark ? theme.surface_12dp : theme.background_color
+                }
+              >
+                <div className="button-text">
+                  {stringFa.caption}
+                  <div className="button-icon" style={{ color: theme.primary }}>
+                    <FaPlusCircle />
+                  </div>
+                </div>
+              </StyledButton>
+            </div>
+
+            <div className="section-settings-content-component">
+              {chartsData.editMode && (
+                <div className="section-settings-content-header-container">
+                  <div className="base-section-settings-header-component">
                     <div
-                      className="editable-component"
-                      ref={ref}
-                      onClick={() => {
-                        setInput(true);
-                      }}
+                      className={`base-section-settings-header ${input && "renaming-section"
+                        }`}
                     >
-                      {input ? (
-                        <input
-                          className="editable-input"
-                          style={{
-                            borderColor: takenData.emptyRequireds.length > 0 ?
-                              takenData.emptyRequireds.includes("input") ?
-                                theme.error :
-                                theme.darken_border_color :
-                              theme.darken_border_color
-                          }}
-                          dir="rtl"
-                          placeholder={stringFa.title}
-                          value={takenData.chartData.title}
-                          onChange={setTitleHandler}
-                          onKeyDown={setTitleHandler}
-                          autoFocus
-                        />
-                      ) : (
-                        <div className="text-component" dir="rtl"
-                          onMouseEnter={() => onMouseEnter("title")}
-                          onMouseLeave={() => onMouseLeave("title")}
-                          style={{
-                            border: takenData.emptyRequireds.length > 0 ?
-                              takenData.emptyRequireds.includes("input") ?
-                                `1px dashed ${theme.error}` :
+                      <div
+                        className="editable-component"
+                        ref={ref}
+                        onClick={() => {
+                          setInput(true);
+                        }}
+                      >
+                        {input ? (
+                          <input
+                            className="editable-input"
+                            style={{
+                              borderColor: takenData.emptyRequireds.length > 0 ?
+                                takenData.emptyRequireds.includes("input") ?
+                                  theme.error :
+                                  theme.darken_border_color :
+                                theme.darken_border_color
+                            }}
+                            dir="rtl"
+                            placeholder={stringFa.title}
+                            value={takenData.chartData.title}
+                            onChange={setTitleHandler}
+                            onKeyDown={setTitleHandler}
+                            autoFocus
+                          />
+                        ) : (
+                          <div className="text-component" dir="rtl"
+                            onMouseEnter={() => onMouseEnter("title")}
+                            onMouseLeave={() => onMouseLeave("title")}
+                            style={{
+                              border: takenData.emptyRequireds.length > 0 ?
+                                takenData.emptyRequireds.includes("input") ?
+                                  `1px dashed ${theme.error}` :
+                                  hover.title ? `1px dashed ${theme.darken_border_color}` :
+                                    "none" :
                                 hover.title ? `1px dashed ${theme.darken_border_color}` :
-                                  "none" :
-                              hover.title ? `1px dashed ${theme.darken_border_color}` :
-                                "none"
-                          }}>
-                          <span>
-                            {takenData.chartData.title
-                              ? takenData.chartData.title
-                              : stringFa.title}
-                          </span>
-                        </div>
-                      )}
+                                  "none"
+                            }}>
+                            <span>
+                              {takenData.chartData.title
+                                ? takenData.chartData.title
+                                : stringFa.title}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {(splitView === "نمودار" || splitView === "تقسیم شده") &&
-              <div className="section-chart-content-container">
-                <ChartSection />
-              </div>}
-            {(splitView === "جدول" || splitView === "تقسیم شده") &&
-              <div className="table-component-container">
-                <BankSection />
-              </div>}
+              )}
+              {(splitView === "نمودار" || splitView === "تقسیم شده") &&
+                <div className="section-chart-content-container">
+                  <ChartSection />
+                </div>}
+              {(splitView === "جدول" || splitView === "تقسیم شده") &&
+                <div className="table-component-container">
+                  <BankSection />
+                </div>}
+            </div>
+
           </div>
+          {takenData.isFullscreen ?
+            takenData.isEdit && <Steps type={"Line"} />
+            :
+            <Steps type={"Line"} />
+          }
         </div>
-        {takenData.isFullscreen ?
-          takenData.isEdit && <Steps type={"Line"} />
-          :
-          <Steps type={"Line"} />
-        }
-      </div>
+
+      }
       {
         takenData.isFullscreen &&
         <div className="footer">
@@ -1242,7 +1367,7 @@ const CreateCharts = (props) => {
           </div>
         </div>
       }
-    </div>
+    </div >
   );
 };
 export default CreateCharts;

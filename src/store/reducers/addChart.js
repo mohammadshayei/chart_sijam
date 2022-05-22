@@ -2,18 +2,20 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   id: "",
+  error: "",
   isEdit: false,
   isFullscreen: false,
   emptyRequireds: [],
+  employees: [],
   data: [],
   filterRules: {
     operator: "",
     selectedFilter: 0,
-    fields: []
+    fields: [],
   },
   metaData: {
     fields: [],
-    filters: []
+    filters: [],
   },
   chartData: {
     title: "",
@@ -28,6 +30,7 @@ const initialState = {
     shareList: [],
     editList: [],
     viewList: [],
+    caption: "",
     data: {
       data: [],
       options: {
@@ -103,14 +106,14 @@ const selectChartData = (state, action) => {
 };
 const changeFieldsMEtaData = (state, action) => {
   const { index, value, name } = action.payload;
-  let updatedMetaData = { ...state.metaData }
-  let updatedFields = [...updatedMetaData.fields]
-  let check = updatedFields.findIndex(item => item.index === index)
+  let updatedMetaData = { ...state.metaData };
+  let updatedFields = [...updatedMetaData.fields];
+  let check = updatedFields.findIndex((item) => item.index === index);
   if (check > -1) {
     updatedFields[check].value = value;
     updatedFields[check].name = name;
   } else {
-    updatedFields.push({ index, value, name })
+    updatedFields.push({ index, value, name });
   }
   updatedMetaData.fields = updatedFields;
   return {
@@ -118,10 +121,16 @@ const changeFieldsMEtaData = (state, action) => {
     metaData: updatedMetaData,
   };
 };
-
+const setError = (state, action) => {
+  const { error } = action.payload;
+  return {
+    ...state,
+    error,
+  };
+};
 const setChartData = (state, action) => {
   const chartData = action.payload;
-  let requireds = chartData.data.data.length === 0 ? [] : state.emptyRequireds
+  let requireds = chartData.data.data.length === 0 ? [] : state.emptyRequireds;
   return {
     ...state,
     emptyRequireds: requireds,
@@ -140,13 +149,30 @@ const setChartData = (state, action) => {
     },
   };
 };
+const setCaption = (state, action) => {
+  const { caption } = action.payload;
+  return {
+    ...state,
+    chartData: {
+      ...state.chartData,
+      caption,
+    },
+  };
+};
+const setEmployees = (state, action) => {
+  const { employees } = action.payload;
+  return {
+    ...state,
+    employees,
+  };
+};
 const updatedDataField = (state, action) => {
   const { selected, inputIndex, fieldValues } = action.payload;
-  let updatedChartData = { ...state.chartData }
-  let updatedData = [...updatedChartData.data.data], updatedOptions = { ...updatedChartData.data.options };
+  let updatedChartData = { ...state.chartData };
+  let updatedData = [...updatedChartData.data.data],
+    updatedOptions = { ...updatedChartData.data.options };
   for (let index = 0; index < fieldValues.length; index++) {
-    const fieldName =
-      inputIndex === 0 ? "category" : `field${inputIndex}`;
+    const fieldName = inputIndex === 0 ? "category" : `field${inputIndex}`;
     let found = false;
     for (const key in updatedData[index]) {
       if (key === fieldName) {
@@ -162,7 +188,8 @@ const updatedDataField = (state, action) => {
     }
   }
   if (inputIndex !== 0) {
-    let valueExst = false, count = 1;
+    let valueExst = false,
+      count = 1;
     for (const key in updatedOptions.fieldNames) {
       count++;
       if (updatedOptions.fieldNames[key] === selected) {
@@ -170,7 +197,10 @@ const updatedDataField = (state, action) => {
       }
     }
     if (!valueExst)
-      updatedOptions.fieldNames = { ...updatedOptions.fieldNames, [`field${count}`]: selected }
+      updatedOptions.fieldNames = {
+        ...updatedOptions.fieldNames,
+        [`field${count}`]: selected,
+      };
   }
   return {
     ...state,
@@ -179,7 +209,7 @@ const updatedDataField = (state, action) => {
       data: {
         ...state.chartData.data,
         data: updatedData,
-        options: updatedOptions
+        options: updatedOptions,
       },
     },
   };
@@ -282,7 +312,8 @@ const setChartOptions = (state, action) => {
 };
 const setChartOptionsAndType = (state, action) => {
   const { item } = action.payload;
-  let updatedType, updatedOptions = { ...state.chartData.data.options };
+  let updatedType,
+    updatedOptions = { ...state.chartData.data.options };
   switch (item) {
     case "smooth":
       updatedType = "Line";
@@ -335,21 +366,19 @@ const fullscreenChart = (state, action) => {
   };
 };
 
-
 const changeFiltersMetaData = (state, action) => {
   const { id, name, remove, value, operator } = action.payload;
-  let updatedMetaData = { ...state.metaData }
-  let updatedFilters = [...updatedMetaData.filters]
+  let updatedMetaData = { ...state.metaData };
+  let updatedFilters = [...updatedMetaData.filters];
 
-  let check = updatedFilters.findIndex(item => item.id === id)
+  let check = updatedFilters.findIndex((item) => item.id === id);
   if (check > -1) {
     if (remove) {
-      updatedFilters = updatedFilters.filter(item => item.id !== id)
-    }
-    else {
+      updatedFilters = updatedFilters.filter((item) => item.id !== id);
+    } else {
       updatedFilters[check].name = name;
       updatedFilters[check].type = operator;
-      updatedFilters[check].rules = value;
+      updatedFilters[check].filters = value;
     }
   } else {
     updatedFilters = [
@@ -357,14 +386,12 @@ const changeFiltersMetaData = (state, action) => {
       {
         id,
         name,
-        type: operator === "یا" ?
-          "or" : operator === "و" ?
-            "and" : "",
+        type: operator === "یا" ? "or" : operator === "و" ? "and" : "",
         filters: value,
         selected: false,
-        saved: false
-      }
-    ]
+        saved: false,
+      },
+    ];
   }
   updatedMetaData.filters = updatedFilters;
   return {
@@ -375,13 +402,11 @@ const changeFiltersMetaData = (state, action) => {
 
 const selectFilter = (state, action) => {
   const { id } = action.payload;
-  let updatedMetaData = { ...state.metaData }
+  let updatedMetaData = { ...state.metaData };
 
-  updatedMetaData.filters.forEach(filter => {
-    if (filter.id === id)
-      filter.selected = true
-    else
-      filter.selected = false
+  updatedMetaData.filters.forEach((filter) => {
+    if (filter.id === id) filter.selected = true;
+    else filter.selected = false;
   });
   return {
     ...state,
@@ -390,14 +415,17 @@ const selectFilter = (state, action) => {
 };
 
 const saveFilter = (state, action) => {
-  const { id, name } = action.payload;
-  let updatedMetaData = { ...state.metaData }
-  let updatedFilters = [...updatedMetaData.filters]
+  const { id, caption, name, users, allAccess } = action.payload;
+  let updatedMetaData = { ...state.metaData };
+  let updatedFilters = [...updatedMetaData.filters];
 
-  updatedFilters.forEach(filter => {
+  updatedFilters.forEach((filter) => {
     if (filter.id === id) {
-      filter.name = name
-      filter.saved = true
+      filter.name = name;
+      filter.caption = caption;
+      filter.users = users;
+      filter.all = allAccess;
+      filter.saved = true;
     }
   });
   updatedMetaData.filters = updatedFilters;
@@ -413,7 +441,7 @@ const setFiltersMetaData = (state, action) => {
     ...state,
     metaData: {
       ...state.metaData,
-      filters
+      filters,
     },
   };
 };
@@ -423,7 +451,7 @@ const clearMetaData = (state) => {
     ...state,
     metaData: {
       fields: [],
-      filters: []
+      filters: [],
     },
   };
 };
@@ -438,30 +466,38 @@ const setAccessToAll = (state, action) => {
     editList = [...state.chartData.editList];
 
   if (access) {
-    if (accessType === "view" || accessType === "share" || accessType === "edit") {
-      viewAll = access
-      viewList = []
+    if (
+      accessType === "view" ||
+      accessType === "share" ||
+      accessType === "edit"
+    ) {
+      viewAll = access;
+      viewList = [];
     }
     if (accessType === "share" || accessType === "edit") {
-      shareAll = access
-      shareList = []
+      shareAll = access;
+      shareList = [];
     }
     if (accessType === "edit") {
-      editAll = access
-      editList = []
+      editAll = access;
+      editList = [];
     }
   } else {
-    if (accessType === "edit" || accessType === "share" || accessType === "view") {
-      editAll = access
-      editList = []
+    if (
+      accessType === "edit" ||
+      accessType === "share" ||
+      accessType === "view"
+    ) {
+      editAll = access;
+      editList = [];
     }
     if (accessType === "share" || accessType === "view") {
-      shareAll = access
-      shareList = []
+      shareAll = access;
+      shareList = [];
     }
     if (accessType === "view") {
-      viewAll = access
-      viewList = []
+      viewAll = access;
+      viewList = [];
     }
   }
 
@@ -474,7 +510,7 @@ const setAccessToAll = (state, action) => {
       editAll,
       viewList,
       editList,
-      shareList
+      shareList,
     },
   };
 };
@@ -490,62 +526,80 @@ const updateAccessList = (state, action) => {
 
   if (add) {
     if (employee.length > 1) {
-      if (accessType === "view" || accessType === "share" || accessType === "edit") {
-        if (viewAll)
-          viewAll = false
+      if (
+        accessType === "view" ||
+        accessType === "share" ||
+        accessType === "edit"
+      ) {
+        if (viewAll) viewAll = false;
         viewList = [];
       }
       if (accessType === "share" || accessType === "edit") {
-        if (shareAll)
-          shareAll = false
+        if (shareAll) shareAll = false;
         shareList = [];
       }
       if (accessType === "edit") {
-        if (editAll)
-          editAll = false
+        if (editAll) editAll = false;
         editList = [];
       }
       employee.forEach((emp) => {
-        if (accessType === "view" || accessType === "share" || accessType === "edit")
+        if (
+          accessType === "view" ||
+          accessType === "share" ||
+          accessType === "edit"
+        )
           viewList = [...viewList, emp.user._id];
         if (accessType === "share" || accessType === "edit")
           shareList = [...shareList, emp.user._id];
-        if (accessType === "edit")
-          editList = [...editList, emp.user._id];
+        if (accessType === "edit") editList = [...editList, emp.user._id];
       });
-    }
-    else {
-      if (accessType === "view" || accessType === "share" || accessType === "edit") {
-        if (viewAll)
-          viewAll = false
+    } else {
+      if (
+        accessType === "view" ||
+        accessType === "share" ||
+        accessType === "edit"
+      ) {
+        if (viewAll) viewAll = false;
       }
       if (accessType === "share" || accessType === "edit") {
-        if (shareAll)
-          shareAll = false
+        if (shareAll) shareAll = false;
       }
       if (accessType === "edit") {
-        if (editAll)
-          editAll = false
+        if (editAll) editAll = false;
       }
-      if (accessType === "view" || accessType === "share" || accessType === "edit")
-        viewList = viewList.includes(employee[0]) ? viewList : [...viewList, ...employee];
+      if (
+        accessType === "view" ||
+        accessType === "share" ||
+        accessType === "edit"
+      )
+        viewList = viewList.includes(employee[0])
+          ? viewList
+          : [...viewList, ...employee];
       if (accessType === "share" || accessType === "edit")
-        shareList = shareList.includes(employee[0]) ? shareList : [...shareList, ...employee];
+        shareList = shareList.includes(employee[0])
+          ? shareList
+          : [...shareList, ...employee];
       if (accessType === "edit")
-        editList = editList.includes(employee[0]) ? editList : [...editList, ...employee];
+        editList = editList.includes(employee[0])
+          ? editList
+          : [...editList, ...employee];
     }
-  }
-  else {
+  } else {
     if (employee.length > 1) {
-      if (accessType === "edit" || accessType === "share" || accessType === "view")
+      if (
+        accessType === "edit" ||
+        accessType === "share" ||
+        accessType === "view"
+      )
         editList = [];
-      if (accessType === "share" || accessType === "view")
-        shareList = [];
-      if (accessType === "view")
-        viewList = [];
-    }
-    else {
-      if (accessType === "edit" || accessType === "share" || accessType === "view")
+      if (accessType === "share" || accessType === "view") shareList = [];
+      if (accessType === "view") viewList = [];
+    } else {
+      if (
+        accessType === "edit" ||
+        accessType === "share" ||
+        accessType === "view"
+      )
         editList = editList.filter((emp) => emp !== employee[0]);
       if (accessType === "share" || accessType === "view")
         shareList = shareList.filter((emp) => emp !== employee[0]);
@@ -562,7 +616,7 @@ const updateAccessList = (state, action) => {
       editAll,
       viewList,
       editList,
-      shareList
+      shareList,
     },
   };
 };
@@ -571,7 +625,7 @@ const updateEmptyRequireds = (state, action) => {
   const { emptyRequireds } = action.payload;
   return {
     ...state,
-    emptyRequireds
+    emptyRequireds,
   };
 };
 
@@ -617,7 +671,12 @@ const reducer = (state = initialState, action) => {
       return clearMetaData(state);
     case actionTypes.SET_FILTERS_META_DATA:
       return setFiltersMetaData(state, action);
-
+    case actionTypes.SET_ERROR_ADD_CHART:
+      return setError(state, action);
+    case actionTypes.SET_CAPTION_TO_CHART:
+      return setCaption(state, action);
+    case actionTypes.SET_EMPLOYEES:
+      return setEmployees(state, action);
     default:
       return state;
   }

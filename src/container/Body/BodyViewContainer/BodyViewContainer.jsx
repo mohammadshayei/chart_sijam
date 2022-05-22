@@ -226,7 +226,10 @@ const BodyViewContainer = ({ isMenuOpen }) => {
           loading: false,
           seprated: '',
           hide: false,
-          filterName: ""
+          filterName: "",
+          caption: item.chart.caption,
+          visible: item.chart.visible,
+
         },
       };
     });

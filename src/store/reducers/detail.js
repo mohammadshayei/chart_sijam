@@ -128,32 +128,6 @@ const changeInfoINSourceCharts = (state, action) => {
   };
 };
 
-/////hehrehheheheheheh
-const changeSeeTimeChart = (state, action) => {
-  const { chartId, isSee } = action.payload;
-  let updatedSourceCharts = [...state.sourceCharts];
-  let updatedChartIndex = updatedSourceCharts.findIndex(
-    (item) => item.chart._id === chartId
-  );
-  if (
-    updatedChartIndex < 0 ||
-    updatedSourceCharts[updatedChartIndex].time.isSee === isSee
-  )
-    return { ...state };
-  updatedSourceCharts[updatedChartIndex].time.isSee = isSee;
-  if (isSee) {
-    updatedSourceCharts[updatedChartIndex].time.start = new Date();
-  } else {
-    updatedSourceCharts[updatedChartIndex].time.duration = Math.abs(
-      new Date() - updatedSourceCharts[updatedChartIndex].time.start
-    );
-    updatedSourceCharts[updatedChartIndex].time.start = "";
-  }
-  return {
-    ...state,
-    sourceCharts: updatedSourceCharts,
-  };
-};
 const resetTimeSee = (state, action) => {
   const { chartId } = action.payload;
   let updatedSourceCharts = [...state.sourceCharts];
@@ -185,8 +159,6 @@ const reducer = (state = initialState, action) => {
       return setSourceCharts(state, action);
     case actionTypes.CHANGE_INFO_IN_SOURCE_CHARTS:
       return changeInfoINSourceCharts(state, action);
-    case actionTypes.CHANGE_SEE_TIME_CHART:
-      return changeSeeTimeChart(state, action);
     case actionTypes.RESET_TIME_SEE:
       return resetTimeSee(state, action);
     case actionTypes.SET_UNITY_FILTER:

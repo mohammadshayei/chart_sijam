@@ -150,5 +150,10 @@ export const stringFa = {
   version: "نسخه",
   unity_filter_list: "لیست فیلتر های مشابه",
   no_exist_unity_filter_list: "فیلتر مشترک موجود نمی باشد",
+  back: "بازگشت",
+  caption: "توضیحات",
+  caption_not_added: "توضیحاتی برای این نمودار موجود نمی باشد",
+  filter_caption_not_added: "توضیحاتی برای این فیلتر  موجود نمی باشد",
+  no_acccess_to_filters_chart:"شما به هیچ کدام از فیلتر ها دسترسی ندارید"
 
 };

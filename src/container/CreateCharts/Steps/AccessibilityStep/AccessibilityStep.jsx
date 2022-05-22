@@ -33,14 +33,14 @@ const AccessibilityStep = () => {
         })
     const [accessType, setAccessType] = useState("view");
     const [loading, setLoading] = useState(false);
-    const [employees, setEmployees] = useState(new Array(0).fill(""));
+    // const [employees, setEmployees] = useState(new Array(0).fill(""));
     const [error, setError] = useState(null);
     const [isChanged, setIsChanged] = useState({ view: false, share: false, edit: false });
     const [changed, setChanged] = useState([]);
     const [changedAccess, setChangedAccess] = useState(null);
 
     const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
-    const { chartData, emptyRequireds } = useSelector((state) => state.addChart);
+    const { chartData, emptyRequireds, employees } = useSelector((state) => state.addChart);
     const { token, userId } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
@@ -61,7 +61,6 @@ const AccessibilityStep = () => {
         updatedPageBtnOrder[key] = updatedItem;
         setPageBtnOrder(updatedPageBtnOrder)
     }
-
     const allCheckBoxOnChange = () => {
         let updatedAccess = !chartData[`${accessType}All`];
         if (accessType === "view") {
@@ -148,32 +147,7 @@ const AccessibilityStep = () => {
         }
     }, [pageBtnOrder])
 
-    useEffect(() => {
-        if (!selectedHolding) return
-        let controller = new AbortController();
-        (async () => {
-            try {
-                setLoading(true)
-                const resultFetchingUsers = await axios.post(
-                    `${baseUrl}api/get_employees`,
-                    { id: selectedHolding.holdingId },
-                    { headers: { "auth-token": token } }
-                );
-                if (resultFetchingUsers.data.success) {
-                    const res = resultFetchingUsers.data.result.employees.filter((employee) => !employee.user.is_fekrafzar && userId !== employee.user._id)
-                    setEmployees(res)
-                }
-                else
-                    setError(<ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>)
-                setLoading(false)
-                controller = null;
 
-            } catch (e) {
-                setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
-            }
-            return () => controller?.abort()
-        })()
-    }, [selectedHolding]);
 
     return <div className="accessibility-step">
         {error}

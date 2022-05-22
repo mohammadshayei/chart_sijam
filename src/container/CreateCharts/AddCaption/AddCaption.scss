@@ -1,0 +1,24 @@
+.add-caption-wrapper {
+  direction: rtl;
+  padding: 1rem 0.5rem;
+  height: 100%;
+  label {
+    width: 100%;
+    text-align: center;
+    textarea {
+      width: 100%;
+      margin-top: 1rem;
+      outline: none;
+      resize: none;
+      height: calc(100% - 5rem);
+      padding: 0.9rem;
+      font-size: 14px;
+    }
+  }
+  .actions {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 4rem;
+    align-items: center;
+  }
+}
