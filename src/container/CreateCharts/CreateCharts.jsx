@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import Steps from "./Steps/Steps";
@@ -33,6 +33,7 @@ import { MdModeEditOutline, MdErrorOutline } from 'react-icons/md'
 import FilterSelector from "../../component/TitleBlock/FilterSelector/FilterSelector";
 import { getChartFilterData, getFilteredData } from "../../api/home";
 import AddCaption from "./AddCaption/AddCaption";
+import doubleRingLoading from "../../assets/images/DoubleRing.svg"
 
 
 
@@ -76,6 +77,7 @@ const CreateCharts = (props) => {
   const [fave, setFave] = useState(false)
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const [captionHovered, setCaptionHovered] = useState(false)
+  const [loading, setLoading] = useState(false);
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
@@ -460,6 +462,7 @@ const CreateCharts = (props) => {
         })
       };
     } else {
+      setLoading(true);
       chartApi = "edit_chart";
       payload = {
         chartId: takenData.id,
@@ -521,6 +524,7 @@ const CreateCharts = (props) => {
             {result.data.message.error}
           </ErrorDialog>
         );
+        setLoading(false)
       } else {
         if (location.pathname !== "/create_chart") {
           updatedChartsData = {
@@ -565,6 +569,7 @@ const CreateCharts = (props) => {
             },
           };
           setChartsData(updatedChartsData);
+          setLoading(false)
         }
         closeHandler();
         setError(
@@ -577,6 +582,7 @@ const CreateCharts = (props) => {
       setError(
         <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
       );
+      setLoading(false)
     }
   };
 
@@ -1016,20 +1022,24 @@ const CreateCharts = (props) => {
             </div>
           </div>}
           <div className="close">
-            <StyledButton
-              ButtonStyle={{
-                flex: "0 0 auto",
-                fontSize: "1.4rem",
-                marginBottom: "1rem",
-                padding: "4px",
-              }}
-              hover={
-                themeState.isDark ? theme.surface_1dp : theme.background_color
-              }
-              onClick={fullScreenCloseHandler}
-            >
-              <VscClose />
-            </StyledButton>
+            {loading ?
+              <img src={doubleRingLoading} alt="double-ring-loading-gif" />
+              :
+              <StyledButton
+                ButtonStyle={{
+                  flex: "0 0 auto",
+                  fontSize: "1.4rem",
+                  marginBottom: "1rem",
+                  padding: "4px",
+                }}
+                hover={
+                  themeState.isDark ? theme.surface_1dp : theme.background_color
+                }
+                onClick={fullScreenCloseHandler}
+              >
+                <VscClose />
+              </StyledButton>
+            }
           </div>
           <div className="path">
             {
