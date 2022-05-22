@@ -381,7 +381,7 @@ const TitleBlock = React.memo((props) => {
       id: "createList",
       icon: <AiOutlinePlus />,
     })
-    if (props.shareable && !props.seprated) updatedExtraItems.push({
+    if (props.shareable && !props.seprated && props.visible) updatedExtraItems.push({
       name: stringFa.share,
       id: "share",
       icon: <FaUserFriends />,
@@ -392,7 +392,7 @@ const TitleBlock = React.memo((props) => {
       { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
     }
     setExtraItems(updatedExtraItems)
-  }, [props.shareable, props.editable, props.seprated])
+  }, [props.shareable, props.editable, props.seprated, props.visible])
 
   useEffect(() => {
     if (!selectedHolding || !selectedHolding.categories) return;
@@ -474,7 +474,7 @@ const TitleBlock = React.memo((props) => {
             )}
           </div>
         </div>
-        <div className="details">
+        <div className="details" style={{ flexDirection: props.filters?.length > 0 ? 'row' : "row-reverse" }}>
           {
             props.filters?.length > 0 &&
             <div className="filter">
@@ -544,7 +544,7 @@ const TitleBlock = React.memo((props) => {
         ) : (
           !props.seprated &&
           <div className="right-icon-container">
-            {props.shareable &&
+            {props.shareable && props.visible &&
               <StyledButton
                 onClick={toggleShareModal}
                 hover={
