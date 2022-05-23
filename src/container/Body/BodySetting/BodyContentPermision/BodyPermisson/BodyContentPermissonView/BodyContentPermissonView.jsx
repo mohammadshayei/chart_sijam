@@ -66,9 +66,13 @@ const BodyContentPermissonView = () => {
     }, [selectedHolding, token]);
 
     const trBodyStyle = {
-        borderColor: '#dddddd',
-        backgroundColor: theme.table_background,
+        borderColor: theme.border_color,
+        backgroundColor:
+            themeState.isDark ?
+                theme.surface_4dp :
+                theme.surface,
     }
+
     return (
         <div className='body-content-permission-view-container'>
             <h4 className='permission-title'>
@@ -81,22 +85,35 @@ const BodyContentPermissonView = () => {
                     </div>
                     :
                     labels && labels.length > 0 &&
-                    <div className='table-container'>
-                        <table className='tabe-permissions'
-                            style={{
-                                boxShadow: `0 0 20px ${theme.hover}`
-                            }}>
+                    <div className='table-container'
+                        style={{
+                            boxShadow: `0 0 20px 
+                                ${themeState.isDark ?
+                                    theme.background_color :
+                                    theme.border_color}`
+                        }}
+                    >
+                        <table className='tabe-permissions'>
                             <thead>
                                 <tr className='tabe-permissions-thead-tr'
                                     style={{
                                         backgroundColor: theme.primary,
+                                        borderLeftColor: theme.background_color,
                                         color: theme.on_primary
                                     }}
                                 >
-                                    <th>ویژگی</th>
+                                    <th
+                                        style={{
+                                            borderLeftColor: theme.background_color,
+                                        }}
+                                    >ویژگی</th>
                                     {
                                         labels.map(item =>
-                                            <th key={item.label._id}>{item.label.name}</th>
+                                            <th key={item.label._id}
+                                                style={{
+                                                    borderLeftColor: theme.background_color,
+                                                }}
+                                            >{item.label.name}</th>
                                         )
                                     }
                                 </tr>
@@ -105,11 +122,22 @@ const BodyContentPermissonView = () => {
 
                                 {
                                     order.map((v) =>
-                                        <tr key={v.title} style={{ ...trBodyStyle }}>
-                                            <td>{v.title}</td>
+                                        <tr key={v.title} style={{
+                                            borderBottomColor: theme.border_color,
+                                            ...trBodyStyle
+                                        }}>
+                                            <td
+                                                style={{
+                                                    borderLeftColor: theme.background_color,
+                                                }}
+                                            >{v.title}</td>
                                             {
                                                 labels.map((item) =>
-                                                    <td key={item._id}>
+                                                    <td key={item._id}
+                                                        style={{
+                                                            borderLeftColor: theme.background_color,
+                                                        }}
+                                                    >
                                                         <CheckBox checked={item.label[v.path[0]]} />
                                                     </td>
                                                 )

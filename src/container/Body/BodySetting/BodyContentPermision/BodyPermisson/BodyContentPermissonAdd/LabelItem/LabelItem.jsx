@@ -8,7 +8,10 @@ const LabelItem = (props) => {
     return (
         <div className='label-item-container'
             style={{
-                backgroundColor: theme.table_background
+                backgroundColor:
+                    themeState.isDark ?
+                        theme.surface_4dp :
+                        theme.surface,
             }}
             onClick={props.onChange}
         >
