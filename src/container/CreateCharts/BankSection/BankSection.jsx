@@ -10,21 +10,19 @@ const BankSection = () => {
   const theme = themeState.computedTheme;
   const [tableData, setTableData] = useState([]);
   const { data, metaData, id } = useSelector((state) => state.addChart);
-  const chartsData = useSelector((state) => state.chart);
 
   useEffect(() => {
-    if (!data || !metaData || !chartsData.data[id]?.mergedData) return
+    if (!data || !metaData) return
     let newData = data
-    if (chartsData.data[id]?.mergedData && Object.entries(chartsData.data[id].mergedData).length === 0)
-      if (metaData.filters.length > 0) {
-        metaData.filters.forEach(filter => {
-          if (filter.selected) {
-            newData = filterData(data, filter)
-          }
-        });
-      }
+    if (metaData.filters.length > 0) {
+      metaData.filters.forEach(filter => {
+        if (filter.selected) {
+          newData = filterData(data, filter)
+        }
+      });
+    }
     setTableData(newData)
-  }, [data, metaData, chartsData.data[id]?.mergedData]);
+  }, [data, metaData]);
 
   return (
     <div className="bank-section-container">

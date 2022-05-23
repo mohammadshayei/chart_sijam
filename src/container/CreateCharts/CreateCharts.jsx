@@ -1215,6 +1215,7 @@ const CreateCharts = (props) => {
               {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
                 tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
               <StyledButton
+                disabled={chartsData?.data[takenData.id]?.mergedData && Object.entries(chartsData.data[takenData.id].mergedData).length > 0 && takenData.isFullscreen}
                 ButtonStyle={{
                   flex: "0 0 auto",
                   fontSize: "1rem",
