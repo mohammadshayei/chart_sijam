@@ -452,12 +452,11 @@ const TitleBlock = React.memo((props) => {
                 hover={
                   themeState.isDark ? theme.surface_1dp : theme.background_color
                 }
-                ButtonStyle={{ padding: "0 0.3rem", height: "26px" }}
               >
                 <MdMoreVert
                   style={{
                     color: theme.on_surface,
-                    fontSize: "1.4rem",
+                    fontSize: "1rem",
                   }}
                 />
               </StyledButton>
@@ -534,9 +533,9 @@ const TitleBlock = React.memo((props) => {
         {chartsData.editMode ? (
           <div className="right-icon-container small">
             {props.cardIsHover && (
-              <div className="icon-container draggable-handle">
+              <div className="draggable-handle">
                 <MdDragHandle
-                  style={{ color: theme.primary, fontSize: "1.8rem" }}
+                  style={{ color: theme.primary, maxHeight: "100%" }}
                 />
               </div>
             )}
