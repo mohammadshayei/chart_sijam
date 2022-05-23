@@ -361,21 +361,21 @@ const CreateCharts = (props) => {
       if (errorText === stringFa.field_not_chosen)
         updatedStepErrors = [...updatedStepErrors, "xAxis"]
     }
-    if (!takenData.chartData.editAll &&
-      takenData.chartData.editList.length === 0) {
-      updatedStepErrors = [...updatedStepErrors, "edit"]
-      errorText = stringFa.permissions_not_defined
-    }
+    // if (!takenData.chartData.editAll &&
+    //   takenData.chartData.editList.length === 0) {
+    //   updatedStepErrors = [...updatedStepErrors, "edit"]
+    //   errorText = stringFa.permissions_not_defined
+    // }
     if (!takenData.chartData.viewAll &&
       takenData.chartData.viewList.length === 0) {
       updatedStepErrors = [...updatedStepErrors, "view"]
       errorText = stringFa.permissions_not_defined
     }
-    if (!takenData.chartData.shareAll &&
-      takenData.chartData.shareList.length === 0) {
-      updatedStepErrors = [...updatedStepErrors, "share"]
-      errorText = stringFa.permissions_not_defined
-    }
+    // if (!takenData.chartData.shareAll &&
+    //   takenData.chartData.shareList.length === 0) {
+    //   updatedStepErrors = [...updatedStepErrors, "share"]
+    //   errorText = stringFa.permissions_not_defined
+    // }
     if (errorText === stringFa.permissions_not_defined) {
       updatedStepErrors = [...updatedStepErrors, "accessibility"]
     }

@@ -1,10 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "../../../../assets/strings/stringFaCollection";
 import CheckBox from "../../../../component/UI/CheckBox/CheckBox";
-import ErrorDialog from "../../../../component/UI/Error/ErrorDialog";
-import { baseUrl } from "../../../../constants/Config";
 import { useTheme } from "../../../../styles/ThemeProvider";
 import * as addChartActions from "../../../../store/actions/addChart";
 import "./AccessibilityStep.scss";
@@ -32,16 +29,14 @@ const AccessibilityStep = () => {
             }
         })
     const [accessType, setAccessType] = useState("view");
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     // const [employees, setEmployees] = useState(new Array(0).fill(""));
     const [error, setError] = useState(null);
     const [isChanged, setIsChanged] = useState({ view: false, share: false, edit: false });
     const [changed, setChanged] = useState([]);
     const [changedAccess, setChangedAccess] = useState(null);
 
-    const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
     const { chartData, emptyRequireds, employees } = useSelector((state) => state.addChart);
-    const { token, userId } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
     const setAccessToAll = (access) => {
