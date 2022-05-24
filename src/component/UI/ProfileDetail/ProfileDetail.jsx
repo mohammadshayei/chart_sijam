@@ -5,6 +5,10 @@ import DropDown from "../../UI/DropDown/DropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { stringFa } from "./../../../assets/strings/stringFaCollection";
 import * as actions from "../../../store/actions/index";
+import * as detailActions from "../../../store/actions/detail";
+import * as chartActions from "../../../store/actions/chart";
+
+
 import { baseUrl } from "../../../constants/Config";
 import SkeletonProfile from "../../Skeletons/SkeletonProfile";
 import { IoIosArrowDropdown } from "react-icons/io";
@@ -47,6 +51,7 @@ const ProfileDetail = (props) => {
 
   const logout = () => {
     dispatch(actions.logout());
+    dispatch(detailActions.setSourceCharts({ charts: [] }));
   };
 
   const onMouseEnter = () => {
