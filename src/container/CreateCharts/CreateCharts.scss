@@ -75,6 +75,10 @@
       position: absolute;
       left: 1rem;
       top: 1rem;
+      height: 60%;
+      img {
+        height: 100%;
+      }
     }
     .action {
       display: flex;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { stringFa } from "../../../../../assets/strings/stringFaCollection.js";
 import "./ToolsContainer.scss";
 import { FaPlusCircle } from "react-icons/fa";
@@ -6,24 +6,21 @@ import { useTheme } from "../../../../../styles/ThemeProvider";
 import StyledButton from "../../../../../component/UI/Button/StyledButton";
 import { useSelector, useDispatch } from "react-redux";
 import * as chartActions from "../../../../../store/actions/chart.js";
-import axios from "axios";
-import { baseUrl } from "../../../../../constants/Config";
-import { getChartsDataWithSpecificFilter, getFilteredData } from "../../../../../api/home.js";
+import { getChartsDataWithSpecificFilter } from "../../../../../api/home.js";
 import ErrorDialog from "../../../../../component/UI/Error/ErrorDialog.jsx";
 
 const ToolsContainer = (props) => {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null)
+  const [chartLabelAccess, setChartLabelAccess] = useState(false);
   const chartsData = useSelector((state) => state.chart);
   const token = useSelector((state) => state.auth.token);
+  const { selectedHolding } = useSelector((state) => state.holdingDetail);
 
   const themeState = useTheme();
   const theme = themeState.computedTheme;
 
   const dispatch = useDispatch();
-  const updateChartData = (chartData) => {
-    dispatch(chartActions.updateChartData(chartData));
-  };
   const changeLoadingCharts = (payload) => {
     dispatch(chartActions.changeLoadingCharts(payload));
   };
@@ -80,9 +77,14 @@ const ToolsContainer = (props) => {
     setLoading(null);
   };
 
+  useEffect(() => {
+    if (selectedHolding && selectedHolding.chart) setChartLabelAccess(true)
+    else setChartLabelAccess(false)
+  }, [selectedHolding])
+
   return (
     <div className="tools-container">
-      {chartsData.editMode && (
+      {chartLabelAccess && chartsData.editMode && (
         <StyledButton
           onClick={creatChartClickHandler}
           hover={
@@ -97,7 +99,7 @@ const ToolsContainer = (props) => {
           </div>
         </StyledButton>
       )}
-      {chartsData.editMode && props.chartCount !== 0 && (
+      {chartLabelAccess && chartsData.editMode && props.chartCount !== 0 && (
         <div
           className="divider"
           style={{ borderColor: theme.border_color }}

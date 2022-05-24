@@ -95,7 +95,7 @@ const Brand = (props) => {
   return (
     <div className="brand-container"
       style={{
-        border: hover ? `1px solid ${theme.border_color}` : 'none'
+        border: hover ? `1px solid ${theme.darken_border_color}` : 'none'
       }}
       ref={ref}
 
@@ -115,7 +115,7 @@ const Brand = (props) => {
                 `${baseUrl}uploads/${selectedHolding.holdingImage}` : IMAGE} alt='logo' />
               <span style={{ color: "#A49BFF" }}>{selectedHolding && selectedHolding.holdingName}</span>
               <BsChevronDown style={{
-                color: theme.border_color,
+                color: theme.darken_border_color,
                 fontSize: '15px',
                 position: 'absolute',
                 left: '.2rem',

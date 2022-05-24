@@ -24,6 +24,7 @@ const StyledButton = (props) => {
   };
   return (
     <button
+      disabled={props.disabled}
       className={`sijam-style-button ${props.className}`}
       style={{ ...newStyle, ...props.ButtonStyle }}
       onClick={(e) => {

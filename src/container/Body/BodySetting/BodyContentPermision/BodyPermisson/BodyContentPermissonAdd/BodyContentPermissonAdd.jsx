@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { stringFa } from '../../../../../../assets/strings/stringFaCollection'
 import { baseUrl } from '../../../../../../constants/Config'
@@ -7,7 +7,7 @@ import { useTheme } from '../../../../../../styles/ThemeProvider'
 import './BodyContentPermissonAdd.scss'
 import LabelItem from './LabelItem/LabelItem'
 import ErrorDialog from '../../../../../../component/UI/Error/ErrorDialog'
-import StyledButton from '../../../../../../component/UI/Button/StyledButton'
+import Button from '../../../../../../component/UI/Button/Button'
 
 const BodyContentPermissonAdd = () => {
     const [loading, setLoading] = useState(false)
@@ -54,8 +54,6 @@ const BodyContentPermissonAdd = () => {
     const [inputError, setInputError] = useState(false)
 
     const ref = useRef()
-    const themeState = useTheme();
-    const theme = themeState.computedTheme;
     const token = useSelector(state => state.auth.token)
     const { selectedHolding } = useSelector(state => state.holdingDetail)
 
@@ -156,23 +154,18 @@ const BodyContentPermissonAdd = () => {
                     }
                 </div>
                 <div className='body-content-permission-add-button-container'>
-                    <StyledButton
+                    <Button
                         onClick={onSaveLabel}
                         ButtonStyle={{
-                            backgroundColor: theme.primary,
                             fontWeight: 400,
                             fontSize: "1rem",
-                            color: theme.on_primary,
                             padding: '.2rem 3rem',
                             height: '2.4rem'
                         }}
-                        hover={
-                            themeState.isDark ? theme.surface_12dp : theme.background_color
-                        }
                     >
                         {stringFa.save}
 
-                    </StyledButton>
+                    </Button>
                 </div>
             </div>
 

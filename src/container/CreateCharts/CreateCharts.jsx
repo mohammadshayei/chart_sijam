@@ -33,6 +33,7 @@ import { MdModeEditOutline, MdErrorOutline } from 'react-icons/md'
 import FilterSelector from "../../component/TitleBlock/FilterSelector/FilterSelector";
 import { getChartFilterData, getFilteredData } from "../../api/home";
 import AddCaption from "./AddCaption/AddCaption";
+import doubleRingLoading from "../../assets/images/DoubleRing.svg"
 
 
 
@@ -82,7 +83,8 @@ const CreateCharts = (props) => {
     chart: false,
   })
   const [addCaptionValue, setAddCaptionValue] = useState('')
-
+  const [loading, setLoading] = useState(false);
+  const [chartLabelAccess, setChartLabelAccess] = useState(false);
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
@@ -366,21 +368,21 @@ const CreateCharts = (props) => {
       if (errorText === stringFa.field_not_chosen)
         updatedStepErrors = [...updatedStepErrors, "xAxis"]
     }
-    if (!takenData.chartData.editAll &&
-      takenData.chartData.editList.length === 0) {
-      updatedStepErrors = [...updatedStepErrors, "edit"]
-      errorText = stringFa.permissions_not_defined
-    }
+    // if (!takenData.chartData.editAll &&
+    //   takenData.chartData.editList.length === 0) {
+    //   updatedStepErrors = [...updatedStepErrors, "edit"]
+    //   errorText = stringFa.permissions_not_defined
+    // }
     if (!takenData.chartData.viewAll &&
       takenData.chartData.viewList.length === 0) {
       updatedStepErrors = [...updatedStepErrors, "view"]
       errorText = stringFa.permissions_not_defined
     }
-    if (!takenData.chartData.shareAll &&
-      takenData.chartData.shareList.length === 0) {
-      updatedStepErrors = [...updatedStepErrors, "share"]
-      errorText = stringFa.permissions_not_defined
-    }
+    // if (!takenData.chartData.shareAll &&
+    //   takenData.chartData.shareList.length === 0) {
+    //   updatedStepErrors = [...updatedStepErrors, "share"]
+    //   errorText = stringFa.permissions_not_defined
+    // }
     if (errorText === stringFa.permissions_not_defined) {
       updatedStepErrors = [...updatedStepErrors, "accessibility"]
     }
@@ -467,6 +469,7 @@ const CreateCharts = (props) => {
         })
       };
     } else {
+      setLoading(true);
       chartApi = "edit_chart";
       payload = {
         chartId: takenData.id,
@@ -535,6 +538,7 @@ const CreateCharts = (props) => {
             {result.data.message.error}
           </ErrorDialog>
         );
+        setLoading(false)
       } else {
         if (location.pathname !== "/create_chart") {
           updatedChartsData = {
@@ -580,6 +584,7 @@ const CreateCharts = (props) => {
             },
           };
           setChartsData(updatedChartsData);
+          setLoading(false)
         }
         closeHandler();
         setError(
@@ -592,6 +597,7 @@ const CreateCharts = (props) => {
       setError(
         <ErrorDialog onClose={setError}>{stringFa.error_message}</ErrorDialog>
       );
+      setLoading(false)
     }
   };
 
@@ -795,13 +801,13 @@ const CreateCharts = (props) => {
       id: "share",
       icon: <FaUserFriends />,
     })
-    if (editable && !chartsData?.data[takenData.id]?.seprated) {
+    if (chartLabelAccess && editable && !chartsData?.data[takenData.id]?.seprated) {
       updatedMenuItems = [...updatedMenuItems,
       { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
       { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
     }
     setMenuItems(updatedMenuItems)
-  }, [shareable, editable])
+  }, [shareable, editable, chartLabelAccess])
 
   useEffect(() => {
     if (!(chartsData.data[takenData?.id]?.faveList)) return;
@@ -912,6 +918,10 @@ const CreateCharts = (props) => {
 
   }, [chartsData.data[takenData?.id]?.selectedFilterId])
 
+  useEffect(() => {
+    if (selectedHolding?.chart) setChartLabelAccess(true)
+    else setChartLabelAccess(false)
+  }, [selectedHolding]);
 
   useEffect(() => {
     if (takenData.chartData?.caption)
@@ -1090,20 +1100,24 @@ const CreateCharts = (props) => {
             </div>
           }
           <div className="close">
-            <StyledButton
-              ButtonStyle={{
-                flex: "0 0 auto",
-                fontSize: "1.4rem",
-                marginBottom: "1rem",
-                padding: "4px",
-              }}
-              hover={
-                themeState.isDark ? theme.surface_1dp : theme.background_color
-              }
-              onClick={fullScreenCloseHandler}
-            >
-              <VscClose />
-            </StyledButton>
+            {loading ?
+              <img src={doubleRingLoading} alt="double-ring-loading-gif" />
+              :
+              <StyledButton
+                ButtonStyle={{
+                  flex: "0 0 auto",
+                  fontSize: "1.4rem",
+                  marginBottom: "1rem",
+                  padding: "4px",
+                }}
+                hover={
+                  themeState.isDark ? theme.surface_1dp : theme.background_color
+                }
+                onClick={fullScreenCloseHandler}
+              >
+                <VscClose />
+              </StyledButton>
+            }
           </div>
           <div className="path">
             {
@@ -1149,7 +1163,7 @@ const CreateCharts = (props) => {
                   </div>
                 }
                 {
-                  !chartsData?.data[takenData.id]?.seprated &&
+                  chartLabelAccess && !chartsData?.data[takenData.id]?.seprated &&
                   <StyledButton
                     ButtonStyle={{
                       fontSize: "1rem",
@@ -1343,6 +1357,7 @@ const CreateCharts = (props) => {
                 {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
                   tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
                 <StyledButton
+                  disabled={chartsData?.data[takenData.id]?.mergedData && Object.entries(chartsData.data[takenData.id].mergedData).length > 0 && takenData.isFullscreen}
                   ButtonStyle={{
                     flex: "0 0 auto",
                     fontSize: "1rem",
@@ -1456,13 +1471,14 @@ const CreateCharts = (props) => {
                   </div>}
               </div>
 
-            </div>
-            {takenData.isFullscreen ?
-              takenData.isEdit && <Steps type={"Line"} />
-              :
-              <Steps type={"Line"} />
+            </div >
+            {
+              takenData.isFullscreen ?
+                takenData.isEdit && <Steps type={"Line"} />
+                :
+                <Steps type={"Line"} />
             }
-          </div>
+          </div >
 
       }
       {

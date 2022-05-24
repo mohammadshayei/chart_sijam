@@ -22,10 +22,8 @@ import AddChartToCategory from "./AddChartToCategory/AddChartToCategory";
 import { onDeleteChart } from "../../api/chart";
 import * as holdingActions from "../../store/actions/holdingDetail.js";
 import * as detailActions from "../../store/actions/detail.js";
-import CustomSelect from "../UI/CustomSelect/CustomSelect";
 import FilterSelector from "./FilterSelector/FilterSelector";
 import { getChartFilterData, getFilteredData } from "../../api/home";
-import { v4 as uuidv4 } from "uuid";
 import { MdCancel } from "react-icons/md";
 
 
@@ -57,6 +55,7 @@ const TitleBlock = React.memo((props) => {
   const [editableInput, setEditableInput] = useState(false)
   const [titleValue, setTitleValue] = useState('')
   const [faveCat, setFaveCat] = useState(false)
+  const [chartLabelAccess, setChartLabelAccess] = useState(false);
 
   const { selectedHolding } = useSelector((state) => state.holdingDetail);
   const chartsData = useSelector((state) => state.chart);
@@ -101,9 +100,6 @@ const TitleBlock = React.memo((props) => {
   const deleteChart = (chartId) => {
     dispatch(chartActions.deleteChart(chartId));
   };
-  const setChart = (chartData) => {
-    dispatch(chartActions.setChartData(chartData));
-  };
   const setId = (id) => {
     dispatch(addChartActions.setAddChartId(id));
   };
@@ -134,9 +130,6 @@ const TitleBlock = React.memo((props) => {
   const changeSelectedFilter = (payload) => {
     dispatch(chartActions.changeSelectedFilter(payload));
   };
-  const setChartsData = (chartsData) => {
-    dispatch(chartActions.setChartsData(chartsData));
-  };
   const deleteSepratedCharts = (payload) => {
     dispatch(chartActions.deleteSepratedCharts(payload));
   };
@@ -145,10 +138,6 @@ const TitleBlock = React.memo((props) => {
   };
   const updateChartOptions = (payload) => {
     dispatch(chartActions.updateChartOptions(payload));
-  };
-
-  const undoDeleteChartHandler = () => {
-    setChart({ chartId: props.chartId, chartData: deletedChart[0] });
   };
 
   const toggleShareModal = () => {
@@ -386,13 +375,13 @@ const TitleBlock = React.memo((props) => {
       id: "share",
       icon: <FaUserFriends />,
     })
-    if (props.editable && !props.seprated) {
+    if (chartLabelAccess && props.editable && !props.seprated) {
       updatedExtraItems = [...updatedExtraItems,
       { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
       { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
     }
     setExtraItems(updatedExtraItems)
-  }, [props.shareable, props.editable, props.seprated, props.visible])
+  }, [props.shareable, props.editable, props.seprated, props.visible, chartLabelAccess])
 
   useEffect(() => {
     if (!selectedHolding || !selectedHolding.categories) return;
@@ -401,6 +390,11 @@ const TitleBlock = React.memo((props) => {
     let updatedFaveCat = faveCategory.category.charts.findIndex(item => item.chart === props.chartId) > -1
     setFaveCat(updatedFaveCat)
   }, [selectedHolding])
+
+  useEffect(() => {
+    if (selectedHolding?.chart) setChartLabelAccess(true)
+    else setChartLabelAccess(false)
+  }, [selectedHolding]);
 
   return (
     <div className="title-container" style={{ color: theme.on_surface }}>
@@ -452,12 +446,11 @@ const TitleBlock = React.memo((props) => {
                 hover={
                   themeState.isDark ? theme.surface_1dp : theme.background_color
                 }
-                ButtonStyle={{ padding: "0 0.3rem", height: "26px" }}
               >
                 <MdMoreVert
                   style={{
                     color: theme.on_surface,
-                    fontSize: "1.4rem",
+                    fontSize: "1rem",
                   }}
                 />
               </StyledButton>
@@ -534,9 +527,9 @@ const TitleBlock = React.memo((props) => {
         {chartsData.editMode ? (
           <div className="right-icon-container small">
             {props.cardIsHover && (
-              <div className="icon-container draggable-handle">
+              <div className="draggable-handle">
                 <MdDragHandle
-                  style={{ color: theme.primary, fontSize: "1.8rem" }}
+                  style={{ color: theme.primary, maxHeight: "100%" }}
                 />
               </div>
             )}
