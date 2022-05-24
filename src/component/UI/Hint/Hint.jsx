@@ -29,13 +29,16 @@ const Hint = (props) => {
           }}
         >
           <p>{props.hint}</p>
-          <div
-            className="arrow-tooltip"
-            style={{
-              borderBottom: ` 8px solid ${theme.on_background}`,
-              ...props.arrowStyle,
-            }}
-          />
+          {
+            !props.hide &&
+            <div
+              className="arrow-tooltip"
+              style={{
+                borderBottom: ` 8px solid ${theme.on_background}`,
+                ...props.arrowStyle,
+              }}
+            />
+          }
         </animated.div>
       )
   );
