@@ -78,6 +78,7 @@ const CreateCharts = (props) => {
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const [captionHovered, setCaptionHovered] = useState(false)
   const [loading, setLoading] = useState(false);
+  const [chartLabelAccess, setChartLabelAccess] = useState(false);
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
@@ -778,13 +779,13 @@ const CreateCharts = (props) => {
       id: "share",
       icon: <FaUserFriends />,
     })
-    if (editable && !chartsData?.data[takenData.id]?.seprated) {
+    if (chartLabelAccess && editable && !chartsData?.data[takenData.id]?.seprated) {
       updatedMenuItems = [...updatedMenuItems,
       { name: stringFa.Edit, id: "setting", icon: <FcSettings /> },
       { name: stringFa.delete, id: "delete", icon: <FcFullTrash /> },]
     }
     setMenuItems(updatedMenuItems)
-  }, [shareable, editable])
+  }, [shareable, editable, chartLabelAccess])
 
   useEffect(() => {
     if (!(chartsData.data[takenData?.id]?.faveList)) return;
@@ -883,6 +884,11 @@ const CreateCharts = (props) => {
       }
       return () => controller?.abort()
     })()
+  }, [selectedHolding]);
+
+  useEffect(() => {
+    if (selectedHolding?.chart) setChartLabelAccess(true)
+    else setChartLabelAccess(false)
   }, [selectedHolding]);
 
   useEffect(() => {
@@ -1055,7 +1061,7 @@ const CreateCharts = (props) => {
               <div className="editmode" ref={ref}>
 
                 {
-                  !chartsData?.data[takenData.id]?.seprated &&
+                  chartLabelAccess && !chartsData?.data[takenData.id]?.seprated &&
                   <StyledButton
                     ButtonStyle={{
                       fontSize: "1rem",

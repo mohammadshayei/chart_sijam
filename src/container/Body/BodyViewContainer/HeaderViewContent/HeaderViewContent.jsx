@@ -22,7 +22,7 @@ import { RiFilter2Fill, RiFilter2Line } from 'react-icons/ri'
 
 const HeaderViewContent = (props) => {
     const [isFav, setIsFav] = useState(false)
-    const [editable, setEditable] = useState(false)
+    // const [editable, setEditable] = useState(false)
     const [dropDown, setDropDown] = useState(false);
     const [showModal, setShowModal] = useState(false)
     const themeState = useTheme();
@@ -69,10 +69,10 @@ const HeaderViewContent = (props) => {
         return count;
     };
 
-    useEffect(() => {
-        if (selectedHolding && selectedHolding.chart) setEditable(true)
-        else setEditable(false)
-    }, [selectedHolding])
+    // useEffect(() => {
+    //     if (selectedHolding && selectedHolding.chart) setEditable(true)
+    //     else setEditable(false)
+    // }, [selectedHolding])
 
     const onCategoryClickHandler = _id => {
         if (_id === 'add_category') {
@@ -187,10 +187,10 @@ const HeaderViewContent = (props) => {
             </div>
 
             <div className="header-view-middle-section">
-                {
-                    editable &&
-                    <GroupButton buttonNames={["نمایش", "ویرایش"]} />
-                }
+                {/* { */}
+                {/* editable && */}
+                <GroupButton buttonNames={["نمایش", "ویرایش"]} />
+                {/* } */}
             </div>
             <div className="header-view-right-section">
                 <ToolsContainer
