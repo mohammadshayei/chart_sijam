@@ -14,13 +14,14 @@ import SelectBankModal from "../../CreateCharts/SelectBankModal/SelectBankModal"
 import BanksContainer from "./BanksContainer/BanksContainer";
 import HeaderViewContent from "./HeaderViewContent/HeaderViewContent";
 import Modal from "../../../component/UI/Modal/Modal";
-import { getFilteredData } from "../../../api/home";
+import { getChartsDataWithSpecificFilter, getFilteredData } from "../../../api/home";
 const PERIOD_INTRAVEL = 60000;
 
 const BodyViewContainer = ({ isMenuOpen }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const [filteredCharts, setFilteredCharts] = useState([])
+  const [isRefreshNeed, setIsRefreshNeed] = useState(false)
 
   const detail = useSelector((state) => state.detail);
   const { token, parentsCharts } = useSelector((state) => state.auth);
@@ -48,12 +49,18 @@ const BodyViewContainer = ({ isMenuOpen }) => {
   const changeLoading = (payload) => {
     dispatch(chartActions.changeLoading(payload));
   };
+
+
+  const changeLoadingCharts = (payload) => {
+    dispatch(chartActions.changeLoadingCharts(payload));
+  };
+
+  let depend = selectedCategory?.charts.length
+
   function getDifferenceInMinutes(date1, date2) {
     const diffInMs = Math.abs(date2 - date1);
     return Math.floor(diffInMs / (1000 * 60));
   }
-  let depend = selectedCategory?.charts.length
-
 
   useEffect(() => {
     if (!parentsCharts) return;
@@ -193,6 +200,10 @@ const BodyViewContainer = ({ isMenuOpen }) => {
     if (filteredCharts.length === 0) return;
     let newChartsData = {};
     filteredCharts.forEach((item) => {
+      let refreshNeeded = false;
+      if (item.chart?.data_info?.filters.length > 0 && item.chart?.data_info?.selectedFilterId) {
+        refreshNeeded = item.chart?.data_info?.filters.findIndex(filterItem => filterItem._id === item.chart?.data_info?.selectedFilterId) > -1 ? false : true
+      }
       newChartsData = {
         ...newChartsData,
         [item.chart._id]: {
@@ -222,17 +233,22 @@ const BodyViewContainer = ({ isMenuOpen }) => {
           sharedFrom: item.shared_from,
           label: item.label,
           time: item.time,
-          selectedFilterId: item.chart.data_info.filters?.length > 0 ? item.chart.data_info.filters[item.chart.data_info.selectedFilter]._id : null,
+          selectedFilterId: refreshNeeded ? item.chart.data_info?.filters.length > 0 ? item.chart.data_info?.filters[0]._id :
+            null : item.chart.data_info?.selectedFilterId,
           loading: false,
           seprated: '',
           hide: false,
           filterName: "",
           caption: item.chart.caption,
           visible: item.chart.visible,
+          refresh: refreshNeeded,
 
         },
       };
     });
+    if (newChartsData) {
+      setIsRefreshNeed(Object.entries(newChartsData).findIndex(([_, v]) => v.refresh) > -1)
+    }
     setChartsData(newChartsData);
   }, [filteredCharts])
 
@@ -263,6 +279,60 @@ const BodyViewContainer = ({ isMenuOpen }) => {
       }
     }
   };
+  useEffect(() => {
+    if (!isRefreshNeed) return;
+    let chartsInfo = [];
+    let chartsId = []
+
+    for (const chartId in chartsData.data) {
+      if (chartsData.data[chartId].refresh && !chartsData.data[chartId].seprated && !chartsData.data[chartId].hide) {
+        chartsId.push(chartId)
+        chartsInfo.push({
+          chartId,
+          filterId: chartsData.data[chartId]?.dataInfo.filters[0]._id
+        })
+      }
+    }
+    (async () => {
+      try {
+        changeLoadingCharts({ chartsId, loading: true })
+        let result = await getChartsDataWithSpecificFilter({ chartsInfo }, token)
+        if (!result.success)
+          setError(<ErrorDialog onClose={setError}>{result.error}</ErrorDialog>)
+
+
+        let updatedSourceCharts = sourceCharts.map(item => {
+          if (chartsId.findIndex(i => i === item.chart._id) > -1) {
+            return {
+              ...item,
+              chart: {
+                ...item.chart,
+                data_info: {
+                  ...item.chart.data_info,
+                  selectedFilter: 0,
+                  selectedFilterId: item.chart.data_info.filters[0]._id,
+                },
+                data: result.data.find(i => i._id === item.chart._id).data
+              }
+            }
+          }
+          else return item
+        })
+        setSourceChart({ charts: updatedSourceCharts })
+        let updatedCharts = { ...chartsData.data }
+        result.data.forEach(item => {
+          updatedCharts[item._id].data = item.data
+          updatedCharts[item._id].loading = false
+          updatedCharts[item._id].last_update = new Date()
+        })
+        setChartsData(updatedCharts)
+      } catch (error) {
+        console.log(error)
+        setError(<ErrorDialog onClose={setError}>{stringFa.error_occured_try_again}</ErrorDialog>)
+
+      }
+    })()
+  }, [isRefreshNeed])
 
   useEffect(() => {
     const updateChart = setInterval(() => {

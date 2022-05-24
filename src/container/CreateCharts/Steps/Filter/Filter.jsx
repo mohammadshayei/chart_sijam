@@ -31,6 +31,8 @@ const Filter = () => {
     const [allowedAll, setAllowedAll] = useState(true)
     const [employeesList, setEmployeesList] = useState([])
     const [captionHovered, setCaptionHovered] = useState(false)
+    const [readyToInitiate, setReadyToInitiate] = useState(false)
+
 
     const themeState = useTheme();
     const theme = themeState.computedTheme;
@@ -85,7 +87,7 @@ const Filter = () => {
     }
 
     const onSaveHandler = () => {
-        saveFilter({ id, name: filterTitle, caption: filterCaption, users: allowedAll ? [] : employeesList.filter(item => item.checked), allAccess: allowedAll })
+        saveFilter({ id, name: filterTitle, caption: filterCaption, users: allowedAll ? [] : employeesList.filter(item => item.checked).map(item => item._id), allAccess: allowedAll })
         setSaveBtnText("تغییر")
         // setFilterValues(null)
         // setId(null)
@@ -181,7 +183,7 @@ const Filter = () => {
 
 
     useEffect(() => {
-        if (!id) return
+        if (!id || !readyToInitiate) return
         selectFilter({ id })
         metaData.filters.forEach(filter => {
             if (filter.id === id) {
@@ -190,7 +192,7 @@ const Filter = () => {
                 setFilterTitle(filter.name)
                 if (filter.name)
                     setAllowedAll(filter.all)
-                if (filter.users?.length > 0)
+                if (filter.users?.length > 0) {
                     setEmployeesList(empList => {
                         if (filter.all) {
                             return empList.map(item => {
@@ -201,11 +203,12 @@ const Filter = () => {
                             })
                         } else {
                             return empList.map(item => {
-                                if (filter.users?.findIndex(user => user._id === item._id) > -1)
+                                if (filter.users?.findIndex(user => user === item._id) > -1) {
                                     return {
                                         ...item,
                                         checked: true
                                     }
+                                }
                                 else
                                     return {
                                         ...item,
@@ -214,16 +217,19 @@ const Filter = () => {
                             })
                         }
                     })
+                }
                 if (filter.caption)
                     setFilterCaption(filter.caption)
                 if (filter.saved)
                     setSaveBtnText("تغییر")
             }
         });
-    }, [id]);
+    }, [id, readyToInitiate]);
+
+    // console.log(employeesList)
 
     useEffect(() => {
-        if (!employees) return;
+        if (!employees && employees.length === 0) return;
         let updatedEmployeesList = employees.map(item => {
             return {
                 _id: item.user._id,
@@ -232,8 +238,9 @@ const Filter = () => {
             }
         })
         setEmployeesList(updatedEmployeesList)
+        if (updatedEmployeesList.length)
+            setReadyToInitiate(true)
     }, [employees])
-
 
 
 
@@ -350,13 +357,10 @@ const Filter = () => {
                     onMouseLeave={() => setCaptionHovered(false)}>
 
                     {
-                        captionHovered && <Hint show={captionHovered} hint={filterCaption ? filterCaption : stringFa.filter_caption_not_added}
-                            tooltipStyle={{ left: "0%" }}
-
+                        captionHovered && <Hint
+                            show={captionHovered} hint={filterCaption ? filterCaption : stringFa.filter_caption_not_added}
                         />
                     }
-
-
                     <StyledButton
                         onClick={() => {
                             setCaptionModal(true)

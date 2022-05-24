@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./CreateCharts.scss";
 import ChartSection from "./ChartSection/ChartSection";
 import Steps from "./Steps/Steps";
@@ -26,7 +26,7 @@ import { MdCancel } from "react-icons/md";
 import { VscSplitVertical, VscClose } from "react-icons/vsc";
 import { FcSettings, FcFullTrash } from "react-icons/fc";
 import { IoEllipsisVertical, IoSettingsOutline } from "react-icons/io5";
-import { FaUserFriends, FaUser, FaRegComment, FaPlusCircle } from "react-icons/fa";
+import { FaUserFriends, FaUser, FaRegComment, FaPlusCircle, FaQuestion } from "react-icons/fa";
 import { AiOutlinePlus, AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import { BsStarFill, BsStar, BsReplyFill, BsFullscreenExit } from "react-icons/bs";
 import { MdModeEditOutline, MdErrorOutline } from 'react-icons/md'
@@ -76,6 +76,13 @@ const CreateCharts = (props) => {
   const [fave, setFave] = useState(false)
   const [lastBankUpdate, setLastBankUpdate] = useState(null);
   const [captionHovered, setCaptionHovered] = useState(false)
+  const [selectedFilterIndex, setSelectedFilterIndex] = useState(0)
+  const [fullscreenCaptionHover, setFullscreenCaptionHover] = useState({
+    filter: false,
+    chart: false,
+  })
+  const [addCaptionValue, setAddCaptionValue] = useState('')
+
   const takenData = useSelector((state) => state.addChart);
   const chartsData = useSelector((state) => state.chart);
   const selectedHolding = useSelector((state) => state.holdingDetail.selectedHolding);
@@ -455,7 +462,7 @@ const CreateCharts = (props) => {
         filtersAccess: takenData.metaData.filters?.map(item => {
           return {
             all: item.all,
-            users: item.users.map(i => i._id)
+            users: item.users
           }
         })
       };
@@ -475,7 +482,6 @@ const CreateCharts = (props) => {
         shareAll: takenData.chartData.shareAll,
         editAll: takenData.chartData.editAll,
         viewAll: takenData.chartData.viewAll,
-        caption: takenData.chartData.caption,
         shareList: takenData.chartData.shareAll ? [] : takenData.chartData.shareList,
         editList: takenData.chartData.editAll ? [] : takenData.chartData.editList,
         viewList: takenData.chartData.viewAll ? [] : takenData.chartData.viewList,
@@ -497,7 +503,9 @@ const CreateCharts = (props) => {
                     }
                   }
                 }),
-              }
+              },
+              caption: item.caption
+
             }
           }),
           fields: takenData.metaData.fields.sort((a, b) => (a.index > b.index) ? 1 : -1).map(item => {
@@ -506,8 +514,14 @@ const CreateCharts = (props) => {
             }
           }),
           selectedFilter: takenData.metaData.filters.findIndex(filter => filter.selected),
-        }
-
+        },
+        caption: takenData.chartData.caption,
+        filtersAccess: takenData.metaData.filters?.map(item => {
+          return {
+            all: item.all,
+            users: item.users
+          }
+        })
       };
     }
     setError(null);
@@ -555,13 +569,14 @@ const CreateCharts = (props) => {
               path: updatedChartsData[takenData.id].path,
               creator: updatedChartsData[takenData.id].creator,
               sharedFrom: updatedChartsData[takenData.id].sharedFrom,
-
               selectedFilterId: result.data.message.chart.data_info.filters?.length > 0 ? result.data.message.chart.data_info.filters[takenData.metaData.filters.findIndex(filter => filter.selected)]._id : null,
               loading: false,
               seprated: '',
               hide: false,
               filterName: "",
               mergedData: {},
+              caption: updatedChartsData[takenData.id].caption,
+              visible: true,
             },
           };
           setChartsData(updatedChartsData);
@@ -699,7 +714,15 @@ const CreateCharts = (props) => {
   const onSaveChartCaption = (caption) => {
     setChartCaption({ caption })
   }
-
+  const onMouseChangeCaptionHandler = (isFilter, mouseIn) => {
+    setFullscreenCaptionHover(state => {
+      return {
+        ...state,
+        chart: isFilter ? state.chart : mouseIn ? true : false,
+        filter: isFilter ? mouseIn ? true : false : state.filter,
+      }
+    })
+  }
   useEffect(() => {
     for (const key in hover) {
       if (hover[key]) {
@@ -820,6 +843,10 @@ const CreateCharts = (props) => {
         id: element._id,
         name: element.filter.name,
         type: element.filter.type,
+        users: element.users?.map(item => item.user),
+        caption: element.caption,
+        image: element.image,
+        all: element.all,
         filters: element.filter.rules.map(item => {
           return {
             type: item.rule.field.type,
@@ -880,6 +907,13 @@ const CreateCharts = (props) => {
   }, [selectedHolding]);
 
   useEffect(() => {
+    if (chartsData.data[takenData?.id]?.selectedFilterId)
+      setSelectedFilterIndex(chartsData.data[takenData?.id]?.dataInfo.filters.findIndex(item => item._id === chartsData.data[takenData?.id]?.selectedFilterId))
+
+  }, [chartsData.data[takenData?.id]?.selectedFilterId])
+
+
+  useEffect(() => {
     if (takenData.chartData?.caption)
       setMainCaption(takenData.chartData?.caption)
     else if (chartsData?.data[takenData.id]?.caption)
@@ -888,6 +922,7 @@ const CreateCharts = (props) => {
       setMainCaption(stringFa.caption_not_added)
 
   }, [takenData.chartData?.caption, chartsData?.data[takenData.id]?.caption])
+
 
   return (
     <div
@@ -915,7 +950,12 @@ const CreateCharts = (props) => {
           zIndex: 550,
         }}
       >
-        <AddCaption currentValue={takenData.chartData?.caption} onSaveChartCaption={onSaveChartCaption} close={() => setCaptionModal(false)} />
+        <AddCaption
+          currentValue={addCaptionValue}
+          onSaveChartCaption={onSaveChartCaption}
+          close={() => setCaptionModal(false)}
+          justClose={!takenData.isEdit}
+        />
       </Modal>
 
       <Modal
@@ -993,28 +1033,62 @@ const CreateCharts = (props) => {
           className="section-header-wrapper"
           style={{ borderColor: theme.border_color, height: '4rem' }}
         >
-          {!takenData.isEdit && chartsData?.data[takenData?.id] && chartsData.data[takenData.id].dataInfo.filters.length > 0 && <div className="filters">
-            <div className="wrapper">
+          {
+            !takenData.isEdit && chartsData?.data[takenData?.id] && chartsData.data[takenData.id].dataInfo.filters.length > 0
+            &&
+            <div className="filters">
+              <div className="wrapper">
+                {
+                  Object.entries(chartsData?.data[takenData?.id]?.mergedData).length > 0 ?
+                    <div onClick={onCancelMerge}
+                      className="cancel"
+                      style={{ borderColor: theme.primary, color: theme.primary }} >
+                      <MdCancel />
+                      <p>{stringFa.merge_filters}</p>
+                    </div>
+                    :
+                    <FilterSelector
+                      onChange={onChangeFilter}
+                      filters={chartsData.data[takenData?.id]?.dataInfo.filters}
+                      selectedFilter={selectedFilterIndex}
+                      seprated={chartsData?.data[takenData.id]?.seprated ? true : false}
+                    />
+                }
+              </div>
               {
-                Object.entries(chartsData?.data[takenData?.id]?.mergedData).length > 0 ?
-                  <div onClick={onCancelMerge}
-                    className="cancel"
-                    style={{ borderColor: theme.primary, color: theme.primary }} >
-                    <MdCancel />
-                    <p>{stringFa.merge_filters}</p>
-                  </div>
-                  :
-                  <FilterSelector
-                    onChange={onChangeFilter}
-                    filters={chartsData.data[takenData?.id]?.dataInfo.filters}
-                    selectedFilter={chartsData.data[takenData?.id]?.filterName ?
-                      chartsData.data[takenData?.id]?.dataInfo.filters.findIndex(item => item.filter.name === chartsData.data[takenData?.id]?.filterName)
-                      : chartsData.data[takenData?.id]?.dataInfo.selectedFilter}
-                    seprated={chartsData?.data[takenData.id]?.seprated ? true : false}
-                  />
+                chartsData.data[takenData?.id]?.dataInfo?.filters.findIndex(i => i.caption) > -1 &&
+                <div className="filter-caption"
+                  onMouseEnter={() => onMouseChangeCaptionHandler(true, true)}
+                  onMouseLeave={() => onMouseChangeCaptionHandler(true, false)}
+                  onClick={() => {
+                    setCaptionModal(true)
+                    setAddCaptionValue(chartsData.data[takenData?.id]?.dataInfo?.filters[selectedFilterIndex]?.caption)
+                  }}
+                >
+                  {fullscreenCaptionHover.filter &&
+                    <Hint show={fullscreenCaptionHover.filter}
+                      hint={chartsData.data[takenData?.id]?.dataInfo?.filters[selectedFilterIndex]?.caption
+                        ? chartsData.data[takenData?.id]?.dataInfo?.filters[selectedFilterIndex]?.caption : stringFa.filter_caption_not_added}
+                      tooltipStyle={{ top: "1.5rem" }}
+                    />}
+                  <StyledButton
+                    ButtonStyle={{
+                      flex: "0 0 auto",
+                      fontSize: "1rem",
+                      // marginBottom: "1rem",
+                      // padding: "4px",
+                    }}
+                    hover={
+                      themeState.isDark ? theme.surface_1dp : theme.background_color
+                    }
+                  // onClick={fullScreenCloseHandler}
+                  >
+                    <FaQuestion />
+                  </StyledButton>
+                </div>
               }
             </div>
-          </div>}
+          }
           <div className="close">
             <StyledButton
               ButtonStyle={{
@@ -1043,7 +1117,37 @@ const CreateCharts = (props) => {
           <div className="action">
             {chartsData.editMode ? (
               <div className="editmode" ref={ref}>
-
+                {!takenData.isEdit &&
+                  chartsData.data[takenData?.id]?.caption &&
+                  <div className="chart-caption"
+                    onMouseEnter={() => onMouseChangeCaptionHandler(false, true)}
+                    onMouseLeave={() => onMouseChangeCaptionHandler(false, false)}
+                    onClick={() => {
+                      setCaptionModal(true)
+                      setAddCaptionValue(chartsData.data[takenData?.id]?.caption)
+                    }}
+                  >
+                    {fullscreenCaptionHover.chart &&
+                      <Hint show={fullscreenCaptionHover.chart}
+                        hint={chartsData.data[takenData?.id]?.caption}
+                        tooltipStyle={{ top: "1.5rem" }}
+                      />}
+                    <StyledButton
+                      ButtonStyle={{
+                        flex: "0 0 auto",
+                        fontSize: "1rem",
+                        // marginBottom: "1rem",
+                        // padding: "4px",
+                      }}
+                      hover={
+                        themeState.isDark ? theme.surface_1dp : theme.background_color
+                      }
+                    // onClick={fullScreenCloseHandler}
+                    >
+                      <FaQuestion />
+                    </StyledButton>
+                  </div>
+                }
                 {
                   !chartsData?.data[takenData.id]?.seprated &&
                   <StyledButton
@@ -1091,43 +1195,75 @@ const CreateCharts = (props) => {
               </div>
             ) : (
               <div className="not_editmode">
-                {!chartsData?.data[takenData.id]?.seprated ?
-                  <div
-                    className="title"
-                    ref={titleRef}
+                {
+                  !chartsData?.data[takenData.id]?.seprated ?
+                    <div
+                      className="title"
+                      ref={titleRef}
+                      onClick={() => {
+                        setEditableInput(true);
+                        setTitleValue(props.label ? props.label : props.title)
+                      }}
+                    >
+                      {editableInput ? (
+                        <input
+                          className="editable-input"
+                          dir="rtl"
+                          placeholder={stringFa.title}
+                          value={titleValue}
+                          onChange={setTitleHandlerEditMode}
+                          autoFocus
+                          onKeyDown={setTitleHandlerEditMode}
+                          style={{ borderColor: error ? "red" : "" }}
+                        />
+                      ) : (
+                        <div className="text-component" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
+                          {
+                            chartsData?.data[takenData?.id]?.label ?
+                              <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
+                              <p>{chartsData.data[takenData.id].title}</p>
+                          }
+                        </div>
+                      )}
+                    </div>
+                    :
+                    <div className="not_editable" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
+                      {
+                        chartsData?.data[takenData?.id]?.label ?
+                          <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
+                          <p>{chartsData.data[takenData.id].title}</p>
+                      }
+                    </div>
+                }
+                {
+                  chartsData.data[takenData?.id]?.caption &&
+                  <div className="chart-caption"
+                    onMouseEnter={() => onMouseChangeCaptionHandler(false, true)}
+                    onMouseLeave={() => onMouseChangeCaptionHandler(false, false)}
                     onClick={() => {
-                      setEditableInput(true);
-                      setTitleValue(props.label ? props.label : props.title)
+                      setCaptionModal(true)
+                      setAddCaptionValue(chartsData.data[takenData?.id]?.caption)
                     }}
                   >
-                    {editableInput ? (
-                      <input
-                        className="editable-input"
-                        dir="rtl"
-                        placeholder={stringFa.title}
-                        value={titleValue}
-                        onChange={setTitleHandlerEditMode}
-                        autoFocus
-                        onKeyDown={setTitleHandlerEditMode}
-                        style={{ borderColor: error ? "red" : "" }}
-                      />
-                    ) : (
-                      <div className="text-component" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
-                        {
-                          chartsData?.data[takenData?.id]?.label ?
-                            <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
-                            <p>{chartsData.data[takenData.id].title}</p>
-                        }
-                      </div>
-                    )}
-                  </div>
-                  :
-                  <div className="not_editable" style={{ color: chartsData?.data[takenData?.id]?.receivedType === 3 ? theme.primary : "" }} dir="rtl">
-                    {
-                      chartsData?.data[takenData?.id]?.label ?
-                        <p>   {chartsData.data[takenData.id].label}  <span>({chartsData.data[takenData.id].title})</span></p> :
-                        <p>{chartsData.data[takenData.id].title}</p>
-                    }
+                    {fullscreenCaptionHover.chart &&
+                      <Hint show={fullscreenCaptionHover.chart}
+                        hint={chartsData.data[takenData?.id]?.caption}
+                        tooltipStyle={{ top: "1.5rem" }}
+                      />}
+                    <StyledButton
+                      ButtonStyle={{
+                        flex: "0 0 auto",
+                        fontSize: "1rem",
+                        // marginBottom: "1rem",
+                        // padding: "4px",
+                      }}
+                      hover={
+                        themeState.isDark ? theme.surface_1dp : theme.background_color
+                      }
+                    // onClick={fullScreenCloseHandler}
+                    >
+                      <FaQuestion />
+                    </StyledButton>
                   </div>
                 }
                 {
@@ -1171,155 +1307,162 @@ const CreateCharts = (props) => {
             )}
           </div>
         </div>
-      )}
-      {takenData.error ?
-        <div className="error-wrapper" >
-          <span onClick={closeHandler} className="go-back" style={{ color: theme.primary }}>{stringFa.back}</span>
-          <span className="content">{takenData.error}</span>
-          <MdErrorOutline fontSize={'1.3rem'} color={theme.error} />
+      )
+      }
+      {
+        takenData.error ?
+          <div className="error-wrapper" >
+            <span onClick={closeHandler} className="go-back" style={{ color: theme.primary }}>{stringFa.back}</span>
+            <span className="content">{takenData.error}</span>
+            <MdErrorOutline fontSize={'1.3rem'} color={theme.error} />
 
-        </div>
-        :
-        <div className="section-settings-wrapper">
-          <div
-            className="section-settings"
-            style={{
-              border: chartsData.editMode && `1px solid ${theme.border_color}`,
-            }}
-          >
+          </div>
+          :
+          <div className="section-settings-wrapper">
             <div
-              className="section-settings-header-wrapper"
+              className="section-settings"
               style={{
-                borderBottom:
-                  chartsData.editMode && `1px solid ${theme.border_color}`,
+                border: chartsData.editMode && `1px solid ${theme.border_color}`,
               }}
             >
-            </div>
-
-            <div
-              className="section-settings-display-type-switcher-wrapper"
-              onMouseEnter={() => onMouseEnter("split")}
-              onMouseLeave={() => onMouseLeave("split")}
-              style={{ top: chartsData.editMode ? "1rem" : "-4.5rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
-            >
-              {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
-                tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
-              <StyledButton
-                ButtonStyle={{
-                  flex: "0 0 auto",
-                  fontSize: "1rem",
-                  marginBottom: "1rem",
-                  padding: "4px",
+              <div
+                className="section-settings-header-wrapper"
+                style={{
+                  borderBottom:
+                    chartsData.editMode && `1px solid ${theme.border_color}`,
                 }}
-                hover={
-                  themeState.isDark ? theme.surface_1dp : theme.background_color
-                }
-                onClick={splitViewHandler}
               >
-                <VscSplitVertical />
-              </StyledButton>
-            </div>
+              </div>
 
-            <div
-              style={{ top: chartsData.editMode ? "1rem" : "-3.5rem", left: chartsData.editMode ? "3rem" : "4.5rem" }}
-              onMouseEnter={() => setCaptionHovered(true)}
-              onMouseLeave={() => setCaptionHovered(false)}
-              className="setting-caption-wrapper"
-            >
-              {captionHovered && <Hint show={captionHovered} hint={mainCaption}
-                tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.7rem" }} arrowStyle={{ left: chartsData.editMode ? "13%" : "33%" }}
-              />}
-              <StyledButton
-                onClick={() => {
-                  setCaptionModal(true)
-                }}
-                hover={
-                  themeState.isDark ? theme.surface_12dp : theme.background_color
-                }
+              <div
+                className="section-settings-display-type-switcher-wrapper"
+                onMouseEnter={() => onMouseEnter("split")}
+                onMouseLeave={() => onMouseLeave("split")}
+                style={{ top: chartsData.editMode ? "1rem" : "-4.5rem", left: chartsData.editMode ? "1rem" : "2.5rem" }}
               >
-                <div className="button-text">
-                  {stringFa.caption}
-                  <div className="button-icon" style={{ color: theme.primary }}>
-                    <FaPlusCircle />
-                  </div>
+                {hintShow.split && <Hint show={hintShow.split} hint={`نوع نمایش : ${splitView}`}
+                  tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.5rem" }} arrowStyle={{ left: chartsData.editMode ? "15%" : "35%" }} />}
+                <StyledButton
+                  ButtonStyle={{
+                    flex: "0 0 auto",
+                    fontSize: "1rem",
+                    marginBottom: "1rem",
+                    padding: "4px",
+                  }}
+                  hover={
+                    themeState.isDark ? theme.surface_1dp : theme.background_color
+                  }
+                  onClick={splitViewHandler}
+                >
+                  <VscSplitVertical />
+                </StyledButton>
+              </div>
+              {
+                takenData.isEdit &&
+                <div
+                  style={{ top: chartsData.editMode ? "1rem" : "-3.5rem", left: chartsData.editMode ? "3rem" : "4.5rem" }}
+                  onMouseEnter={() => setCaptionHovered(true)}
+                  onMouseLeave={() => setCaptionHovered(false)}
+                  className="setting-caption-wrapper"
+                >
+                  {captionHovered && <Hint show={captionHovered} hint={mainCaption}
+                    tooltipStyle={{ maxWidth: "13rem" }}
+                  // tooltipStyle={{ left: chartsData.editMode ? "0" : "-180%", top: "0.7rem" }} arrowStyle={{ left: chartsData.editMode ? "13%" : "33%" }}
+                  />
+                  }
+                  <StyledButton
+                    onClick={() => {
+                      setCaptionModal(true)
+                      setAddCaptionValue(mainCaption === stringFa.caption_not_added ? '' : mainCaption)
+                    }}
+                    hover={
+                      themeState.isDark ? theme.surface_12dp : theme.background_color
+                    }
+                  >
+                    <div className="button-text">
+                      {stringFa.caption}
+                      <div className="button-icon" style={{ color: theme.primary }}>
+                        <FaPlusCircle />
+                      </div>
+                    </div>
+                  </StyledButton>
                 </div>
-              </StyledButton>
-            </div>
+              }
 
-            <div className="section-settings-content-component">
-              {chartsData.editMode && (
-                <div className="section-settings-content-header-container">
-                  <div className="base-section-settings-header-component">
-                    <div
-                      className={`base-section-settings-header ${input && "renaming-section"
-                        }`}
-                    >
+              <div className="section-settings-content-component">
+                {chartsData.editMode && (
+                  <div className="section-settings-content-header-container">
+                    <div className="base-section-settings-header-component">
                       <div
-                        className="editable-component"
-                        ref={ref}
-                        onClick={() => {
-                          setInput(true);
-                        }}
+                        className={`base-section-settings-header ${input && "renaming-section"
+                          }`}
                       >
-                        {input ? (
-                          <input
-                            className="editable-input"
-                            style={{
-                              borderColor: takenData.emptyRequireds.length > 0 ?
-                                takenData.emptyRequireds.includes("input") ?
-                                  theme.error :
-                                  theme.darken_border_color :
-                                theme.darken_border_color
-                            }}
-                            dir="rtl"
-                            placeholder={stringFa.title}
-                            value={takenData.chartData.title}
-                            onChange={setTitleHandler}
-                            onKeyDown={setTitleHandler}
-                            autoFocus
-                          />
-                        ) : (
-                          <div className="text-component" dir="rtl"
-                            onMouseEnter={() => onMouseEnter("title")}
-                            onMouseLeave={() => onMouseLeave("title")}
-                            style={{
-                              border: takenData.emptyRequireds.length > 0 ?
-                                takenData.emptyRequireds.includes("input") ?
-                                  `1px dashed ${theme.error}` :
+                        <div
+                          className="editable-component"
+                          ref={ref}
+                          onClick={() => {
+                            setInput(true);
+                          }}
+                        >
+                          {input ? (
+                            <input
+                              className="editable-input"
+                              style={{
+                                borderColor: takenData.emptyRequireds.length > 0 ?
+                                  takenData.emptyRequireds.includes("input") ?
+                                    theme.error :
+                                    theme.darken_border_color :
+                                  theme.darken_border_color
+                              }}
+                              dir="rtl"
+                              placeholder={stringFa.title}
+                              value={takenData.chartData.title}
+                              onChange={setTitleHandler}
+                              onKeyDown={setTitleHandler}
+                              autoFocus
+                            />
+                          ) : (
+                            <div className="text-component" dir="rtl"
+                              onMouseEnter={() => onMouseEnter("title")}
+                              onMouseLeave={() => onMouseLeave("title")}
+                              style={{
+                                border: takenData.emptyRequireds.length > 0 ?
+                                  takenData.emptyRequireds.includes("input") ?
+                                    `1px dashed ${theme.error}` :
+                                    hover.title ? `1px dashed ${theme.darken_border_color}` :
+                                      "none" :
                                   hover.title ? `1px dashed ${theme.darken_border_color}` :
-                                    "none" :
-                                hover.title ? `1px dashed ${theme.darken_border_color}` :
-                                  "none"
-                            }}>
-                            <span>
-                              {takenData.chartData.title
-                                ? takenData.chartData.title
-                                : stringFa.title}
-                            </span>
-                          </div>
-                        )}
+                                    "none"
+                              }}>
+                              <span>
+                                {takenData.chartData.title
+                                  ? takenData.chartData.title
+                                  : stringFa.title}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-              {(splitView === "نمودار" || splitView === "تقسیم شده") &&
-                <div className="section-chart-content-container">
-                  <ChartSection />
-                </div>}
-              {(splitView === "جدول" || splitView === "تقسیم شده") &&
-                <div className="table-component-container">
-                  <BankSection />
-                </div>}
-            </div>
+                )}
+                {(splitView === "نمودار" || splitView === "تقسیم شده") &&
+                  <div className="section-chart-content-container">
+                    <ChartSection />
+                  </div>}
+                {(splitView === "جدول" || splitView === "تقسیم شده") &&
+                  <div className="table-component-container">
+                    <BankSection />
+                  </div>}
+              </div>
 
+            </div>
+            {takenData.isFullscreen ?
+              takenData.isEdit && <Steps type={"Line"} />
+              :
+              <Steps type={"Line"} />
+            }
           </div>
-          {takenData.isFullscreen ?
-            takenData.isEdit && <Steps type={"Line"} />
-            :
-            <Steps type={"Line"} />
-          }
-        </div>
 
       }
       {

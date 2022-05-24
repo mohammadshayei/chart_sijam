@@ -3,7 +3,7 @@ import { stringFa } from '../../../assets/strings/stringFaCollection'
 import Button from '../../../component/UI/Button/Button';
 import { useTheme } from '../../../styles/ThemeProvider';
 import './AddCaption.scss'
-const AddCaption = ({ close, onSaveChartCaption, currentValue }) => {
+const AddCaption = ({ close, onSaveChartCaption, currentValue, justClose }) => {
     const [focus, setFocus] = useState(false)
     const [value, setValue] = useState('')
 
@@ -29,6 +29,7 @@ const AddCaption = ({ close, onSaveChartCaption, currentValue }) => {
                         color: theme.on_background,
                         borderColor: (focus ? theme.primary : theme.darken_border_color),
                     }}
+                    disabled={justClose}
                     onFocus={() => setFocus(true)}
                     onBlur={() => setFocus(false)}
                     value={value}
@@ -36,26 +37,30 @@ const AddCaption = ({ close, onSaveChartCaption, currentValue }) => {
                 />
             </label>
             <div className='actions'>
-                <Button
-                    ButtonStyle={{
-                        padding: ".1rem 1rem",
-                        marginRight: "1rem"
-                    }}
-                    disabled={value.length === 0}
-                    onClick={() => {
-                        onSaveChartCaption(value)
-                        close()
-                    }}
-                >
-                    {stringFa.confirm}
-                </Button>
+                {
+                    !justClose &&
+                    <Button
+                        ButtonStyle={{
+                            padding: ".1rem 1rem",
+                            marginRight: "1rem"
+                        }}
+                        disabled={value.length === 0}
+                        onClick={() => {
+                            onSaveChartCaption(value)
+                            close()
+                        }}
+                    >
+                        {stringFa.confirm}
+                    </Button>
+                }
                 <Button
                     ButtonStyle={{
                         padding: ".1rem 1rem"
                     }}
                     onClick={close}
+                    cancel={true}
                 >
-                    {stringFa.cancel}
+                    {justClose ? stringFa.close : stringFa.cancel}
                 </Button>
 
             </div>

@@ -18,6 +18,10 @@
 
     .filters {
       padding-left: 5rem;
+      padding-bottom: 0.1rem;
+      display: flex;
+      align-items: center;
+      justify-items: center;
       .wrapper {
         min-width: 8rem;
         .cancel {
@@ -33,6 +37,12 @@
             font-size: 0.8rem;
           }
         }
+      }
+      .filter-caption {
+        margin-left: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
     .path {
@@ -75,6 +85,11 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        .chart-caption {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
       .not_editmode {
         width: 100%;
@@ -124,6 +139,11 @@
               margin: 0 0.1rem;
             }
           }
+        }
+        .chart-caption {
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
     }
@@ -206,6 +226,8 @@
       .setting-caption-wrapper {
         position: absolute;
         display: flex;
+        justify-content: center;
+        align-items: center;
         z-index: 200;
 
         .button-text {

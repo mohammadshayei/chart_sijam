@@ -31,7 +31,7 @@ const BankSection = () => {
         <EditTitle />
       </div> */}
       <div className="bank-table-container">
-        <table className="table-bank"
+        {tableData.length > 0 ? <table className="table-bank"
           style={{
             color: theme.on_background,
           }}>
@@ -50,7 +50,7 @@ const BankSection = () => {
               </tr>}
           </thead>
           <tbody>
-            {tableData.length > 0 ?
+            {
               tableData.map((v, i) => (
                 <tr className="tabe-bank-tbody-tr" key={i}
                   style={{ background: i % 2 === 0 ? theme.background : theme.border_color }}
@@ -60,13 +60,15 @@ const BankSection = () => {
                       {vcell.data}
                     </td>))}
                 </tr>
-              )) :
-              <div style={{ color: theme.on_primary, marginTop: "1rem" }}>
-                <p>{stringFa.data_not_found}</p>
-              </div>
+              ))
             }
           </tbody>
-        </table>
+        </table> :
+          <div style={{ color: theme.on_primary, marginTop: "1rem" }}>
+            <p>{stringFa.data_not_found}</p>
+          </div>
+        }
+
       </div>
     </div>
   );

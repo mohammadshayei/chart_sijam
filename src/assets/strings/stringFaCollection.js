@@ -154,6 +154,7 @@ export const stringFa = {
   caption: "توضیحات",
   caption_not_added: "توضیحاتی برای این نمودار موجود نمی باشد",
   filter_caption_not_added: "توضیحاتی برای این فیلتر  موجود نمی باشد",
-  no_acccess_to_filters_chart:"شما به هیچ کدام از فیلتر ها دسترسی ندارید"
+  no_acccess_to_filters_chart:"شما به هیچ کدام از فیلتر ها دسترسی ندارید",
+  close:"بستن"
 
 };

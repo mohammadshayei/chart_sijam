@@ -6,6 +6,8 @@
     border-collapse: collapse;
     width: 100%;
     overflow: auto;
+    cursor: default;
+    user-select: text;
     .tabe-bank-thead-tr {
       th {
         padding: 0.5rem;
@@ -15,13 +17,15 @@
     }
     .tabe-bank-tbody-tr {
       td {
+        cursor: text;
         border-width: 1px;
         border-style: solid;
+        user-select: text;
       }
     }
     thead tr:nth-child(1) th {
       position: sticky;
-	  background-color: #554ac5;
+      background-color: #554ac5;
       top: 0;
     }
   }
